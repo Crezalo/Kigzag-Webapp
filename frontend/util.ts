@@ -41,6 +41,19 @@ const CURRENCY_LIST = {
   1287: "MOVR"
 }
 
+const NETWORK_NAME_LIST = {
+  137: "Polygon Mainnet", 
+  80001: " Polygon Mumbai", 
+  43114: "Avalance Mainnet", 
+  43113: "Avalance FUJI", 
+  56: "BSC", 
+  97: "BSC - Testnet", 
+  250: "Fantom Opera", 
+  4002: "Fantom Testnet", 
+  1285: "Moonriver", 
+  1287: "Moonbase Alpha"
+}
+
 export function formatBlockExplorerLink(
   type: "Account" | "Transaction",
   data: [number, string]
@@ -61,6 +74,14 @@ export function formatBlockExplorerLink(
 
 export function currencyName(chainId: number){
   return CURRENCY_LIST[chainId];
+}
+
+export function chainIdSupported(chainId: number) {
+  return CURRENCY_LIST[chainId]!=undefined;
+}
+
+export function networkName(chainId: number) {
+  return NETWORK_NAME_LIST[chainId];
 }
 
 export const parseBalance = (

@@ -7,6 +7,7 @@
   import Image from 'next/image'
   import Account from "../components/Account";
   import useEagerConnect from "../hooks/useEagerConnect";
+import ChainName from "../components/ChainName";
 
   function MyApp({ Component, pageProps }) {
 
@@ -15,7 +16,7 @@
     return (
       <div>
         <Web3ReactProvider getLibrary={getLibrary}>
-          <nav className="border-b p-6">
+          <nav className="p-1">
             <div className="flex mt-4" style={{justifyContent: "space-between"}}>
               <Image
                 src="/../public/XeldoradoLogo.png"
@@ -33,6 +34,7 @@
                   Creators
                 </a>
               </Link>
+              <ChainName triedToEagerConnect={triedToEagerConnect} />
               <Account triedToEagerConnect={triedToEagerConnect} />
             </div>
           </nav>

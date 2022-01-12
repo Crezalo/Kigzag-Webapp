@@ -12,41 +12,19 @@ const DAI_TOKEN_ADDRESS = "0x381F20437A607dbb9A7C7ecCa9D912F6d9b5A469";
 export default function Home() {
 
   return (
-    <div>
-      <Head>
-        <title>Eldorado</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <header>
-        <nav>
-          <Link href="/">
-            <a>next-web3-boilerplate</a>
-          </Link>
-
-          
-        </nav>
-      </header>
-
-      <main>
-        <h1>
-          Welcome to{" "}
-          <a href="https://github.com/mirshko/next-web3-boilerplate">
-            next-web3-boilerplate
-          </a>
-        </h1>
-      </main>
-
-      <style jsx>{`
-        nav {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        main {
-          text-align: center;
-        }
-      `}</style>
-    </div>
+    <>
+      <div>
+        <Head>
+          <title>Eldorado</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+      </div>
+      <br/>
+      <div style={{justifyContent: 'center', width: '100%'}}>
+        <div className="outline text-green-500 outline-offset-2 font-bold py-2 px-2 rounded" style={{width:'100%', fontSize: 25, textAlign: "center"}}>
+          <p>My Tokens</p>
+        </div>
+      </div>
+    </>
   );
 }
