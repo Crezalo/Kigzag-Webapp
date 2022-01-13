@@ -1,5 +1,10 @@
 import type { BigNumberish } from "@ethersproject/bignumber";
 import { formatUnits } from "@ethersproject/units";
+import { BigNumber } from '@ethersproject/bignumber'
+import { hexStripZeros } from '@ethersproject/bytes'
+import { Web3Provider } from '@ethersproject/providers'
+import { CHAIN_INFO } from './constants/chaininfo'
+import { SupportedChainId, BLOCK_EXPLORER, CURRENCY_LIST, NETWORK_NAME_LIST } from './constants/chains'
 
 export function shortenHex(hex: string, length = 4) {
   return `${hex.substring(0, length + 2)}…${hex.substring(
@@ -14,45 +19,6 @@ export function shortenHex(hex: string, length = 4) {
 //   5: "goerli.",
 //   42: "kovan.",
 // };
-
-const BLOCK_EXPLORER = {
-  137: "polygonscan.com/", 
-  80001: "mumbai.polygonscan.com/", 
-  43114: "snowtrace.io/", 
-  43113: "testnet.snowtrace.io/", 
-  56: "bscscan.com", 
-  97: "testnet.bscscan.com", 
-  250: "ftmscan.com/", 
-  4002: "testnet.ftmscan.com/", 
-  1285: "moonriver.moonscan.io/", 
-  1287: "moonbase.moonscan.io/"
-}
-
-const CURRENCY_LIST = {
-  137: "MATIC", 
-  80001: "MATIC", 
-  43114: "AVAX", 
-  43113: "AVAX", 
-  56: "BNB", 
-  97: "BNB", 
-  250: "FTM", 
-  4002: "FTM", 
-  1285: "MOVR", 
-  1287: "MOVR"
-}
-
-const NETWORK_NAME_LIST = {
-  137: "Polygon Mainnet", 
-  80001: " Polygon Mumbai", 
-  43114: "Avalance Mainnet", 
-  43113: "Avalance FUJI", 
-  56: "BSC", 
-  97: "BSC - Testnet", 
-  250: "Fantom Opera", 
-  4002: "Fantom Testnet", 
-  1285: "Moonriver", 
-  1287: "Moonbase Alpha"
-}
 
 export function formatBlockExplorerLink(
   type: "Account" | "Transaction",
@@ -83,6 +49,58 @@ export function chainIdSupported(chainId: number) {
 export function networkName(chainId: number) {
   return NETWORK_NAME_LIST[chainId];
 }
+
+interface SwitchNetworkArguments {
+  library: Web3Provider
+  chainId: SupportedChainId
+}
+
+// provider.request returns Promise<any>, but wallet_switchEthereumChain must return null or throw
+// see https://github.com/rekmarks/EIPs/blob/3326-create/EIPS/eip-3326.md for more info on wallet_switchEthereumChain
+export async function switchToNetwork({ library, chainId }: SwitchNetworkArguments): Promise<null | void> {
+  if (!library?.provider?.request) {
+    return
+  }
+  const formattedChainId = hexStripZeros(BigNumber.from(chainId).toHexString())
+  try {
+    await library.provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: formattedChainId }],
+    })
+  } catch (error) {
+    // 4902 is the error code for attempting to switch to an unrecognized chainId
+    if (error.code === 4902) {
+      const info = CHAIN_INFO[chainId]
+
+      await library.provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: formattedChainId,
+            chainName: info.label,
+            rpcUrls: [info.addNetworkInfo.rpcUrl],
+            nativeCurrency: info.addNetworkInfo.nativeCurrency,
+            blockExplorerUrls: [info.explorer],
+          },
+        ],
+      })
+      // metamask (only known implementer) automatically switches after a network is added
+      // the second call is done here because that behavior is not a part of the spec and cannot be relied upon in the future
+      // metamask's behavior when switching to the current network is just to return null (a no-op)
+      try {
+        await library.provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: formattedChainId }],
+        })
+      } catch (error) {
+        console.debug('Added network but could not switch chains', error)
+      }
+    } else {
+      throw error
+    }
+  }
+}
+
 
 export const parseBalance = (
   value: BigNumberish,

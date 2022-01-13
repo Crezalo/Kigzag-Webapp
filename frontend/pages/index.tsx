@@ -7,24 +7,34 @@ import ETHBalance from "../components/ETHBalance";
 import TokenBalance from "../components/TokenBalance";
 import useEagerConnect from "../hooks/useEagerConnect";
 
+
 const DAI_TOKEN_ADDRESS = "0x381F20437A607dbb9A7C7ecCa9D912F6d9b5A469";
 
 export default function Home() {
 
   return (
-    <>
+    <div style={{backgroundColor:'black'}}>
       <div>
         <Head>
           <title>Eldorado</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
       </div>
-      <br/>
+      {/* <br/> */}
       <div style={{justifyContent: 'center', width: '100%'}}>
-        <div className="outline text-green-500 outline-offset-2 font-bold py-2 px-2 rounded" style={{width:'100%', fontSize: 25, textAlign: "center"}}>
-          <p>My Tokens</p>
+        <div className="text-green-500 font-bold py-2 px-2" style={{width:'100%', fontSize: 25}}>
+          <div  style={{marginTop:25, marginLeft:50}}>
+            <Image 
+              src="/../public/profilepic.png"
+              alt="Picture of the author"
+              width={180}
+              height={180}
+            />
+          </div>
+          <div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -7,6 +7,7 @@
   import Image from 'next/image'
   import Account from "../components/Account";
   import useEagerConnect from "../hooks/useEagerConnect";
+
 import ChainName from "../components/ChainName";
 
   function MyApp({ Component, pageProps }) {
@@ -16,30 +17,33 @@ import ChainName from "../components/ChainName";
     return (
       <div>
         <Web3ReactProvider getLibrary={getLibrary}>
-          <nav className="p-1">
-            <div className="flex mt-4" style={{justifyContent: "space-between"}}>
-              <Image
-                src="/../public/XeldoradoLogo.png"
-                alt="Picture of the author"
-                width={200}
-                height={25}
-              />
-              <Link href="/">
-                <a className="mr-4 text-green-500" style={{fontSize:25}}>
-                  Dashboard
-                </a>
-              </Link>
-              <Link href="/Creators">
-                <a className="mr-6 text-green-500" style={{fontSize:25}}>
-                  Creators
-                </a>
-              </Link>
-              <ChainName triedToEagerConnect={triedToEagerConnect} />
-              <Account triedToEagerConnect={triedToEagerConnect} />
-            </div>
+          <nav className="p-1" style={{backgroundColor:'black', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Link href="/">  
+              <a>
+                &nbsp;&nbsp;
+                <Image
+                  src="/../public/favicon.ico"
+                  alt="Picture of the author"
+                  width={35}
+                  height={35}
+                />
+              </a>
+            </Link>
+            <Link href="/">
+              <a className="mr-4 text-green-500 py-2" style={{fontSize:18}}>
+                Dashboard
+              </a>
+            </Link>
+            <Link href="/Creators">
+              <a className="mr-6 text-green-500 py-2" style={{fontSize:18}}>
+              Creators
+              </a>
+            </Link>
+            <ChainName triedToEagerConnect={triedToEagerConnect} />
+            <Account triedToEagerConnect={triedToEagerConnect} />
           </nav>
           <Component {...pageProps} />
-      </Web3ReactProvider>
+        </Web3ReactProvider>
       </div>
     )
   }
