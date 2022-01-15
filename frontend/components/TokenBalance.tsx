@@ -1,6 +1,6 @@
 import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
-import  {useTokenAllowance, getTokenName, getTokenSymbol, TokenTransfer, useTokenBalance, useTokenName, useTokenSymbol, useTokenTotalSupply, useTokenContract} from "../hooks/ERC20/useTokenContract";
+import  {useTokenAllowance, getTokenName, getTokenSymbol, useTokenBalance, useTokenName, useTokenSymbol, useTokenTotalSupply, useTokenContract} from "../hooks/ERC20/useTokenContract";
 import { parseBalance } from "../util";
 
 type TokenBalanceProps = {
@@ -16,10 +16,10 @@ const TokenBalance = ({ tokenAddress, symbol }: TokenBalanceProps) => {
         {`${symbol} Balance`}: {parseBalance(useTokenBalance(account, tokenAddress).data ?? 0)}
       </p>
       <p>
-        Name: {getTokenName(useTokenContract(tokenAddress))}
+        Name: {useTokenName(tokenAddress).data??0}
       </p>
       <p>
-        Symbol: {getTokenSymbol(useTokenContract(tokenAddress))}
+        Symbol: {useTokenSymbol(tokenAddress).data??0}
       </p>
       <p>
         TotalSupply: {parseBalance(useTokenTotalSupply(tokenAddress).data ?? 0)}
