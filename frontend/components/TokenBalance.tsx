@@ -1,3 +1,4 @@
+import { BigNumber } from "@ethersproject/bignumber";
 import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import {
@@ -19,6 +20,8 @@ type TokenBalanceProps = {
 
 const TokenBalance = ({ tokenAddress, symbol }: TokenBalanceProps) => {
   const { account } = useWeb3React<Web3Provider>();
+  const tokenContract = useTokenContract(tokenAddress);
+  const amount = BigNumber.from("10000000000000000000");
   return (
     <>
       <p>
@@ -41,9 +44,9 @@ const TokenBalance = ({ tokenAddress, symbol }: TokenBalanceProps) => {
           ).data ?? 0
         )}
       </p>
-      {/* <button onClick={()=>{TokenTransfer(tokenAddress, "0x4fCd14A5855D381460D15770fA235187D93c2B48", 10000000000000000000)}}>
+      <button onClick={async ()=>{await tokenContract.transfer("0x4fCd14A5855D381460D15770fA235187D93c2B48", amount )}}>
         Transfer
-      </button> */}
+      </button>
     </>
   );
 };
