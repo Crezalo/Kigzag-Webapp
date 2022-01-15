@@ -13,7 +13,7 @@ type AccountProps = {
 };
 
 const Account = ({ triedToEagerConnect }: AccountProps) => {
-  const { active, error, activate, chainId, account, library, setError } =
+  const { active, error, activate, chainId, account, library, setError , deactivate} =
     useWeb3React();
 
   const {
@@ -55,7 +55,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
   if (!triedToEagerConnect) {
     return null;
   }
-
+  
   if (typeof account !== "string") {
     return (
       <div>
@@ -120,12 +120,13 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
           {isConnected && <ETHBalance />}
         </button>
       </a>
-      <div
+      <button
         className="w-full bg-green-500 text-white px-2 py-2 rounded"
         style={{fontSize: 18, textAlign: "center"  }}
+        onClick={()=>{deactivate()}}
       >
         {ENSName || `${shortenHex(account, 4)}`}
-      </div>
+      </button>
     </div>
   );
 };

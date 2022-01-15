@@ -91,3 +91,29 @@ export const L2_CHAIN_IDS = [
 ] as const
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
+
+// Creator Factory Address for Loyalty Tokens across different chains
+export const LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST = {
+  80001: "0xd7743Cbf3c35dcA2079659e9Fc0E8ce967340269", // Polygon Mumbai
+  43113: "0x00eb20674CD2039B524CC74ed7F23A355D9B3861", // Avalanche FUJI
+  97: "0x00eb20674CD2039B524CC74ed7F23A355D9B3861",    // BSC Testnet
+  4002: "0x00eb20674CD2039B524CC74ed7F23A355D9B3861",  // Fantom Testnet
+  1287: "0x00eb20674CD2039B524CC74ed7F23A355D9B3861",  // Moonbase Alpha
+}
+
+export const XELDORADO_TOKEN_ADDRESS_LIST = {
+  80001: "0x0ace5d75952054B2D92B77124f03d1B3D7245370", // Polygon Mumbai
+  43113: "0xBD5a0e448Efb029688b7752d327d873Dc79A1bfF", // Avalanche FUJI
+  97: "0xBD5a0e448Efb029688b7752d327d873Dc79A1bfF",    // BSC Testnet
+  4002: "0xBD5a0e448Efb029688b7752d327d873Dc79A1bfF",  // Fantom Testnet
+  1287: "0xBD5a0e448Efb029688b7752d327d873Dc79A1bfF",  // Moonbase Alpha
+}
+
+export const XELDORADO_BASE_TOKEN_SUPPORTED_ADDRESS = {
+  80001: ["0x20D2C08Af83ff9d5116f92bf2fBAD81c04a6D94d"], // Polygon Mumbai
+  43113: ["0x7a396865c17E92a196825017E47fA4f4F39f035a"], // Avalanche FUJI
+  97: ["0xDC2C2A8d4F7fe3081995bCc1fA6d39edDCDe8B0D"],    // BSC Testnet
+  4002: ["0xDC2C2A8d4F7fe3081995bCc1fA6d39edDCDe8B0D"],  // Fantom Testnet
+  1287: ["0xDC2C2A8d4F7fe3081995bCc1fA6d39edDCDe8B0D"],  // Moonbase Alpha
+
+}

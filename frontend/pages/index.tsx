@@ -30,6 +30,7 @@ export default function Home() {
               width={180}
               height={180}
             />
+            <TokenBalance tokenAddress={'0xBD5a0e448Efb029688b7752d327d873Dc79A1bfF'} symbol={'X'} />
           </div>
           <div>
           </div>
