@@ -3,8 +3,6 @@ import type { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import {
   useTokenAllowance,
-  getTokenName,
-  getTokenSymbol,
   useTokenBalance,
   useTokenName,
   useTokenSymbol,
@@ -22,6 +20,7 @@ const TokenBalance = ({ tokenAddress, symbol }: TokenBalanceProps) => {
   const { account } = useWeb3React<Web3Provider>();
   const tokenContract = useTokenContract(tokenAddress);
   const amount = BigNumber.from("10000000000000000000");
+  console.log(useTokenName(tokenAddress).data);
   return (
     <>
       <p>
