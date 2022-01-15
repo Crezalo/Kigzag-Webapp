@@ -7,7 +7,12 @@ const ETHBalance = () => {
   const { account, chainId } = useWeb3React<Web3Provider>();
   const { data } = useETHBalance(account);
 
-  return <p>{parseBalance(data ?? 0)}{currencyName(chainId)}</p>;
+  return (
+    <p>
+      {parseBalance(data ?? 0)}
+      {currencyName(chainId)}
+    </p>
+  );
 };
 
 export default ETHBalance;

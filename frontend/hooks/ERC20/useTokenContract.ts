@@ -9,15 +9,10 @@ export function useTokenContract(tokenAddress?: string) {
   return useContract<ERC20>(tokenAddress, ERC20_ABI);
 }
 
-export function useTokenName(
-  tokenAddress: string,
-  suspense = false
-) {
+export function useTokenName(tokenAddress: string, suspense = false) {
   const contract = useTokenContract(tokenAddress);
 
-  const shouldFetch =
-    typeof tokenAddress === "string" &&
-    !!contract;
+  const shouldFetch = typeof tokenAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["TokenName", tokenAddress] : null,
@@ -32,15 +27,10 @@ export function useTokenName(
   return result;
 }
 
-export function useTokenSymbol(
-  tokenAddress: string,
-  suspense = false
-) {
+export function useTokenSymbol(tokenAddress: string, suspense = false) {
   const contract = useTokenContract(tokenAddress);
 
-  const shouldFetch =
-    typeof tokenAddress === "string" &&
-    !!contract;
+  const shouldFetch = typeof tokenAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["TokenSymbol", tokenAddress] : null,
@@ -55,15 +45,10 @@ export function useTokenSymbol(
   return result;
 }
 
-export function useTokenTotalSupply(
-  tokenAddress: string,
-  suspense = false
-) {
+export function useTokenTotalSupply(tokenAddress: string, suspense = false) {
   const contract = useTokenContract(tokenAddress);
 
-  const shouldFetch =
-    typeof tokenAddress === "string" &&
-    !!contract;
+  const shouldFetch = typeof tokenAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["TokenTotalSupply", tokenAddress] : null,
@@ -92,7 +77,7 @@ export function useTokenBalance(
 
   const result = useSWR(
     shouldFetch ? ["TokenBalance", address, tokenAddress] : null,
-    getTokenBalanceOf(contract,address),
+    getTokenBalanceOf(contract, address),
     {
       suspense,
     }
@@ -119,7 +104,7 @@ export function useTokenAllowance(
 
   const result = useSWR(
     shouldFetch ? ["TokenAllowance", owner, spender, tokenAddress] : null,
-    getTokenAllowance(contract,owner,spender),
+    getTokenAllowance(contract, owner, spender),
     {
       suspense,
     }
@@ -163,9 +148,13 @@ export function getTokenBalanceOf(contract: ERC20, address: string) {
   };
 }
 
-function getTokenAllowance(contract: ERC20, owner: string | null | undefined, spender: string | null | undefined) {
+function getTokenAllowance(
+  contract: ERC20,
+  owner: string | null | undefined,
+  spender: string | null | undefined
+) {
   return async (_: string) => {
-    const allowance = await contract.allowance(owner,spender);
+    const allowance = await contract.allowance(owner, spender);
 
     return allowance;
   };

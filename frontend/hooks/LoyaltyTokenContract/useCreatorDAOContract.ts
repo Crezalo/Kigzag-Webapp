@@ -97,33 +97,51 @@ function getDAOTotalAllowances(contract: CreatorDAOLT) {
 
 function getDAOProposal(contract: CreatorDAOLT, proposalId: number) {
   return async (_: string) => {
-    const [proposer, link, category, choices] = await contract.proposal(proposalId);
+    const [proposer, link, category, choices] = await contract.proposal(
+      proposalId
+    );
 
-    return {proposer, link, category, choices};
+    return { proposer, link, category, choices };
   };
 }
 
-function getDAOProposalManagerAllowancesInfoLength(contract: CreatorDAOLT, proposalId: number) {
+function getDAOProposalManagerAllowancesInfoLength(
+  contract: CreatorDAOLT,
+  proposalId: number
+) {
   return async (_: string) => {
-    const proposalManagerAllowancesInfoLength = await contract.proposalManagerAllowancesInfoLength(proposalId);
+    const proposalManagerAllowancesInfoLength =
+      await contract.proposalManagerAllowancesInfoLength(proposalId);
 
     return proposalManagerAllowancesInfoLength;
   };
 }
 
-function getDAOProposalManagerAllowanesInfo(contract: CreatorDAOLT, proposalId: number, index: number) {
+function getDAOProposalManagerAllowanesInfo(
+  contract: CreatorDAOLT,
+  proposalId: number,
+  index: number
+) {
   return async (_: string) => {
-    const [manager, proposedAllowance] = await contract.proposalManagerAllowanesInfo(proposalId, index);
+    const [manager, proposedAllowance] =
+      await contract.proposalManagerAllowanesInfo(proposalId, index);
 
-    return {manager, proposedAllowance};
+    return { manager, proposedAllowance };
   };
 }
 
-function getDAOProposalVoteDataInfo(contract: CreatorDAOLT, proposalId: number, choice: number) {
+function getDAOProposalVoteDataInfo(
+  contract: CreatorDAOLT,
+  proposalId: number,
+  choice: number
+) {
   return async (_: string) => {
-    const [voteCount, votersTokenCount] = await contract.proposalVoteDataInfo(proposalId, choice);
+    const [voteCount, votersTokenCount] = await contract.proposalVoteDataInfo(
+      proposalId,
+      choice
+    );
 
-    return {voteCount, votersTokenCount};
+    return { voteCount, votersTokenCount };
   };
 }
 
@@ -137,7 +155,9 @@ function getDAOProposalStatus(contract: CreatorDAOLT, proposalId: number) {
 
 function getDAOCommunityManagerExists(contract: CreatorDAOLT, manager: string) {
   return async (_: string) => {
-    const communityManagerExists = await contract.CommunityManagerExists(manager);
+    const communityManagerExists = await contract.CommunityManagerExists(
+      manager
+    );
 
     return communityManagerExists;
   };

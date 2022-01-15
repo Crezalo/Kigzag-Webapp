@@ -31,7 +31,10 @@ function getCreatorVaultToken(contract: XeldoradoVaultLT) {
   };
 }
 
-function getCreatorVaultIdToTokenId(contract: XeldoradoVaultLT, vaultId: string) {
+function getCreatorVaultIdToTokenId(
+  contract: XeldoradoVaultLT,
+  vaultId: string
+) {
   return async (_: string) => {
     const tokenId = await contract.vaultIdToTokenId(vaultId);
 
@@ -39,7 +42,10 @@ function getCreatorVaultIdToTokenId(contract: XeldoradoVaultLT, vaultId: string)
   };
 }
 
-function getCreatorVaultIdTonftContract(contract: XeldoradoVaultLT, vaultId: string) {
+function getCreatorVaultIdTonftContract(
+  contract: XeldoradoVaultLT,
+  vaultId: string
+) {
   return async (_: string) => {
     const vaultIdTonftContract = await contract.vaultIdTonftContract(vaultId);
 
@@ -47,7 +53,10 @@ function getCreatorVaultIdTonftContract(contract: XeldoradoVaultLT, vaultId: str
   };
 }
 
-function getCreatorVaultIdTonftPrice(contract: XeldoradoVaultLT, vaultId: string) {
+function getCreatorVaultIdTonftPrice(
+  contract: XeldoradoVaultLT,
+  vaultId: string
+) {
   return async (_: string) => {
     const vaultIdTonftPrice = await contract.vaultIdTonftPrice(vaultId);
 

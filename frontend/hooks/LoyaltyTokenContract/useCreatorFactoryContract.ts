@@ -2,12 +2,20 @@ import XeldoradoCreatorFactoryLT_ABI from "../../contracts/XeldoradoCreatorFacto
 import type { XeldoradoCreatorFactoryLT } from "../../contracts/types";
 import useContract from "../useContract";
 
-export default function useCreatorFactoryContract(creatorFactoryAddress?: string) {
-  return useContract<XeldoradoCreatorFactoryLT>(creatorFactoryAddress, XeldoradoCreatorFactoryLT_ABI);
+export default function useCreatorFactoryContract(
+  creatorFactoryAddress?: string
+) {
+  return useContract<XeldoradoCreatorFactoryLT>(
+    creatorFactoryAddress,
+    XeldoradoCreatorFactoryLT_ABI
+  );
 }
 
 // Read functions
-function getCreatorFactoryCreatorToken(contract: XeldoradoCreatorFactoryLT, creator: string) {
+function getCreatorFactoryCreatorToken(
+  contract: XeldoradoCreatorFactoryLT,
+  creator: string
+) {
   return async (_: string) => {
     const token = await contract.creatorToken(creator);
 
@@ -15,7 +23,10 @@ function getCreatorFactoryCreatorToken(contract: XeldoradoCreatorFactoryLT, crea
   };
 }
 
-function getCreatorFactoryCreatorVault(contract: XeldoradoCreatorFactoryLT, creator: string) {
+function getCreatorFactoryCreatorVault(
+  contract: XeldoradoCreatorFactoryLT,
+  creator: string
+) {
   return async (_: string) => {
     const vault = await contract.creatorVault(creator);
 
@@ -23,7 +34,10 @@ function getCreatorFactoryCreatorVault(contract: XeldoradoCreatorFactoryLT, crea
   };
 }
 
-function getCreatorFactoryCreatorDAO(contract: XeldoradoCreatorFactoryLT, creator: string) {
+function getCreatorFactoryCreatorDAO(
+  contract: XeldoradoCreatorFactoryLT,
+  creator: string
+) {
   return async (_: string) => {
     const dao = await contract.creatorDAO(creator);
 
@@ -31,7 +45,10 @@ function getCreatorFactoryCreatorDAO(contract: XeldoradoCreatorFactoryLT, creato
   };
 }
 
-function getCreatorFactoryCreatorSaleFee(contract: XeldoradoCreatorFactoryLT, creator: string) {
+function getCreatorFactoryCreatorSaleFee(
+  contract: XeldoradoCreatorFactoryLT,
+  creator: string
+) {
   return async (_: string) => {
     const tokenPrice = await contract.creatorSaleFee(creator);
 
@@ -39,7 +56,10 @@ function getCreatorFactoryCreatorSaleFee(contract: XeldoradoCreatorFactoryLT, cr
   };
 }
 
-function getCreatorFactoryAllCreators(contract: XeldoradoCreatorFactoryLT, index: string) {
+function getCreatorFactoryAllCreators(
+  contract: XeldoradoCreatorFactoryLT,
+  index: string
+) {
   return async (_: string) => {
     const creator = await contract.allCreators(index);
 
@@ -50,7 +70,6 @@ function getCreatorFactoryAllCreators(contract: XeldoradoCreatorFactoryLT, index
 function getCreatorFactoryExchangeAdmin(contract: XeldoradoCreatorFactoryLT) {
   return async (_: string) => {
     const exchangeAdmin = await contract.exchangeAdmin();
-
 
     return exchangeAdmin;
   };
@@ -72,7 +91,9 @@ function getCreatorFactoryDiscount(contract: XeldoradoCreatorFactoryLT) {
   };
 }
 
-function getCreatorFactoryNoOFTokensForDiscount(contract: XeldoradoCreatorFactoryLT) {
+function getCreatorFactoryNoOFTokensForDiscount(
+  contract: XeldoradoCreatorFactoryLT
+) {
   return async (_: string) => {
     const noOFTokensForDiscount = await contract.noOFTokensForDiscount();
 
@@ -104,7 +125,10 @@ function getCreatorFactoryExchangeToken(contract: XeldoradoCreatorFactoryLT) {
   };
 }
 
-function getCreatorFactoryGetCreatorAdmins(contract: XeldoradoCreatorFactoryLT, creator: string) {
+function getCreatorFactoryGetCreatorAdmins(
+  contract: XeldoradoCreatorFactoryLT,
+  creator: string
+) {
   return async (_: string) => {
     const getCreatorAdmins = await contract.getCreatorAdmins(creator);
 
@@ -112,7 +136,11 @@ function getCreatorFactoryGetCreatorAdmins(contract: XeldoradoCreatorFactoryLT, 
   };
 }
 
-function getCreatorFactoryGetIsCreatorAdmin(contract: XeldoradoCreatorFactoryLT, creator: string, admin: string) {
+function getCreatorFactoryGetIsCreatorAdmin(
+  contract: XeldoradoCreatorFactoryLT,
+  creator: string,
+  admin: string
+) {
   return async (_: string) => {
     const isCreatorAdmin = await contract.isCreatorAdmin(creator, admin);
 

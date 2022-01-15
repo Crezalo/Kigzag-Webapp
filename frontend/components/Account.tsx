@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { injected } from "../connectors";
 import useENSName from "../hooks/useENSName";
 import useMetaMaskOnboarding from "../hooks/useMetaMaskOnboarding";
-import { chainIdSupported, formatBlockExplorerLink, networkName, shortenHex } from "../util";
+import {
+  chainIdSupported,
+  formatBlockExplorerLink,
+  networkName,
+  shortenHex,
+} from "../util";
 import ETHBalance from "./ETHBalance";
 import TokenBalance from "./TokenBalance";
 
@@ -13,8 +18,16 @@ type AccountProps = {
 };
 
 const Account = ({ triedToEagerConnect }: AccountProps) => {
-  const { active, error, activate, chainId, account, library, setError , deactivate} =
-    useWeb3React();
+  const {
+    active,
+    error,
+    activate,
+    chainId,
+    account,
+    library,
+    setError,
+    deactivate,
+  } = useWeb3React();
 
   const {
     isMetaMaskInstalled,
@@ -38,24 +51,24 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
   const isConnected = typeof account === "string" && !!library;
 
   if (error) {
-    if(error.name=="UnsupportedChainIdError"){
+    if (error.name == "UnsupportedChainIdError") {
       return (
         <button
           className="w-full bg-red-500 text-white px-2 py-2 rounded"
-          style={{ fontSize: 18, textAlign: "center"  }}
+          style={{ fontSize: 18, textAlign: "center" }}
         >
           Wrong Network
         </button>
       );
     }
-    console.log(error.name)
+    console.log(error.name);
     return null;
   }
 
   if (!triedToEagerConnect) {
     return null;
   }
-  
+
   if (typeof account !== "string") {
     return (
       <div>
@@ -78,14 +91,14 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
             {isMetaMaskInstalled ? (
               <button
                 className="w-full bg-green-500 text-white px-2 py-2 rounded"
-                style={{fontSize: 18, textAlign: "center"  }}
+                style={{ fontSize: 18, textAlign: "center" }}
               >
                 Connect to MetaMask
               </button>
             ) : (
               <button
                 className="w-full bg-green-500 text-white px-2 py-2 rounded"
-                style={{ fontSize: 18, textAlign: "center"  }}
+                style={{ fontSize: 18, textAlign: "center" }}
               >
                 Connect to Wallet
               </button>
@@ -94,7 +107,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
         ) : (
           <button
             className="w-full bg-green-500 text-white px-2 py-2 rounded"
-            style={{fontSize: 18, textAlign: "center"  }}
+            style={{ fontSize: 18, textAlign: "center" }}
             onClick={startOnboarding}
           >
             Install Metamask
@@ -105,7 +118,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
   }
 
   return (
-    <div style={{ display: "flex" , justifyContent: "space-between" }}>
+    <div style={{ display: "flex", justifyContent: "space-between" }}>
       <a
         {...{
           href: formatBlockExplorerLink("Account", [chainId, account]),
@@ -115,15 +128,17 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       >
         <button
           className="outline text-green-500 outline-offset-0 px-2 py-2 rounded"
-          style={{ fontSize: 18, textAlign: "center"}}
+          style={{ fontSize: 18, textAlign: "center" }}
         >
           {isConnected && <ETHBalance />}
         </button>
       </a>
       <button
         className="w-full bg-green-500 text-white px-2 py-2 rounded"
-        style={{fontSize: 18, textAlign: "center"  }}
-        onClick={()=>{deactivate()}}
+        style={{ fontSize: 18, textAlign: "center" }}
+        onClick={() => {
+          deactivate();
+        }}
       >
         {ENSName || `${shortenHex(account, 4)}`}
       </button>

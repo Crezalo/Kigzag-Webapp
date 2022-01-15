@@ -47,7 +47,11 @@ function getCreatorGetApproved(contract: CreatorNFTLT, tokenId: number) {
   };
 }
 
-function getCreatorIsApprovedForAll(contract: CreatorNFTLT, owner: string, operator: string) {
+function getCreatorIsApprovedForAll(
+  contract: CreatorNFTLT,
+  owner: string,
+  operator: string
+) {
   return async (_: string) => {
     const isApprovedForAll = await contract.isApprovedForAll(owner, operator);
 
