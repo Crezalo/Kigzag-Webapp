@@ -24,6 +24,9 @@ a {
   margin-right: auto;
   display: flex;
   flex-direction: row;
+  display: flex;
+  grid-template-columns: 1fr fit-content(20%);
+  overflow: hidden;
 }
 
 .card {
