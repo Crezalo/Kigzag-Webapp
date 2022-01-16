@@ -12,22 +12,7 @@ export default function Creators() {
     "500",
     "50",
     "5000",
-    "500",
-    "50",
-    "5000",
-    "500",
-    "500",
-    "50",
-    "5000",
-    "500",
-    "50",
-    "5000",
-    "500",
-    "50",
-    "5000",
-    "500",
-    "50",
-    "5000",
+    "15",
   ];
   return (
     <>
@@ -40,7 +25,7 @@ export default function Creators() {
           fontSize: 25,
         }}
       >
-        <div style={{ marginTop: 25, marginLeft: 50 }}>
+        <div style={{ marginTop: 25, marginLeft: 0 }}>
           <NFTCardGrid notes={notes} />
           {/* <Image
             src="/../public/profilepic.png"
