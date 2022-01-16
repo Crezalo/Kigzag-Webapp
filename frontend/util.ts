@@ -109,6 +109,12 @@ export async function switchToNetwork({
   }
 }
 
+export const parsePercent = (
+  value: BigNumberish,
+  decimals = 2,
+  decimalsToDisplay = 2
+) => parseFloat(formatUnits(value, decimals)).toFixed(decimalsToDisplay);
+
 export const parseBalance = (
   value: BigNumberish,
   decimals = 18,

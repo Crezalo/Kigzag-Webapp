@@ -12,6 +12,7 @@ import {
 } from "../util";
 import ETHBalance from "./ETHBalance";
 import TokenBalance from "./TokenBalance";
+import Router from 'next/router';
 
 type AccountProps = {
   triedToEagerConnect: boolean;
@@ -53,12 +54,17 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
   if (error) {
     if (error.name == "UnsupportedChainIdError") {
       return (
-        <button
+        <div>
+          <button
           className="w-full bg-red-500 text-white px-2 py-2 rounded"
           style={{ fontSize: 18, textAlign: "center" }}
-        >
-          Wrong Network
-        </button>
+          onClick={() => {
+            Router.reload();
+          }}
+          >
+            Wrong Network
+          </button>
+        </div>
       );
     }
     console.log(error.name);
