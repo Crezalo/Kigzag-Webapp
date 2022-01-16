@@ -115,8 +115,11 @@ export function useTokenAllowance(
   return result;
 }
 
-// Read functions
-export function getTokenName(contract: ERC20) {
+////////////////////////////////////////////////////
+///////////// Read functions ///////////////////////
+////////////////////////////////////////////////////
+
+function getTokenName(contract: ERC20) {
   return async (_: string) => {
     const name = await contract.name();
 
@@ -124,7 +127,7 @@ export function getTokenName(contract: ERC20) {
   };
 }
 
-export function getTokenSymbol(contract: ERC20) {
+function getTokenSymbol(contract: ERC20) {
   return async (_: string) => {
     const symbol = await contract.symbol();
 
@@ -132,7 +135,7 @@ export function getTokenSymbol(contract: ERC20) {
   };
 }
 
-export function getTokenTotalSupply(contract: ERC20) {
+function getTokenTotalSupply(contract: ERC20) {
   return async (_: string) => {
     const totalSupply = await contract.totalSupply();
 
@@ -140,7 +143,7 @@ export function getTokenTotalSupply(contract: ERC20) {
   };
 }
 
-export function getTokenBalanceOf(contract: ERC20, address: string) {
+function getTokenBalanceOf(contract: ERC20, address: string) {
   return async (_: string) => {
     const balance = await contract.balanceOf(address);
 
