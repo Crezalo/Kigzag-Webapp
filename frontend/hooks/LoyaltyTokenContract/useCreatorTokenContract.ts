@@ -8,12 +8,13 @@ export function useCreatorTokenContract(creatorTokenAddress?: string) {
   return useContract<CreatorTokenLT>(creatorTokenAddress, CreatorTokenLT_ABI);
 }
 
-export function useCreatorTokenCreator(creatorTokenAddress: string, suspense = false) {
+export function useCreatorTokenCreator(
+  creatorTokenAddress: string,
+  suspense = false
+) {
   const contract = useCreatorTokenContract(creatorTokenAddress);
 
-  const shouldFetch = 
-    typeof creatorTokenAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorTokenAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorTokenCreator", creatorTokenAddress] : null,
@@ -28,12 +29,13 @@ export function useCreatorTokenCreator(creatorTokenAddress: string, suspense = f
   return result;
 }
 
-export function useCreatorTokenBaseToken(creatorTokenAddress: string, suspense = false) {
+export function useCreatorTokenBaseToken(
+  creatorTokenAddress: string,
+  suspense = false
+) {
   const contract = useCreatorTokenContract(creatorTokenAddress);
 
-  const shouldFetch = 
-    typeof creatorTokenAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorTokenAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorTokenBaseToken", creatorTokenAddress] : null,
@@ -48,12 +50,13 @@ export function useCreatorTokenBaseToken(creatorTokenAddress: string, suspense =
   return result;
 }
 
-export function useCreatorTokenDAO(creatorTokenAddress: string, suspense = false) {
+export function useCreatorTokenDAO(
+  creatorTokenAddress: string,
+  suspense = false
+) {
   const contract = useCreatorTokenContract(creatorTokenAddress);
 
-  const shouldFetch = 
-    typeof creatorTokenAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorTokenAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorTokenDAO", creatorTokenAddress] : null,

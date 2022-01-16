@@ -5,19 +5,28 @@ import useSWR from "swr";
 import useKeepSWRDataLiveAsBlocksArrive from "../useKeepSWRDataLiveAsBlocksArrive";
 
 export function useCreatorFactoryContract(creatorFactoryAddress?: string) {
-  return useContract<XeldoradoCreatorFactoryLT>(creatorFactoryAddress, XeldoradoCreatorFactoryLT_ABI);
+  return useContract<XeldoradoCreatorFactoryLT>(
+    creatorFactoryAddress,
+    XeldoradoCreatorFactoryLT_ABI
+  );
 }
 
-export function useCreatorFactoryCreatorToken(creatorFactoryAddress: string, creator: string, suspense = false) {
+export function useCreatorFactoryCreatorToken(
+  creatorFactoryAddress: string,
+  creator: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creator === "string" && 
-    typeof creatorFactoryAddress === "string" && 
+  const shouldFetch =
+    typeof creator === "string" &&
+    typeof creatorFactoryAddress === "string" &&
     !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorFactoryCreatorToken", creator, creatorFactoryAddress] : null,
+    shouldFetch
+      ? ["CreatorFactoryCreatorToken", creator, creatorFactoryAddress]
+      : null,
     getCreatorFactoryCreatorToken(contract, creator),
     {
       suspense,
@@ -29,16 +38,22 @@ export function useCreatorFactoryCreatorToken(creatorFactoryAddress: string, cre
   return result;
 }
 
-export function useCreatorFactoryCreatorVault(creatorFactoryAddress: string, creator: string, suspense = false) {
+export function useCreatorFactoryCreatorVault(
+  creatorFactoryAddress: string,
+  creator: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creator === "string" && 
-    typeof creatorFactoryAddress === "string" && 
+  const shouldFetch =
+    typeof creator === "string" &&
+    typeof creatorFactoryAddress === "string" &&
     !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorFactoryCreatorVault", creator, creatorFactoryAddress] : null,
+    shouldFetch
+      ? ["CreatorFactoryCreatorVault", creator, creatorFactoryAddress]
+      : null,
     getCreatorFactoryCreatorVault(contract, creator),
     {
       suspense,
@@ -50,16 +65,22 @@ export function useCreatorFactoryCreatorVault(creatorFactoryAddress: string, cre
   return result;
 }
 
-export function useCreatorFactoryCreatorDAO(creatorFactoryAddress: string, creator: string, suspense = false) {
+export function useCreatorFactoryCreatorDAO(
+  creatorFactoryAddress: string,
+  creator: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creator === "string" && 
-    typeof creatorFactoryAddress === "string" && 
+  const shouldFetch =
+    typeof creator === "string" &&
+    typeof creatorFactoryAddress === "string" &&
     !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorFactoryCreatorDAO", creator, creatorFactoryAddress] : null,
+    shouldFetch
+      ? ["CreatorFactoryCreatorDAO", creator, creatorFactoryAddress]
+      : null,
     getCreatorFactoryCreatorDAO(contract, creator),
     {
       suspense,
@@ -71,16 +92,22 @@ export function useCreatorFactoryCreatorDAO(creatorFactoryAddress: string, creat
   return result;
 }
 
-export function useCreatorFactoryCreatorSaleFee(creatorFactoryAddress: string, creator: string, suspense = false) {
+export function useCreatorFactoryCreatorSaleFee(
+  creatorFactoryAddress: string,
+  creator: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creator === "string" && 
-    typeof creatorFactoryAddress === "string" && 
+  const shouldFetch =
+    typeof creator === "string" &&
+    typeof creatorFactoryAddress === "string" &&
     !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorFactoryCreatorSaleFee", creator, creatorFactoryAddress] : null,
+    shouldFetch
+      ? ["CreatorFactoryCreatorSaleFee", creator, creatorFactoryAddress]
+      : null,
     getCreatorFactoryCreatorSaleFee(contract, creator),
     {
       suspense,
@@ -92,15 +119,19 @@ export function useCreatorFactoryCreatorSaleFee(creatorFactoryAddress: string, c
   return result;
 }
 
-export function useCreatorFactoryAllCreators(creatorFactoryAddress: string, index: number, suspense = false) {
+export function useCreatorFactoryAllCreators(
+  creatorFactoryAddress: string,
+  index: number,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creatorFactoryAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorFactoryAllCreators", index, creatorFactoryAddress] : null,
+    shouldFetch
+      ? ["CreatorFactoryAllCreators", index, creatorFactoryAddress]
+      : null,
     getCreatorFactoryAllCreators(contract, index),
     {
       suspense,
@@ -112,12 +143,13 @@ export function useCreatorFactoryAllCreators(creatorFactoryAddress: string, inde
   return result;
 }
 
-export function useCreatorFactoryExchangeAdmin(creatorFactoryAddress: string, suspense = false) {
+export function useCreatorFactoryExchangeAdmin(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creatorFactoryAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorFactoryExchangeAdmin", creatorFactoryAddress] : null,
@@ -132,12 +164,13 @@ export function useCreatorFactoryExchangeAdmin(creatorFactoryAddress: string, su
   return result;
 }
 
-export function useCreatorFactorFee(creatorFactoryAddress: string, suspense = false) {
+export function useCreatorFactorFee(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creatorFactoryAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorFactoryFee", creatorFactoryAddress] : null,
@@ -152,12 +185,13 @@ export function useCreatorFactorFee(creatorFactoryAddress: string, suspense = fa
   return result;
 }
 
-export function useCreatorFactorDiscount(creatorFactoryAddress: string, suspense = false) {
+export function useCreatorFactorDiscount(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creatorFactoryAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorFactoryDiscount", creatorFactoryAddress] : null,
@@ -172,15 +206,18 @@ export function useCreatorFactorDiscount(creatorFactoryAddress: string, suspense
   return result;
 }
 
-export function useCreatorFactorNoOFTokensForDiscount(creatorFactoryAddress: string, suspense = false) {
+export function useCreatorFactorNoOFTokensForDiscount(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creatorFactoryAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorFactoryNoOFTokensForDiscount", creatorFactoryAddress] : null,
+    shouldFetch
+      ? ["CreatorFactoryNoOFTokensForDiscount", creatorFactoryAddress]
+      : null,
     getCreatorFactoryNoOFTokensForDiscount(contract),
     {
       suspense,
@@ -192,12 +229,13 @@ export function useCreatorFactorNoOFTokensForDiscount(creatorFactoryAddress: str
   return result;
 }
 
-export function useCreatorFactorFeeTo(creatorFactoryAddress: string, suspense = false) {
+export function useCreatorFactorFeeTo(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creatorFactoryAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorFactoryFeeTo", creatorFactoryAddress] : null,
@@ -212,12 +250,13 @@ export function useCreatorFactorFeeTo(creatorFactoryAddress: string, suspense = 
   return result;
 }
 
-export function useCreatorFactorFeeToSetter(creatorFactoryAddress: string, suspense = false) {
+export function useCreatorFactorFeeToSetter(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creatorFactoryAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorFactoryFeeToSetter", creatorFactoryAddress] : null,
@@ -232,12 +271,13 @@ export function useCreatorFactorFeeToSetter(creatorFactoryAddress: string, suspe
   return result;
 }
 
-export function useCreatorFactorExchangeToken(creatorFactoryAddress: string, suspense = false) {
+export function useCreatorFactorExchangeToken(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creatorFactoryAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorFactoryExchangeToken", creatorFactoryAddress] : null,
@@ -252,16 +292,22 @@ export function useCreatorFactorExchangeToken(creatorFactoryAddress: string, sus
   return result;
 }
 
-export function useCreatorFactorGetCreatorAdmins(creatorFactoryAddress: string, creator: string, suspense = false) {
+export function useCreatorFactorGetCreatorAdmins(
+  creatorFactoryAddress: string,
+  creator: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creator === "string" && 
-    typeof creatorFactoryAddress === "string" && 
+  const shouldFetch =
+    typeof creator === "string" &&
+    typeof creatorFactoryAddress === "string" &&
     !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorFactoryGetCreatorAdmins", creator, creatorFactoryAddress] : null,
+    shouldFetch
+      ? ["CreatorFactoryGetCreatorAdmins", creator, creatorFactoryAddress]
+      : null,
     getCreatorFactoryGetCreatorAdmins(contract, creator),
     {
       suspense,
@@ -273,17 +319,29 @@ export function useCreatorFactorGetCreatorAdmins(creatorFactoryAddress: string, 
   return result;
 }
 
-export function useCreatorFactorGetIsCreatorAdmin(creatorFactoryAddress: string, creator: string, admin: string, suspense = false) {
+export function useCreatorFactorGetIsCreatorAdmin(
+  creatorFactoryAddress: string,
+  creator: string,
+  admin: string,
+  suspense = false
+) {
   const contract = useCreatorFactoryContract(creatorFactoryAddress);
 
-  const shouldFetch = 
-    typeof creator === "string" && 
-    typeof admin === "string" && 
-    typeof creatorFactoryAddress === "string" && 
+  const shouldFetch =
+    typeof creator === "string" &&
+    typeof admin === "string" &&
+    typeof creatorFactoryAddress === "string" &&
     !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorFactoryGetIsCreatorAdmin", creator, admin, creatorFactoryAddress] : null,
+    shouldFetch
+      ? [
+          "CreatorFactoryGetIsCreatorAdmin",
+          creator,
+          admin,
+          creatorFactoryAddress,
+        ]
+      : null,
     getCreatorFactoryGetIsCreatorAdmin(contract, creator, admin),
     {
       suspense,
@@ -305,7 +363,7 @@ function getCreatorFactoryCreatorToken(
 ) {
   return async (_: string) => {
     const token = await contract.creatorToken(creator);
-    
+
     return token;
   };
 }
@@ -365,7 +423,7 @@ function getCreatorFactoryExchangeAdmin(contract: XeldoradoCreatorFactoryLT) {
 function getCreatorFactoryFee(contract: XeldoradoCreatorFactoryLT) {
   return async (_: string) => {
     const fee = await contract.fee();
-    
+
     return fee;
   };
 }

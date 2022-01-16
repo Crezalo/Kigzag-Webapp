@@ -12,7 +12,7 @@ import {
 } from "../util";
 import ETHBalance from "./ETHBalance";
 import TokenBalance from "./TokenBalance";
-import Router from 'next/router';
+import Router from "next/router";
 
 type AccountProps = {
   triedToEagerConnect: boolean;
@@ -57,11 +57,11 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       return (
         <div>
           <button
-          className="w-full bg-red-500 text-white px-2 py-2 rounded"
-          style={{ fontSize: 18, textAlign: "center" }}
-          onClick={() => {
-            Router.reload();
-          }}
+            className="w-full bg-red-500 text-white px-2 py-2 rounded"
+            style={{ fontSize: 18, textAlign: "center" }}
+            onClick={() => {
+              Router.reload();
+            }}
           >
             Wrong Network
           </button>

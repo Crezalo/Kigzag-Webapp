@@ -8,13 +8,13 @@ export function useCreatorNFTContract(creatorNFTAddress?: string) {
   return useContract<CreatorNFTLT>(creatorNFTAddress, CreatorNFTLT_ABI);
 }
 
-
-export function useCreatorNFTCreator(creatorNFTAddress: string, suspense = false) {
+export function useCreatorNFTCreator(
+  creatorNFTAddress: string,
+  suspense = false
+) {
   const contract = useCreatorNFTContract(creatorNFTAddress);
 
-  const shouldFetch = 
-    typeof creatorNFTAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorNFTAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorNFTCreator", creatorNFTAddress] : null,
@@ -32,9 +32,7 @@ export function useCreatorNFTCreator(creatorNFTAddress: string, suspense = false
 export function useCreatorNFTName(creatorNFTAddress: string, suspense = false) {
   const contract = useCreatorNFTContract(creatorNFTAddress);
 
-  const shouldFetch = 
-    typeof creatorNFTAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorNFTAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorNFTName", creatorNFTAddress] : null,
@@ -49,12 +47,13 @@ export function useCreatorNFTName(creatorNFTAddress: string, suspense = false) {
   return result;
 }
 
-export function useCreatorNFTSymbol(creatorNFTAddress: string, suspense = false) {
+export function useCreatorNFTSymbol(
+  creatorNFTAddress: string,
+  suspense = false
+) {
   const contract = useCreatorNFTContract(creatorNFTAddress);
 
-  const shouldFetch = 
-    typeof creatorNFTAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorNFTAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorNFTSymbol", creatorNFTAddress] : null,
@@ -69,12 +68,16 @@ export function useCreatorNFTSymbol(creatorNFTAddress: string, suspense = false)
   return result;
 }
 
-export function useCreatorNFTBalanceOf(creatorNFTAddress: string, address: string, suspense = false) {
+export function useCreatorNFTBalanceOf(
+  creatorNFTAddress: string,
+  address: string,
+  suspense = false
+) {
   const contract = useCreatorNFTContract(creatorNFTAddress);
 
-  const shouldFetch = 
-    typeof address === "string" && 
-    typeof creatorNFTAddress === "string" && 
+  const shouldFetch =
+    typeof address === "string" &&
+    typeof creatorNFTAddress === "string" &&
     !!contract;
 
   const result = useSWR(
@@ -90,12 +93,14 @@ export function useCreatorNFTBalanceOf(creatorNFTAddress: string, address: strin
   return result;
 }
 
-export function useCreatorNFTGetApproved(creatorNFTAddress: string, tokenId: number, suspense = false) {
+export function useCreatorNFTGetApproved(
+  creatorNFTAddress: string,
+  tokenId: number,
+  suspense = false
+) {
   const contract = useCreatorNFTContract(creatorNFTAddress);
 
-  const shouldFetch = 
-    typeof creatorNFTAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorNFTAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorNFTGetApproved", tokenId, creatorNFTAddress] : null,
@@ -110,17 +115,24 @@ export function useCreatorNFTGetApproved(creatorNFTAddress: string, tokenId: num
   return result;
 }
 
-export function useCreatorNFTIsApprovedForAll(creatorNFTAddress: string, owner: string, operator: string, suspense = false) {
+export function useCreatorNFTIsApprovedForAll(
+  creatorNFTAddress: string,
+  owner: string,
+  operator: string,
+  suspense = false
+) {
   const contract = useCreatorNFTContract(creatorNFTAddress);
 
-  const shouldFetch = 
-    typeof owner === "string" && 
-    typeof operator === "string" && 
-    typeof creatorNFTAddress === "string" && 
+  const shouldFetch =
+    typeof owner === "string" &&
+    typeof operator === "string" &&
+    typeof creatorNFTAddress === "string" &&
     !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorNFTIsApprovedForAll", owner, operator, creatorNFTAddress] : null,
+    shouldFetch
+      ? ["CreatorNFTIsApprovedForAll", owner, operator, creatorNFTAddress]
+      : null,
     getCreatorNFTIsApprovedForAll(contract, owner, operator),
     {
       suspense,
@@ -132,12 +144,14 @@ export function useCreatorNFTIsApprovedForAll(creatorNFTAddress: string, owner: 
   return result;
 }
 
-export function useCreatorNFTOwnerOf(creatorNFTAddress: string, tokenId: number, suspense = false) {
+export function useCreatorNFTOwnerOf(
+  creatorNFTAddress: string,
+  tokenId: number,
+  suspense = false
+) {
   const contract = useCreatorNFTContract(creatorNFTAddress);
 
-  const shouldFetch = 
-    typeof creatorNFTAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorNFTAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorNFTOwnerOf", tokenId, creatorNFTAddress] : null,
@@ -152,12 +166,14 @@ export function useCreatorNFTOwnerOf(creatorNFTAddress: string, tokenId: number,
   return result;
 }
 
-export function useCreatorNFTTokenURI(creatorNFTAddress: string, tokenId: number, suspense = false) {
+export function useCreatorNFTTokenURI(
+  creatorNFTAddress: string,
+  tokenId: number,
+  suspense = false
+) {
   const contract = useCreatorNFTContract(creatorNFTAddress);
 
-  const shouldFetch = 
-    typeof creatorNFTAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorNFTAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorNFTTokenURI", tokenId, creatorNFTAddress] : null,

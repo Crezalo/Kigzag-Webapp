@@ -80,7 +80,10 @@ export function useDAOProposals(creatorDAOAddress: string, suspense = false) {
   return result;
 }
 
-export function useDAOTokenBalance(creatorDAOAddress: string, suspense = false) {
+export function useDAOTokenBalance(
+  creatorDAOAddress: string,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
@@ -98,7 +101,10 @@ export function useDAOTokenBalance(creatorDAOAddress: string, suspense = false) 
   return result;
 }
 
-export function useDAOBaseTokenBalance(creatorDAOAddress: string, suspense = false) {
+export function useDAOBaseTokenBalance(
+  creatorDAOAddress: string,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
@@ -116,11 +122,15 @@ export function useDAOBaseTokenBalance(creatorDAOAddress: string, suspense = fal
   return result;
 }
 
-export function useDAOAllowances(creatorDAOAddress: string, of: string,suspense = false) {
+export function useDAOAllowances(
+  creatorDAOAddress: string,
+  of: string,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
-  const shouldFetch = 
-    typeof of === "string" &&  
+  const shouldFetch =
+    typeof of === "string" &&
     typeof creatorDAOAddress === "string" &&
     !!contract;
 
@@ -137,7 +147,10 @@ export function useDAOAllowances(creatorDAOAddress: string, of: string,suspense 
   return result;
 }
 
-export function useDAOVotingDuration(creatorDAOAddress: string, suspense = false) {
+export function useDAOVotingDuration(
+  creatorDAOAddress: string,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
@@ -155,7 +168,11 @@ export function useDAOVotingDuration(creatorDAOAddress: string, suspense = false
   return result;
 }
 
-export function useDAOCommunityManagers(creatorDAOAddress: string, index: number,  suspense = false) {
+export function useDAOCommunityManagers(
+  creatorDAOAddress: string,
+  index: number,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
@@ -173,7 +190,11 @@ export function useDAOCommunityManagers(creatorDAOAddress: string, index: number
   return result;
 }
 
-export function useDAOAllowancesProposalIds(creatorDAOAddress: string, index: number,  suspense = false) {
+export function useDAOAllowancesProposalIds(
+  creatorDAOAddress: string,
+  index: number,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
@@ -191,7 +212,10 @@ export function useDAOAllowancesProposalIds(creatorDAOAddress: string, index: nu
   return result;
 }
 
-export function useDAOTotalAllowances(creatorDAOAddress: string, suspense = false) {
+export function useDAOTotalAllowances(
+  creatorDAOAddress: string,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
@@ -209,7 +233,11 @@ export function useDAOTotalAllowances(creatorDAOAddress: string, suspense = fals
   return result;
 }
 
-export function useDAOProposal(creatorDAOAddress: string, proposalId: number,  suspense = false) {
+export function useDAOProposal(
+  creatorDAOAddress: string,
+  proposalId: number,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
@@ -227,13 +255,23 @@ export function useDAOProposal(creatorDAOAddress: string, proposalId: number,  s
   return result;
 }
 
-export function useDAOProposalManagerAllowancesInfoLength(creatorDAOAddress: string, proposalId: number,  suspense = false) {
+export function useDAOProposalManagerAllowancesInfoLength(
+  creatorDAOAddress: string,
+  proposalId: number,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["DAOProposalManagerAllowancesInfoLength", proposalId, creatorDAOAddress] : null,
+    shouldFetch
+      ? [
+          "DAOProposalManagerAllowancesInfoLength",
+          proposalId,
+          creatorDAOAddress,
+        ]
+      : null,
     getDAOProposalManagerAllowancesInfoLength(contract, proposalId),
     {
       suspense,
@@ -245,13 +283,25 @@ export function useDAOProposalManagerAllowancesInfoLength(creatorDAOAddress: str
   return result;
 }
 
-export function useDAOProposalManagerAllowanesInfo(creatorDAOAddress: string, proposalId: number, index: number, suspense = false) {
+export function useDAOProposalManagerAllowanesInfo(
+  creatorDAOAddress: string,
+  proposalId: number,
+  index: number,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["DAOProposalManagerAllowanesInfo", proposalId, index, creatorDAOAddress] : null,
+    shouldFetch
+      ? [
+          "DAOProposalManagerAllowanesInfo",
+          proposalId,
+          index,
+          creatorDAOAddress,
+        ]
+      : null,
     getDAOProposalManagerAllowanesInfo(contract, proposalId, index),
     {
       suspense,
@@ -263,13 +313,20 @@ export function useDAOProposalManagerAllowanesInfo(creatorDAOAddress: string, pr
   return result;
 }
 
-export function useDAOProposalVoteDataInfo(creatorDAOAddress: string, proposalId: number, choice: number, suspense = false) {
+export function useDAOProposalVoteDataInfo(
+  creatorDAOAddress: string,
+  proposalId: number,
+  choice: number,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["DAOProposalVoteDataInfo", proposalId, choice, creatorDAOAddress] : null,
+    shouldFetch
+      ? ["DAOProposalVoteDataInfo", proposalId, choice, creatorDAOAddress]
+      : null,
     getDAOProposalVoteDataInfo(contract, proposalId, choice),
     {
       suspense,
@@ -281,7 +338,11 @@ export function useDAOProposalVoteDataInfo(creatorDAOAddress: string, proposalId
   return result;
 }
 
-export function useDAOProposalStatus(creatorDAOAddress: string, proposalId: number, suspense = false) {
+export function useDAOProposalStatus(
+  creatorDAOAddress: string,
+  proposalId: number,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
@@ -299,16 +360,22 @@ export function useDAOProposalStatus(creatorDAOAddress: string, proposalId: numb
   return result;
 }
 
-export function useDAOCommunityManagerExists(creatorDAOAddress: string, manager: string, suspense = false) {
+export function useDAOCommunityManagerExists(
+  creatorDAOAddress: string,
+  manager: string,
+  suspense = false
+) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
-  const shouldFetch = 
-    typeof manager === "string" && 
-    typeof creatorDAOAddress === "string" && 
+  const shouldFetch =
+    typeof manager === "string" &&
+    typeof creatorDAOAddress === "string" &&
     !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["DAOCommunityManagerExists", manager, creatorDAOAddress] : null,
+    shouldFetch
+      ? ["DAOCommunityManagerExists", manager, creatorDAOAddress]
+      : null,
     getDAOCommunityManagerExists(contract, manager),
     {
       suspense,

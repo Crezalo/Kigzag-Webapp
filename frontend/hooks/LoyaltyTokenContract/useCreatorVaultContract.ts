@@ -8,12 +8,13 @@ export function useCreatorVaultContract(creatorVaultAddress?: string) {
   return useContract<XeldoradoVaultLT>(creatorVaultAddress, CreatorVaultLT_ABI);
 }
 
-export function useCreatorVaultCreator(creatorVaultAddress: string, suspense = false) {
+export function useCreatorVaultCreator(
+  creatorVaultAddress: string,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorVaultCreator", creatorVaultAddress] : null,
@@ -28,12 +29,13 @@ export function useCreatorVaultCreator(creatorVaultAddress: string, suspense = f
   return result;
 }
 
-export function useCreatorVaultDAO(creatorVaultAddress: string, suspense = false) {
+export function useCreatorVaultDAO(
+  creatorVaultAddress: string,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorVaultDAO", creatorVaultAddress] : null,
@@ -48,12 +50,13 @@ export function useCreatorVaultDAO(creatorVaultAddress: string, suspense = false
   return result;
 }
 
-export function useCreatorVaultToken(creatorVaultAddress: string, suspense = false) {
+export function useCreatorVaultToken(
+  creatorVaultAddress: string,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorVaultToken", creatorVaultAddress] : null,
@@ -68,15 +71,19 @@ export function useCreatorVaultToken(creatorVaultAddress: string, suspense = fal
   return result;
 }
 
-export function useCreatorVaultIdToTokenId(creatorVaultAddress: string, vaultId: number, suspense = false) {
+export function useCreatorVaultIdToTokenId(
+  creatorVaultAddress: string,
+  vaultId: number,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorVaultIdToTokenId", vaultId, creatorVaultAddress] : null,
+    shouldFetch
+      ? ["CreatorVaultIdToTokenId", vaultId, creatorVaultAddress]
+      : null,
     getCreatorVaultIdToTokenId(contract, vaultId),
     {
       suspense,
@@ -88,15 +95,19 @@ export function useCreatorVaultIdToTokenId(creatorVaultAddress: string, vaultId:
   return result;
 }
 
-export function useCreatorVaultIdTonftContract(creatorVaultAddress: string, vaultId: number, suspense = false) {
+export function useCreatorVaultIdTonftContract(
+  creatorVaultAddress: string,
+  vaultId: number,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorVaultIdTonftContract", vaultId, creatorVaultAddress] : null,
+    shouldFetch
+      ? ["CreatorVaultIdTonftContract", vaultId, creatorVaultAddress]
+      : null,
     getCreatorVaultIdTonftContract(contract, vaultId),
     {
       suspense,
@@ -108,15 +119,19 @@ export function useCreatorVaultIdTonftContract(creatorVaultAddress: string, vaul
   return result;
 }
 
-export function useCreatorVaultIdTonftPrice(creatorVaultAddress: string, vaultId: number, suspense = false) {
+export function useCreatorVaultIdTonftPrice(
+  creatorVaultAddress: string,
+  vaultId: number,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["CreatorVaultIdTonftPrice", vaultId, creatorVaultAddress] : null,
+    shouldFetch
+      ? ["CreatorVaultIdTonftPrice", vaultId, creatorVaultAddress]
+      : null,
     getCreatorVaultIdTonftPrice(contract, vaultId),
     {
       suspense,
@@ -128,12 +143,13 @@ export function useCreatorVaultIdTonftPrice(creatorVaultAddress: string, vaultId
   return result;
 }
 
-export function useCreatorVaultAllNFTs(creatorVaultAddress: string, suspense = false) {
+export function useCreatorVaultAllNFTs(
+  creatorVaultAddress: string,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorVaultAllNFTs", creatorVaultAddress] : null,
@@ -148,12 +164,13 @@ export function useCreatorVaultAllNFTs(creatorVaultAddress: string, suspense = f
   return result;
 }
 
-export function useCreatorVaultAllOnSaleNFTs(creatorVaultAddress: string, suspense = false) {
+export function useCreatorVaultAllOnSaleNFTs(
+  creatorVaultAddress: string,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorVaultAllOnSaleNFTs", creatorVaultAddress] : null,
@@ -168,12 +185,13 @@ export function useCreatorVaultAllOnSaleNFTs(creatorVaultAddress: string, suspen
   return result;
 }
 
-export function useCreatorVaultAllSoldNFTs(creatorVaultAddress: string, suspense = false) {
+export function useCreatorVaultAllSoldNFTs(
+  creatorVaultAddress: string,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorVaultAllSoldNFTs", creatorVaultAddress] : null,
@@ -188,12 +206,13 @@ export function useCreatorVaultAllSoldNFTs(creatorVaultAddress: string, suspense
   return result;
 }
 
-export function useCreatorVaultNftContract(creatorVaultAddress: string, suspense = false) {
+export function useCreatorVaultNftContract(
+  creatorVaultAddress: string,
+  suspense = false
+) {
   const contract = useCreatorVaultContract(creatorVaultAddress);
 
-  const shouldFetch = 
-    typeof creatorVaultAddress === "string" && 
-    !!contract;
+  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
 
   const result = useSWR(
     shouldFetch ? ["CreatorVaultNftContract", creatorVaultAddress] : null,
