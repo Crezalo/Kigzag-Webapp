@@ -13,7 +13,7 @@ const Header = () => {
     <nav
       className="p-1"
       style={{
-        // backgroundColor: "black",
+        backgroundColor: "black",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",

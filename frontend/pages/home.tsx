@@ -10,7 +10,7 @@ export default function Home() {
       <div
         className="text-green-500 font-bold py-2 px-2"
         style={{
-          //   backgroundColor: "black",
+          backgroundColor: "black",
           justifyContent: "center",
           width: "100%",
           fontSize: 25,

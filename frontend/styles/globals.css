@@ -28,7 +28,7 @@ a {
 
 .card {
   /* Add shadows to create the "card" effect */
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 1px 3px green;
   transition: 0.3s;
   width: 250px;
   height: 280px;
@@ -37,7 +37,7 @@ a {
 
 /* On mouse-over, add a deeper shadow */
 .card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 18px 8px green;
 }
 
 /* Add some padding inside the card container */
