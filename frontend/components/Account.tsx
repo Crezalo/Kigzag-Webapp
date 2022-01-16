@@ -53,6 +53,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
 
   if (error) {
     if (error.name == "UnsupportedChainIdError") {
+      Router.reload();
       return (
         <div>
           <button
