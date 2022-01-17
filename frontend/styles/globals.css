@@ -63,5 +63,10 @@ a {
 }
 
 .paperContainer {
-  background-image: url("../assets/background.jpg");
+  background-image: url("../assets/background4.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: auto;
+  height: auto;
 }
