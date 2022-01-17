@@ -1,3 +1,4 @@
+import { Paper } from "@material-ui/core";
 import React from "react";
 import NFTCardGrid from "../components/NFTCardGrid";
 
@@ -15,11 +16,12 @@ export default function Creators() {
     "15",
   ];
   return (
-    <>
+    <Paper className="paperContainer">
       <div
         className="text-green-500 font-bold py-2 px-2"
         style={{
-          backgroundColor: "black",
+          // backgroundColor: "black",
+          backgroundImage: require("../assets/background.png"),
           justifyContent: "center",
           width: "100%",
           fontSize: 25,
@@ -39,6 +41,6 @@ export default function Creators() {
           /> */}
         </div>
       </div>
-    </>
+    </Paper>
   );
 }

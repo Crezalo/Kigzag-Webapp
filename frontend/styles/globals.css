@@ -33,6 +33,7 @@ a {
   width: 250px;
   height: 280px;
   margin: 20px auto;
+  background-color: black;
 }
 
 /* On mouse-over, add a deeper shadow */
@@ -59,4 +60,8 @@ a {
   flex-direction: column;
   display: flex;
   align-items: flex-end;
+}
+
+.paperContainer {
+  background-image: url("../assets/background.jpg");
 }
