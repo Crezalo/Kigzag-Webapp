@@ -96,3 +96,9 @@ a {
   width: auto;
   height: auto;
 }
+
+.createProposal {
+  display: flex;
+  justify-content: space-around;
+  background: black;
+}
