@@ -5,11 +5,11 @@ import TokenBalance from "../components/TokenBalance";
 
 export default function Home() {
   return (
-    <Paper className="paperContainer">
+    // <Paper className="paperContainer">
       <div
         className="text-green-500 font-bold py-2 px-2"
         style={{
-          //   backgroundColor: "black",
+          backgroundColor: "black",
           justifyContent: "center",
           width: "100%",
           fontSize: 25,
@@ -28,6 +28,6 @@ export default function Home() {
           />
         </div>
       </div>
-    </Paper>
+    // </Paper>
   );
 }

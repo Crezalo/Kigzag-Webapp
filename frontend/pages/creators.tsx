@@ -16,11 +16,11 @@ export default function Creators() {
     "15",
   ];
   return (
-    <Paper className="paperContainer">
+    // <Paper className="paperContainer">
       <div
         className="text-green-500 font-bold py-2 px-2"
         style={{
-          // backgroundColor: "black",
+          backgroundColor: "black",
           backgroundImage: require("../assets/background.png"),
           justifyContent: "center",
           width: "100%",
@@ -41,6 +41,6 @@ export default function Creators() {
           /> */}
         </div>
       </div>
-    </Paper>
+    // </Paper>
   );
 }
