@@ -49,7 +49,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
   return (
     <div
       className="outline text-green-500 outline-offset-0 py-1 font-bold rounded"
-      style={{ fontSize: 18, textAlign: "center" }}
+      style={{ fontSize: 18, textAlign: "center", zIndex:1}}
     >
       <Menu as="div" className="relative inline-block text-left">
         <div>
