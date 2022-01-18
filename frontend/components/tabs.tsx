@@ -26,6 +26,24 @@ const notes = [
   "15",
 ];
 
+const proposals = [
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+  "http://main.xeldorado.live/",
+];
+
 const HomePageTabs = () => {
   const classes = useStyles();
 
@@ -36,7 +54,7 @@ const HomePageTabs = () => {
   let tabs_array = [
     <NFTCardGrid notes={notes} />,
     <NFTCardGrid notes={notes} />,
-    <BasicModal />,
+    <BasicModal proposals={proposals} />,
   ];
 
   return (
@@ -52,13 +70,14 @@ const HomePageTabs = () => {
         <Tab label="All NFTs" className={classes.tab}>
           <NFTCardGrid notes={notes} />
         </Tab>
-        <Tab label="Sold NFTs" className={classes.tab}>
+        <Tab label="For Sale NFTs" className={classes.tab}>
           <p>abcg</p>
         </Tab>
         <Tab label="DAO" className={classes.tab} />
         <Tab label="Owned Tokens" className={classes.tab} />
         <Tab label="Owned NFTs" className={classes.tab} />
       </Tabs>
+      <br/>
       <Paper>{tabs_array[value]}</Paper>
     </>
   );
