@@ -59,7 +59,7 @@ const GridItem = ({ note, classes }: GridItemProps) => {
 const NFTCardGrid = ({ notes }: NFTCardGridProp) => {
   const classes = useStyles();
   return (
-    <div>
+    <div className="text-green-500 font-bold py-2 px-2">
       <Grid container spacing={1}>
         {notes.map((note) => (
           <GridItem note={note} classes={classes} />

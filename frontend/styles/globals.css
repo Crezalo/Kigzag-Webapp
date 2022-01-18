@@ -62,6 +62,32 @@ a {
   align-items: flex-end;
 }
 
+.image {
+  width: 50%;
+  float: left;
+  padding: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+/* border: 2px solid red; */
+
+.description {
+  width: 50%;
+  float: left;
+  padding: 20px;
+  /* border: 2px solid red; */
+  display: flex;
+  font-size: larger;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tokenDetails {
+  width: 20%;
+  float: left;
+  padding: 20px;
+  /* border: 2px solid red; */
+}
 .paperContainer {
   background-image: url("../assets/background4.jpg");
   background-position: center;
@@ -69,4 +95,10 @@ a {
   background-repeat: no-repeat;
   width: auto;
   height: auto;
+}
+
+.createProposal {
+  display: flex;
+  justify-content: space-around;
+  background: black;
 }

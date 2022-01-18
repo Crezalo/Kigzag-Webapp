@@ -1,7 +1,7 @@
 import { Paper } from "@material-ui/core";
 import Image from "next/image";
 import React from "react";
-import TokenBalance from "../components/TokenBalance";
+import HomePageTabs from "../components/tabs";
 
 export default function Home() {
   return (
@@ -15,18 +15,25 @@ export default function Home() {
           fontSize: 25,
         }}
       >
-        <div style={{ marginTop: 25, marginLeft: 50 }}>
-          <Image
-            src="/../public/profilepic.png"
-            alt="Picture of the author"
-            width={180}
-            height={180}
-          />
-          <TokenBalance
-            tokenAddress={"0xBD5a0e448Efb029688b7752d327d873Dc79A1bfF"}
-            symbol={"X"}
-          />
+        <div style={{ display: "flex" }}>
+          <div className="image">
+            <Image
+              src="/../public/xeldorado.png"
+              alt="Picture of the author"
+              width={180}
+              height={180}
+            />
+          </div>
+
+          <div className="description">
+            <div>Name: Token Name</div>
+            <div>Symbol: Sym</div>
+            <div>Sym: 5USDC</div>
+            <div>Social Handles</div>
+          </div>
         </div>
+        <div style={{ marginTop: "30px" }}></div>
+        <HomePageTabs />
       </div>
     // </Paper>
   );
