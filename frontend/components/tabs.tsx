@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab/Tab";
 import Tabs from "@material-ui/core/Tabs/Tabs";
 import React from "react";
-import BasicModal from "./BasicModal";
+import DAOTab from "./DAOTab";
 import NFTCardGrid from "./NFTCardGrid";
 
 const useStyles = makeStyles({
@@ -54,7 +54,7 @@ const HomePageTabs = () => {
   let tabs_array = [
     <NFTCardGrid notes={notes} />,
     <NFTCardGrid notes={notes} />,
-    <BasicModal proposals={proposals} />,
+    <DAOTab proposals={proposals} />,
   ];
 
   return (
@@ -77,7 +77,7 @@ const HomePageTabs = () => {
         <Tab label="Owned Tokens" className={classes.tab} />
         <Tab label="Owned NFTs" className={classes.tab} />
       </Tabs>
-      <br/>
+      <br />
       <Paper>{tabs_array[value]}</Paper>
     </>
   );
