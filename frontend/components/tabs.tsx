@@ -4,7 +4,7 @@ import Tab from "@material-ui/core/Tab/Tab";
 import Tabs from "@material-ui/core/Tabs/Tabs";
 import React from "react";
 import DAOTab from "./DAOTab";
-import NFTCardGrid from "./NFTCardGrid";
+import CreatorCardGrid from "./CreatorsGrid";
 
 const useStyles = makeStyles({
   tab: {
@@ -52,8 +52,8 @@ const HomePageTabs = () => {
     setValue(newValue);
   };
   let tabs_array = [
-    <NFTCardGrid notes={notes} />,
-    <NFTCardGrid notes={notes} />,
+    <CreatorCardGrid notes={notes} />,
+    <CreatorCardGrid notes={notes} />,
     <DAOTab proposals={proposals} />,
   ];
 
@@ -67,12 +67,8 @@ const HomePageTabs = () => {
           style: { backgroundColor: "green" },
         }}
       >
-        <Tab label="All NFTs" className={classes.tab}>
-          <NFTCardGrid notes={notes} />
-        </Tab>
-        <Tab label="For Sale NFTs" className={classes.tab}>
-          <p>abcg</p>
-        </Tab>
+        <Tab label="All NFTs" className={classes.tab} />
+        <Tab label="NFTs For Sale" className={classes.tab} />
         <Tab label="DAO" className={classes.tab} />
         <Tab label="Owned Tokens" className={classes.tab} />
         <Tab label="Owned NFTs" className={classes.tab} />
