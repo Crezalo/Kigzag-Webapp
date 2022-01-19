@@ -4,7 +4,9 @@ import Tab from "@material-ui/core/Tab/Tab";
 import Tabs from "@material-ui/core/Tabs/Tabs";
 import React from "react";
 import DAOTab from "./DAOTab";
-import CreatorCardGrid from "./CreatorsGrid";
+import CreatorCardGrid from "./CreatorCardGrid";
+import TokenCardGrid from "./TokenCardGrid";
+import NFTCardGrid from "./NFTCardGrid";
 
 const useStyles = makeStyles({
   tab: {
@@ -52,9 +54,11 @@ const HomePageTabs = () => {
     setValue(newValue);
   };
   let tabs_array = [
-    <CreatorCardGrid notes={notes} />,
-    <CreatorCardGrid notes={notes} />,
+    <NFTCardGrid notes={notes} />,
+    <NFTCardGrid notes={notes} />,
     <DAOTab proposals={proposals} />,
+    <TokenCardGrid notes={notes} />,
+    <NFTCardGrid notes={notes} />,
   ];
 
   return (

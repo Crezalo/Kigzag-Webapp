@@ -5,8 +5,8 @@ interface CreatorCardProp {
 }
 const CreatorCard = ({ note }: CreatorCardProp) => {
   return (
-    <section className="card">
-      <div className="nftImage">
+    <section className="creatorCard">
+      <div className="creatorCardImage">
         <Image
           src="/../public/xeldorado.png"
           alt="Picture of the author"

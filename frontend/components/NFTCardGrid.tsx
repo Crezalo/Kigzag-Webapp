@@ -2,11 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import React from "react";
 import { Paper } from "@material-ui/core";
-import CreatorCard from "./CreatorCard";
-
-interface CreatorCardGridProp {
-  notes: string[];
-}
+import NFTCard from "./NFTCard";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,12 +22,16 @@ const GridItem = ({ note, classes }: GridItemProps) => {
     // From 600-690px wide (tablets), I take up 6 out of 12 columns, so 2 columns fit the screen.
     // From 960px wide and above, I take up 25% of the device (3/12), so 4 columns fit the screen.
     <Grid item xs={12} sm={6} md={3}>
-      <CreatorCard note={note} />
+      <NFTCard note={note} />
       {/* <Paper className={classes.paper}>item</Paper> */}
     </Grid>
   );
 };
-const CreatorCardGrid = ({ notes }: CreatorCardGridProp) => {
+
+interface NFTCardGridProp {
+  notes: string[];
+}
+const NFTCardGrid = ({ notes }: NFTCardGridProp) => {
   const classes = useStyles();
   return (
     <div className="text-green-500 font-bold py-2 px-2">
@@ -43,4 +43,4 @@ const CreatorCardGrid = ({ notes }: CreatorCardGridProp) => {
     </div>
   );
 };
-export default CreatorCardGrid;
+export default NFTCardGrid;

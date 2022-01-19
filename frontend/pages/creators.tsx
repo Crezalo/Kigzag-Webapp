@@ -1,6 +1,6 @@
 import { Paper } from "@material-ui/core";
 import React from "react";
-import CreatorCardGrid from "../components/CreatorsGrid";
+import CreatorCardGrid from "../components/CreatorCardGrid";
 
 export default function Creators() {
   const notes = [
