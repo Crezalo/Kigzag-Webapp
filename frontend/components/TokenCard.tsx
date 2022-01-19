@@ -8,7 +8,7 @@ const TokenCard = ({ note }: TokenCardProp) => {
     <section className="tokenCard">
       <div className="tokenImage">
         <Image
-          src="/../public/xeldorado.png"
+          src="/../public/favicon.png"
           alt="Picture of the author"
           width={60}
           height={60}

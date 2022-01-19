@@ -20,13 +20,12 @@ const Header = () => {
       }}
     >
       <Link href="/">
-        <a>
-          &nbsp;&nbsp;
+        <a className="mr-6 text-green-500 font-bold">
           <Image
-            src="/../public/favicon.ico"
+            src="/../public/logo.png"
             alt="Picture of the author"
-            width={35}
-            height={35}
+            width={150}
+            height={38}
           />
         </a>
       </Link>
