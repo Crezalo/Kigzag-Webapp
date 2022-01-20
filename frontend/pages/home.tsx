@@ -18,7 +18,7 @@ export default function Home() {
       <div style={{ display: "flex" }}>
         <div className="creatorImage">
           <Image
-            src="/../public/favicon.png"
+            src="/../public/xeldorado.png"
             alt="Picture of the author"
             width={180}
             height={180}

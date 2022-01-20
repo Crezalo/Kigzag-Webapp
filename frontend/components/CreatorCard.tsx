@@ -8,7 +8,7 @@ const CreatorCard = ({ note }: CreatorCardProp) => {
     <section className="creatorCard">
       <div className="creatorCardImage">
         <Image
-          src="/../public/favicon.png"
+          src="/../public/xeldorado.png"
           alt="Picture of the author"
           width={180}
           height={180}

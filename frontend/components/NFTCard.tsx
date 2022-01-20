@@ -8,7 +8,7 @@ const NFTCard = ({ note }: NFTCardProp) => {
     <section className="nftCard">
       <div className="nftCardImage">
         <Image
-          src="/../public/favicon.png"
+          src="/../public/xeldorado.png"
           alt="Picture of the author"
           width={180}
           height={180}
