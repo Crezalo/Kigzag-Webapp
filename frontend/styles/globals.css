@@ -182,3 +182,17 @@ a {
   flex-direction: column;
   align-items: center;
 }
+
+.nftPageImage {
+  width: 30%;
+  float: left;
+  display: flex;
+  justify-content: end;
+  padding: 20px;
+}
+
+.nftPageDetails {
+  width: 70%;
+  float: left;
+  padding: 20px;
+}
