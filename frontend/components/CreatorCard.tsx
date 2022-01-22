@@ -1,11 +1,20 @@
 import Image from "next/image";
+import Router from "next/router";
 
 interface CreatorCardProp {
   note: string;
 }
 const CreatorCard = ({ note }: CreatorCardProp) => {
   return (
-    <section className="creatorCard">
+    <section
+      className="creatorCard"
+      onClick={() =>
+        Router.push({
+          pathname: "/home",
+          query: { data: note },
+        })
+      }
+    >
       <div className="creatorCardImage">
         <Image
           src="/../public/xeldorado.png"
