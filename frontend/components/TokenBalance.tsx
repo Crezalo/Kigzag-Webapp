@@ -38,10 +38,10 @@ const TokenBalance = ({ tokenAddress, symbol }: TokenBalanceProps) => {
     <>
       <p>
         {`${symbol} Balance`}:{" "}
-        {parseBalance(useTokenBalance(account, tokenAddress).data ?? 0)}
+        {parseBalance(useTokenBalance(account, tokenAddress).data ?? "")}
       </p>
-      <p>Name: {useTokenName(tokenAddress).data ?? 0}</p>
-      <p>Symbol: {useTokenSymbol(tokenAddress).data ?? 0}</p>
+      <p>Name: {useTokenName(tokenAddress).data ?? ""}</p>
+      <p>Symbol: {useTokenSymbol(tokenAddress).data ?? ""}</p>
       <p>
         TotalSupply: {parseBalance(useTokenTotalSupply(tokenAddress).data ?? 0)}
       </p>
@@ -53,7 +53,7 @@ const TokenBalance = ({ tokenAddress, symbol }: TokenBalanceProps) => {
             account,
             "0xBD5a0e448Efb029688b7752d327d873Dc79A1bfF",
             tokenAddress
-          ).data ?? 0
+          ).data ?? ""
         )}
       </p> */}
       <p>
@@ -75,17 +75,17 @@ const TokenBalance = ({ tokenAddress, symbol }: TokenBalanceProps) => {
       <p>
         Creator Factory Fee To:{" "}
         {useCreatorFactorFeeTo("0x00eb20674CD2039B524CC74ed7F23A355D9B3861")
-          .data ?? 0}
+          .data ?? ""}
       </p>
       <p>
         Creator NFT Name:{" "}
         {useCreatorNFTName("0x4a1254f48fed3fdc21697aef85e5f347f652cbf9").data ??
-          0}
+          ""}
       </p>
       <p>
         Creator NFT TokenURI 4:{" "}
         {useCreatorNFTTokenURI("0x4a1254f48fed3fdc21697aef85e5f347f652cbf9", 4)
-          .data ?? 0}
+          .data ?? ""}
       </p>
       <button
         onClick={async () => {
