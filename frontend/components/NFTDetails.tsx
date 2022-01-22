@@ -1,11 +1,17 @@
-const NFTDetails = () => {
+
+interface NFTDetailsProp {
+  notes: any;
+}
+
+const NFTDetails = ({ notes }: NFTDetailsProp) => {
+  const { contract, tokenId } = notes;
   return (
     <div className="nftPageDetails">
       <p>Collection Name</p>
       <p className="triad" style={{ justifyContent: "left" }}>
         Flying Horse
       </p>
-      <p className="triad">#tokenIdUrl</p>
+      <p className="triad">Token Id: {tokenId}</p>
       <p className="triad">200 CT1</p>
       <p style={{ paddingRight: "50px" }}>
         Drop 2 of Semiosis is 10 animated pieces, created to reflect the
@@ -26,7 +32,7 @@ const NFTDetails = () => {
       <p color="text3" style={{ width: "25%", float: "left" }}>
         Contract Address:
       </p>
-      <p style={{ width: "75%", float: "left" }}>nftContractAddrUrl</p>
+      <p style={{ width: "75%", float: "left" }}>{contract}</p>
       <p color="text3" style={{ width: "25%", float: "left" }}>
         Owned By:
       </p>

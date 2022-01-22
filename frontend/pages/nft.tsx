@@ -4,7 +4,7 @@ import NFTDetails from "../components/NFTDetails";
 
 export default function NFT() {
   const router = useRouter();
-  const { data } = router.query;
+  // const { contract, tokenId } = router.query;
 
   return (
     <>
@@ -16,8 +16,7 @@ export default function NFT() {
           height={300}
         />
       </div>
-      <NFTDetails />
-      <p>{data}</p>
+      <NFTDetails notes={router.query}/>
     </>
   );
 }
