@@ -196,3 +196,7 @@ a {
   float: left;
   padding: 20px;
 }
+
+.gridMinHeight{
+  min-height: 53vh;
+}
