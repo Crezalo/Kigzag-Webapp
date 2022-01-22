@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import NFTTable from "../components/NFTTable";
 import Image from "next/image";
 import NFTDetails from "../components/NFTDetails";
 
@@ -18,7 +17,6 @@ export default function NFT() {
         />
       </div>
       <NFTDetails />
-      <NFTTable />
       <p>{data}</p>
     </>
   );

@@ -16,6 +16,7 @@ const NFTDetails = () => {
         first generative collection, featuring 25 unique symbols and 8 different
         colours.
       </p>
+      <br />
       <p color="text3" style={{ width: "25%", float: "left" }}>
         Created By:
       </p>
