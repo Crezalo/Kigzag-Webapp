@@ -10,7 +10,7 @@ const CreatorCard = ({ note }: CreatorCardProp) => {
       className="creatorCard"
       onClick={() =>
         Router.push({
-          pathname: "/home",
+          pathname: "/creatorprofile",
           query: { data: note },
         })
       }

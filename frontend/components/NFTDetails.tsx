@@ -6,7 +6,7 @@ interface NFTDetailsProp {
 const NFTDetails = ({ notes }: NFTDetailsProp) => {
   const { contract, tokenId } = notes;
   return (
-    <div className="nftPageDetails">
+    <div className="nftPageDetails text-green-500">
       <p>Collection Name</p>
       <p className="triad" style={{ justifyContent: "left" }}>
         Flying Horse

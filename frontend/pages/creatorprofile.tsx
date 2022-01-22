@@ -5,6 +5,8 @@ import React from "react";
 import HomePageTabs from "../components/HomePageTabs";
 
 export default function Home() {
+  const router = useRouter();
+  const { data } = router.query;
   return (
     // <Paper className="paperContainer">
     <div
