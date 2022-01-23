@@ -128,14 +128,14 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
     <div style={{ display: "flex", justifyContent: "space-between" }}>
       <a
         {...{
-          href: formatBlockExplorerLink("Account", [chainId, account]),
+          href: formatBlockExplorerLink("Account", [chainId, account, ""]),
           target: "_blank",
           rel: "noopener noreferrer",
         }}
       >
         <button
           className="outline text-green-500 outline-offset-0 px-2 py-2 rounded"
-          style={{ fontSize: 18, textAlign: "center" }}
+          style={{ fontSize: 18, textAlign: "center", outlineWidth: "thin"  }}
         >
           {isConnected && <ETHBalance />}
         </button>

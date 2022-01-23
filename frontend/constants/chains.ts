@@ -19,16 +19,16 @@ export enum SupportedChainId {
 }
 
 export const BLOCK_EXPLORER = {
-  137: "polygonscan.com/",
-  80001: "mumbai.polygonscan.com/",
-  43114: "snowtrace.io/",
-  43113: "testnet.snowtrace.io/",
+  137: "polygonscan.com",
+  80001: "mumbai.polygonscan.com",
+  43114: "snowtrace.io",
+  43113: "testnet.snowtrace.io",
   56: "bscscan.com",
   97: "testnet.bscscan.com",
-  250: "ftmscan.com/",
-  4002: "testnet.ftmscan.com/",
-  1285: "moonriver.moonscan.io/",
-  1287: "moonbase.moonscan.io/",
+  250: "ftmscan.com",
+  4002: "testnet.ftmscan.com",
+  1285: "moonriver.moonscan.io",
+  1287: "moonbase.moonscan.io",
 };
 
 export const CURRENCY_LIST = {

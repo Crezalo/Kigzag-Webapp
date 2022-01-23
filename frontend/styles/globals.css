@@ -184,19 +184,56 @@ a {
 }
 
 .nftPageImage {
-  width: 30%;
+  width: 60%;
   float: left;
   display: flex;
-  justify-content: end;
-  padding: 20px;
+  justify-content: center;
+  padding: 20px 20px 20px 50px;
 }
 
 .nftPageDetails {
-  width: 70%;
+  width: 40%;
   float: left;
-  padding: 20px;
+  padding: 50px 50px 20px 50px;
+}
+
+.nftPageProp {
+  width: 60%;
+  float: left;
+  padding: 25px 25px 50px 50px;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.nftPagePropGrid{
+  padding: 25px 25px 50px 50px;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
+}
+
+.nftPageDescription {
+  width: 40%;
+  float: left;
+  padding: 25px 50px 50px 50px;
+}
+.nftPage{
+  display: flex;
+  flex-direction: column;
 }
 
 .gridMinHeight{
   min-height: 53vh;
+}
+
+.link{
+  text-decoration-color: blue;
+}
+
+.bidButton:hover{
+  color: rgb(76, 175, 80);
+}
+.buyButton:hover{
+  background-color: rgb(76, 175, 80);
 }

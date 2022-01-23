@@ -1,50 +1,259 @@
+import { useWeb3React } from "@web3-react/core";
+import { formatBlockExplorerLink, shortenHex } from "../util";
+import useENSName from "../hooks/useENSName";
+import Router from "next/router";
+import { useTokenName, useTokenSymbol } from "../hooks/ERC20/useTokenContract";
+import {
+  useCreatorNFTName,
+  useCreatorNFTSymbol,
+  useCreatorNFTTokenURI,
+} from "../hooks/ERC721/useCreatorNFTContract";
 
 interface NFTDetailsProp {
   notes: any;
+  name: string;
 }
 
-const NFTDetails = ({ notes }: NFTDetailsProp) => {
+const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
   const { contract, tokenId } = notes;
+  const {
+    active,
+    error,
+    activate,
+    chainId,
+    account,
+    library,
+    setError,
+    deactivate,
+  } = useWeb3React();
+
+  const nftContractName = useCreatorNFTName(contract).data ?? "";
+  const nftName = name;
+  const nftSymbol = useCreatorNFTSymbol(contract).data ?? "";
+  const price = "300";
+  const creatorToken = "0x7a396865c17E92a196825017E47fA4f4F39f035a";
+  const creatorTokenSymbol = useTokenSymbol(creatorToken).data ?? "";
+  const creatorTokenName = useTokenName(creatorToken).data ?? "";
+  const isListed = true;
+  const isOwnerVault = false;
+  let isSold;
+  if (isOwnerVault) {
+    isSold = false;
+  } else {
+    isSold = true;
+  }
+  const ownedBy = "0x58B1AE79E72aA23784e97934b80b750Bb7972d2a";
+  const creator = "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955";
   return (
-    <div className="nftPageDetails text-green-500">
-      <p>Collection Name</p>
-      <p className="triad" style={{ justifyContent: "left" }}>
-        Flying Horse
+    <div className="nftPageDetails text-white">
+      <p
+        className="text-green-500"
+        style={{ width: "30%", float: "left", fontSize: 20 }}
+      >
+        Creator:
       </p>
-      <p className="triad">Token Id: {tokenId}</p>
-      <p className="triad">200 CT1</p>
-      <p style={{ paddingRight: "50px" }}>
-        Drop 2 of Semiosis is 10 animated pieces, created to reflect the
-        movement all around us. Signs, symbols and signals are everywhere around
-        us in the built environment. They show us the way, warn us, excite us.
-        But on their own they have no meaning. We all learn a shared visual
-        language, devoid of words, to help us navigate the world. Semiosis is my
-        first generative collection, featuring 25 unique symbols and 8 different
-        colours.
+      <p
+        style={{
+          width: "70%",
+          float: "left",
+          fontSize: 20,
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <p>{creatorTokenName}&nbsp;</p>
+        <button
+          onClick={() => {
+            Router.push({
+              pathname: "/creatorprofile",
+              query: { data: creator },
+            });
+          }}
+          className="text-blue-500"
+        >
+          ({useENSName(creator) || shortenHex(creator, 2)})
+        </button>
       </p>
       <br />
-      <p color="text3" style={{ width: "25%", float: "left" }}>
-        Created By:
+      <br />
+      <p
+        className="text-green-500"
+        style={{ width: "30%", float: "left", fontSize: 20 }}
+      >
+        Collection:
       </p>
-      <p style={{ width: "75%", float: "left" }}>
-        0x14dC79964da2C08b23698B3D3cc7Ca32193d9955
+      <p style={{ width: "70%", float: "left", fontSize: 20 }}>
+        {nftContractName} ({nftSymbol})
       </p>
-      <p color="text3" style={{ width: "25%", float: "left" }}>
-        Contract Address:
+      <br />
+      <br />
+      <p
+        className="text-green-500"
+        style={{ width: "30%", float: "left", fontSize: 20 }}
+      >
+        Name:
       </p>
-      <p style={{ width: "75%", float: "left" }}>{contract}</p>
-      <p color="text3" style={{ width: "25%", float: "left" }}>
-        Owned By:
+      <p style={{ width: "70%", float: "left", fontSize: 20 }}>
+        {nftName ? nftName : "Bored Ape"}
       </p>
-      <p style={{ width: "75%", float: "left" }}>ownerAddress</p>
-      <p color="text3" style={{ width: "25%", float: "left" }}>
-        Blockchain:
+      <br />
+      <br />
+      <p
+        className="text-green-500"
+        style={{ width: "30%", float: "left", fontSize: 20 }}
+      >
+        Token Id:
       </p>
-      <p style={{ width: "75%", float: "left" }}>Polygon</p>
-      <p color="text3" style={{ width: "25%", float: "left" }}>
-        Token Standard:
+      <p style={{ width: "70%", float: "left", fontSize: 20 }}>#{tokenId}</p>
+      <br />
+      <br />
+      <p
+        className="text-green-500"
+        style={{ width: "30%", float: "left", fontSize: 20 }}
+      >
+        Contract:
       </p>
-      <p style={{ width: "75%", float: "left" }}>ERC-721</p>
+      <p
+        className="text-blue-500"
+        style={{ width: "70%", float: "left", fontSize: 20 }}
+      >
+        <a
+          {...{
+            href: formatBlockExplorerLink("Account", [chainId, contract, ""]),
+            target: "_blank",
+            rel: "noopener noreferrer",
+          }}
+          style={{ display: "flex", flexDirection: "row", width: "50%" }}
+        >
+          ({useENSName(contract) || shortenHex(contract, 2)})
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="17px"
+            height="17px"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#C3C5CB"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style={{ marginLeft: "12px" }}
+          >
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </p>
+      <br />
+      <br />
+      <p
+        className="text-green-500"
+        style={{ width: "30%", float: "left", fontSize: 20 }}
+      >
+        Owner:
+      </p>
+      <p
+        style={{
+          width: "70%",
+          float: "left",
+          fontSize: 20,
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <a
+          {...{
+            href: formatBlockExplorerLink("NFTOwner", [
+              chainId,
+              contract,
+              ownedBy,
+            ]),
+            target: "_blank",
+            rel: "noopener noreferrer",
+          }}
+          style={{ display: "flex", flexDirection: "row", width: "50%" }}
+          className="text-blue-500"
+        >
+          {isSold ? "Vault" : useENSName(ownedBy) || shortenHex(ownedBy, 2)}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="17px"
+            height="17px"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#C3C5CB"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style={{ marginLeft: "12px" }}
+          >
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      </p>
+      <br />
+      <br />
+      <p
+        className="text-green-500"
+        style={{ width: "30%", float: "left", fontSize: 20 }}
+      >
+        Price:{" "}
+      </p>
+      <p
+        className="text-white"
+        style={{ width: "70%", float: "left", fontSize: 20 }}
+      >
+        {price} {creatorTokenSymbol}
+      </p>
+      <br />
+      <br />
+      {isListed ? (
+        <button
+          className="w-full bg-green-500 text-white px-2 py-2 rounded buyButton"
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            textAlign: "center",
+            width: "40%",
+            margin: "70px 20px 10px 0px",
+          }}
+          onClick={() => {}}
+        >
+          Buy
+        </button>
+      ) : (
+        <div
+          className="w-full bg-yellow-500 text-white px-2 py-2 rounded"
+          style={{
+            fontSize: 20,
+            fontWeight: "bold",
+            textAlign: "center",
+            width: "40%",
+            margin: "70px 20px 10px 40px",
+          }}
+        >
+          Not For Sale
+        </div>
+      )}
+      {!isOwnerVault ? (
+        <button
+          className="outline text-white outline-offset-0 px-2 py-2 rounded bidButton"
+          style={{
+            fontSize: 20,
+            textAlign: "center",
+            width: "35%",
+            margin: "70px 20px 10px 20px",
+            outlineWidth: "thin",
+          }}
+          onClick={() => {}}
+        >
+          Place a bid
+        </button>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

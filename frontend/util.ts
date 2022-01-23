@@ -26,19 +26,24 @@ export function shortenHex(hex: string, length = 4) {
 // };
 
 export function formatBlockExplorerLink(
-  type: "Account" | "Transaction",
-  data: [number, string]
+  type: "Account" | "Transaction" | "NFTOwner",
+  data: [number, string, string]
 ) {
   switch (type) {
     case "Account": {
-      const [chainId, address] = data;
+      const [chainId, address, ] = data;
       // return `https://${ETHERSCAN_PREFIXES[chainId]}etherscan.io/address/${address}`;
       return `https://${BLOCK_EXPLORER[chainId]}/address/${address}`;
     }
     case "Transaction": {
-      const [chainId, hash] = data;
+      const [chainId, hash, ] = data;
       // return `https://${ETHERSCAN_PREFIXES[chainId]}etherscan.io/tx/${hash}`;
       return `https://${BLOCK_EXPLORER[chainId]}/tx/${hash}`;
+    }
+    case "NFTOwner": {
+      const [chainId, contract, owner] = data;
+      // return `https://${ETHERSCAN_PREFIXES[chainId]}etherscan.io/tx/${hash}`;
+      return `https://${BLOCK_EXPLORER[chainId]}/token/${contract}?a=${owner}`;
     }
   }
 }
