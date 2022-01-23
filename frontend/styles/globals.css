@@ -205,7 +205,7 @@ a {
   text-align: center;
 }
 
-.nftPagePropGrid{
+.nftPagePropGrid {
   padding: 25px 25px 50px 50px;
   display: flex;
   flex-direction: row;
@@ -218,22 +218,22 @@ a {
   float: left;
   padding: 25px 50px 50px 50px;
 }
-.nftPage{
+.nftPage {
   display: flex;
   flex-direction: column;
 }
 
-.gridMinHeight{
+.gridMinHeight {
   min-height: 53vh;
 }
 
-.link{
+.link {
   text-decoration-color: blue;
 }
 
-.bidButton:hover{
+.bidButton:hover {
   color: rgb(76, 175, 80);
 }
-.buyButton:hover{
+.buyButton:hover {
   background-color: rgb(76, 175, 80);
 }

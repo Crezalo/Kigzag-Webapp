@@ -6,7 +6,9 @@ import "../styles/globals.css";
 import { useEffect } from "react";
 
 export default function MyApp({ Component, pageProps }) {
-  useEffect(() => { document.body.style.backgroundColor = 'black';}, []);
+  useEffect(() => {
+    document.body.style.backgroundColor = "black";
+  }, []);
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <Header />

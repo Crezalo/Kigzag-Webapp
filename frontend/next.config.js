@@ -7,6 +7,6 @@ module.exports = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['ipfs.io'],
-  }
+    domains: ["ipfs.io"],
+  },
 };

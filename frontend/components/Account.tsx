@@ -135,7 +135,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       >
         <button
           className="outline text-green-500 outline-offset-0 px-2 py-2 rounded"
-          style={{ fontSize: 18, textAlign: "center", outlineWidth: "thin"  }}
+          style={{ fontSize: 18, textAlign: "center", outlineWidth: "thin" }}
         >
           {isConnected && <ETHBalance />}
         </button>
