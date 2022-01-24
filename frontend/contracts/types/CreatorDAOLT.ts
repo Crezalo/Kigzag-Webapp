@@ -20,41 +20,44 @@ import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 export interface CreatorDAOLTInterface extends utils.Interface {
   functions: {
     "CommunityManagerExists(address)": FunctionFragment;
+    "TotalAllowances()": FunctionFragment;
     "addCommunityManager(address[])": FunctionFragment;
     "airdrop(uint256,address[])": FunctionFragment;
-    "allowancesProposal(uint256[],address[],bool)": FunctionFragment;
+    "allowances(address)": FunctionFragment;
+    "allowancesProposal(uint256[],address[])": FunctionFragment;
     "allowancesProposalIds(uint256)": FunctionFragment;
+    "baseTokenBalance()": FunctionFragment;
+    "basetoken()": FunctionFragment;
+    "burnUsedToken()": FunctionFragment;
     "communityManagers(uint256)": FunctionFragment;
     "creator()": FunctionFragment;
     "currentBalanceUpdate()": FunctionFragment;
     "generalProposal(string,uint256)": FunctionFragment;
     "generalProposalVote(uint256,uint256)": FunctionFragment;
-    "initialise(address,uint256,address)": FunctionFragment;
-    "nativeTokenAllowances(address)": FunctionFragment;
-    "nativeTokenBalance()": FunctionFragment;
-    "nativeTotalAllowances()": FunctionFragment;
     "proposal(uint256)": FunctionFragment;
     "proposalManagerAllowancesInfoLength(uint256)": FunctionFragment;
     "proposalManagerAllowanesInfo(uint256,uint256)": FunctionFragment;
     "proposalStatus(uint256)": FunctionFragment;
     "proposalVoteDataInfo(uint256,uint256)": FunctionFragment;
     "proposals()": FunctionFragment;
-    "redeemAllowances(uint256,uint256)": FunctionFragment;
+    "redeemAllowances(uint256)": FunctionFragment;
     "removeCommunityManager(uint256)": FunctionFragment;
-    "sendAllowances(address[],uint256[],uint256[])": FunctionFragment;
-    "setAllowances(address[],uint256[],bool)": FunctionFragment;
+    "sendAllowances(address[],uint256[])": FunctionFragment;
+    "setAllowances(address[],uint256[])": FunctionFragment;
     "token()": FunctionFragment;
+    "tokenBalance()": FunctionFragment;
     "updateManagerAllowances(uint256)": FunctionFragment;
     "updateVotingDuration(uint256)": FunctionFragment;
-    "usdAllowances(address)": FunctionFragment;
-    "usdBalance()": FunctionFragment;
-    "usdTotalAllowances()": FunctionFragment;
     "votingDuration()": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "CommunityManagerExists",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "TotalAllowances",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "addCommunityManager",
@@ -64,13 +67,23 @@ export interface CreatorDAOLTInterface extends utils.Interface {
     functionFragment: "airdrop",
     values: [BigNumberish, string[]]
   ): string;
+  encodeFunctionData(functionFragment: "allowances", values: [string]): string;
   encodeFunctionData(
     functionFragment: "allowancesProposal",
-    values: [BigNumberish[], string[], boolean]
+    values: [BigNumberish[], string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "allowancesProposalIds",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "baseTokenBalance",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "basetoken", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "burnUsedToken",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "communityManagers",
@@ -88,22 +101,6 @@ export interface CreatorDAOLTInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "generalProposalVote",
     values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "initialise",
-    values: [string, BigNumberish, string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nativeTokenAllowances",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nativeTokenBalance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nativeTotalAllowances",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "proposal",
@@ -128,7 +125,7 @@ export interface CreatorDAOLTInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "proposals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "redeemAllowances",
-    values: [BigNumberish, BigNumberish]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "removeCommunityManager",
@@ -136,13 +133,17 @@ export interface CreatorDAOLTInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "sendAllowances",
-    values: [string[], BigNumberish[], BigNumberish[]]
+    values: [string[], BigNumberish[]]
   ): string;
   encodeFunctionData(
     functionFragment: "setAllowances",
-    values: [string[], BigNumberish[], boolean]
+    values: [string[], BigNumberish[]]
   ): string;
   encodeFunctionData(functionFragment: "token", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "tokenBalance",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "updateManagerAllowances",
     values: [BigNumberish]
@@ -150,18 +151,6 @@ export interface CreatorDAOLTInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "updateVotingDuration",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "usdAllowances",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "usdBalance",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "usdTotalAllowances",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "votingDuration",
@@ -173,16 +162,30 @@ export interface CreatorDAOLTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "TotalAllowances",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "addCommunityManager",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "airdrop", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "allowances", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "allowancesProposal",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "allowancesProposalIds",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "baseTokenBalance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "basetoken", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "burnUsedToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -200,19 +203,6 @@ export interface CreatorDAOLTInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "generalProposalVote",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "initialise", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "nativeTokenAllowances",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "nativeTokenBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "nativeTotalAllowances",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "proposal", data: BytesLike): Result;
@@ -251,20 +241,15 @@ export interface CreatorDAOLTInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "tokenBalance",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "updateManagerAllowances",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "updateVotingDuration",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "usdAllowances",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "usdBalance", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "usdTotalAllowances",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -274,14 +259,16 @@ export interface CreatorDAOLTInterface extends utils.Interface {
 
   events: {
     "Airdropped(address,uint256,address)": EventFragment;
-    "allowancesRedeemed(address,uint256,address,uint256)": EventFragment;
-    "allowancesUpdated(address,address,address,uint256,bool)": EventFragment;
+    "AmountAddedToVault(address,uint256)": EventFragment;
+    "allowancesRedeemed(address,uint256,address)": EventFragment;
+    "allowancesUpdated(address,address,address,uint256)": EventFragment;
     "managerAdded(address,address)": EventFragment;
     "managerRemoved(address,address)": EventFragment;
     "proposalCreated(uint256,address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Airdropped"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AmountAddedToVault"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "allowancesRedeemed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "allowancesUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "managerAdded"): EventFragment;
@@ -296,23 +283,25 @@ export type AirdroppedEvent = TypedEvent<
 
 export type AirdroppedEventFilter = TypedEventFilter<AirdroppedEvent>;
 
+export type AmountAddedToVaultEvent = TypedEvent<
+  [string, BigNumber],
+  { creator: string; amount: BigNumber }
+>;
+
+export type AmountAddedToVaultEventFilter =
+  TypedEventFilter<AmountAddedToVaultEvent>;
+
 export type allowancesRedeemedEvent = TypedEvent<
-  [string, BigNumber, string, BigNumber],
-  { dao: string; amount: BigNumber; member: string; tokenId: BigNumber }
+  [string, BigNumber, string],
+  { dao: string; amount: BigNumber; member: string }
 >;
 
 export type allowancesRedeemedEventFilter =
   TypedEventFilter<allowancesRedeemedEvent>;
 
 export type allowancesUpdatedEvent = TypedEvent<
-  [string, string, string, BigNumber, boolean],
-  {
-    dao: string;
-    from: string;
-    to: string;
-    amount: BigNumber;
-    nativeAllowance: boolean;
-  }
+  [string, string, string, BigNumber],
+  { dao: string; from: string; to: string; amount: BigNumber }
 >;
 
 export type allowancesUpdatedEventFilter =
@@ -371,6 +360,8 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    TotalAllowances(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     addCommunityManager(
       managers: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -382,10 +373,11 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    allowances(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
     allowancesProposal(
       amount: BigNumberish[],
       managers: string[],
-      _nativeAllowance: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -393,6 +385,14 @@ export interface CreatorDAOLT extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    baseTokenBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    basetoken(overrides?: CallOverrides): Promise<[string]>;
+
+    burnUsedToken(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     communityManagers(
       arg0: BigNumberish,
@@ -417,22 +417,6 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    initialise(
-      _creator: string,
-      _votingDuration: BigNumberish,
-      _token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    nativeTokenAllowances(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    nativeTokenBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    nativeTotalAllowances(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     proposal(
       proposalId: BigNumberish,
       overrides?: CallOverrides
@@ -447,13 +431,7 @@ export interface CreatorDAOLT extends BaseContract {
       proposalId: BigNumberish,
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber, boolean] & {
-        manager: string;
-        amount: BigNumber;
-        nativeAllowance: boolean;
-      }
-    >;
+    ): Promise<[string, BigNumber] & { manager: string; amount: BigNumber }>;
 
     proposalStatus(
       proposalId: BigNumberish,
@@ -470,7 +448,6 @@ export interface CreatorDAOLT extends BaseContract {
 
     redeemAllowances(
       amount: BigNumberish,
-      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -482,18 +459,18 @@ export interface CreatorDAOLT extends BaseContract {
     sendAllowances(
       members: string[],
       amount: BigNumberish[],
-      tokenId: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     setAllowances(
       _to: string[],
       _amount: BigNumberish[],
-      _nativeAllowance: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     token(overrides?: CallOverrides): Promise<[string]>;
+
+    tokenBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     updateManagerAllowances(
       proposalId: BigNumberish,
@@ -505,15 +482,6 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    usdAllowances(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    usdBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    usdTotalAllowances(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     votingDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
@@ -521,6 +489,8 @@ export interface CreatorDAOLT extends BaseContract {
     manager: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  TotalAllowances(overrides?: CallOverrides): Promise<BigNumber>;
 
   addCommunityManager(
     managers: string[],
@@ -533,10 +503,11 @@ export interface CreatorDAOLT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  allowances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
   allowancesProposal(
     amount: BigNumberish[],
     managers: string[],
-    _nativeAllowance: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -544,6 +515,14 @@ export interface CreatorDAOLT extends BaseContract {
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  baseTokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
+  basetoken(overrides?: CallOverrides): Promise<string>;
+
+  burnUsedToken(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   communityManagers(
     arg0: BigNumberish,
@@ -568,22 +547,6 @@ export interface CreatorDAOLT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  initialise(
-    _creator: string,
-    _votingDuration: BigNumberish,
-    _token: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  nativeTokenAllowances(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  nativeTokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  nativeTotalAllowances(overrides?: CallOverrides): Promise<BigNumber>;
-
   proposal(
     proposalId: BigNumberish,
     overrides?: CallOverrides
@@ -598,13 +561,7 @@ export interface CreatorDAOLT extends BaseContract {
     proposalId: BigNumberish,
     index: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<
-    [string, BigNumber, boolean] & {
-      manager: string;
-      amount: BigNumber;
-      nativeAllowance: boolean;
-    }
-  >;
+  ): Promise<[string, BigNumber] & { manager: string; amount: BigNumber }>;
 
   proposalStatus(
     proposalId: BigNumberish,
@@ -621,7 +578,6 @@ export interface CreatorDAOLT extends BaseContract {
 
   redeemAllowances(
     amount: BigNumberish,
-    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -633,18 +589,18 @@ export interface CreatorDAOLT extends BaseContract {
   sendAllowances(
     members: string[],
     amount: BigNumberish[],
-    tokenId: BigNumberish[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   setAllowances(
     _to: string[],
     _amount: BigNumberish[],
-    _nativeAllowance: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   token(overrides?: CallOverrides): Promise<string>;
+
+  tokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
   updateManagerAllowances(
     proposalId: BigNumberish,
@@ -656,12 +612,6 @@ export interface CreatorDAOLT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  usdAllowances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  usdBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  usdTotalAllowances(overrides?: CallOverrides): Promise<BigNumber>;
-
   votingDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
@@ -669,6 +619,8 @@ export interface CreatorDAOLT extends BaseContract {
       manager: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    TotalAllowances(overrides?: CallOverrides): Promise<BigNumber>;
 
     addCommunityManager(
       managers: string[],
@@ -681,10 +633,11 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    allowances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     allowancesProposal(
       amount: BigNumberish[],
       managers: string[],
-      _nativeAllowance: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -692,6 +645,12 @@ export interface CreatorDAOLT extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    baseTokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
+    basetoken(overrides?: CallOverrides): Promise<string>;
+
+    burnUsedToken(overrides?: CallOverrides): Promise<void>;
 
     communityManagers(
       arg0: BigNumberish,
@@ -714,22 +673,6 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    initialise(
-      _creator: string,
-      _votingDuration: BigNumberish,
-      _token: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    nativeTokenAllowances(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    nativeTokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nativeTotalAllowances(overrides?: CallOverrides): Promise<BigNumber>;
-
     proposal(
       proposalId: BigNumberish,
       overrides?: CallOverrides
@@ -744,13 +687,7 @@ export interface CreatorDAOLT extends BaseContract {
       proposalId: BigNumberish,
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber, boolean] & {
-        manager: string;
-        amount: BigNumber;
-        nativeAllowance: boolean;
-      }
-    >;
+    ): Promise<[string, BigNumber] & { manager: string; amount: BigNumber }>;
 
     proposalStatus(
       proposalId: BigNumberish,
@@ -767,7 +704,6 @@ export interface CreatorDAOLT extends BaseContract {
 
     redeemAllowances(
       amount: BigNumberish,
-      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -779,18 +715,18 @@ export interface CreatorDAOLT extends BaseContract {
     sendAllowances(
       members: string[],
       amount: BigNumberish[],
-      tokenId: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     setAllowances(
       _to: string[],
       _amount: BigNumberish[],
-      _nativeAllowance: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
     token(overrides?: CallOverrides): Promise<string>;
+
+    tokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     updateManagerAllowances(
       proposalId: BigNumberish,
@@ -801,12 +737,6 @@ export interface CreatorDAOLT extends BaseContract {
       _votingDuration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    usdAllowances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    usdBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    usdTotalAllowances(overrides?: CallOverrides): Promise<BigNumber>;
 
     votingDuration(overrides?: CallOverrides): Promise<BigNumber>;
   };
@@ -823,32 +753,37 @@ export interface CreatorDAOLT extends BaseContract {
       member?: null
     ): AirdroppedEventFilter;
 
-    "allowancesRedeemed(address,uint256,address,uint256)"(
+    "AmountAddedToVault(address,uint256)"(
+      creator?: null,
+      amount?: null
+    ): AmountAddedToVaultEventFilter;
+    AmountAddedToVault(
+      creator?: null,
+      amount?: null
+    ): AmountAddedToVaultEventFilter;
+
+    "allowancesRedeemed(address,uint256,address)"(
       dao?: null,
       amount?: null,
-      member?: null,
-      tokenId?: null
+      member?: null
     ): allowancesRedeemedEventFilter;
     allowancesRedeemed(
       dao?: null,
       amount?: null,
-      member?: null,
-      tokenId?: null
+      member?: null
     ): allowancesRedeemedEventFilter;
 
-    "allowancesUpdated(address,address,address,uint256,bool)"(
+    "allowancesUpdated(address,address,address,uint256)"(
       dao?: null,
       from?: null,
       to?: null,
-      amount?: null,
-      nativeAllowance?: null
+      amount?: null
     ): allowancesUpdatedEventFilter;
     allowancesUpdated(
       dao?: null,
       from?: null,
       to?: null,
-      amount?: null,
-      nativeAllowance?: null
+      amount?: null
     ): allowancesUpdatedEventFilter;
 
     "managerAdded(address,address)"(
@@ -883,6 +818,8 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    TotalAllowances(overrides?: CallOverrides): Promise<BigNumber>;
+
     addCommunityManager(
       managers: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -894,16 +831,25 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    allowances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     allowancesProposal(
       amount: BigNumberish[],
       managers: string[],
-      _nativeAllowance: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     allowancesProposalIds(
       arg0: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    baseTokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
+
+    basetoken(overrides?: CallOverrides): Promise<BigNumber>;
+
+    burnUsedToken(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     communityManagers(
@@ -928,22 +874,6 @@ export interface CreatorDAOLT extends BaseContract {
       choice: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
-
-    initialise(
-      _creator: string,
-      _votingDuration: BigNumberish,
-      _token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    nativeTokenAllowances(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    nativeTokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nativeTotalAllowances(overrides?: CallOverrides): Promise<BigNumber>;
 
     proposal(
       proposalId: BigNumberish,
@@ -976,7 +906,6 @@ export interface CreatorDAOLT extends BaseContract {
 
     redeemAllowances(
       amount: BigNumberish,
-      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -988,18 +917,18 @@ export interface CreatorDAOLT extends BaseContract {
     sendAllowances(
       members: string[],
       amount: BigNumberish[],
-      tokenId: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     setAllowances(
       _to: string[],
       _amount: BigNumberish[],
-      _nativeAllowance: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     token(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     updateManagerAllowances(
       proposalId: BigNumberish,
@@ -1011,12 +940,6 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    usdAllowances(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    usdBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    usdTotalAllowances(overrides?: CallOverrides): Promise<BigNumber>;
-
     votingDuration(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
@@ -1025,6 +948,8 @@ export interface CreatorDAOLT extends BaseContract {
       manager: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    TotalAllowances(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     addCommunityManager(
       managers: string[],
@@ -1037,16 +962,28 @@ export interface CreatorDAOLT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    allowances(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     allowancesProposal(
       amount: BigNumberish[],
       managers: string[],
-      _nativeAllowance: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     allowancesProposalIds(
       arg0: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    baseTokenBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    basetoken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    burnUsedToken(
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     communityManagers(
@@ -1070,26 +1007,6 @@ export interface CreatorDAOLT extends BaseContract {
       proposalId: BigNumberish,
       choice: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    initialise(
-      _creator: string,
-      _votingDuration: BigNumberish,
-      _token: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    nativeTokenAllowances(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    nativeTokenBalance(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    nativeTotalAllowances(
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     proposal(
@@ -1123,7 +1040,6 @@ export interface CreatorDAOLT extends BaseContract {
 
     redeemAllowances(
       amount: BigNumberish,
-      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1135,18 +1051,18 @@ export interface CreatorDAOLT extends BaseContract {
     sendAllowances(
       members: string[],
       amount: BigNumberish[],
-      tokenId: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setAllowances(
       _to: string[],
       _amount: BigNumberish[],
-      _nativeAllowance: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     updateManagerAllowances(
       proposalId: BigNumberish,
@@ -1156,17 +1072,6 @@ export interface CreatorDAOLT extends BaseContract {
     updateVotingDuration(
       _votingDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    usdAllowances(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    usdBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    usdTotalAllowances(
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     votingDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
