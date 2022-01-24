@@ -6,6 +6,7 @@ export type { CreatorNFTLT } from "./CreatorNFTLT";
 export type { CreatorTokenLT } from "./CreatorTokenLT";
 export type { ERC20 } from "./ERC20";
 export type { XeldoradoCreatorFactoryLT } from "./XeldoradoCreatorFactoryLT";
+export type { XeldoradoDeployer } from "./XeldoradoDeployer";
 export type { XeldoradoVaultLT } from "./XeldoradoVaultLT";
 
 export { CreatorDAOLT__factory } from "./factories/CreatorDAOLT__factory";
@@ -13,4 +14,5 @@ export { CreatorNFTLT__factory } from "./factories/CreatorNFTLT__factory";
 export { CreatorTokenLT__factory } from "./factories/CreatorTokenLT__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
 export { XeldoradoCreatorFactoryLT__factory } from "./factories/XeldoradoCreatorFactoryLT__factory";
+export { XeldoradoDeployer__factory } from "./factories/XeldoradoDeployer__factory";
 export { XeldoradoVaultLT__factory } from "./factories/XeldoradoVaultLT__factory";
