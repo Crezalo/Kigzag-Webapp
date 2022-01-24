@@ -13,74 +13,65 @@ export default function NFT() {
     contract.toString(),
     parseInt(tokenId.toString())
   ).data;
+  const [metadata, setmetadata] = useState({
+    metadata: [],
+  });
 
-  let metadata: any;
-  let metadataUrl = "";
-
-  const getMetadata = () => {
-    fetch(metadataUrl)
-      .then(function (response) {
-        console.log(response);
-        return response.json();
-      })
-      .then(function (data) {
-        console.log(data);
-        metadata = data;
-      })
-      .catch(function (err) {
-        console.log(err, " error");
-      });
+  const getMetadata = (metadataUrl: string) => {
+    useEffect(() => {
+      async function fetchData() {
+        const response = await fetch(metadataUrl);
+        const jsonData = await response.json();
+        setmetadata(jsonData);
+      }
+      fetchData();
+    });
   };
 
-  console.log(tokenURI);
-
-  if (tokenURI) metadataUrl = "https://ipfs.io/ipfs/" + tokenURI.substring(7);
-
-  if (metadataUrl != "") getMetadata();
-
-  useEffect(() => {
-    if (tokenURI) metadataUrl = "https://ipfs.io/ipfs/" + tokenURI.substring(7);
-  }, [contract, tokenId, tokenURI]);
-
-  useEffect(() => {
-    if (tokenURI != "") getMetadata();
-  }, [contract, tokenId, tokenURI]);
+  let metadataUrl = "https://ipfs.io/ipfs/";
+  if (tokenURI) {
+    metadataUrl = metadataUrl + tokenURI.substring(7);
+  }
+  getMetadata(metadataUrl);
 
   const image =
     "https://ipfs.io/ipfs/" + (metadata["image"] ?? "").substring(7);
   const external_url = metadata["external_url"] ?? "";
   const name = metadata["name"] ?? "";
   const attributes = metadata["attributes"] ?? "";
-  console.log(attributes);
   const description = metadata["description"] ?? "";
 
   return (
     <>
-      <div className="nftPage">
-        <div>
-          <div className="nftPageImage">
-            {external_url != "" ? (
-              <Image
-                src={external_url}
-                alt="Image Not Working"
-                width={550}
-                height={550}
-              />
-            ) : (
-              <Image
-                src={image}
-                alt="Image Not Working"
-                width={550}
-                height={550}
-              />
-            )}
+      {attributes ? (
+        <div className="nftPage">
+          <div>
+            <div className="nftPageImage">
+              {external_url != "" ? (
+                <Image
+                  src={external_url}
+                  alt="Image Not Working"
+                  width={550}
+                  height={550}
+                />
+              ) : (
+                <Image
+                  src={image}
+                  alt="Image Not Working"
+                  width={550}
+                  height={550}
+                />
+              )}
+            </div>
+            <NFTDetails notes={router.query} name={name} />
           </div>
-          <NFTDetails notes={router.query} name={name} />
+          <div>
+            <NFTProperties properties={attributes} description={description} />
+          </div>
         </div>
-        <div>
-          <NFTProperties properties={attributes} description={description} />
-        </div>
-      </div>
+      ) : (
+        <p>Loading</p>
+      )}
     </>
   );
 }
