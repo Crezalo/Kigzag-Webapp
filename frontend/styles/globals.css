@@ -245,9 +245,3 @@ a {
 .pageMinHeight {
   min-height: 90vh;
 }
-
-.footer {
-  display: flex;
-  justify-content: space-around;
-  padding-bottom: 10;
-}

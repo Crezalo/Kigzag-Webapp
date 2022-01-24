@@ -11,11 +11,9 @@ const Header = () => {
   const triedToEagerConnect = useEagerConnect();
   return (
     <nav
-      className="p-1"
       style={{
-        backgroundColor: "black",
+        padding: "4px",
         display: "flex",
-        flexDirection: "row",
         justifyContent: "space-between",
       }}
     >

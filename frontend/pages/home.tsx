@@ -4,15 +4,7 @@ import HomePageTabs from "../components/HomePageTabs";
 
 export default function Home() {
   return (
-    <div
-      className="greenTextBlackBackground"
-      style={{
-        backgroundColor: "black",
-        justifyContent: "center",
-        width: "100%",
-        fontSize: 25,
-      }}
-    >
+    <div className="greenTextBlackBackground" style={{ fontSize: 25 }}>
       <div style={{ display: "flex" }}>
         <div className="creatorImage">
           <Image

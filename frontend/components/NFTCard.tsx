@@ -5,7 +5,10 @@ import {
   useCreatorNFTName,
   useCreatorNFTSymbol,
 } from "../hooks/ERC721/useCreatorNFTContract";
-import nft from "../pages/nft";
+
+const fontStyle = {
+  fontSize: 18,
+};
 
 interface NFTCardProp {
   nft: string[];
@@ -31,12 +34,12 @@ const NFTCard = ({ nft }: NFTCardProp) => {
         />
       </div>
       <div className="nftCardDetails">
-        <p style={{ fontSize: 18 }}>
+        <p style={fontStyle}>
           {useCreatorNFTName(nft[0]).data ?? ""} (
           {useCreatorNFTSymbol(nft[0]).data ?? ""})
         </p>
-        <p style={{ fontSize: 18 }}>#{nft[1]}</p>
-        <p style={{ fontSize: 18 }}>
+        <p style={fontStyle}>#{nft[1]}</p>
+        <p style={fontStyle}>
           Price: {nft[2]} {useTokenSymbol(nft[3]).data ?? ""}
         </p>
       </div>

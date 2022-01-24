@@ -8,6 +8,17 @@ import {
   useCreatorNFTSymbol,
   useCreatorNFTTokenURI,
 } from "../hooks/ERC721/useCreatorNFTContract";
+import { CSSProperties } from "react";
+
+const leftStyle: CSSProperties = { width: "30%", float: "left", fontSize: 20 };
+const rightStyle: CSSProperties = { width: "70%", float: "left", fontSize: 20 };
+const buttonStyle: CSSProperties = {
+  fontSize: 20,
+  fontWeight: "bold",
+  textAlign: "center",
+  width: "40%",
+  margin: "70px 20px 10px 0px",
+};
 
 interface NFTDetailsProp {
   notes: any;
@@ -46,17 +57,12 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
   const creator = "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955";
   return (
     <div className="nftPageDetails text-white">
-      <p
-        className="text-green-500"
-        style={{ width: "30%", float: "left", fontSize: 20 }}
-      >
+      <p className="text-green-500" style={leftStyle}>
         Creator:
       </p>
       <p
         style={{
-          width: "70%",
-          float: "left",
-          fontSize: 20,
+          ...rightStyle,
           display: "flex",
           flexDirection: "row",
         }}
@@ -76,47 +82,30 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
       </p>
       <br />
       <br />
-      <p
-        className="text-green-500"
-        style={{ width: "30%", float: "left", fontSize: 20 }}
-      >
+      <p className="text-green-500" style={leftStyle}>
         Collection:
       </p>
-      <p style={{ width: "70%", float: "left", fontSize: 20 }}>
+      <p style={rightStyle}>
         {nftContractName} ({nftSymbol})
       </p>
       <br />
       <br />
-      <p
-        className="text-green-500"
-        style={{ width: "30%", float: "left", fontSize: 20 }}
-      >
+      <p className="text-green-500" style={leftStyle}>
         Name:
       </p>
-      <p style={{ width: "70%", float: "left", fontSize: 20 }}>
-        {nftName ? nftName : "Bored Ape"}
-      </p>
+      <p style={rightStyle}>{nftName ? nftName : "Bored Ape"}</p>
       <br />
       <br />
-      <p
-        className="text-green-500"
-        style={{ width: "30%", float: "left", fontSize: 20 }}
-      >
+      <p className="text-green-500" style={leftStyle}>
         Token Id:
       </p>
-      <p style={{ width: "70%", float: "left", fontSize: 20 }}>#{tokenId}</p>
+      <p style={rightStyle}>#{tokenId}</p>
       <br />
       <br />
-      <p
-        className="text-green-500"
-        style={{ width: "30%", float: "left", fontSize: 20 }}
-      >
+      <p className="text-green-500" style={leftStyle}>
         Contract:
       </p>
-      <p
-        className="text-blue-500"
-        style={{ width: "70%", float: "left", fontSize: 20 }}
-      >
+      <p className="text-blue-500" style={rightStyle}>
         <a
           {...{
             href: formatBlockExplorerLink("Account", [chainId, contract, ""]),
@@ -146,17 +135,12 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
       </p>
       <br />
       <br />
-      <p
-        className="text-green-500"
-        style={{ width: "30%", float: "left", fontSize: 20 }}
-      >
+      <p className="text-green-500" style={leftStyle}>
         Owner:
       </p>
       <p
         style={{
-          width: "70%",
-          float: "left",
-          fontSize: 20,
+          ...rightStyle,
           display: "flex",
           flexDirection: "row",
         }}
@@ -195,16 +179,10 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
       </p>
       <br />
       <br />
-      <p
-        className="text-green-500"
-        style={{ width: "30%", float: "left", fontSize: 20 }}
-      >
+      <p className="text-green-500" style={leftStyle}>
         Price:{" "}
       </p>
-      <p
-        className="text-white"
-        style={{ width: "70%", float: "left", fontSize: 20 }}
-      >
+      <p className="text-white" style={rightStyle}>
         {price} {creatorTokenSymbol}
       </p>
       <br />
@@ -212,13 +190,7 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
       {isListed ? (
         <button
           className="w-full bg-green-500 text-white px-2 py-2 rounded buyButton"
-          style={{
-            fontSize: 20,
-            fontWeight: "bold",
-            textAlign: "center",
-            width: "40%",
-            margin: "70px 20px 10px 0px",
-          }}
+          style={buttonStyle}
           onClick={() => {}}
         >
           Buy
@@ -227,11 +199,8 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
         <div
           className="w-full bg-yellow-500 text-white px-2 py-2 rounded"
           style={{
-            fontSize: 20,
-            fontWeight: "bold",
-            textAlign: "center",
-            width: "40%",
-            margin: "70px 20px 10px 40px",
+            ...buttonStyle,
+            marginLeft: "40px",
           }}
         >
           Not For Sale
@@ -241,10 +210,9 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
         <button
           className="outline text-white outline-offset-0 px-2 py-2 rounded bidButton"
           style={{
-            fontSize: 20,
-            textAlign: "center",
+            ...buttonStyle,
             width: "35%",
-            margin: "70px 20px 10px 20px",
+            marginLeft: "20px",
             outlineWidth: "thin",
           }}
           onClick={() => {}}
