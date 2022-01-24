@@ -4,6 +4,8 @@ import NFTDetails from "../components/NFTDetails";
 import NFTProperties from "../components/NFTProperties";
 import { useCreatorNFTTokenURI } from "../hooks/ERC721/useCreatorNFTContract";
 import { useEffect, useState } from "react";
+import { Spinner } from "reactstrap";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export default function NFT() {
   const router = useRouter();
@@ -42,7 +44,7 @@ export default function NFT() {
   const description = metadata["description"] ?? "";
 
   return (
-    <>
+    <div>
       {attributes ? (
         <div className="nftPage">
           <div>
@@ -65,13 +67,15 @@ export default function NFT() {
             </div>
             <NFTDetails notes={router.query} name={name} />
           </div>
-          <div>
-            <NFTProperties properties={attributes} description={description} />
-          </div>
+          <NFTProperties properties={attributes} description={description} />
         </div>
       ) : (
-        <p>Loading</p>
+        <CircularProgress
+          style={{ display: "flex", margin: "auto", height: "80vh" }}
+        />
+        // <Spinner />
+        // <p>Loading</p>
       )}
-    </>
+    </div>
   );
 }

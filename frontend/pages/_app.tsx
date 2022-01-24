@@ -12,7 +12,9 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <Header />
-      <Component {...pageProps} />
+      <div className="pageMinHeight">
+        <Component {...pageProps} />
+      </div>
       <Footer />
     </Web3ReactProvider>
   );

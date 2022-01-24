@@ -48,7 +48,6 @@ const GridItem = ({ proposal, classes }: GridItemProps) => {
     // From 960px wide and above, I take up 25% of the device (3/12), so 4 columns fit the screen.
     <Grid item xs={12} sm={12} md={12}>
       <ProposalCard proposal={proposal} />
-      {/* <Paper className={classes.paper}>item</Paper> */}
     </Grid>
   );
 };
@@ -59,7 +58,7 @@ interface ProposalCardGridProp {
 const DAOTab = ({ proposals }: ProposalCardGridProp) => {
   const classes = useStyles();
   return (
-    <div className="text-green-500 font-bold py-2 px-2">
+    <div className="greenTextBlackBackground">
       <BasicModal modalBody={<CreateProposalModal />} />
       <Grid container spacing={1}>
         {proposals.map((proposal) => (

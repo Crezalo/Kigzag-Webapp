@@ -202,7 +202,7 @@ const HomePageTabs = () => {
         <Tab label="Owned NFTs" className={classes.tab} />
       </Tabs>
       <br />
-      <Paper className="gridMinHeight">{tabs_array[value]}</Paper>
+      <Paper>{tabs_array[value]}</Paper>
     </>
   );
 };

@@ -34,7 +34,7 @@ interface NFTCardGridProp {
 const NFTCardGrid = ({ nfts }: NFTCardGridProp) => {
   const classes = useStyles();
   return (
-    <div className="text-green-500 font-bold py-2 px-2">
+    <div className="greenTextBlackBackground">
       <Grid container spacing={1}>
         {nfts.map((nft) => (
           <GridItem nft={nft} classes={classes} />

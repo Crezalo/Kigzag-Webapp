@@ -10,7 +10,7 @@ export default function Home() {
   return (
     // <Paper className="paperContainer">
     <div
-      className="text-green-500 font-bold py-2 px-2"
+      className="greenTextBlackBackground"
       style={{
         backgroundColor: "black",
         justifyContent: "center",

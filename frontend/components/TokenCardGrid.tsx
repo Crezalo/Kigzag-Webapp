@@ -34,7 +34,7 @@ interface TokenCardGridProp {
 const TokenCardGrid = ({ notes }: TokenCardGridProp) => {
   const classes = useStyles();
   return (
-    <div className="text-green-500 font-bold py-2 px-2">
+    <div className="greenTextBlackBackground">
       <Grid container spacing={1}>
         {notes.map((note) => (
           <GridItem note={note} classes={classes} />

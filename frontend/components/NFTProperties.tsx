@@ -11,16 +11,13 @@ const GridItem = ({ trait_type, value }: GridItemProps) => {
     // From 960px wide and above, I take up 25% of the device (3/12), so 4 columns fit the screen.
     <Grid
       className="outline outline-offset-0 px-2 py-2 rounded bidButton"
-      style={{ outlineWidth: "thin" }}
+      style={{ outlineWidth: "thin", margin: 5 }}
       item
       xs={12}
       sm={6}
       md={3}
     >
-      <p
-        className="text-green-500 font-bold py-2 px-2"
-        style={{ fontSize: 12 }}
-      >
+      <p className="greenTextBlackBackground" style={{ fontSize: 12 }}>
         {trait_type}
       </p>
       <p className="text-white font-bold py-2 px-2" style={{ fontSize: 15 }}>
