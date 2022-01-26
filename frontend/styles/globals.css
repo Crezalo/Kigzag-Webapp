@@ -60,7 +60,7 @@ a {
   padding-top: 20px;
   padding-bottom: 20px;
   background-color: black;
-  border-radius: 20%;
+  border-radius: 2%;
 }
 
 /* On mouse-over, add a deeper shadow */
@@ -97,7 +97,7 @@ a {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  padding: 4px 50px 4px 50px;
+  padding: 4px 50px 6px 50px;
 }
 
 /* Add some padding inside the card container */
@@ -157,7 +157,7 @@ a {
   height: auto;
 }
 
-.createProposal {
+.modelButton {
   display: flex;
   justify-content: space-around;
 }

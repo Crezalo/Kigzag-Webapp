@@ -20,9 +20,10 @@ const useStylesModal = makeStyles((theme) => ({
 }));
 
 interface BasicModalProps {
+  modalButtonText: string;
   modalBody: any;
 }
-const BasicModal = ({ modalBody }: BasicModalProps) => {
+const BasicModal = ({ modalButtonText, modalBody }: BasicModalProps) => {
   const classesModal = useStylesModal();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -30,13 +31,13 @@ const BasicModal = ({ modalBody }: BasicModalProps) => {
 
   return (
     <>
-      <div className="createProposal">
+      <div className="modelButton">
         <Button
-          style={{ background: "rgb(34 197 94)" }}
+          style={{ background: "#4EC660", marginBottom: "2px"}}
           variant="contained"
           onClick={handleOpen}
         >
-          Create Proposal
+          {modalButtonText}
         </Button>
       </div>
       <Modal

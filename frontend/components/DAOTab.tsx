@@ -32,22 +32,22 @@ export const ProposalCard = ({ proposal }: ProposalCardProp) => {
       </div>
       <div className="proposalDetails">
         <p className="choiceVote">
-          <button className="outline text-green-500 px-2 rounded choiceButton" >Choice 1</button>
+          <BasicModal modalButtonText="Choice 1" modalBody={<CreateProposalModal />} />
           <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px' }} variant="determinate" value={20} />
           <h2>20%</h2>
         </p>
         <p className="choiceVote">
-          <button className="outline text-green-500 px-2 rounded choiceButton" >Choice 2</button>
+          <BasicModal modalButtonText="Choice 2" modalBody={<CreateProposalModal />} />
           <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px'}} variant="determinate" value={30} />
           <h2>30%</h2>
         </p>
         <p className="choiceVote">
-          <button className="outline text-green-500 px-2 rounded choiceButton" >Choice 3</button>
+          <BasicModal modalButtonText="Choice 3" modalBody={<CreateProposalModal />} />
           <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px'}} variant="determinate" value={40} />
           <h2>40%</h2>
         </p>
         <p className="choiceVote">
-          <button className="outline text-green-500 px-2 rounded choiceButton" >Choice 4</button>
+          <BasicModal modalButtonText="Choice 4" modalBody={<CreateProposalModal />} />
           <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px'}} variant="determinate" value={10} />
           <h2>10%</h2>
         </p>
@@ -86,7 +86,7 @@ const DAOTab = ({ proposals }: ProposalCardGridProp) => {
   const classes = useStyles();
   return (
     <div className="greenTextBlackBackground">
-      <BasicModal modalBody={<CreateProposalModal />} />
+      <BasicModal modalButtonText="Create Proposal" modalBody={<CreateProposalModal />} />
       <Grid container spacing={1}>
         {proposals.map((proposal) => (
           <GridItem proposal={proposal} classes={classes} />
