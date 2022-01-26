@@ -18,13 +18,12 @@ const Header = () => {
       }}
     >
       <Link href="/">
-        <a>
-          &nbsp;&nbsp;
+        <a style={{marginTop:"5px",marginLeft:"5px"}}>
           <Image
-            src="/../public/favicon.ico"
+            src="/../public/Kigzaglogo.png"
             alt="Picture of the author"
-            width={35}
-            height={35}
+            width={100}
+            height={30}
           />
         </a>
       </Link>
