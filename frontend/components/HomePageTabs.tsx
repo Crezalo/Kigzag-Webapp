@@ -7,10 +7,12 @@ import DAOTab from "./DAOTab";
 import CreatorCardGrid from "./CreatorCardGrid";
 import TokenCardGrid from "./TokenCardGrid";
 import NFTCardGrid from "./NFTCardGrid";
+import NFTTabs from "./NFTTabs";
+import CollectedTabs from "./CollectedTabs";
 
 const useStyles = makeStyles({
   tab: {
-    fontSize: "16px",
+    fontSize: "18px",
     fontWeight: 600,
   },
 });
@@ -178,11 +180,9 @@ const HomePageTabs = () => {
     setValue(newValue);
   };
   let tabs_array = [
-    <NFTCardGrid nfts={nfts} />, // All
-    <NFTCardGrid nfts={nfts} />, //Listed for Sale
+    <NFTTabs nfts={nfts} />, 
     <DAOTab proposals={proposals} />,
-    <TokenCardGrid notes={notes} />,
-    <NFTCardGrid nfts={nfts} />,
+    <CollectedTabs notes={notes} nfts={nfts} />
   ];
 
   return (
@@ -195,11 +195,9 @@ const HomePageTabs = () => {
           style: { backgroundColor: "green" },
         }}
       >
-        <Tab label="All NFTs" className={classes.tab} />
-        <Tab label="NFTs For Sale" className={classes.tab} />
+        <Tab label="NFTs" className={classes.tab} />
         <Tab label="DAO" className={classes.tab} />
-        <Tab label="Owned Tokens" className={classes.tab} />
-        <Tab label="Owned NFTs" className={classes.tab} />
+        <Tab label="Collected" className={classes.tab} />
       </Tabs>
       <br />
       <Paper>{tabs_array[value]}</Paper>
