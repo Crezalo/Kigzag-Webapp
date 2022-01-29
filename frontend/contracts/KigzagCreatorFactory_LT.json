@@ -15,6 +15,21 @@
         "internalType": "address",
         "name": "_exchangeToken",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_networkWrappedToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_usdc",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_dai",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -223,25 +238,6 @@
         "type": "address"
       }
     ],
-    "name": "creatorSaleFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
     "name": "creatorToken",
     "outputs": [
       {
@@ -262,6 +258,19 @@
       }
     ],
     "name": "creatorVault",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "dai",
     "outputs": [
       {
         "internalType": "address",
@@ -375,6 +384,44 @@
         "internalType": "address",
         "name": "_creator",
         "type": "address"
+      }
+    ],
+    "name": "getCreatorExtraFee",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_creator",
+        "type": "address"
+      }
+    ],
+    "name": "getCreatorSaleFee",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_creator",
+        "type": "address"
       },
       {
         "internalType": "address",
@@ -394,10 +441,33 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "networkWrappedToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
         "name": "_creator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_dao",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_vault",
         "type": "address"
       },
       {
@@ -411,19 +481,14 @@
         "type": "string"
       },
       {
-        "internalType": "address",
-        "name": "_basetoken",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
-        "name": "_creatorSaleFee",
+        "name": "_creatorSaleFeeNative",
         "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "_vault",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "_creatorSaleFeeUSD",
+        "type": "uint256"
       }
     ],
     "name": "newCreator",
@@ -431,11 +496,6 @@
       {
         "internalType": "address",
         "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "dao",
         "type": "address"
       }
     ],
@@ -578,13 +638,80 @@
       },
       {
         "internalType": "uint256",
-        "name": "_creatorSaleFee",
+        "name": "_creatorExtraFeeNative",
         "type": "uint256"
       }
     ],
-    "name": "updateCreatorSaleFee",
+    "name": "updateCreatorExtraFeeNative",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_creator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_creatorExtraFeeUSD",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateCreatorExtraFeeUSD",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_creator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_creatorSaleFeeNative",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateCreatorSaleFeeNative",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_creator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_creatorSaleFeeUSD",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateCreatorSaleFeeUSD",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "usdc",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

@@ -27,11 +27,6 @@ const _abi = [
         name: "symbol",
         type: "string",
       },
-      {
-        internalType: "address",
-        name: "_basetoken",
-        type: "address",
-      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -204,19 +199,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "basetoken",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
@@ -235,6 +217,11 @@ const _abi = [
         internalType: "uint256",
         name: "_amount",
         type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_basetoken",
+        type: "address",
       },
     ],
     name: "buyTokens",

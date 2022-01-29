@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
 import type {
-  XeldoradoVaultLT,
-  XeldoradoVaultLTInterface,
-} from "../XeldoradoVaultLT";
+  CreatorVaultLT,
+  CreatorVaultLTInterface,
+} from "../CreatorVaultLT";
 
 const _abi = [
   {
@@ -151,11 +151,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "_to",
-        type: "address",
-      },
-      {
         internalType: "uint256[]",
         name: "_vaultIds",
         type: "uint256[]",
@@ -180,20 +175,12 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "dao",
-    outputs: [
+    inputs: [
       {
         internalType: "address",
-        name: "",
+        name: "_creator",
         type: "address",
       },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
       {
         internalType: "string",
         name: "_name",
@@ -207,11 +194,6 @@ const _abi = [
       {
         internalType: "address",
         name: "_token",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_dao",
         type: "address",
       },
     ],
@@ -229,7 +211,7 @@ const _abi = [
       },
       {
         internalType: "uint256[]",
-        name: "priceInBaseTokens",
+        name: "priceInCreatorTokenss",
         type: "uint256[]",
       },
     ],
@@ -286,7 +268,7 @@ const _abi = [
       },
       {
         internalType: "uint256[]",
-        name: "priceInBaseTokens",
+        name: "priceInCreatorTokenss",
         type: "uint256[]",
       },
     ],
@@ -354,15 +336,15 @@ const _abi = [
   },
 ];
 
-export class XeldoradoVaultLT__factory {
+export class CreatorVaultLT__factory {
   static readonly abi = _abi;
-  static createInterface(): XeldoradoVaultLTInterface {
-    return new utils.Interface(_abi) as XeldoradoVaultLTInterface;
+  static createInterface(): CreatorVaultLTInterface {
+    return new utils.Interface(_abi) as CreatorVaultLTInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): XeldoradoVaultLT {
-    return new Contract(address, _abi, signerOrProvider) as XeldoradoVaultLT;
+  ): CreatorVaultLT {
+    return new Contract(address, _abi, signerOrProvider) as CreatorVaultLT;
   }
 }

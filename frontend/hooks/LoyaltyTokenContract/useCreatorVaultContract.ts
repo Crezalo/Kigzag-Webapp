@@ -1,11 +1,11 @@
-import CreatorVaultLT_ABI from "../../contracts/XeldoradoVault_LT.json";
-import type { XeldoradoVaultLT } from "../../contracts/types";
+import CreatorVaultLT_ABI from "../../contracts/CreatorVault_LT.json";
+import type { CreatorVaultLT } from "../../contracts/types";
 import useContract from "../useContract";
 import useKeepSWRDataLiveAsBlocksArrive from "../useKeepSWRDataLiveAsBlocksArrive";
 import useSWR from "swr";
 
 export function useCreatorVaultContract(creatorVaultAddress?: string) {
-  return useContract<XeldoradoVaultLT>(creatorVaultAddress, CreatorVaultLT_ABI);
+  return useContract<CreatorVaultLT>(creatorVaultAddress, CreatorVaultLT_ABI);
 }
 
 export function useCreatorVaultCreator(
@@ -19,27 +19,6 @@ export function useCreatorVaultCreator(
   const result = useSWR(
     shouldFetch ? ["CreatorVaultCreator", creatorVaultAddress] : null,
     getCreatorVaultCreator(contract),
-    {
-      suspense,
-    }
-  );
-
-  useKeepSWRDataLiveAsBlocksArrive(result.mutate);
-
-  return result;
-}
-
-export function useCreatorVaultDAO(
-  creatorVaultAddress: string,
-  suspense = false
-) {
-  const contract = useCreatorVaultContract(creatorVaultAddress);
-
-  const shouldFetch = typeof creatorVaultAddress === "string" && !!contract;
-
-  const result = useSWR(
-    shouldFetch ? ["CreatorVaultDAO", creatorVaultAddress] : null,
-    getCreatorVaultDAO(contract),
     {
       suspense,
     }
@@ -231,7 +210,7 @@ export function useCreatorVaultNftContract(
 ///////////// Read functions ///////////////////////
 ////////////////////////////////////////////////////
 
-function getCreatorVaultCreator(contract: XeldoradoVaultLT) {
+function getCreatorVaultCreator(contract: CreatorVaultLT) {
   return async (_: string) => {
     const creator = await contract.creator();
 
@@ -239,15 +218,7 @@ function getCreatorVaultCreator(contract: XeldoradoVaultLT) {
   };
 }
 
-function getCreatorVaultDAO(contract: XeldoradoVaultLT) {
-  return async (_: string) => {
-    const dao = await contract.dao();
-
-    return dao;
-  };
-}
-
-function getCreatorVaultToken(contract: XeldoradoVaultLT) {
+function getCreatorVaultToken(contract: CreatorVaultLT) {
   return async (_: string) => {
     const token = await contract.token();
 
@@ -255,19 +226,8 @@ function getCreatorVaultToken(contract: XeldoradoVaultLT) {
   };
 }
 
-function getCreatorVaultIdToTokenId(
-  contract: XeldoradoVaultLT,
-  vaultId: number
-) {
-  return async (_: string) => {
-    const tokenId = await contract.vaultIdToTokenId(vaultId);
-
-    return tokenId;
-  };
-}
-
 function getCreatorVaultIdTonftContract(
-  contract: XeldoradoVaultLT,
+  contract: CreatorVaultLT,
   vaultId: number
 ) {
   return async (_: string) => {
@@ -277,8 +237,19 @@ function getCreatorVaultIdTonftContract(
   };
 }
 
+function getCreatorVaultIdToTokenId(
+  contract: CreatorVaultLT,
+  vaultId: number
+) {
+  return async (_: string) => {
+    const tokenId = await contract.vaultIdToTokenId(vaultId);
+
+    return tokenId;
+  };
+}
+
 function getCreatorVaultIdTonftPrice(
-  contract: XeldoradoVaultLT,
+  contract: CreatorVaultLT,
   vaultId: number
 ) {
   return async (_: string) => {
@@ -288,7 +259,7 @@ function getCreatorVaultIdTonftPrice(
   };
 }
 
-function getCreatorVaultAllNFTs(contract: XeldoradoVaultLT) {
+function getCreatorVaultAllNFTs(contract: CreatorVaultLT) {
   return async (_: string) => {
     const allNFTs = await contract.allNFTs();
 
@@ -296,7 +267,7 @@ function getCreatorVaultAllNFTs(contract: XeldoradoVaultLT) {
   };
 }
 
-function getCreatorVaultAllOnSaleNFTs(contract: XeldoradoVaultLT) {
+function getCreatorVaultAllOnSaleNFTs(contract: CreatorVaultLT) {
   return async (_: string) => {
     const allOnSaleNFTs = await contract.allOnSaleNFTs();
 
@@ -304,7 +275,7 @@ function getCreatorVaultAllOnSaleNFTs(contract: XeldoradoVaultLT) {
   };
 }
 
-function getCreatorVaultAllSoldNFTs(contract: XeldoradoVaultLT) {
+function getCreatorVaultAllSoldNFTs(contract: CreatorVaultLT) {
   return async (_: string) => {
     const allSoldNFTs = await contract.allSoldNFTs();
 
@@ -312,7 +283,7 @@ function getCreatorVaultAllSoldNFTs(contract: XeldoradoVaultLT) {
   };
 }
 
-function getCreatorVaultNftContract(contract: XeldoradoVaultLT) {
+function getCreatorVaultNftContract(contract: CreatorVaultLT) {
   return async (_: string) => {
     const nftContract = await contract.nftContract();
 

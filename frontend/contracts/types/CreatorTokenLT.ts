@@ -22,9 +22,8 @@ export interface CreatorTokenLTInterface extends utils.Interface {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "basetoken()": FunctionFragment;
     "burnMyTokens(uint256)": FunctionFragment;
-    "buyTokens(uint256)": FunctionFragment;
+    "buyTokens(uint256,address)": FunctionFragment;
     "creator()": FunctionFragment;
     "dao()": FunctionFragment;
     "decimals()": FunctionFragment;
@@ -48,14 +47,13 @@ export interface CreatorTokenLTInterface extends utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(functionFragment: "basetoken", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "burnMyTokens",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "buyTokens",
-    values: [BigNumberish]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "creator", values?: undefined): string;
   encodeFunctionData(functionFragment: "dao", values?: undefined): string;
@@ -91,7 +89,6 @@ export interface CreatorTokenLTInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "basetoken", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "burnMyTokens",
     data: BytesLike
@@ -204,8 +201,6 @@ export interface CreatorTokenLT extends BaseContract {
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    basetoken(overrides?: CallOverrides): Promise<[string]>;
-
     burnMyTokens(
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -213,6 +208,7 @@ export interface CreatorTokenLT extends BaseContract {
 
     buyTokens(
       _amount: BigNumberish,
+      _basetoken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -279,8 +275,6 @@ export interface CreatorTokenLT extends BaseContract {
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  basetoken(overrides?: CallOverrides): Promise<string>;
-
   burnMyTokens(
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -288,6 +282,7 @@ export interface CreatorTokenLT extends BaseContract {
 
   buyTokens(
     _amount: BigNumberish,
+    _basetoken: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -354,14 +349,16 @@ export interface CreatorTokenLT extends BaseContract {
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    basetoken(overrides?: CallOverrides): Promise<string>;
-
     burnMyTokens(
       _amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    buyTokens(_amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    buyTokens(
+      _amount: BigNumberish,
+      _basetoken: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     creator(overrides?: CallOverrides): Promise<string>;
 
@@ -470,8 +467,6 @@ export interface CreatorTokenLT extends BaseContract {
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    basetoken(overrides?: CallOverrides): Promise<BigNumber>;
-
     burnMyTokens(
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -479,6 +474,7 @@ export interface CreatorTokenLT extends BaseContract {
 
     buyTokens(
       _amount: BigNumberish,
+      _basetoken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -549,8 +545,6 @@ export interface CreatorTokenLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    basetoken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     burnMyTokens(
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -558,6 +552,7 @@ export interface CreatorTokenLT extends BaseContract {
 
     buyTokens(
       _amount: BigNumberish,
+      _basetoken: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

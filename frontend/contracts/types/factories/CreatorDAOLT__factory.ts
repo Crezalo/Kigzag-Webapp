@@ -8,28 +8,7 @@ import type { CreatorDAOLT, CreatorDAOLTInterface } from "../CreatorDAOLT";
 
 const _abi = [
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_creator",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_votingDuration",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_token",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_basetoken",
-        type: "address",
-      },
-    ],
+    inputs: [],
     stateMutability: "nonpayable",
     type: "constructor",
   },
@@ -64,25 +43,6 @@ const _abi = [
       {
         indexed: false,
         internalType: "address",
-        name: "creator",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "AmountAddedToVault",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
         name: "dao",
         type: "address",
       },
@@ -97,6 +57,12 @@ const _abi = [
         internalType: "address",
         name: "member",
         type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
       },
     ],
     name: "allowancesRedeemed",
@@ -129,8 +95,39 @@ const _abi = [
         name: "amount",
         type: "uint256",
       },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "nativeAllowance",
+        type: "bool",
+      },
     ],
     name: "allowancesUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "dao",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "creatorRedeemed",
     type: "event",
   },
   {
@@ -222,19 +219,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "TotalAllowances",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address[]",
@@ -268,25 +252,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "allowances",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256[]",
         name: "amount",
         type: "uint256[]",
@@ -295,6 +260,11 @@ const _abi = [
         internalType: "address[]",
         name: "managers",
         type: "address[]",
+      },
+      {
+        internalType: "bool",
+        name: "_nativeAllowance",
+        type: "bool",
       },
     ],
     name: "allowancesProposal",
@@ -319,39 +289,6 @@ const _abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "baseTokenBalance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "basetoken",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "burnUsedToken",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -432,6 +369,74 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "_creator",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_votingDuration",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_token",
+        type: "address",
+      },
+    ],
+    name: "initialise",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "nativeTokenAllowances",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "nativeTokenBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "nativeTotalAllowances",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "proposalId",
         type: "uint256",
@@ -507,6 +512,11 @@ const _abi = [
         name: "amount",
         type: "uint256",
       },
+      {
+        internalType: "bool",
+        name: "nativeAllowance",
+        type: "bool",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -579,8 +589,31 @@ const _abi = [
         name: "amount",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
     ],
     name: "redeemAllowances",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "redeemFromTreasury",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -610,6 +643,11 @@ const _abi = [
         name: "amount",
         type: "uint256[]",
       },
+      {
+        internalType: "uint256[]",
+        name: "tokenId",
+        type: "uint256[]",
+      },
     ],
     name: "sendAllowances",
     outputs: [],
@@ -628,6 +666,11 @@ const _abi = [
         name: "_amount",
         type: "uint256[]",
       },
+      {
+        internalType: "bool",
+        name: "_nativeAllowance",
+        type: "bool",
+      },
     ],
     name: "setAllowances",
     outputs: [],
@@ -642,19 +685,6 @@ const _abi = [
         internalType: "address",
         name: "",
         type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "tokenBalance",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -684,6 +714,51 @@ const _abi = [
     name: "updateVotingDuration",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "usdAllowances",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "usdBalance",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "usdTotalAllowances",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {

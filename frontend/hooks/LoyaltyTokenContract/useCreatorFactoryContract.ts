@@ -1,13 +1,13 @@
-import XeldoradoCreatorFactoryLT_ABI from "../../contracts/XeldoradoCreatorFactory_LT.json";
-import type { XeldoradoCreatorFactoryLT } from "../../contracts/types";
+import KigzagCreatorFactoryLT_ABI from "../../contracts/KigzagCreatorFactory_LT.json";
+import type { KigzagCreatorFactoryLT } from "../../contracts/types";
 import useContract from "../useContract";
 import useSWR from "swr";
 import useKeepSWRDataLiveAsBlocksArrive from "../useKeepSWRDataLiveAsBlocksArrive";
 
 export function useCreatorFactoryContract(creatorFactoryAddress?: string) {
-  return useContract<XeldoradoCreatorFactoryLT>(
+  return useContract<KigzagCreatorFactoryLT>(
     creatorFactoryAddress,
-    XeldoradoCreatorFactoryLT_ABI
+    KigzagCreatorFactoryLT_ABI
   );
 }
 
@@ -109,6 +109,33 @@ export function useCreatorFactoryCreatorSaleFee(
       ? ["CreatorFactoryCreatorSaleFee", creator, creatorFactoryAddress]
       : null,
     getCreatorFactoryCreatorSaleFee(contract, creator),
+    {
+      suspense,
+    }
+  );
+
+  useKeepSWRDataLiveAsBlocksArrive(result.mutate);
+
+  return result;
+}
+
+export function useCreatorFactoryCreatorExtraFee(
+  creatorFactoryAddress: string,
+  creator: string,
+  suspense = false
+) {
+  const contract = useCreatorFactoryContract(creatorFactoryAddress);
+
+  const shouldFetch =
+    typeof creator === "string" &&
+    typeof creatorFactoryAddress === "string" &&
+    !!contract;
+
+  const result = useSWR(
+    shouldFetch
+      ? ["CreatorFactoryCreatorExtraFee", creator, creatorFactoryAddress]
+      : null,
+    getCreatorFactoryCreatorExtraFee(contract, creator),
     {
       suspense,
     }
@@ -292,6 +319,69 @@ export function useCreatorFactorExchangeToken(
   return result;
 }
 
+export function useCreatorFactorNetworkWrappedToken(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
+  const contract = useCreatorFactoryContract(creatorFactoryAddress);
+
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
+
+  const result = useSWR(
+    shouldFetch ? ["CreatorFactoryNetworkWrappedToken", creatorFactoryAddress] : null,
+    getCreatorFactoryNetworkWrappedToken(contract),
+    {
+      suspense,
+    }
+  );
+
+  useKeepSWRDataLiveAsBlocksArrive(result.mutate);
+
+  return result;
+}
+
+export function useCreatorFactorUSDC(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
+  const contract = useCreatorFactoryContract(creatorFactoryAddress);
+
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
+
+  const result = useSWR(
+    shouldFetch ? ["CreatorFactoryUSDC", creatorFactoryAddress] : null,
+    getCreatorFactoryUSDC(contract),
+    {
+      suspense,
+    }
+  );
+
+  useKeepSWRDataLiveAsBlocksArrive(result.mutate);
+
+  return result;
+}
+
+export function useCreatorFactorDAI(
+  creatorFactoryAddress: string,
+  suspense = false
+) {
+  const contract = useCreatorFactoryContract(creatorFactoryAddress);
+
+  const shouldFetch = typeof creatorFactoryAddress === "string" && !!contract;
+
+  const result = useSWR(
+    shouldFetch ? ["CreatorFactoryDAI", creatorFactoryAddress] : null,
+    getCreatorFactoryDAI(contract),
+    {
+      suspense,
+    }
+  );
+
+  useKeepSWRDataLiveAsBlocksArrive(result.mutate);
+
+  return result;
+}
+
 export function useCreatorFactorGetCreatorAdmins(
   creatorFactoryAddress: string,
   creator: string,
@@ -358,7 +448,7 @@ export function useCreatorFactorGetIsCreatorAdmin(
 ////////////////////////////////////////////////////
 
 function getCreatorFactoryCreatorToken(
-  contract: XeldoradoCreatorFactoryLT,
+  contract: KigzagCreatorFactoryLT,
   creator: string
 ) {
   return async (_: string) => {
@@ -369,7 +459,7 @@ function getCreatorFactoryCreatorToken(
 }
 
 function getCreatorFactoryCreatorVault(
-  contract: XeldoradoCreatorFactoryLT,
+  contract: KigzagCreatorFactoryLT,
   creator: string
 ) {
   return async (_: string) => {
@@ -380,7 +470,7 @@ function getCreatorFactoryCreatorVault(
 }
 
 function getCreatorFactoryCreatorDAO(
-  contract: XeldoradoCreatorFactoryLT,
+  contract: KigzagCreatorFactoryLT,
   creator: string
 ) {
   return async (_: string) => {
@@ -391,18 +481,31 @@ function getCreatorFactoryCreatorDAO(
 }
 
 function getCreatorFactoryCreatorSaleFee(
-  contract: XeldoradoCreatorFactoryLT,
+  contract: KigzagCreatorFactoryLT,
   creator: string
 ) {
   return async (_: string) => {
-    const tokenPrice = await contract.creatorSaleFee(creator);
+    const tokenPrice = await contract.getCreatorSaleFee(creator);
+    const nativefee = tokenPrice[0];
+    const usdfee = tokenPrice[1];
+    return {nativefee, usdfee};
+  };
+}
 
-    return tokenPrice;
+function getCreatorFactoryCreatorExtraFee(
+  contract: KigzagCreatorFactoryLT,
+  creator: string
+) {
+  return async (_: string) => {
+    const additionalFeeDeduct = await contract.getCreatorExtraFee(creator);
+    const nativeAdditionalFeeDeduct = additionalFeeDeduct[0];
+    const usdfeeAdditionalFeeDeduct = additionalFeeDeduct[1];
+    return {nativeAdditionalFeeDeduct, usdfeeAdditionalFeeDeduct};
   };
 }
 
 function getCreatorFactoryAllCreators(
-  contract: XeldoradoCreatorFactoryLT,
+  contract: KigzagCreatorFactoryLT,
   index: number
 ) {
   return async (_: string) => {
@@ -412,7 +515,7 @@ function getCreatorFactoryAllCreators(
   };
 }
 
-function getCreatorFactoryExchangeAdmin(contract: XeldoradoCreatorFactoryLT) {
+function getCreatorFactoryExchangeAdmin(contract: KigzagCreatorFactoryLT) {
   return async (_: string) => {
     const exchangeAdmin = await contract.exchangeAdmin();
 
@@ -420,7 +523,7 @@ function getCreatorFactoryExchangeAdmin(contract: XeldoradoCreatorFactoryLT) {
   };
 }
 
-function getCreatorFactoryFee(contract: XeldoradoCreatorFactoryLT) {
+function getCreatorFactoryFee(contract: KigzagCreatorFactoryLT) {
   return async (_: string) => {
     const fee = await contract.fee();
 
@@ -428,7 +531,7 @@ function getCreatorFactoryFee(contract: XeldoradoCreatorFactoryLT) {
   };
 }
 
-function getCreatorFactoryDiscount(contract: XeldoradoCreatorFactoryLT) {
+function getCreatorFactoryDiscount(contract: KigzagCreatorFactoryLT) {
   return async (_: string) => {
     const discount = await contract.discount();
 
@@ -437,7 +540,7 @@ function getCreatorFactoryDiscount(contract: XeldoradoCreatorFactoryLT) {
 }
 
 function getCreatorFactoryNoOFTokensForDiscount(
-  contract: XeldoradoCreatorFactoryLT
+  contract: KigzagCreatorFactoryLT
 ) {
   return async (_: string) => {
     const noOFTokensForDiscount = await contract.noOFTokensForDiscount();
@@ -446,7 +549,7 @@ function getCreatorFactoryNoOFTokensForDiscount(
   };
 }
 
-function getCreatorFactoryFeeTo(contract: XeldoradoCreatorFactoryLT) {
+function getCreatorFactoryFeeTo(contract: KigzagCreatorFactoryLT) {
   return async (_: string) => {
     const feeTo = await contract.feeTo();
 
@@ -454,7 +557,7 @@ function getCreatorFactoryFeeTo(contract: XeldoradoCreatorFactoryLT) {
   };
 }
 
-function getCreatorFactoryFeeToSetter(contract: XeldoradoCreatorFactoryLT) {
+function getCreatorFactoryFeeToSetter(contract: KigzagCreatorFactoryLT) {
   return async (_: string) => {
     const feeToSetter = await contract.feeToSetter();
 
@@ -462,7 +565,7 @@ function getCreatorFactoryFeeToSetter(contract: XeldoradoCreatorFactoryLT) {
   };
 }
 
-function getCreatorFactoryExchangeToken(contract: XeldoradoCreatorFactoryLT) {
+function getCreatorFactoryExchangeToken(contract: KigzagCreatorFactoryLT) {
   return async (_: string) => {
     const exchangeToken = await contract.exchangeToken();
 
@@ -470,8 +573,32 @@ function getCreatorFactoryExchangeToken(contract: XeldoradoCreatorFactoryLT) {
   };
 }
 
+function getCreatorFactoryNetworkWrappedToken(contract: KigzagCreatorFactoryLT) {
+  return async (_: string) => {
+    const networkWrappedToken = await contract.networkWrappedToken();
+
+    return networkWrappedToken;
+  };
+}
+
+function getCreatorFactoryUSDC(contract: KigzagCreatorFactoryLT) {
+  return async (_: string) => {
+    const usdc = await contract.usdc();
+
+    return usdc;
+  };
+}
+
+function getCreatorFactoryDAI(contract: KigzagCreatorFactoryLT) {
+  return async (_: string) => {
+    const dai = await contract.dai();
+
+    return dai;
+  };
+}
+
 function getCreatorFactoryGetCreatorAdmins(
-  contract: XeldoradoCreatorFactoryLT,
+  contract: KigzagCreatorFactoryLT,
   creator: string
 ) {
   return async (_: string) => {
@@ -482,7 +609,7 @@ function getCreatorFactoryGetCreatorAdmins(
 }
 
 function getCreatorFactoryGetIsCreatorAdmin(
-  contract: XeldoradoCreatorFactoryLT,
+  contract: KigzagCreatorFactoryLT,
   creator: string,
   admin: string
 ) {

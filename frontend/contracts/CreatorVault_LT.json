@@ -140,11 +140,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_to",
-        "type": "address"
-      },
-      {
         "internalType": "uint256[]",
         "name": "_vaultIds",
         "type": "uint256[]"
@@ -169,20 +164,12 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "dao",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "_creator",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      },
       {
         "internalType": "string",
         "name": "_name",
@@ -196,11 +183,6 @@
       {
         "internalType": "address",
         "name": "_token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_dao",
         "type": "address"
       }
     ],
@@ -218,7 +200,7 @@
       },
       {
         "internalType": "uint256[]",
-        "name": "priceInBaseTokens",
+        "name": "priceInCreatorTokenss",
         "type": "uint256[]"
       }
     ],
@@ -275,7 +257,7 @@
       },
       {
         "internalType": "uint256[]",
-        "name": "priceInBaseTokens",
+        "name": "priceInCreatorTokenss",
         "type": "uint256[]"
       }
     ],

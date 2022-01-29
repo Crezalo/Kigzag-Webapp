@@ -17,15 +17,14 @@ import { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
 import { Listener, Provider } from "@ethersproject/providers";
 import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
-export interface XeldoradoVaultLTInterface extends utils.Interface {
+export interface CreatorVaultLTInterface extends utils.Interface {
   functions: {
     "allNFTs()": FunctionFragment;
     "allOnSaleNFTs()": FunctionFragment;
     "allSoldNFTs()": FunctionFragment;
-    "buyNFT(address,uint256[])": FunctionFragment;
+    "buyNFT(uint256[])": FunctionFragment;
     "creator()": FunctionFragment;
-    "dao()": FunctionFragment;
-    "initialise(string,string,address,address)": FunctionFragment;
+    "initialise(address,string,string,address)": FunctionFragment;
     "listNFTsForSale(uint256[],uint256[])": FunctionFragment;
     "mintNFTUsingVaultContract(string[])": FunctionFragment;
     "nftContract()": FunctionFragment;
@@ -47,10 +46,9 @@ export interface XeldoradoVaultLTInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "buyNFT",
-    values: [string, BigNumberish[]]
+    values: [BigNumberish[]]
   ): string;
   encodeFunctionData(functionFragment: "creator", values?: undefined): string;
-  encodeFunctionData(functionFragment: "dao", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "initialise",
     values: [string, string, string, string]
@@ -96,7 +94,6 @@ export interface XeldoradoVaultLTInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "buyNFT", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "creator", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "dao", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialise", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "listNFTsForSale",
@@ -170,12 +167,12 @@ export type NFTaddedEvent = TypedEvent<
 
 export type NFTaddedEventFilter = TypedEventFilter<NFTaddedEvent>;
 
-export interface XeldoradoVaultLT extends BaseContract {
+export interface CreatorVaultLT extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: XeldoradoVaultLTInterface;
+  interface: CreatorVaultLTInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -204,26 +201,23 @@ export interface XeldoradoVaultLT extends BaseContract {
     allSoldNFTs(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     buyNFT(
-      _to: string,
       _vaultIds: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     creator(overrides?: CallOverrides): Promise<[string]>;
 
-    dao(overrides?: CallOverrides): Promise<[string]>;
-
     initialise(
+      _creator: string,
       _name: string,
       _symbol: string,
       _token: string,
-      _dao: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     listNFTsForSale(
       vaultIds: BigNumberish[],
-      priceInBaseTokens: BigNumberish[],
+      priceInCreatorTokenss: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -238,7 +232,7 @@ export interface XeldoradoVaultLT extends BaseContract {
 
     updateNFTPrice(
       vaultIds: BigNumberish[],
-      priceInBaseTokens: BigNumberish[],
+      priceInCreatorTokenss: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -265,26 +259,23 @@ export interface XeldoradoVaultLT extends BaseContract {
   allSoldNFTs(overrides?: CallOverrides): Promise<BigNumber>;
 
   buyNFT(
-    _to: string,
     _vaultIds: BigNumberish[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   creator(overrides?: CallOverrides): Promise<string>;
 
-  dao(overrides?: CallOverrides): Promise<string>;
-
   initialise(
+    _creator: string,
     _name: string,
     _symbol: string,
     _token: string,
-    _dao: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   listNFTsForSale(
     vaultIds: BigNumberish[],
-    priceInBaseTokens: BigNumberish[],
+    priceInCreatorTokenss: BigNumberish[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -299,7 +290,7 @@ export interface XeldoradoVaultLT extends BaseContract {
 
   updateNFTPrice(
     vaultIds: BigNumberish[],
-    priceInBaseTokens: BigNumberish[],
+    priceInCreatorTokenss: BigNumberish[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -325,27 +316,21 @@ export interface XeldoradoVaultLT extends BaseContract {
 
     allSoldNFTs(overrides?: CallOverrides): Promise<BigNumber>;
 
-    buyNFT(
-      _to: string,
-      _vaultIds: BigNumberish[],
-      overrides?: CallOverrides
-    ): Promise<void>;
+    buyNFT(_vaultIds: BigNumberish[], overrides?: CallOverrides): Promise<void>;
 
     creator(overrides?: CallOverrides): Promise<string>;
 
-    dao(overrides?: CallOverrides): Promise<string>;
-
     initialise(
+      _creator: string,
       _name: string,
       _symbol: string,
       _token: string,
-      _dao: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
     listNFTsForSale(
       vaultIds: BigNumberish[],
-      priceInBaseTokens: BigNumberish[],
+      priceInCreatorTokenss: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -360,7 +345,7 @@ export interface XeldoradoVaultLT extends BaseContract {
 
     updateNFTPrice(
       vaultIds: BigNumberish[],
-      priceInBaseTokens: BigNumberish[],
+      priceInCreatorTokenss: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -422,26 +407,23 @@ export interface XeldoradoVaultLT extends BaseContract {
     allSoldNFTs(overrides?: CallOverrides): Promise<BigNumber>;
 
     buyNFT(
-      _to: string,
       _vaultIds: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     creator(overrides?: CallOverrides): Promise<BigNumber>;
 
-    dao(overrides?: CallOverrides): Promise<BigNumber>;
-
     initialise(
+      _creator: string,
       _name: string,
       _symbol: string,
       _token: string,
-      _dao: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     listNFTsForSale(
       vaultIds: BigNumberish[],
-      priceInBaseTokens: BigNumberish[],
+      priceInCreatorTokenss: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -456,7 +438,7 @@ export interface XeldoradoVaultLT extends BaseContract {
 
     updateNFTPrice(
       vaultIds: BigNumberish[],
-      priceInBaseTokens: BigNumberish[],
+      priceInCreatorTokenss: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -484,26 +466,23 @@ export interface XeldoradoVaultLT extends BaseContract {
     allSoldNFTs(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     buyNFT(
-      _to: string,
       _vaultIds: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     creator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    dao(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     initialise(
+      _creator: string,
       _name: string,
       _symbol: string,
       _token: string,
-      _dao: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     listNFTsForSale(
       vaultIds: BigNumberish[],
-      priceInBaseTokens: BigNumberish[],
+      priceInCreatorTokenss: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -518,7 +497,7 @@ export interface XeldoradoVaultLT extends BaseContract {
 
     updateNFTPrice(
       vaultIds: BigNumberish[],
-      priceInBaseTokens: BigNumberish[],
+      priceInCreatorTokenss: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

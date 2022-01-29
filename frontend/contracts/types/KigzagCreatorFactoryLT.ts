@@ -17,13 +17,13 @@ import { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
 import { Listener, Provider } from "@ethersproject/providers";
 import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
-export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
+export interface KigzagCreatorFactoryLTInterface extends utils.Interface {
   functions: {
     "allCreators(uint256)": FunctionFragment;
     "creatorDAO(address)": FunctionFragment;
-    "creatorSaleFee(address)": FunctionFragment;
     "creatorToken(address)": FunctionFragment;
     "creatorVault(address)": FunctionFragment;
+    "dai()": FunctionFragment;
     "discount()": FunctionFragment;
     "exchangeAdmin()": FunctionFragment;
     "exchangeToken()": FunctionFragment;
@@ -31,8 +31,11 @@ export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
     "feeTo()": FunctionFragment;
     "feeToSetter()": FunctionFragment;
     "getCreatorAdmins(address)": FunctionFragment;
+    "getCreatorExtraFee(address)": FunctionFragment;
+    "getCreatorSaleFee(address)": FunctionFragment;
     "isCreatorAdmin(address,address)": FunctionFragment;
-    "newCreator(address,string,string,address,uint256,address)": FunctionFragment;
+    "networkWrappedToken()": FunctionFragment;
+    "newCreator(address,address,address,string,string,uint256,uint256)": FunctionFragment;
     "noOFTokensForDiscount()": FunctionFragment;
     "removeCreatorAdmins(address,uint256)": FunctionFragment;
     "setCreatorAdmins(address,address[])": FunctionFragment;
@@ -42,7 +45,11 @@ export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
     "setFeeTo(address)": FunctionFragment;
     "setFeeToSetter(address)": FunctionFragment;
     "setNoOFTokensForDiscount(uint256)": FunctionFragment;
-    "updateCreatorSaleFee(address,uint256)": FunctionFragment;
+    "updateCreatorExtraFeeNative(address,uint256)": FunctionFragment;
+    "updateCreatorExtraFeeUSD(address,uint256)": FunctionFragment;
+    "updateCreatorSaleFeeNative(address,uint256)": FunctionFragment;
+    "updateCreatorSaleFeeUSD(address,uint256)": FunctionFragment;
+    "usdc()": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -51,10 +58,6 @@ export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "creatorDAO", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "creatorSaleFee",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "creatorToken",
     values: [string]
   ): string;
@@ -62,6 +65,7 @@ export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
     functionFragment: "creatorVault",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "dai", values?: undefined): string;
   encodeFunctionData(functionFragment: "discount", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "exchangeAdmin",
@@ -82,12 +86,24 @@ export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "getCreatorExtraFee",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getCreatorSaleFee",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "isCreatorAdmin",
     values: [string, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "networkWrappedToken",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "newCreator",
-    values: [string, string, string, string, BigNumberish, string]
+    values: [string, string, string, string, string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "noOFTokensForDiscount",
@@ -123,19 +139,28 @@ export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "updateCreatorSaleFee",
+    functionFragment: "updateCreatorExtraFeeNative",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "updateCreatorExtraFeeUSD",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateCreatorSaleFeeNative",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateCreatorSaleFeeUSD",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "usdc", values?: undefined): string;
 
   decodeFunctionResult(
     functionFragment: "allCreators",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "creatorDAO", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "creatorSaleFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "creatorToken",
     data: BytesLike
@@ -144,6 +169,7 @@ export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
     functionFragment: "creatorVault",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "dai", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "discount", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "exchangeAdmin",
@@ -164,7 +190,19 @@ export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getCreatorExtraFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getCreatorSaleFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "isCreatorAdmin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "networkWrappedToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "newCreator", data: BytesLike): Result;
@@ -199,9 +237,22 @@ export interface XeldoradoCreatorFactoryLTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "updateCreatorSaleFee",
+    functionFragment: "updateCreatorExtraFeeNative",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateCreatorExtraFeeUSD",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateCreatorSaleFeeNative",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateCreatorSaleFeeUSD",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "usdc", data: BytesLike): Result;
 
   events: {
     "CreatorAdminAdded(address,address,address)": EventFragment;
@@ -278,12 +329,12 @@ export type CreatorVaultUpdatedEvent = TypedEvent<
 export type CreatorVaultUpdatedEventFilter =
   TypedEventFilter<CreatorVaultUpdatedEvent>;
 
-export interface XeldoradoCreatorFactoryLT extends BaseContract {
+export interface KigzagCreatorFactoryLT extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: XeldoradoCreatorFactoryLTInterface;
+  interface: KigzagCreatorFactoryLTInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -312,14 +363,11 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
 
     creatorDAO(arg0: string, overrides?: CallOverrides): Promise<[string]>;
 
-    creatorSaleFee(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     creatorToken(arg0: string, overrides?: CallOverrides): Promise<[string]>;
 
     creatorVault(arg0: string, overrides?: CallOverrides): Promise<[string]>;
+
+    dai(overrides?: CallOverrides): Promise<[string]>;
 
     discount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -338,19 +386,32 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string[]]>;
 
+    getCreatorExtraFee(
+      _creator: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
+    getCreatorSaleFee(
+      _creator: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
     isCreatorAdmin(
       _creator: string,
       _admin: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    networkWrappedToken(overrides?: CallOverrides): Promise<[string]>;
+
     newCreator(
       _creator: string,
+      _dao: string,
+      _vault: string,
       _name: string,
       _symbol: string,
-      _basetoken: string,
-      _creatorSaleFee: BigNumberish,
-      _vault: string,
+      _creatorSaleFeeNative: BigNumberish,
+      _creatorSaleFeeUSD: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -398,22 +459,42 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    updateCreatorSaleFee(
+    updateCreatorExtraFeeNative(
       _creator: string,
-      _creatorSaleFee: BigNumberish,
+      _creatorExtraFeeNative: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    updateCreatorExtraFeeUSD(
+      _creator: string,
+      _creatorExtraFeeUSD: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updateCreatorSaleFeeNative(
+      _creator: string,
+      _creatorSaleFeeNative: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updateCreatorSaleFeeUSD(
+      _creator: string,
+      _creatorSaleFeeUSD: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    usdc(overrides?: CallOverrides): Promise<[string]>;
   };
 
   allCreators(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   creatorDAO(arg0: string, overrides?: CallOverrides): Promise<string>;
 
-  creatorSaleFee(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
   creatorToken(arg0: string, overrides?: CallOverrides): Promise<string>;
 
   creatorVault(arg0: string, overrides?: CallOverrides): Promise<string>;
+
+  dai(overrides?: CallOverrides): Promise<string>;
 
   discount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -432,19 +513,32 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string[]>;
 
+  getCreatorExtraFee(
+    _creator: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
+  getCreatorSaleFee(
+    _creator: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
   isCreatorAdmin(
     _creator: string,
     _admin: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  networkWrappedToken(overrides?: CallOverrides): Promise<string>;
+
   newCreator(
     _creator: string,
+    _dao: string,
+    _vault: string,
     _name: string,
     _symbol: string,
-    _basetoken: string,
-    _creatorSaleFee: BigNumberish,
-    _vault: string,
+    _creatorSaleFeeNative: BigNumberish,
+    _creatorSaleFeeUSD: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -492,22 +586,42 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  updateCreatorSaleFee(
+  updateCreatorExtraFeeNative(
     _creator: string,
-    _creatorSaleFee: BigNumberish,
+    _creatorExtraFeeNative: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  updateCreatorExtraFeeUSD(
+    _creator: string,
+    _creatorExtraFeeUSD: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updateCreatorSaleFeeNative(
+    _creator: string,
+    _creatorSaleFeeNative: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updateCreatorSaleFeeUSD(
+    _creator: string,
+    _creatorSaleFeeUSD: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  usdc(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     allCreators(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     creatorDAO(arg0: string, overrides?: CallOverrides): Promise<string>;
 
-    creatorSaleFee(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
     creatorToken(arg0: string, overrides?: CallOverrides): Promise<string>;
 
     creatorVault(arg0: string, overrides?: CallOverrides): Promise<string>;
+
+    dai(overrides?: CallOverrides): Promise<string>;
 
     discount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -526,21 +640,34 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string[]>;
 
+    getCreatorExtraFee(
+      _creator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
+    getCreatorSaleFee(
+      _creator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
     isCreatorAdmin(
       _creator: string,
       _admin: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    networkWrappedToken(overrides?: CallOverrides): Promise<string>;
+
     newCreator(
       _creator: string,
+      _dao: string,
+      _vault: string,
       _name: string,
       _symbol: string,
-      _basetoken: string,
-      _creatorSaleFee: BigNumberish,
-      _vault: string,
+      _creatorSaleFeeNative: BigNumberish,
+      _creatorSaleFeeUSD: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string, string] & { token: string; dao: string }>;
+    ): Promise<string>;
 
     noOFTokensForDiscount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -580,11 +707,31 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    updateCreatorSaleFee(
+    updateCreatorExtraFeeNative(
       _creator: string,
-      _creatorSaleFee: BigNumberish,
+      _creatorExtraFeeNative: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    updateCreatorExtraFeeUSD(
+      _creator: string,
+      _creatorExtraFeeUSD: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateCreatorSaleFeeNative(
+      _creator: string,
+      _creatorSaleFeeNative: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateCreatorSaleFeeUSD(
+      _creator: string,
+      _creatorSaleFeeUSD: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    usdc(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -668,11 +815,11 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
 
     creatorDAO(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    creatorSaleFee(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
-
     creatorToken(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     creatorVault(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    dai(overrides?: CallOverrides): Promise<BigNumber>;
 
     discount(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -691,19 +838,32 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getCreatorExtraFee(
+      _creator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getCreatorSaleFee(
+      _creator: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isCreatorAdmin(
       _creator: string,
       _admin: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    networkWrappedToken(overrides?: CallOverrides): Promise<BigNumber>;
+
     newCreator(
       _creator: string,
+      _dao: string,
+      _vault: string,
       _name: string,
       _symbol: string,
-      _basetoken: string,
-      _creatorSaleFee: BigNumberish,
-      _vault: string,
+      _creatorSaleFeeNative: BigNumberish,
+      _creatorSaleFeeUSD: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -751,11 +911,31 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    updateCreatorSaleFee(
+    updateCreatorExtraFeeNative(
       _creator: string,
-      _creatorSaleFee: BigNumberish,
+      _creatorExtraFeeNative: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    updateCreatorExtraFeeUSD(
+      _creator: string,
+      _creatorExtraFeeUSD: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateCreatorSaleFeeNative(
+      _creator: string,
+      _creatorSaleFeeNative: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateCreatorSaleFeeUSD(
+      _creator: string,
+      _creatorSaleFeeUSD: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    usdc(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -769,11 +949,6 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    creatorSaleFee(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     creatorToken(
       arg0: string,
       overrides?: CallOverrides
@@ -783,6 +958,8 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    dai(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     discount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -801,19 +978,34 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getCreatorExtraFee(
+      _creator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getCreatorSaleFee(
+      _creator: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     isCreatorAdmin(
       _creator: string,
       _admin: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    networkWrappedToken(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     newCreator(
       _creator: string,
+      _dao: string,
+      _vault: string,
       _name: string,
       _symbol: string,
-      _basetoken: string,
-      _creatorSaleFee: BigNumberish,
-      _vault: string,
+      _creatorSaleFeeNative: BigNumberish,
+      _creatorSaleFeeUSD: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -863,10 +1055,30 @@ export interface XeldoradoCreatorFactoryLT extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    updateCreatorSaleFee(
+    updateCreatorExtraFeeNative(
       _creator: string,
-      _creatorSaleFee: BigNumberish,
+      _creatorExtraFeeNative: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    updateCreatorExtraFeeUSD(
+      _creator: string,
+      _creatorExtraFeeUSD: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateCreatorSaleFeeNative(
+      _creator: string,
+      _creatorSaleFeeNative: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateCreatorSaleFeeUSD(
+      _creator: string,
+      _creatorSaleFeeUSD: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    usdc(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

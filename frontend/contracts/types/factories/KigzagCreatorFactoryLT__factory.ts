@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
 import type {
-  XeldoradoCreatorFactoryLT,
-  XeldoradoCreatorFactoryLTInterface,
-} from "../XeldoradoCreatorFactoryLT";
+  KigzagCreatorFactoryLT,
+  KigzagCreatorFactoryLTInterface,
+} from "../KigzagCreatorFactoryLT";
 
 const _abi = [
   {
@@ -25,6 +25,21 @@ const _abi = [
       {
         internalType: "address",
         name: "_exchangeToken",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_networkWrappedToken",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_usdc",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_dai",
         type: "address",
       },
     ],
@@ -234,25 +249,6 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "creatorSaleFee",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
     name: "creatorToken",
     outputs: [
       {
@@ -273,6 +269,19 @@ const _abi = [
       },
     ],
     name: "creatorVault",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "dai",
     outputs: [
       {
         internalType: "address",
@@ -387,6 +396,44 @@ const _abi = [
         name: "_creator",
         type: "address",
       },
+    ],
+    name: "getCreatorExtraFee",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_creator",
+        type: "address",
+      },
+    ],
+    name: "getCreatorSaleFee",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_creator",
+        type: "address",
+      },
       {
         internalType: "address",
         name: "_admin",
@@ -405,10 +452,33 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "networkWrappedToken",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
         name: "_creator",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_dao",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_vault",
         type: "address",
       },
       {
@@ -422,19 +492,14 @@ const _abi = [
         type: "string",
       },
       {
-        internalType: "address",
-        name: "_basetoken",
-        type: "address",
-      },
-      {
         internalType: "uint256",
-        name: "_creatorSaleFee",
+        name: "_creatorSaleFeeNative",
         type: "uint256",
       },
       {
-        internalType: "address",
-        name: "_vault",
-        type: "address",
+        internalType: "uint256",
+        name: "_creatorSaleFeeUSD",
+        type: "uint256",
       },
     ],
     name: "newCreator",
@@ -442,11 +507,6 @@ const _abi = [
       {
         internalType: "address",
         name: "token",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "dao",
         type: "address",
       },
     ],
@@ -589,30 +649,97 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "_creatorSaleFee",
+        name: "_creatorExtraFeeNative",
         type: "uint256",
       },
     ],
-    name: "updateCreatorSaleFee",
+    name: "updateCreatorExtraFeeNative",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_creator",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_creatorExtraFeeUSD",
+        type: "uint256",
+      },
+    ],
+    name: "updateCreatorExtraFeeUSD",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_creator",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_creatorSaleFeeNative",
+        type: "uint256",
+      },
+    ],
+    name: "updateCreatorSaleFeeNative",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_creator",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_creatorSaleFeeUSD",
+        type: "uint256",
+      },
+    ],
+    name: "updateCreatorSaleFeeUSD",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "usdc",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 
-export class XeldoradoCreatorFactoryLT__factory {
+export class KigzagCreatorFactoryLT__factory {
   static readonly abi = _abi;
-  static createInterface(): XeldoradoCreatorFactoryLTInterface {
-    return new utils.Interface(_abi) as XeldoradoCreatorFactoryLTInterface;
+  static createInterface(): KigzagCreatorFactoryLTInterface {
+    return new utils.Interface(_abi) as KigzagCreatorFactoryLTInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): XeldoradoCreatorFactoryLT {
+  ): KigzagCreatorFactoryLT {
     return new Contract(
       address,
       _abi,
       signerOrProvider
-    ) as XeldoradoCreatorFactoryLT;
+    ) as KigzagCreatorFactoryLT;
   }
 }

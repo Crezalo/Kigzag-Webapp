@@ -4,13 +4,15 @@
 export type { CreatorDAOLT } from "./CreatorDAOLT";
 export type { CreatorNFTLT } from "./CreatorNFTLT";
 export type { CreatorTokenLT } from "./CreatorTokenLT";
+export type { CreatorVaultLT } from "./CreatorVaultLT";
 export type { ERC20 } from "./ERC20";
-export type { XeldoradoCreatorFactoryLT } from "./XeldoradoCreatorFactoryLT";
-export type { XeldoradoVaultLT } from "./XeldoradoVaultLT";
+export type { KigzagCreatorFactoryLT } from "./KigzagCreatorFactoryLT";
+export type { KigzagDeployerLT } from "./KigzagDeployerLT";
 
 export { CreatorDAOLT__factory } from "./factories/CreatorDAOLT__factory";
 export { CreatorNFTLT__factory } from "./factories/CreatorNFTLT__factory";
 export { CreatorTokenLT__factory } from "./factories/CreatorTokenLT__factory";
+export { CreatorVaultLT__factory } from "./factories/CreatorVaultLT__factory";
 export { ERC20__factory } from "./factories/ERC20__factory";
-export { XeldoradoCreatorFactoryLT__factory } from "./factories/XeldoradoCreatorFactoryLT__factory";
-export { XeldoradoVaultLT__factory } from "./factories/XeldoradoVaultLT__factory";
+export { KigzagCreatorFactoryLT__factory } from "./factories/KigzagCreatorFactoryLT__factory";
+export { KigzagDeployerLT__factory } from "./factories/KigzagDeployerLT__factory";

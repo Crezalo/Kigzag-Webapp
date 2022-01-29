@@ -44,24 +44,6 @@ export function useDAOToken(creatorDAOAddress: string, suspense = false) {
   return result;
 }
 
-export function useDAOBaseToken(creatorDAOAddress: string, suspense = false) {
-  const contract = useCreatorDAOContract(creatorDAOAddress);
-
-  const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
-
-  const result = useSWR(
-    shouldFetch ? ["DAOBaseToken", creatorDAOAddress] : null,
-    getDAOBaseToken(contract),
-    {
-      suspense,
-    }
-  );
-
-  useKeepSWRDataLiveAsBlocksArrive(result.mutate);
-
-  return result;
-}
-
 export function useDAOProposals(creatorDAOAddress: string, suspense = false) {
   const contract = useCreatorDAOContract(creatorDAOAddress);
 
@@ -80,7 +62,7 @@ export function useDAOProposals(creatorDAOAddress: string, suspense = false) {
   return result;
 }
 
-export function useDAOTokenBalance(
+export function useDAONativeTokenBalance(
   creatorDAOAddress: string,
   suspense = false
 ) {
@@ -89,8 +71,8 @@ export function useDAOTokenBalance(
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["DAOTokenBalance", creatorDAOAddress] : null,
-    getDAOTokenBalance(contract),
+    shouldFetch ? ["DAONativeTokenBalance", creatorDAOAddress] : null,
+    getDAONativeTokenBalance(contract),
     {
       suspense,
     }
@@ -101,7 +83,7 @@ export function useDAOTokenBalance(
   return result;
 }
 
-export function useDAOBaseTokenBalance(
+export function useDAOUSDBalance(
   creatorDAOAddress: string,
   suspense = false
 ) {
@@ -110,8 +92,8 @@ export function useDAOBaseTokenBalance(
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["DAOBaseTokenBalance", creatorDAOAddress] : null,
-    getDAOBaseTokenBalance(contract),
+    shouldFetch ? ["DAOUSDBalance", creatorDAOAddress] : null,
+    getDAOUSDBalance(contract),
     {
       suspense,
     }
@@ -122,7 +104,7 @@ export function useDAOBaseTokenBalance(
   return result;
 }
 
-export function useDAOAllowances(
+export function useDAONativeTokenAllowances(
   creatorDAOAddress: string,
   of: string,
   suspense = false
@@ -135,8 +117,33 @@ export function useDAOAllowances(
     !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["DAOAllowances", of, creatorDAOAddress] : null,
-    getDAOAllowances(contract, of),
+    shouldFetch ? ["DAONativeTokenAllowances", of, creatorDAOAddress] : null,
+    getDAONativeTokenAllowances(contract, of),
+    {
+      suspense,
+    }
+  );
+
+  useKeepSWRDataLiveAsBlocksArrive(result.mutate);
+
+  return result;
+}
+
+export function useDAOUSDAllowances(
+  creatorDAOAddress: string,
+  of: string,
+  suspense = false
+) {
+  const contract = useCreatorDAOContract(creatorDAOAddress);
+
+  const shouldFetch =
+    typeof of === "string" &&
+    typeof creatorDAOAddress === "string" &&
+    !!contract;
+
+  const result = useSWR(
+    shouldFetch ? ["DAOUSDAllowances", of, creatorDAOAddress] : null,
+    getDAOUSDAllowances(contract, of),
     {
       suspense,
     }
@@ -212,7 +219,7 @@ export function useDAOAllowancesProposalIds(
   return result;
 }
 
-export function useDAOTotalAllowances(
+export function useDAONativeTotalAllowances(
   creatorDAOAddress: string,
   suspense = false
 ) {
@@ -221,8 +228,29 @@ export function useDAOTotalAllowances(
   const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
 
   const result = useSWR(
-    shouldFetch ? ["DAOTotalAllowances", creatorDAOAddress] : null,
-    getDAOTotalAllowances(contract),
+    shouldFetch ? ["DAONativeTotalAllowances", creatorDAOAddress] : null,
+    getDAONativeTotalAllowances(contract),
+    {
+      suspense,
+    }
+  );
+
+  useKeepSWRDataLiveAsBlocksArrive(result.mutate);
+
+  return result;
+}
+
+export function useDAOUSDTotalAllowances(
+  creatorDAOAddress: string,
+  suspense = false
+) {
+  const contract = useCreatorDAOContract(creatorDAOAddress);
+
+  const shouldFetch = typeof creatorDAOAddress === "string" && !!contract;
+
+  const result = useSWR(
+    shouldFetch ? ["DAOUSDTotalAllowances", creatorDAOAddress] : null,
+    getDAOUSDTotalAllowances(contract),
     {
       suspense,
     }
@@ -407,14 +435,6 @@ function getDAOToken(contract: CreatorDAOLT) {
   };
 }
 
-function getDAOBaseToken(contract: CreatorDAOLT) {
-  return async (_: string) => {
-    const basetoken = await contract.basetoken();
-
-    return basetoken;
-  };
-}
-
 function getDAOProposals(contract: CreatorDAOLT) {
   return async (_: string) => {
     const proposals = await contract.proposals();
@@ -423,27 +443,35 @@ function getDAOProposals(contract: CreatorDAOLT) {
   };
 }
 
-function getDAOTokenBalance(contract: CreatorDAOLT) {
+function getDAONativeTokenBalance(contract: CreatorDAOLT) {
   return async (_: string) => {
-    const tokenBalance = await contract.tokenBalance();
+    const nativeTokenBalance = await contract.nativeTokenBalance();
 
-    return tokenBalance;
+    return nativeTokenBalance;
   };
 }
 
-function getDAOBaseTokenBalance(contract: CreatorDAOLT) {
+function getDAOUSDBalance(contract: CreatorDAOLT) {
   return async (_: string) => {
-    const baseTokenBalance = await contract.baseTokenBalance();
+    const usdBalance = await contract.usdBalance();
 
-    return baseTokenBalance;
+    return usdBalance;
   };
 }
 
-function getDAOAllowances(contract: CreatorDAOLT, of: string) {
+function getDAONativeTokenAllowances(contract: CreatorDAOLT, of: string) {
   return async (_: string) => {
-    const allowances = await contract.allowances(of);
+    const nativeTokenAllowances = await contract.nativeTokenAllowances(of);
 
-    return allowances;
+    return nativeTokenAllowances;
+  };
+}
+
+function getDAOUSDAllowances(contract: CreatorDAOLT, of: string) {
+  return async (_: string) => {
+    const usdAllowances = await contract.usdAllowances(of);
+
+    return usdAllowances;
   };
 }
 
@@ -471,11 +499,19 @@ function getDAOAllowancesProposalIds(contract: CreatorDAOLT, index: number) {
   };
 }
 
-function getDAOTotalAllowances(contract: CreatorDAOLT) {
+function getDAONativeTotalAllowances(contract: CreatorDAOLT) {
   return async (_: string) => {
-    const TotalAllowances = await contract.TotalAllowances();
+    const nativeTotalAllowances = await contract.nativeTotalAllowances();
 
-    return TotalAllowances;
+    return nativeTotalAllowances;
+  };
+}
+
+function getDAOUSDTotalAllowances(contract: CreatorDAOLT) {
+  return async (_: string) => {
+    const usdTotalAllowances = await contract.usdTotalAllowances();
+
+    return usdTotalAllowances;
   };
 }
 
@@ -507,10 +543,10 @@ function getDAOProposalManagerAllowanesInfo(
   index: number
 ) {
   return async (_: string) => {
-    const [manager, proposedAllowance] =
+    const [manager, proposedAllowance, isNative] =
       await contract.proposalManagerAllowanesInfo(proposalId, index);
 
-    return { manager, proposedAllowance };
+    return { manager, proposedAllowance, isNative };
   };
 }
 

@@ -29,27 +29,6 @@ export function useCreatorTokenCreator(
   return result;
 }
 
-export function useCreatorTokenBaseToken(
-  creatorTokenAddress: string,
-  suspense = false
-) {
-  const contract = useCreatorTokenContract(creatorTokenAddress);
-
-  const shouldFetch = typeof creatorTokenAddress === "string" && !!contract;
-
-  const result = useSWR(
-    shouldFetch ? ["CreatorTokenBaseToken", creatorTokenAddress] : null,
-    getCreatorTokenBaseToken(contract),
-    {
-      suspense,
-    }
-  );
-
-  useKeepSWRDataLiveAsBlocksArrive(result.mutate);
-
-  return result;
-}
-
 export function useCreatorTokenDAO(
   creatorTokenAddress: string,
   suspense = false
@@ -82,14 +61,6 @@ function getCreatorTokenCreator(contract: CreatorTokenLT) {
     const creator = await contract.creator();
 
     return creator;
-  };
-}
-
-function getCreatorTokenBaseToken(contract: CreatorTokenLT) {
-  return async (_: string) => {
-    const basetoken = await contract.basetoken();
-
-    return basetoken;
   };
 }
 
