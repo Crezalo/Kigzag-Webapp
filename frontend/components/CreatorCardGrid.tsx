@@ -12,27 +12,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface GridItemProps {
-  note: string;
+  creator: string;
   classes: any;
 }
-const GridItem = ({ note, classes }: GridItemProps) => {
+const GridItem = ({ creator, classes }: GridItemProps) => {
   return (
     <Grid item xs={12} sm={6} md={3}>
-      <CreatorCard note={note} />
+      <CreatorCard creator={creator} />
     </Grid>
   );
 };
 
 interface CreatorCardGridProp {
-  notes: string[];
+  creators: string[];
 }
-const CreatorCardGrid = ({ notes }: CreatorCardGridProp) => {
+const CreatorCardGrid = ({ creators }: CreatorCardGridProp) => {
   const classes = useStyles();
   return (
     <div className="greenTextBlackBackground">
       <Grid container spacing={1}>
-        {notes.map((note) => (
-          <GridItem note={note} classes={classes} />
+        {creators.map((creator) => (
+          <GridItem creator={creator} classes={classes} />
         ))}
       </Grid>
     </div>

@@ -27,6 +27,11 @@ a {
   background: black;
 }
 
+.RedeemTreasuryButton{  
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
 .jobs {
   margin-left: auto;
   margin-right: auto;
@@ -121,12 +126,16 @@ a {
   align-items: flex-end;
 }
 
-.creatorImage {
+.creatorImageDiv {
   width: 50%;
   float: left;
   padding: 20px;
   display: flex;
   justify-content: flex-end;
+}
+
+.becomeCreatorButton {
+  margin: 100px 0px 0px 50px;
 }
 
 /* border: 2px solid red; */
@@ -138,8 +147,8 @@ a {
   /* border: 2px solid red; */
   display: flex;
   font-size: larger;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .tokenDetails {
@@ -167,8 +176,8 @@ a {
   box-shadow: 0 1px 1px 3px green;
   transition: 0.3s;
   width: 250px;
-  height: 90px;
-  padding: 10px;
+  height: 110px;
+  padding: 15px;
   margin: 20px auto;
   background-color: black;
   border-radius: 20%;
@@ -182,6 +191,31 @@ a {
   width: 30%;
   float: left;
   display: flex;
+  justify-content: space-around;
+  padding-top: 10px;
+}
+
+.nativeBalance {
+  width: 40%;
+  float: left;
+  margin: 50px 50px 20px 50px;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.usdBalance {
+  width: 40%;
+  float: left;
+  margin: 50px 50px 20px 50px;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.treasuryDiv{
+  width: 90vw;
+  height: 25vh;
+  display: flex;
+  flex-direction: row;
   justify-content: space-around;
 }
 

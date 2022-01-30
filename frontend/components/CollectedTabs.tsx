@@ -15,10 +15,10 @@ const useStyles = makeStyles({
 
 interface CollectedTabsProp {
     nfts: string[][];
-    notes: string[];
+    tokenAddresses: string[];
 }
 
-const CollectedTabs = ({ nfts, notes }: CollectedTabsProp) => {
+const CollectedTabs = ({ nfts, tokenAddresses }: CollectedTabsProp) => {
   const classes = useStyles();
 
   const [value, setValue] = React.useState(0);
@@ -26,13 +26,13 @@ const CollectedTabs = ({ nfts, notes }: CollectedTabsProp) => {
     setValue(newValue);
   };
   let tabs_array = [
-    <TokenCardGrid notes={notes} />,
+    <TokenCardGrid tokenAddresses={tokenAddresses} />,
     <NFTCardGrid nfts={nfts} />,
   ];
 
   return (
     <div style={{backgroundColor:"black", display: "flex", flexDirection: "row"}}>
-        <div>
+        <div style={{width: "10vw"}}>
             <Tabs
                 value={value}
                 onChange={handleChange}
@@ -47,7 +47,7 @@ const CollectedTabs = ({ nfts, notes }: CollectedTabsProp) => {
                 <Tab label="NFTs" className={classes.tab} />
             </Tabs>
         </div>
-        <div>
+        <div style={{width: "90vw"}}>
             <Paper>{tabs_array[value]}</Paper>
         </div>
     </div>

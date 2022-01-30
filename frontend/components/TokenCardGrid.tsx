@@ -13,31 +13,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface GridItemProps {
-  note: string;
+  tokenAddress: string;
   classes: any;
 }
-const GridItem = ({ note, classes }: GridItemProps) => {
+const GridItem = ({ tokenAddress, classes }: GridItemProps) => {
   return (
     // From 0 to 600px wide (smart-phones), I take up 12 columns, or the whole device width!
     // From 600-690px wide (tablets), I take up 6 out of 12 columns, so 2 columns fit the screen.
     // From 960px wide and above, I take up 25% of the device (3/12), so 4 columns fit the screen.
     <Grid item xs={12} sm={6} md={3}>
-      <TokenCard note={note} />
+      <TokenCard tokenAddress={tokenAddress} />
       {/* <Paper className={classes.paper}>item</Paper> */}
     </Grid>
   );
 };
 
 interface TokenCardGridProp {
-  notes: string[];
+  tokenAddresses: string[];
 }
-const TokenCardGrid = ({ notes }: TokenCardGridProp) => {
+const TokenCardGrid = ({ tokenAddresses }: TokenCardGridProp) => {
   const classes = useStyles();
   return (
     <div className="greenTextBlackBackground">
       <Grid container spacing={1}>
-        {notes.map((note) => (
-          <GridItem note={note} classes={classes} />
+        {tokenAddresses.map((tokenAddress) => (
+          <GridItem tokenAddress={tokenAddress} classes={classes} />
         ))}
       </Grid>
     </div>

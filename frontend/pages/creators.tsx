@@ -2,30 +2,42 @@ import React from "react";
 import CreatorCardGrid from "../components/CreatorCardGrid";
 
 export default function Creators() {
-  const notes = [
-    "500",
-    "50",
-    "5000",
-    "500",
-    "50",
-    "5000",
-    "500",
-    "50",
-    "5000",
-    "15",
+  const creators = [
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
+    "0xa53fC4fcB7A398B4bBD6B7316999e5E6128E4163",
   ];
   return (
     <div
       className="greenTextBlackBackground"
       style={{
-        backgroundImage: require("../assets/background.png"),
         justifyContent: "center",
-        width: "100%",
-        fontSize: 25,
+        fontSize: 25
       }}
     >
       <div style={{ marginTop: 25, marginLeft: 0 }}>
-        <CreatorCardGrid notes={notes} />
+        <CreatorCardGrid creators={creators} />
       </div>
     </div>
   );

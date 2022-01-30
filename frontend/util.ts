@@ -9,6 +9,11 @@ import {
   BLOCK_EXPLORER,
   CURRENCY_LIST,
   NETWORK_NAME_LIST,
+  LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST,
+  XELDORADO_TOKEN_ADDRESS_LIST,
+  NATIVE_TOKEN_SUPPORTED_ADDRESS,
+  USDC_SUPPORTED_ADDRESS,
+  DAI_SUPPORTED_ADDRESS,
 } from "./constants/chains";
 
 export function shortenHex(hex: string, length = 4) {
@@ -26,7 +31,7 @@ export function shortenHex(hex: string, length = 4) {
 // };
 
 export function formatBlockExplorerLink(
-  type: "Account" | "Transaction" | "NFTOwner",
+  type: "Account" | "Transaction" | "Owner",
   data: [number, string, string]
 ) {
   switch (type) {
@@ -40,7 +45,7 @@ export function formatBlockExplorerLink(
       // return `https://${ETHERSCAN_PREFIXES[chainId]}etherscan.io/tx/${hash}`;
       return `https://${BLOCK_EXPLORER[chainId]}/tx/${hash}`;
     }
-    case "NFTOwner": {
+    case "Owner": {
       const [chainId, contract, owner] = data;
       // return `https://${ETHERSCAN_PREFIXES[chainId]}etherscan.io/tx/${hash}`;
       return `https://${BLOCK_EXPLORER[chainId]}/token/${contract}?a=${owner}`;
@@ -58,6 +63,26 @@ export function chainIdSupported(chainId: number) {
 
 export function networkName(chainId: number) {
   return NETWORK_NAME_LIST[chainId];
+}
+
+export function creatorFactoryLT(chainId: number) {
+  return LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId];
+}
+
+export function exchangeTokenLT(chainId: number) {
+  return XELDORADO_TOKEN_ADDRESS_LIST[chainId];
+}
+
+export function nativeTokenLT(chainId: number) {
+  return NATIVE_TOKEN_SUPPORTED_ADDRESS[chainId];
+}
+
+export function usdcLT(chainId: number) {
+  return USDC_SUPPORTED_ADDRESS[chainId];
+}
+
+export function daiLT(chainId: number) {
+  return DAI_SUPPORTED_ADDRESS[chainId];
 }
 
 interface SwitchNetworkArguments {

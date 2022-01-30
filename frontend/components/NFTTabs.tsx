@@ -2,7 +2,7 @@ import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab/Tab";
 import Tabs from "@material-ui/core/Tabs/Tabs";
-import React from "react";
+import { useState } from "react";
 import NFTCardGrid from "./NFTCardGrid";
 
 const useStyles = makeStyles({
@@ -19,7 +19,7 @@ interface NFTTabsProp {
 const NFTTabs = ({ nfts }: NFTTabsProp) => {
   const classes = useStyles();
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -32,7 +32,7 @@ const NFTTabs = ({ nfts }: NFTTabsProp) => {
 
   return (
     <div style={{backgroundColor:"black", display: "flex", flexDirection: "row"}}>
-        <div>
+        <div style={{width: "10vw"}}>
             <Tabs
                 value={value}
                 onChange={handleChange}
@@ -49,7 +49,7 @@ const NFTTabs = ({ nfts }: NFTTabsProp) => {
                 <Tab label="Sold" className={classes.tab} />
             </Tabs>
         </div>
-        <div>
+        <div style={{width: "90vw"}}>
             <Paper>{tabs_array[value]}</Paper>
         </div>
     </div>

@@ -147,7 +147,7 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
       >
         <a
           {...{
-            href: formatBlockExplorerLink("NFTOwner", [
+            href: formatBlockExplorerLink("Owner", [
               chainId,
               contract,
               ownedBy,
