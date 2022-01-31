@@ -27,7 +27,7 @@ const CreatorCard = ({ creator }: CreatorCardProp) => {
       }
     >
       <div className="creatorCardImage">
-        <Jdenticon size={200} value={creator} />
+        <Jdenticon size={180} value={creator} />
       </div>
       <div style={{padding:"0px 5px 8px 15px"}}>
         <h2>{name.substring(0,12)+".."}</h2>

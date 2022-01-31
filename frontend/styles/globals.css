@@ -22,7 +22,6 @@ a {
 .greenTextBlackBackground {
   --tw-text-opacity: 1;
   color: rgb(34 197 94 / var(--tw-text-opacity));
-  font-weight: 700;
   padding: 0.5rem;
   background: black;
 }
@@ -143,12 +142,31 @@ a {
 .description {
   width: 50%;
   float: left;
-  padding: 20px;
+  padding: 20px 20px 20px 20px;
   /* border: 2px solid red; */
   display: flex;
   font-size: larger;
   flex-direction: row;
+  font-size: 20px;
   justify-content: space-around;
+}
+
+.creatorProfileDescription {
+  width: 50%;
+  float: left;
+  padding: 20px 20px 20px 60px;
+  /* border: 2px solid red; */
+  display: flex;
+  font-size: larger;
+  flex-direction: row;
+  font-size: 20px;
+}
+
+.creatorTokenPrice{
+  font-size: 15px;
+  margin-left: 50px; 
+  width: 10vw;
+  text-align: center;
 }
 
 .tokenDetails {

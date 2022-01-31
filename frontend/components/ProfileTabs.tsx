@@ -221,7 +221,7 @@ const ProfileTabs = ({onCreatorProfile, creator}: ProfileTabsProps) => {
               style: { backgroundColor: "green" },
             }}
           >
-            <Tab label="NFTs" className={classes.tab} />
+            <Tab label="NFT" className={classes.tab} />
             <Tab label="DAO" className={classes.tab} />
           </Tabs><br /><Paper>{tabs_array[value]}</Paper></>
         ) : ( // on dashboard
@@ -235,7 +235,7 @@ const ProfileTabs = ({onCreatorProfile, creator}: ProfileTabsProps) => {
                 style: { backgroundColor: "green" },
               }}
             >
-              <Tab label="NFTs" className={classes.tab} />
+              <Tab label="NFT" className={classes.tab} />
               <Tab label="DAO" className={classes.tab} />
               <Tab label="Collected" className={classes.tab} />
             </Tabs><br /><Paper>{tabs_array[value]}</Paper></>

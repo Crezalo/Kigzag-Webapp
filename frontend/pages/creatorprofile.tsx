@@ -17,6 +17,7 @@ import {
 } from "../hooks/ERC20/useTokenContract";
 import { useCreatorFactoryCreatorDAO, useCreatorFactoryCreatorSaleFee, useCreatorFactoryCreatorToken } from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
 import { creatorFactoryLT, parseBalance } from "../util";
+import { fontWeight, textAlign, width } from "@mui/system";
 
 export default function CreatorProfile() {
   const router = useRouter();
@@ -67,7 +68,7 @@ export default function CreatorProfile() {
         <div className="greenTextBlackBackground" style={{ fontSize: 25 }}>
           <div style={{ display: "flex" }}>
             <div className="creatorImageDiv">
-              <Jdenticon size={200} value={address.toString()} />
+              <Jdenticon size={250} value={address.toString()} />
             </div>
             {creatorToken === ZERO_ADDRESS ? (
               <div className="becomeCreatorButton">
@@ -77,13 +78,27 @@ export default function CreatorProfile() {
                 />
               </div>
             ) : (
-              <div className="description">
-                <div style={{minWidth:"25%"}}>
-                  <div>{creatorTokenName} ({creatorTokenSymbol})</div>
-                  <div>Price:</div>
-                  <div style={{fontSize: 20, marginLeft: "50px"}}>1 {creatorTokenSymbol} = {nativeCreatorPrice} {nativeTokenSymbol}</div>
-                  <div style={{fontSize: 20, marginLeft: "50px"}}>1 {creatorTokenSymbol} = {usdCreatorPrice} USD</div>
-                  <div>Total Supply: {creatorTokenTotalSupply}</div>
+              <div className="creatorProfileDescription">
+                <div style={{minWidth:"25vw", width: "30vw", justifyContent: "center"}}>
+                  <div style={{fontSize:"25px", fontWeight:"bold"}}>{creatorTokenName} ({creatorTokenSymbol})</div>
+                  <div style={{color: "grey", fontWeight:"bold", fontSize: "18px", marginTop: "20px", marginBottom: "12px"}}>Price</div>
+                  <div style={{display: "flex", flexDirection: "row", marginLeft:"20px", marginBottom:"10px"}}>
+                    <div style={{color: "grey", fontSize: "18px",paddingTop: "2px", marginRight: "2px"}}>Native:</div>
+                    <div style={{color: "white"}}>{nativeCreatorPrice} {nativeTokenSymbol}</div>
+                  </div>
+                  <div style={{display: "flex", flexDirection: "row", marginLeft:"20px", marginBottom:"10px"}}>
+                    <div style={{color: "grey", fontSize: "18px",paddingTop: "2px", marginRight: "2px"}}>USD:</div>
+                    <div style={{color: "white"}}>{usdCreatorPrice} USD</div>
+                  </div>
+                  <div style={{display: "flex", flexDirection: "row"}}>
+                    <div className="w-full bg-green-500 text-white px-2 py-2 rounded" style={{ width:"150px", height:"50px", marginTop: "15px", textAlign: "center"}}>
+                      <h2 style={{color: "white", fontWeight:"bold", fontSize: "18px"}}>Join My Fam</h2>
+                    </div>
+                    {/* <div className="w-full bg-grey text-white px-2 py-2 rounded" style={{ width:"150px"}}>
+                      <div style={{color: "grey", fontWeight:"bold", fontSize: "18px"}}>Total Supply:</div>
+                      <h2 style={{color: "white", fontWeight:"bold", fontSize: "18px"}}>{creatorTokenTotalSupply}</h2>
+                    </div> */}
+                  </div>
                   {/* <div>Social Handles</div> */}
                 </div>
               </div>

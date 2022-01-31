@@ -129,7 +129,7 @@ const GridItem = ({ proposal, dao, classes }: GridItemProps) => {
 interface ProposalCardGridProp {
   dao: string;
 }
-const ProposalGridCard = ({ dao }: ProposalCardGridProp) => {
+const DAOProposalGridCard = ({ dao }: ProposalCardGridProp) => {
   const classes = useStyles();
 
   const { chainId, account, library } = useWeb3React();
@@ -171,4 +171,4 @@ const ProposalGridCard = ({ dao }: ProposalCardGridProp) => {
     </div>
   );
 };
-export default ProposalGridCard;
+export default DAOProposalGridCard;

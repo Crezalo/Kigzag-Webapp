@@ -6,7 +6,8 @@ import { useWeb3React } from "@web3-react/core";
 import { useState } from "react";
 import { DAI_SUPPORTED_ADDRESS, NATIVE_TOKEN_SUPPORTED_ADDRESS, USDC_SUPPORTED_ADDRESS } from "../constants/chains";
 import DAOAllowances from "./DAOAllowances";
-import ProposalGridCard from "./ProposalGridCard";
+import DAOTreasury from "./DAOTreasury";
+import DAOProposalGridCard from "./DAOProposalGridCard";
 import TokenCardGrid from "./TokenCardGrid";
 
 const useStyles = makeStyles({
@@ -36,9 +37,9 @@ const DAOTabs = ({ dao }: DAOTabsProp) => {
   ];
 
   let tabs_array = [
-    <TokenCardGrid tokenAddresses={TreasuryTokens} />, // Listed for Sale
-    <ProposalGridCard dao={dao} />, // Listed for Sale
+    <DAOTreasury dao={dao} />, // Listed for Sale
     <DAOAllowances dao={dao} />, // Listed for Sale
+    <DAOProposalGridCard dao={dao} />, // Listed for Sale
   ];
 
   return (
@@ -61,8 +62,8 @@ const DAOTabs = ({ dao }: DAOTabsProp) => {
           orientation="vertical"
         >
           <Tab label="Treasury" className={classes.tab} />
-          <Tab label="Proposals" className={classes.tab} />
           <Tab label="Allowance" className={classes.tab} />
+          <Tab label="Proposals" className={classes.tab} />
         </Tabs>
       </div>
       <div style={{width: "90vw"}}>

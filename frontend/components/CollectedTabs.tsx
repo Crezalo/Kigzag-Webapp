@@ -44,7 +44,7 @@ const CollectedTabs = ({ nfts, tokenAddresses }: CollectedTabsProp) => {
                 orientation="vertical"
             >
                 <Tab label="Tokens" className={classes.tab} />
-                <Tab label="NFTs" className={classes.tab} />
+                <Tab label="NFT" className={classes.tab} />
             </Tabs>
         </div>
         <div style={{width: "90vw"}}>
