@@ -71,13 +71,10 @@ export default function Home() {
                     <div style={{color: "white"}}>{usdCreatorPrice} USD</div>
                   </div>
                   <div style={{display: "flex", flexDirection: "row"}}>
-                    <div className="w-full bg-green-500 text-white px-2 py-2 rounded" style={{ width:"150px", height:"50px", marginTop: "15px", textAlign: "center"}}>
-                      <h2 style={{color: "white", fontWeight:"bold", fontSize: "18px"}}>Join My Fam</h2>
+                    <div className="w-full bg-grey text-white px-2 py-2 rounded" style={{ width:"150px"}}>
+                      <div style={{color: "grey", fontWeight:"bold", fontSize: "18px"}}>Total Supply</div>
+                      <h2 style={{color: "white", fontWeight:"bold", fontSize: "18px", marginLeft: "10px"}}>{creatorTokenTotalSupply}</h2>
                     </div>
-                    {/* <div className="w-full bg-grey text-white px-2 py-2 rounded" style={{ width:"150px"}}>
-                      <div style={{color: "grey", fontWeight:"bold", fontSize: "18px"}}>Total Supply:</div>
-                      <h2 style={{color: "white", fontWeight:"bold", fontSize: "18px"}}>{creatorTokenTotalSupply}</h2>
-                    </div> */}
                   </div>
                   {/* <div>Social Handles</div> */}
                 </div>
