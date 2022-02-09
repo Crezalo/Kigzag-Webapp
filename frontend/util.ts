@@ -10,7 +10,7 @@ import {
   CURRENCY_LIST,
   NETWORK_NAME_LIST,
   LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST,
-  XELDORADO_TOKEN_ADDRESS_LIST,
+  KIGZAG_TOKEN_ADDRESS_LIST,
   NATIVE_TOKEN_SUPPORTED_ADDRESS,
   USDC_SUPPORTED_ADDRESS,
   DAI_SUPPORTED_ADDRESS,
@@ -70,7 +70,7 @@ export function creatorFactoryLT(chainId: number) {
 }
 
 export function exchangeTokenLT(chainId: number) {
-  return XELDORADO_TOKEN_ADDRESS_LIST[chainId];
+  return KIGZAG_TOKEN_ADDRESS_LIST[chainId];
 }
 
 export function nativeTokenLT(chainId: number) {

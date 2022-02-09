@@ -75,7 +75,7 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
               query: { data: creator },
             });
           }}
-          className="text-blue-500"
+          className="text-green-500"
         >
           ({useENSName(creator) || shortenHex(creator, 2)})
         </button>
@@ -105,7 +105,7 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
       <p className="text-green-500" style={leftStyle}>
         Contract:
       </p>
-      <p className="text-blue-500" style={rightStyle}>
+      <p className="text-green-500" style={rightStyle}>
         <a
           {...{
             href: formatBlockExplorerLink("Account", [chainId, contract, ""]),
@@ -156,7 +156,7 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
             rel: "noopener noreferrer",
           }}
           style={{ display: "flex", flexDirection: "row", width: "50%" }}
-          className="text-blue-500"
+          className="text-green-500"
         >
           {isSold ? "Vault" : useENSName(ownedBy) || shortenHex(ownedBy, 2)}
           <svg

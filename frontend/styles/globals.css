@@ -20,8 +20,7 @@ a {
 }
 
 .greenTextBlackBackground {
-  --tw-text-opacity: 1;
-  color: rgb(34 197 94 / var(--tw-text-opacity));
+  color: #4EC660;
   padding: 0.5rem;
   background: black;
 }
@@ -58,7 +57,7 @@ a {
   /* Add shadows to create the "card" effect */
   box-shadow: 0 1px 1px 3px green;
   transition: 0.3s;
-  width: 1000px;
+  width: 800px;
   height: auto;
   margin: 20px auto;
   padding-top: 20px;
@@ -92,6 +91,16 @@ a {
 }
 
 /* Add some padding inside the card container */
+.proposalVoting {
+  padding: 2px 16px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+/* Add some padding inside the card container */
 .proposalLink {
   color: rgb(0, 140, 255);
   text-decoration: underline;
@@ -100,7 +109,7 @@ a {
 .choiceVote{
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: left;
   padding: 4px 50px 6px 50px;
 }
 
@@ -262,6 +271,7 @@ a {
 .nftCardImage {
   margin: auto;
   display: table;
+  padding: 10px;
 }
 
 .nftCardDetails {
@@ -311,7 +321,7 @@ a {
 }
 
 .link {
-  text-decoration-color: blue;
+  text-decoration-color: #4EC660;
 }
 
 .bidButton:hover {

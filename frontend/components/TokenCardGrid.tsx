@@ -1,8 +1,12 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Paper } from "@material-ui/core";
 import TokenCard from "./TokenCard";
+import { useWeb3React } from "@web3-react/core";
+import { useTokenBalance } from "../hooks/ERC20/useTokenContract";
+import { parseBalance } from "../util";
+import { getTokens } from "../services/api-service";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -28,15 +32,45 @@ const GridItem = ({ tokenAddress, classes }: GridItemProps) => {
   );
 };
 
-interface TokenCardGridProp {
-  tokenAddresses: string[];
-}
-const TokenCardGrid = ({ tokenAddresses }: TokenCardGridProp) => {
+const TokenCardGrid = () => {
   const classes = useStyles();
+  const { chainId, account, library } = useWeb3React();
+
+  ////////////////////// getting all tokens
+  const [alltokensList, setAlltokensList] = useState([]);
+
+  const getAllTokenList = () => {
+    useEffect(() => {
+      async function getData() {
+        const res = await getTokens(account, library, chainId);
+        setAlltokensList(res);
+      }
+      getData();
+    }, [account, chainId]);
+  };
+
+  getAllTokenList();
+
+  const alltokens = [];
+
+  if (alltokensList) {
+    for (var i = 0; i < alltokensList.length; i++) {
+      alltokens.push(alltokensList[i].tokenaddress);
+    }
+  }
+
   return (
     <div className="greenTextBlackBackground">
       <Grid container spacing={1}>
-        {tokenAddresses.map((tokenAddress) => (
+        {alltokens.map((tokenAddress) => (
+          // Resolve Render more hooks issue over here to only show those tokens that have non zero balance
+          // <>
+          //   {parseBalance(useTokenBalance(account, tokenAddress).data??0) !=  '0.000' ? (
+          //     <GridItem tokenAddress={tokenAddress} classes={classes} />
+          //   ) : (
+          //     <></>
+          //   )}
+          // </>
           <GridItem tokenAddress={tokenAddress} classes={classes} />
         ))}
       </Grid>

@@ -68,7 +68,7 @@ export default function CreatorProfile() {
         <div className="greenTextBlackBackground" style={{ fontSize: 25 }}>
           <div style={{ display: "flex" }}>
             <div className="creatorImageDiv">
-              <Jdenticon size={250} value={address.toString()} />
+              <Jdenticon size={250} value={address.toString().toLocaleLowerCase()} />
             </div>
             {creatorToken === ZERO_ADDRESS ? (
               <div className="becomeCreatorButton">

@@ -28,7 +28,7 @@ const Header = () => {
         </a>
       </Link>
       <Link href="/creators">
-        <a className="mr-6 text-green-500 py-2" style={{ fontSize: 18 }}>
+        <a className="mr-6 py-2" style={{ fontSize: 18, color: "#4EC660" }}>
           Creators
         </a>
       </Link>

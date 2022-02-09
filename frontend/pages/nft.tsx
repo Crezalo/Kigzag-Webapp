@@ -15,6 +15,7 @@ export default function NFT() {
     contract.toString(),
     parseInt(tokenId.toString())
   ).data;
+  
   const [metadata, setmetadata] = useState({
     metadata: [],
   });
@@ -52,14 +53,14 @@ export default function NFT() {
               {external_url != "" ? (
                 <Image
                   src={external_url}
-                  alt="Image Not Working"
+                  alt="Loading ..."
                   width={550}
                   height={550}
                 />
               ) : (
                 <Image
                   src={image}
-                  alt="Image Not Working"
+                  alt="Loading ..."
                   width={550}
                   height={550}
                 />

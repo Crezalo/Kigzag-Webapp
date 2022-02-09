@@ -2,95 +2,377 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { makeStyles, Grid, LinearProgress } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST } from "../constants/chains";
 import { ZERO_ADDRESS } from "../constants/misc";
-import { useDAOProposal, useDAOProposals } from "../hooks/LoyaltyTokenContract/useCreatorDAOContract";
+import {
+  useDAOProposal,
+  useDAOProposals,
+  useDAOProposalVoteDataInfo,
+} from "../hooks/LoyaltyTokenContract/useCreatorDAOContract";
+import useENSName from "../hooks/useENSName";
+import { getDAOAllProposals } from "../services/api-service";
+import { currencyName, formatBlockExplorerLink, parseBalance, shortenHex } from "../util";
 import BasicModal from "./BasicModal";
 import CreateProposalModal from "./CreateProposalModal";
 
 const useProgressBarstyles = makeStyles((theme) => ({
   colorPrimary: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   barColorPrimary: {
-    backgroundColor: '#4EC660',
-  }
+    backgroundColor: "#4EC660",
+  },
 }));
 
 interface ProposalCardProp {
   proposal: {
-    proposer: string;
-    link: string;
-    category: BigNumber;
-    choices: BigNumber;
+    author: string;
+    chainid: number;
+    choices: string;
+    creator: string;
+    daoaddress: string;
+    duration: number;
+    id: string;
+    isallowancesproposal: true;
+    managers: string;
+    allowances: string;
+    isnative: boolean;
+    proposaldescription: string;
+    proposalid: number;
+    proposallink: string;
+    proposaltitle: string;
+    starttime: string;
   };
   dao: string;
 }
 
 export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
-  
   const classes = useProgressBarstyles();
-  const {proposer, link, category, choices} = proposal;
+  const { chainId, account } = useWeb3React();
+  const choices = proposal.choices.split("\t");
+  var totalVoterTokenCount = 0;
+  var choiceData = [];
+
+  for (var i = 0; i < choices.length; i++) {
+    try {
+      var voterTokenCount = parseFloat(
+        parseBalance(
+          useDAOProposalVoteDataInfo(dao, proposal.proposalid, i).data
+            .votersTokenCount ?? 0
+        )
+      );
+    } catch (error) {
+      var voterTokenCount = 0.0;
+    }
+    totalVoterTokenCount += voterTokenCount;
+    choiceData.push({
+      choice: choices[i],
+      voterTokenCount: voterTokenCount,
+    });
+  }
+  const votingTimeLeft =
+    Date.now() - Date.parse(proposal.starttime) < proposal.duration * 1000 ? (
+      Date.parse(proposal.starttime) + proposal.duration * 1000 - Date.now() >
+      1000 * 3600 ? (
+        Math.round(
+          (Date.parse(proposal.starttime) +
+            proposal.duration * 1000 -
+            Date.now()) /
+            (1000 * 3600)
+        ).toString() + "h left"
+      ) : Date.parse(proposal.starttime) +
+          proposal.duration * 1000 -
+          Date.now() >
+        1000 * 60 ? (
+        Math.round(
+          (Date.parse(proposal.starttime) +
+            proposal.duration * 1000 -
+            Date.now()) /
+            (1000 * 60)
+        ).toString() + "m left"
+      ) : (
+        Math.round(
+          (Date.parse(proposal.starttime) +
+            proposal.duration * 1000 -
+            Date.now()) /
+            (1000 * 60)
+        ).toString() + "s left"
+      )
+    ) : (
+      <p style={{ color: "red" }}>Voting Closed</p>
+    );
+
+  try {
+    var managers = proposal.managers.split("\t");
+    var allowances = proposal.allowances.split("\t");
+    var isnative = proposal.isnative;
+  } catch (error) {
+    var managers = [""];
+    var allowances = [""];
+    var isnative = false;
+  }
+
+  var allowanceData = [];
+
+  for (var i = 0; i < managers.length; i++) {
+    if (managers[i] !== "") {
+      allowanceData.push({
+        manager: managers[i],
+        allowance: allowances[i],
+      });
+    }
+  }
+
+  console.log(allowanceData);
 
   return (
     <>
-      {proposer===ZERO_ADDRESS? (
+      {proposal.author === ZERO_ADDRESS ? (
         <></>
-      ):(
+      ) : (
         <div>
-          {link? (
-            <section className="proposalCard">
+          <section className="proposalCard">
+            {!proposal.isallowancesproposal ? (
               <div className="proposalDetails">
-                <h2>
-                  <Link href={link}>
-                    <a target="_blank" className="proposalLink">
-                      General Proposal Link
-                    </a>
-                  </Link>
-                </h2>
+                <h2>{proposal.proposaltitle}</h2>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    marginTop: "10px",
+                    marginLeft: "10px",
+                    textAlign: "left",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <p style={{ color: "grey" }}>Author</p>&nbsp;
+                  <a
+                    {...{
+                      href: formatBlockExplorerLink("Account", [
+                        chainId,
+                        proposal.author,
+                        "",
+                      ]),
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                    }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      width: "30%",
+                    }}
+                  >
+                    (
+                    {useENSName(proposal.author) ||
+                      shortenHex(proposal.author, 2)}
+                    )
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="17px"
+                      height="17px"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#C3C5CB"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      style={{ marginLeft: "12px" }}
+                    >
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                      <polyline points="15 3 21 3 21 9"></polyline>
+                      <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                  </a>
+                </p>
+                <p
+                  style={{
+                    fontSize: "12px",
+                    marginTop: "10px",
+                    marginLeft: "10px",
+                    textAlign: "left",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  {votingTimeLeft}
+                </p>
+                <p
+                  style={{
+                    fontSize: "18px",
+                    margin: "10px",
+                    textAlign: "left",
+                  }}
+                >
+                  {proposal.proposaldescription}
+                </p>
               </div>
-              <div className="proposalDetails">
-                <p className="choiceVote">
-                  <BasicModal modalButtonText="Choice 1" modalBody={<CreateProposalModal />} />
-                  <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px' }} variant="determinate" value={20} />
-                  <h2>20%</h2>
-                </p>
-                <p className="choiceVote">
-                  <BasicModal modalButtonText="Choice 2" modalBody={<CreateProposalModal />} />
-                  <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px'}} variant="determinate" value={30} />
-                  <h2>30%</h2>
-                </p>
-                <p className="choiceVote">
-                  <BasicModal modalButtonText="Choice 3" modalBody={<CreateProposalModal />} />
-                  <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px'}} variant="determinate" value={40} />
-                  <h2>40%</h2>
-                </p>
-                <p className="choiceVote">
-                  <BasicModal modalButtonText="Choice 4" modalBody={<CreateProposalModal />} />
-                  <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px'}} variant="determinate" value={10} />
-                  <h2>10%</h2>
-                </p>
-              </div>
-            </section>
-          ) : (
-            <section className="proposalCard">
+            ) : (
               <div className="proposalDetails">
                 <h2>Allowances Proposal</h2>
-              </div>
-              <div className="proposalDetails">
-                <p className="choiceVote">
-                  <BasicModal modalButtonText="Choice 1" modalBody={<CreateProposalModal />} />
-                  <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px' }} variant="determinate" value={20} />
-                  <h2>20%</h2>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    marginTop: "10px",
+                    marginLeft: "10px",
+                    textAlign: "left",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <p style={{ color: "grey" }}>Author</p>&nbsp;
+                  <a
+                    {...{
+                      href: formatBlockExplorerLink("Account", [
+                        chainId,
+                        proposal.author,
+                        "",
+                      ]),
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                    }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      width: "30%",
+                    }}
+                  >
+                    (
+                    {useENSName(proposal.author) ||
+                      shortenHex(proposal.author, 2)}
+                    )
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="17px"
+                      height="17px"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#C3C5CB"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      style={{ marginLeft: "12px" }}
+                    >
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                      <polyline points="15 3 21 3 21 9"></polyline>
+                      <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                  </a>
                 </p>
-                <p className="choiceVote">
-                  <BasicModal modalButtonText="Choice 2" modalBody={<CreateProposalModal />} />
-                  <LinearProgress classes={classes} style={{width: '50%', margin: '10px', padding: '10px'}} variant="determinate" value={30} />
-                  <h2>30%</h2>
+                <p
+                  style={{
+                    fontSize: "12px",
+                    marginTop: "10px",
+                    marginLeft: "10px",
+                    textAlign: "left",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  {votingTimeLeft}
+                </p>
+                <p
+                  style={{
+                    fontSize: "18px",
+                    margin: "10px",
+                    textAlign: "center",
+                  }}
+                >
+                  <p style={{ color: "grey" }}>Managers</p>
+                  {allowanceData.map((adata) => (
+                    <p
+                      style={{
+                        fontSize: "18px",
+                        marginTop: "10px",
+                        marginLeft: "10px",
+                        textAlign: "center",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <a
+                        {...{
+                          href: formatBlockExplorerLink("Account", [
+                            chainId,
+                            adata.manager,
+                            "",
+                          ]),
+                          target: "_blank",
+                          rel: "noopener noreferrer",
+                        }}
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          width: "30%",
+                        }}
+                      >
+                        (
+                        {useENSName(adata.manager) ||
+                          shortenHex(adata.manager, 4)}
+                        )
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="17px"
+                          height="17px"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#C3C5CB"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          style={{ marginLeft: "12px" }}
+                        >
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                          <polyline points="15 3 21 3 21 9"></polyline>
+                          <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                      </a>
+                      <p>
+                        {parseBalance(adata.allowance)} {isnative ? currencyName(chainId) : "USD"}
+                      </p>
+                    </p>
+                  ))}
                 </p>
               </div>
-            </section>
-          )}
+            )}
+            <div className="proposalVoting">
+              {choiceData.map((choiceDataPoint, index) => (
+                <p className="choiceVote">
+                  <BasicModal
+                    modalButtonText={choiceDataPoint.choice}
+                    modalBody={<CreateProposalModal />}
+                  />
+                  <LinearProgress
+                    classes={classes}
+                    style={{
+                      width: "30%",
+                      margin: "10px 10px 10px 150px",
+                      padding: "10px",
+                    }}
+                    variant="determinate"
+                    value={
+                      totalVoterTokenCount > 0
+                        ? Math.round(
+                            (choiceDataPoint.voterTokenCount * 10000) /
+                              totalVoterTokenCount
+                          ) / 100
+                        : 0
+                    }
+                  />
+                  <h2>
+                    {totalVoterTokenCount > 0
+                      ? Math.round(
+                          (choiceDataPoint.voterTokenCount * 10000) /
+                            totalVoterTokenCount
+                        ) / 100
+                      : 0}
+                    %
+                  </h2>
+                </p>
+              ))}
+            </div>
+          </section>
         </div>
       )}
     </>
@@ -107,10 +389,22 @@ const useStyles = makeStyles((theme) => ({
 
 interface GridItemProps {
   proposal: {
-    proposer: string;
-    link: string;
-    category: BigNumber;
-    choices: BigNumber;
+    author: string;
+    chainid: number;
+    choices: string;
+    creator: string;
+    daoaddress: string;
+    duration: number;
+    id: string;
+    isallowancesproposal: true;
+    managers: string;
+    allowances: string;
+    isnative: boolean;
+    proposaldescription: string;
+    proposalid: number;
+    proposallink: string;
+    proposaltitle: string;
+    starttime: string;
   };
   dao: string;
   classes: any;
@@ -133,36 +427,35 @@ const DAOProposalGridCard = ({ dao }: ProposalCardGridProp) => {
   const classes = useStyles();
 
   const { chainId, account, library } = useWeb3React();
-  
-  const proposalCount = useDAOProposals(dao).data?? "";
 
-  console.log("proposalCount: "+proposalCount);
+  const [proposalsList, setProposalsList] = useState([]);
 
-  const proposer = "";
-  const link = "";
-  const category = BigNumber.from(0);
-  const choices = BigNumber.from(0);
+  const getProposalList = () => {
+    useEffect(() => {
+      async function getData() {
+        const res = await getDAOAllProposals(account, library, chainId, dao);
+        setProposalsList(res);
+      }
+      getData();
+    }, [account, chainId]);
+  };
 
-  const nullProposal = {proposer, link, category, choices};
+  getProposalList();
 
-  const proposal1 = useDAOProposal(dao,0).data ?? nullProposal;
-  const proposal2 = useDAOProposal(dao,1).data ?? nullProposal;
-  const proposal3 = useDAOProposal(dao,2).data ?? nullProposal;
-  const proposal4 = useDAOProposal(dao,3).data ?? nullProposal;
-  const proposal5 = useDAOProposal(dao,4).data ?? nullProposal;
-  const proposal6 = useDAOProposal(dao,5).data ?? nullProposal;
-  const proposal7 = useDAOProposal(dao,6).data ?? nullProposal;
-  const proposal8 = useDAOProposal(dao,7).data ?? nullProposal;
-  const proposal9 = useDAOProposal(dao,8).data ?? nullProposal;
-  const proposal10 = useDAOProposal(dao,9).data ?? nullProposal;
+  const proposals = [];
 
-  console.log("proposal10: " + proposal10.proposer);
-
-  const proposals = [proposal1, proposal2, proposal3, proposal4, proposal5, proposal6, proposal7, proposal8, proposal9, proposal10];
+  if (proposalsList) {
+    for (const x of proposalsList) {
+      proposals.push(x);
+    }
+  }
 
   return (
     <div className="greenTextBlackBackground">
-      <BasicModal modalButtonText="Create Proposal" modalBody={<CreateProposalModal />} />
+      <BasicModal
+        modalButtonText="Create Proposal"
+        modalBody={<CreateProposalModal />}
+      />
       <Grid container spacing={1}>
         {proposals.map((proposal) => (
           <GridItem proposal={proposal} dao={dao} classes={classes} />

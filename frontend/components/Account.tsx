@@ -13,6 +13,8 @@ import {
 import ETHBalance from "./ETHBalance";
 import TokenBalance from "./TokenBalance";
 import Router from "next/router";
+import AuthService from "../services/auth-services"
+import authHeader from "../services/auth-header";
 
 type AccountProps = {
   triedToEagerConnect: boolean;
@@ -123,6 +125,12 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       </div>
     );
   }
+
+  AuthService.login();
+
+  // console.log("Authorization Header: " + authHeader(account, library).Authorization);
+  // console.log("#############################################");
+  // console.log("LOCAL STORAGE AUTH CALL" + AuthService.getCurrentUser(account));
 
   return (
     <div style={{ display: "flex", justifyContent: "space-between" }}>

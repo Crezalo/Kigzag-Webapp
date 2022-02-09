@@ -1,8 +1,11 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Paper } from "@material-ui/core";
 import NFTCard from "./NFTCard";
+import { useWeb3React } from "@web3-react/core";
+import { useCreatorNFTOwnerOf } from "../hooks/ERC721/useCreatorNFTContract";
+import { getNFTsOfCreator } from "../services/api-service";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -13,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface GridItemProps {
-  nft: string[];
+  nft: any;
   classes: any;
 }
 const GridItem = ({ nft, classes }: GridItemProps) => {
@@ -29,18 +32,40 @@ const GridItem = ({ nft, classes }: GridItemProps) => {
 };
 
 interface NFTCardGridProp {
-  nfts: string[][];
+  nfts: any[];
+  status: string;
 }
-const NFTCardGrid = ({ nfts }: NFTCardGridProp) => {
+const NFTCardGrid = ({ nfts, status }: NFTCardGridProp) => {
   const classes = useStyles();
+  const { account } = useWeb3React();
+
   return (
     <div className="greenTextBlackBackground">
       <Grid container spacing={1}>
         {nfts.map((nft) => (
-          <GridItem nft={nft} classes={classes} />
+          <>
+            {nft.status == status || status == "ALL" ? (
+              <GridItem nft={nft} classes={classes} />
+            ) : (
+              <>
+                {status == "OWNED" ? (
+                  <>
+                    {useCreatorNFTOwnerOf(nft.nftaddress, nft.tokenid).data==account ? (
+                      <GridItem nft={nft} classes={classes} />
+                    ) : (
+                      <></>
+                    )}
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
+          </>
         ))}
       </Grid>
     </div>
   );
 };
 export default NFTCardGrid;
+

@@ -2,7 +2,9 @@ import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab/Tab";
 import Tabs from "@material-ui/core/Tabs/Tabs";
-import React from "react";
+import { useWeb3React } from "@web3-react/core";
+import React, { useEffect, useState } from "react";
+import { getAllNFTs } from "../services/api-service";
 import NFTCardGrid from "./NFTCardGrid";
 import TokenCardGrid from "./TokenCardGrid";
 
@@ -14,20 +16,46 @@ const useStyles = makeStyles({
 });
 
 interface CollectedTabsProp {
-    nfts: string[][];
-    tokenAddresses: string[];
+  creatorVault:string;
 }
 
-const CollectedTabs = ({ nfts, tokenAddresses }: CollectedTabsProp) => {
+const CollectedTabs = ({ creatorVault }: CollectedTabsProp) => {
   const classes = useStyles();
 
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const { chainId, account, library } = useWeb3React();
+
+  //////////////////////// getting all NFTs
+  const [allnftsList, setAllnftsList] = useState([]);
+
+  const getAllNftList = () => {
+    useEffect(() => {
+      async function getData() {
+        const res = await getAllNFTs(account, library, chainId);
+        setAllnftsList(res);
+      }
+      getData();
+    }, [account, chainId]);
+  };
+
+  getAllNftList();
+
+  const allnfts = [];
+
+  if (allnftsList) {
+    for (var i = 0; i < allnftsList.length; i++) {
+      allnftsList[i]["vault"] = creatorVault;
+      allnfts.push(allnftsList[i]);
+    }
+  }
+  
   let tabs_array = [
-    <TokenCardGrid tokenAddresses={tokenAddresses} />,
-    <NFTCardGrid nfts={nfts} />,
+    <TokenCardGrid/>,
+    <NFTCardGrid nfts={allnfts} status="OWNED"/>
   ];
 
   return (

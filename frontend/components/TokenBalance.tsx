@@ -38,7 +38,7 @@ const TokenBalance = ({ tokenAddress, symbol }: TokenBalanceProps) => {
     <>
       <p>
         {`${symbol} Balance`}:{" "}
-        {parseBalance(useTokenBalance(account, tokenAddress).data ?? "")}
+        {parseBalance(useTokenBalance(account, tokenAddress).data ?? 0)}
       </p>
       <p>Name: {useTokenName(tokenAddress).data ?? ""}</p>
       <p>Symbol: {useTokenSymbol(tokenAddress).data ?? ""}</p>
