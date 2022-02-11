@@ -99,14 +99,14 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
           >
             {isMetaMaskInstalled ? (
               <button
-                className="w-full bg-green-500 text-white px-2 py-2 rounded"
+                className="w-full bg-blue-500 text-white px-2 py-2 rounded"
                 style={{ fontSize: 18, textAlign: "center" }}
               >
                 Connect to MetaMask
               </button>
             ) : (
               <button
-                className="w-full bg-green-500 text-white px-2 py-2 rounded"
+                className="w-full bg-blue-500 text-white px-2 py-2 rounded"
                 style={{ fontSize: 18, textAlign: "center" }}
               >
                 Connect to Wallet
@@ -115,7 +115,7 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
           </button>
         ) : (
           <button
-            className="w-full bg-green-500 text-white px-2 py-2 rounded"
+            className="w-full bg-blue-500 text-white px-2 py-2 rounded"
             style={{ fontSize: 18, textAlign: "center" }}
             onClick={startOnboarding}
           >
@@ -142,14 +142,14 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
         }}
       >
         <button
-          className="outline text-green-500 outline-offset-0 px-2 py-2 rounded"
+          className="outline text-blue-500 outline-offset-0 px-2 py-2 rounded"
           style={{ fontSize: 18, textAlign: "center", outlineWidth: "thin" }}
         >
           {isConnected && <ETHBalance />}
         </button>
       </a>
       <button
-        className="w-full bg-green-500 text-white px-2 py-2 rounded"
+        className="w-full bg-blue-500 text-white px-2 py-2 rounded"
         style={{ fontSize: 18, textAlign: "center" }}
         onClick={() => {
           deactivate();

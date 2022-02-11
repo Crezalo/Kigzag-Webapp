@@ -6,16 +6,42 @@ import { useCreatorNFTTokenURI } from "../hooks/ERC721/useCreatorNFTContract";
 import { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { useWeb3React } from "@web3-react/core";
+import { getNFTForGivenTokenId } from "../services/api-service";
 
 export default function NFT() {
   const router = useRouter();
   const { contract, tokenId } = router.query;
 
+  const { chainId, account, library } = useWeb3React();
+
+  const [nft, setNft] = useState({
+    chainid: 0,
+    creator: "",
+    id: "",
+    nftaddress: "",
+    status: "",
+    tokenid: 0,
+    tokenuri: "",
+  });
+
+  const getCreatorList = () => {
+    useEffect(() => {
+      async function getData() {
+        const res = await getNFTForGivenTokenId(account, library, contract.toString() ,chainId, tokenId.toString());
+        setNft(res);
+      }
+      getData();
+    },[contract, tokenId, chainId]);
+  };
+
+  getCreatorList();
+
   const tokenURI = useCreatorNFTTokenURI(
     contract.toString(),
     parseInt(tokenId.toString())
   ).data;
-  
+
   const [metadata, setmetadata] = useState({
     metadata: [],
   });
@@ -28,7 +54,7 @@ export default function NFT() {
         setmetadata(jsonData);
       }
       fetchData();
-    });
+    }, [chainId, contract, tokenId]);
   };
 
   let metadataUrl = "https://ipfs.io/ipfs/";
@@ -39,7 +65,15 @@ export default function NFT() {
 
   const image =
     "https://ipfs.io/ipfs/" + (metadata["image"] ?? "").substring(7);
-  const external_url = metadata["external_url"] ?? "";
+
+  let external_url;
+
+  if(nft[0]){
+    external_url = nft[0].tokenuri ?? "";
+  }
+  else{
+    external_url = "";
+  }
   const name = metadata["name"] ?? "";
   const attributes = metadata["attributes"] ?? "";
   const description = metadata["description"] ?? "";
@@ -50,7 +84,7 @@ export default function NFT() {
         <div className="nftPage">
           <div>
             <div className="nftPageImage">
-              {external_url != "" ? (
+              {external_url ? (
                 <Image
                   src={external_url}
                   alt="Loading ..."
@@ -58,12 +92,7 @@ export default function NFT() {
                   height={550}
                 />
               ) : (
-                <Image
-                  src={image}
-                  alt="Loading ..."
-                  width={550}
-                  height={550}
-                />
+                <Image src={image} alt="Loading ..." width={550} height={550} />
               )}
             </div>
             <NFTDetails notes={router.query} name={name} />

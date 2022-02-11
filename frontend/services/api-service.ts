@@ -242,8 +242,23 @@ export async function getNFTFromStatus(
   return data;
 }
 
+export async function getNFTForGivenTokenId(
+  account: string,
+  library: any,
+  address: string,
+  chainId: number,
+  tokenid: string
+) {
+  const response = await axios.get(
+    API_URL + "nft/address/" + chainId.toString() + "/" + address + "/" + tokenid,
+    { headers: await authHeader(account, library) }
+  );
+  const data = await response.data;
+  return data;
+}
+
 /////////////////////////////////////////////////////////////////////////
-//////////////////     NFT Table            /////////////////////////////
+//////////////////     DAO Table            /////////////////////////////
 /////////////////////////////////////////////////////////////////////////
 
 export async function addDAOProposal(

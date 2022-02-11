@@ -18,8 +18,12 @@ import {
 import { useCreatorFactoryCreatorDAO, useCreatorFactoryCreatorSaleFee, useCreatorFactoryCreatorToken } from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
 import { creatorFactoryLT, parseBalance } from "../util";
 import { fontWeight, textAlign, width } from "@mui/system";
+import Image from "next/image";
+import { getUserData } from "../services/api-service";
+import { useEffect, useState } from "react";
 
 export default function CreatorProfile() {
+  const { chainId, account, library } = useWeb3React();
   const router = useRouter();
 
   let { address } = router.query;
@@ -34,10 +38,30 @@ export default function CreatorProfile() {
     console.log(address)
   }
 
-  const {
-    chainId,
-    account,
-  } = useWeb3React();
+  /////////////////////// getting user data
+  const [user, setUser] = useState({
+    useraddress: "",
+    username: "",
+    iscreator: false,
+    twitterhandle: "",
+    discord: "",
+    tiktok: "",
+    instagram: "",
+    youtube: "",
+    website: "",
+  });
+
+  const getUser = () => {
+    useEffect(() => {
+      async function getData() {
+        const res = await getUserData(account, library, address.toString());
+        setUser(res);
+      }
+      getData();
+    }, [account, chainId]);
+  };
+
+  getUser();
 
   const creatorToken = useCreatorFactoryCreatorToken(
     LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
@@ -90,17 +114,132 @@ export default function CreatorProfile() {
                     <div style={{color: "grey", fontSize: "18px",paddingTop: "2px", marginRight: "2px"}}>USD:</div>
                     <div style={{color: "white"}}>{usdCreatorPrice} USD</div>
                   </div>
-                  <div style={{display: "flex", flexDirection: "row"}}>
-                    <div className="w-full bg-green-500 text-white px-2 py-2 rounded" style={{ width:"150px", height:"50px", marginTop: "15px", textAlign: "center"}}>
-                      <h2 style={{color: "white", fontWeight:"bold", fontSize: "18px"}}>Join My Fam</h2>
+                  <div style={{display: "flex", flexDirection: "row", width:"150px", height:"45px", marginTop: "25px", marginBottom: "35px", textAlign: "center"}}>
+                    <BasicModal
+                      modalButtonText="Join My Fam"
+                      modalBody={<CreateProposalModal />}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      marginTop: "15px",
+                    }}
+                  >
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].twitterhandle ? (
+                        <a
+                          href={"https://twitter.com/" + user[0].twitterhandle}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/twitter.png"
+                            alt=""
+                            width={25}
+                            height={20}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].discord ? (
+                        <a
+                          href={"https://discord.com/invite/"+user[0].discord}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/discord.png"
+                            alt=""
+                            width={25}
+                            height={25}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].tiktok ? (
+                        <a
+                          href={"https://www.tiktok.com/@"+user[0].tiktok}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/tiktok.png"
+                            alt=""
+                            width={25}
+                            height={25}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].instagram ? (
+                        <a
+                          href={"https://instagram.com/"+user[0].instagram}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/instagram.png"
+                            alt=""
+                            width={25}
+                            height={25}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].youtube ? (
+                        <a
+                          href={"https://www.youtube.com/c/"+user[0].youtube.toString().toLocaleLowerCase().replace(" ","")}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/youtube.png"
+                            alt=""
+                            width={25}
+                            height={20}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].website ? (
+                        <a
+                          href={user[0].website}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/website.png"
+                            alt=""
+                            width={25}
+                            height={20}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
-                  {/* <div>Social Handles</div> */}
                 </div>
               </div>
             )}
           </div>
-          <div style={{ marginTop: "30px" }}></div>
           <ProfileTabs onCreatorProfile={true} creator={address.toString()}/>
         </div>
       ) : (

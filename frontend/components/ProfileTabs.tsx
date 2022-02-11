@@ -94,7 +94,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                 onChange={handleChange}
                 centered
                 TabIndicatorProps={{
-                  style: { backgroundColor: "green" },
+                  style: { backgroundColor: "#3B82F6" },
                 }}
               >
                 <Tab label="NFT" className={classes.tab} />
@@ -113,7 +113,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                     onChange={handleChange}
                     centered
                     TabIndicatorProps={{
-                      style: { backgroundColor: "green" },
+                      style: { backgroundColor: "#3B82F6" },
                     }}
                   >
                     <Tab label="NFT" className={classes.tab} />
@@ -130,7 +130,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                     onChange={handleChange}
                     centered
                     TabIndicatorProps={{
-                      style: { backgroundColor: "green" },
+                      style: { backgroundColor: "#3B82F6" },
                     }}
                   >
                     <Tab label="Collected" className={classes.tab} />

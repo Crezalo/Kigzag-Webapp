@@ -24,17 +24,43 @@ import {
   useCreatorFactoryCreatorToken,
 } from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
 import { creatorFactoryLT, parseBalance } from "../util";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { getNFTsOfCreator, getUserData } from "../services/api-service";
 
 export default function Home() {
   const { chainId, account, library } = useWeb3React();
+
+  /////////////////////// getting user data
+  const [user, setUser] = useState({
+    useraddress: "",
+    username: "",
+    iscreator: false,
+    twitterhandle: "",
+    discord: "",
+    tiktok: "",
+    instagram: "",
+    youtube: "",
+    website: "",
+  });
+
+  const getUser = () => {
+    useEffect(() => {
+      async function getData() {
+        const res = await getUserData(account, library, account);
+        setUser(res);
+      }
+      getData();
+    }, [account, chainId]);
+  };
+
+  getUser();
 
   const creatorToken =
     useCreatorFactoryCreatorToken(
       LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
       account
     ).data ?? "";
-
-    console.log(creatorToken);
 
   const nativeToken = NATIVE_TOKEN_SUPPORTED_ADDRESS[chainId] ?? "";
   const usdc = USDC_SUPPORTED_ADDRESS[chainId];
@@ -162,7 +188,122 @@ export default function Home() {
                       </h2>
                     </div>
                   </div>
-                  {/* <div>Social Handles</div> */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      marginTop: "15px",
+                    }}
+                  >
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].twitterhandle ? (
+                        <a
+                          href={"https://twitter.com/" + user[0].twitterhandle}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/twitter.png"
+                            alt=""
+                            width={25}
+                            height={20}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].discord ? (
+                        <a
+                          href={"https://discord.com/invite/"+user[0].discord}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/discord.png"
+                            alt=""
+                            width={25}
+                            height={25}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].tiktok ? (
+                        <a
+                          href={"https://www.tiktok.com/@"+user[0].tiktok}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/tiktok.png"
+                            alt=""
+                            width={25}
+                            height={25}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].instagram ? (
+                        <a
+                          href={"https://instagram.com/"+user[0].instagram}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/instagram.png"
+                            alt=""
+                            width={25}
+                            height={25}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].youtube ? (
+                        <a
+                          href={"https://www.youtube.com/c/"+user[0].youtube.toString().toLocaleLowerCase().replace(" ","")}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/youtube.png"
+                            alt=""
+                            width={25}
+                            height={20}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].website ? (
+                        <a
+                          href={user[0].website}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                        >
+                          <Image
+                            src="/../public/website.png"
+                            alt=""
+                            width={25}
+                            height={20}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 {/* <div>
                   <Settings style={{color:"green",height:"40px", width:"40px"}}/>
@@ -170,7 +311,6 @@ export default function Home() {
               </div>
             )}
           </div>
-          <div style={{ marginTop: "30px" }}></div>
           <ProfileTabs onCreatorProfile={false} creator="" />
         </div>
       ) : (

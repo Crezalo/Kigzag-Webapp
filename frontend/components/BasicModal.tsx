@@ -33,7 +33,7 @@ const BasicModal = ({ modalButtonText, modalBody }: BasicModalProps) => {
     <>
       <div className="modelButton">
         <Button
-          style={{ background: "#4EC660", marginBottom: "2px"}}
+          style={{ background: "#3B82F6", color: "white", marginBottom: "2px"}}
           variant="contained"
           onClick={handleOpen}
         >

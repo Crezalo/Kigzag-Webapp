@@ -307,6 +307,18 @@ router.get("/nft/status/:chainid/:address/:status", async (req, res) => {
   }
 });
 
+router.get("/nft/address/:chainid/:address/:tokenid", async (req, res) => {
+  try {
+    const address = req.params["address"]; // nft address
+    const chainid = req.params["chainid"];
+    const tokenid = req.params["tokenid"];
+    const nftd = await pool.query("SELECT * FROM Creator_nft WHERE NFTAddress = $1 AND ChainId = $2 AND TokenId=$3", [address.toLowerCase(), chainid, tokenid]);
+    res.json(nftd.rows);
+  } catch (err) {
+    res.json(err);
+  }
+});
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////          DAO TABLE           ///////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

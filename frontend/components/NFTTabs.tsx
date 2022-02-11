@@ -76,7 +76,7 @@ const NFTTabs = ({ creator, onCreatorProfile, creatorVault }: NFTTabsProp) => {
               onChange={handleChange}
               centered
               TabIndicatorProps={{
-              style: { backgroundColor: "#4EC660" },
+              style: { backgroundColor: "#3B82F6" },
               }}
               className="nftTabs"
               orientation="vertical"

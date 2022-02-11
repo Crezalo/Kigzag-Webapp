@@ -48,7 +48,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
 
   return (
     <div
-      className="outline text-green-500 outline-offset-0 py-1 font-bold rounded"
+      className="outline text-blue-500 outline-offset-0 py-1 font-bold rounded"
       style={{
         fontSize: 18,
         textAlign: "center",
@@ -80,7 +80,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {
@@ -98,7 +98,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {
@@ -116,7 +116,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {
@@ -134,7 +134,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {
@@ -152,7 +152,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {
@@ -170,7 +170,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {
@@ -188,7 +188,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {
@@ -206,7 +206,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {
@@ -224,7 +224,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {
@@ -242,7 +242,7 @@ const ChainName = ({ triedToEagerConnect }: AccountProps) => {
               {({ active }) => (
                 <button
                   className={`${
-                    active ? "bg-green-500 text-white" : "text-green-500"
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
                   } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                   style={{ fontSize: 18 }}
                   onClick={() => {

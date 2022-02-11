@@ -16,8 +16,8 @@ const useStylesModal = makeStyles((theme) => ({
         justifyContent: "center",
     },
     paper: {
-        border: "#4EC660",
-        boxShadow: "0 1px 1px 3px green",
+        border: "#3B82F6",
+        boxShadow: "0 1px 1px 3px #3B82F6",
         padding: theme.spacing(4, 4, 4, 4),
         transition: "0.3s",
         width: "300px",
@@ -27,7 +27,7 @@ const useStylesModal = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "row",
         '&:hover':{
-            boxShadow: "0 10px 18px 8px green",
+            boxShadow: "0 10px 18px 8px #3B82F6",
         }
     }
   }));
@@ -98,14 +98,14 @@ const ConnectToWallet = () => {
                     >
                         {isMetaMaskInstalled ? (
                         <button
-                            className="w-full bg-green-500 text-white px-2 py-2 rounded"
+                            className="w-full bg-blue-500 text-white px-2 py-2 rounded"
                             style={{ fontSize: 18, textAlign: "center" }}
                         >
                             Connect to MetaMask
                         </button>
                         ) : (
                         <button
-                            className="w-full bg-green-500 text-white px-2 py-2 rounded"
+                            className="w-full bg-blue-500 text-white px-2 py-2 rounded"
                             style={{ fontSize: 18, textAlign: "center" }}
                         >
                             Connect to Wallet
@@ -114,7 +114,7 @@ const ConnectToWallet = () => {
                     </button>
                     ) : (
                     <button
-                        className="w-full bg-green-500 text-white px-2 py-2 rounded"
+                        className="w-full bg-blue-500 text-white px-2 py-2 rounded"
                         style={{ fontSize: 18, textAlign: "center" }}
                         onClick={startOnboarding}
                     >

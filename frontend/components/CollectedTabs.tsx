@@ -66,7 +66,7 @@ const CollectedTabs = ({ creatorVault }: CollectedTabsProp) => {
                 onChange={handleChange}
                 centered
                 TabIndicatorProps={{
-                style: { backgroundColor: "green" },
+                style: { backgroundColor: "#3B82F6" },
                 }}
                 className="nftTabs"
                 orientation="vertical"

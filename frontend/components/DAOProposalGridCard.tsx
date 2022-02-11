@@ -21,7 +21,7 @@ const useProgressBarstyles = makeStyles((theme) => ({
     backgroundColor: "white",
   },
   barColorPrimary: {
-    backgroundColor: "#4EC660",
+    backgroundColor: "#3B82F6",
   },
 }));
 

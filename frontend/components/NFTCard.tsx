@@ -39,7 +39,7 @@ const NFTCard = ({ nft }: NFTCardProp) => {
         }
       }
       fetchData();
-    });
+    },[nft.nftaddress,nft.tokenid]);
   };
 
   let metadataUrl = "https://ipfs.io/ipfs/";
@@ -50,7 +50,7 @@ const NFTCard = ({ nft }: NFTCardProp) => {
 
   const image =
     "https://ipfs.io/ipfs/" + (metadata["image"] ?? "").substring(7);
-  const external_url = metadata["external_url"] ?? "";
+  const external_url = nft.tokenuri ?? "";
 
   const router = useRouter();
   
