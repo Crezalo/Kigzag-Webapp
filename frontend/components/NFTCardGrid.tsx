@@ -40,7 +40,7 @@ const NFTCardGrid = ({ nfts, status }: NFTCardGridProp) => {
   const { account } = useWeb3React();
 
   return (
-    <div className="greenTextBlackBackground">
+    <div className="blueTextBlackBackground">
       <Grid container spacing={1}>
         {nfts.map((nft) => (
           <>

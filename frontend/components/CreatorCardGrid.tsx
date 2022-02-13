@@ -31,7 +31,7 @@ const CreatorCardGrid = ({ creators }: CreatorCardGridProp) => {
   console.log("creators");
   console.log(creators);
   return (
-    <div className="greenTextBlackBackground">
+    <div className="blueTextBlackBackground">
       <Grid container spacing={1}>
         {creators.map((creator) => (
           <GridItem creator={creator} classes={classes} />

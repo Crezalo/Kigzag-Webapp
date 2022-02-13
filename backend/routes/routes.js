@@ -278,7 +278,7 @@ router.put("/nft/:address/:tokenid/:chainid/:status", authorise, async (req, res
 router.get("/nft/:chainid", async (req, res) => {
   try {
     const chainid = req.params["chainid"];
-    const nftd = await pool.query("SELECT * FROM Creator_nft WHERE ChainId = $1;", [chainid]);
+    const nftd = await pool.query("SELECT * FROM Creator_nft WHERE ChainId = $1 ORDER BY TokenId;", [chainid]);
     res.json(nftd.rows);
   } catch (err) {
     res.json(err);
@@ -289,7 +289,7 @@ router.get("/nft/address/:chainid/:address", async (req, res) => {
   try {
     const address = req.params["address"];
     const chainid = req.params["chainid"];
-    const nftd = await pool.query("SELECT * FROM Creator_nft WHERE Creator = $1 AND ChainId = $2;", [address.toLowerCase(), chainid]);
+    const nftd = await pool.query("SELECT * FROM Creator_nft WHERE Creator = $1 AND ChainId = $2 ORDER BY TokenId;", [address.toLowerCase(), chainid]);
     res.json(nftd.rows);
   } catch (err) {
     res.json(err);
@@ -300,7 +300,7 @@ router.get("/nft/status/:chainid/:address/:status", async (req, res) => {
   try {
     const address = req.params["address"];
     const status = req.params["status"];
-    const nftd = await pool.query("SELECT * FROM Creator_nft WHERE NFTAddress = $1 AND Status = $2;", [address.toLowerCase(), status]);
+    const nftd = await pool.query("SELECT * FROM Creator_nft WHERE NFTAddress = $1 AND Status = $2 ORDER BY TokenId;", [address.toLowerCase(), status]);
     res.json(nftd.rows);
   } catch (err) {
     res.json(err);
@@ -312,7 +312,7 @@ router.get("/nft/address/:chainid/:address/:tokenid", async (req, res) => {
     const address = req.params["address"]; // nft address
     const chainid = req.params["chainid"];
     const tokenid = req.params["tokenid"];
-    const nftd = await pool.query("SELECT * FROM Creator_nft WHERE NFTAddress = $1 AND ChainId = $2 AND TokenId=$3", [address.toLowerCase(), chainid, tokenid]);
+    const nftd = await pool.query("SELECT * FROM Creator_nft WHERE NFTAddress = $1 AND ChainId = $2 AND TokenId=$3;", [address.toLowerCase(), chainid, tokenid]);
     res.json(nftd.rows);
   } catch (err) {
     res.json(err);
@@ -378,7 +378,7 @@ router.get("/dao/:chainid/:address/", async (req, res) => {
   try {
     const chainid = req.params["chainid"];
     const address = req.params["address"];
-    const td = await pool.query("SELECT * FROM Creator_dao WHERE ChainId=$1 AND DAOAddress=$2;", [chainid, address.toLowerCase()]);
+    const td = await pool.query("SELECT * FROM Creator_dao WHERE ChainId=$1 AND DAOAddress=$2 ORDER BY ProposalId;", [chainid, address.toLowerCase()]);
     res.json(td.rows);
   } catch (err) {
     res.json(err);
@@ -390,7 +390,7 @@ router.get("/dao/:chainid/:address/:proposalid", async (req, res) => {
     const chainid = req.params["chainid"];
     const address = req.params["address"];
     const proposalid = req.params["proposalid"];
-    const td = await pool.query("SELECT * FROM Creator_dao WHERE ChainId=$1 AND DAOAddress=$2 AND ProposalId =$3;", [chainid, address.toLowerCase(), proposalid]);
+    const td = await pool.query("SELECT * FROM Creator_dao WHERE ChainId=$1 AND DAOAddress=$2 AND ProposalId =$3 ORDER BY ProposalId;", [chainid, address.toLowerCase(), proposalid]);
     res.json(td.rows);
   } catch (err) {
     res.json(err);

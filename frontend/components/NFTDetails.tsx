@@ -1,14 +1,22 @@
 import { useWeb3React } from "@web3-react/core";
-import { formatBlockExplorerLink, shortenHex } from "../util";
+import { formatBlockExplorerLink, parseBalance, shortenHex } from "../util";
 import useENSName from "../hooks/useENSName";
 import Router from "next/router";
 import { useTokenName, useTokenSymbol } from "../hooks/ERC20/useTokenContract";
 import {
   useCreatorNFTName,
+  useCreatorNFTOwnerOf,
   useCreatorNFTSymbol,
   useCreatorNFTTokenURI,
 } from "../hooks/ERC721/useCreatorNFTContract";
 import { CSSProperties } from "react";
+import { LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST } from "../constants/chains";
+import {
+  useCreatorFactoryCreatorToken,
+  useCreatorFactoryCreatorVault,
+} from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
+import { ZERO_ADDRESS } from "../constants/misc";
+import { useCreatorVaultIdTonftPrice } from "../hooks/LoyaltyTokenContract/useCreatorVaultContract";
 
 const leftStyle: CSSProperties = { width: "30%", float: "left", fontSize: 20 };
 const rightStyle: CSSProperties = { width: "70%", float: "left", fontSize: 20 };
@@ -21,12 +29,22 @@ const buttonStyle: CSSProperties = {
 };
 
 interface NFTDetailsProp {
-  notes: any;
+  contract: string;
+  tokenid: string;
+  vault: string;
+  creator: string;
+  status: string;
   name: string;
 }
 
-const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
-  const { contract, tokenId } = notes;
+const NFTDetails = ({
+  contract,
+  tokenid,
+  vault,
+  creator,
+  status,
+  name,
+}: NFTDetailsProp) => {
   const {
     active,
     error,
@@ -41,23 +59,37 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
   const nftContractName = useCreatorNFTName(contract).data ?? "";
   const nftName = name;
   const nftSymbol = useCreatorNFTSymbol(contract).data ?? "";
-  const price = "300";
-  const creatorToken = "0x7a396865c17E92a196825017E47fA4f4F39f035a";
+
+  if (vault == ZERO_ADDRESS && vault) {
+    vault =
+      useCreatorFactoryCreatorVault(
+        LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
+        creator
+      ).data ?? "";
+  }
+
+  const price =
+    parseBalance(
+      useCreatorVaultIdTonftPrice(vault, Number(tokenid) - 1).data ?? 0
+    ) +
+    " " +
+    nftSymbol;
+
+  const nullPrice = "0.000 " + (useTokenSymbol(contract).data ?? "");
+
+  const creatorToken =
+    useCreatorFactoryCreatorToken(
+      LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
+      creator
+    ).data ?? "";
+
   const creatorTokenSymbol = useTokenSymbol(creatorToken).data ?? "";
   const creatorTokenName = useTokenName(creatorToken).data ?? "";
-  const isListed = true;
-  const isOwnerVault = false;
-  let isSold;
-  if (isOwnerVault) {
-    isSold = false;
-  } else {
-    isSold = true;
-  }
-  const ownedBy = "0x58B1AE79E72aA23784e97934b80b750Bb7972d2a";
-  const creator = "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955";
+
+  const ownedBy = useCreatorNFTOwnerOf(contract, Number(tokenid)).data ?? "";
   return (
     <div className="nftPageDetails text-white">
-      <p className="text-green-500" style={leftStyle}>
+      <p className="text-blue-500" style={leftStyle}>
         Creator:
       </p>
       <p
@@ -72,17 +104,17 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
           onClick={() => {
             Router.push({
               pathname: "/creatorprofile",
-              query: { data: creator },
+              query: { address: creator },
             });
           }}
-          className="text-green-500"
+          className="text-blue-500"
         >
           ({useENSName(creator) || shortenHex(creator, 2)})
         </button>
       </p>
       <br />
       <br />
-      <p className="text-green-500" style={leftStyle}>
+      <p className="text-blue-500" style={leftStyle}>
         Collection:
       </p>
       <p style={rightStyle}>
@@ -90,22 +122,22 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
       </p>
       <br />
       <br />
-      <p className="text-green-500" style={leftStyle}>
+      <p className="text-blue-500" style={leftStyle}>
         Name:
       </p>
       <p style={rightStyle}>{nftName ? nftName : "Bored Ape"}</p>
       <br />
       <br />
-      <p className="text-green-500" style={leftStyle}>
+      <p className="text-blue-500" style={leftStyle}>
         Token Id:
       </p>
-      <p style={rightStyle}>#{tokenId}</p>
+      <p style={rightStyle}>#{tokenid}</p>
       <br />
       <br />
-      <p className="text-green-500" style={leftStyle}>
+      <p className="text-blue-500" style={leftStyle}>
         Contract:
       </p>
-      <p className="text-green-500" style={rightStyle}>
+      <p className="text-blue-500" style={rightStyle}>
         <a
           {...{
             href: formatBlockExplorerLink("Account", [chainId, contract, ""]),
@@ -135,7 +167,7 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
       </p>
       <br />
       <br />
-      <p className="text-green-500" style={leftStyle}>
+      <p className="text-blue-500" style={leftStyle}>
         Owner:
       </p>
       <p
@@ -156,9 +188,11 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
             rel: "noopener noreferrer",
           }}
           style={{ display: "flex", flexDirection: "row", width: "50%" }}
-          className="text-green-500"
+          className="text-blue-500"
         >
-          {isSold ? "Vault" : useENSName(ownedBy) || shortenHex(ownedBy, 2)}
+          {status === "UNLISTED" || status === "LISTED"
+            ? "Vault"
+            : useENSName(ownedBy) || shortenHex(ownedBy, 2)}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="17px"
@@ -179,23 +213,26 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
       </p>
       <br />
       <br />
-      <p className="text-green-500" style={leftStyle}>
+      <p className="text-blue-500" style={leftStyle}>
         Price:{" "}
       </p>
       <p className="text-white" style={rightStyle}>
-        {price} {creatorTokenSymbol}
+        {price}
       </p>
       <br />
       <br />
-      {isListed ? (
+      {status === "LISTED" ? (
         <button
-          className="w-full bg-green-500 text-white px-2 py-2 rounded buyButton"
+          className="w-full bg-blue-500 text-white px-2 py-2 rounded buyButton"
           style={buttonStyle}
           onClick={() => {}}
         >
           Buy
         </button>
       ) : (
+        <></>
+      )}
+      {status === "UNLISTED" ? (
         <div
           className="w-full bg-yellow-500 text-white px-2 py-2 rounded"
           style={{
@@ -205,16 +242,13 @@ const NFTDetails = ({ notes, name }: NFTDetailsProp) => {
         >
           Not For Sale
         </div>
+      ) : (
+        <></>
       )}
-      {!isOwnerVault ? (
+      {status === "SOLD" ? (
         <button
-          className="outline text-white outline-offset-0 px-2 py-2 rounded bidButton"
-          style={{
-            ...buttonStyle,
-            width: "35%",
-            marginLeft: "20px",
-            outlineWidth: "thin",
-          }}
+          className="w-full bg-blue-500 text-white px-2 py-2 rounded buyButton"
+          style={buttonStyle}
           onClick={() => {}}
         >
           Place a bid

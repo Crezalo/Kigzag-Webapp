@@ -16,7 +16,7 @@ import {
   useTokenTotalSupply,
 } from "../hooks/ERC20/useTokenContract";
 import { useCreatorFactoryCreatorDAO, useCreatorFactoryCreatorSaleFee, useCreatorFactoryCreatorToken } from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
-import { creatorFactoryLT, parseBalance } from "../util";
+import { creatorFactoryLT, currencyName, parseBalance } from "../util";
 import { fontWeight, textAlign, width } from "@mui/system";
 import Image from "next/image";
 import { getUserData } from "../services/api-service";
@@ -76,7 +76,7 @@ export default function CreatorProfile() {
   const creatorTokenSymbol = useTokenSymbol(creatorToken).data;
   const creatorTokenTotalSupply = parseBalance(useTokenTotalSupply(creatorToken).data ?? 0);
   
-  const nativeTokenSymbol = useTokenSymbol(nativeToken.toString()).data;
+  // const nativeTokenSymbol = useTokenSymbol(nativeToken.toString()).data;
 
   const {nativefee, usdfee} = useCreatorFactoryCreatorSaleFee(
     LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
@@ -89,7 +89,7 @@ export default function CreatorProfile() {
   return (
     <div>
       {creatorToken ? (
-        <div className="greenTextBlackBackground" style={{ fontSize: 25 }}>
+        <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
           <div style={{ display: "flex" }}>
             <div className="creatorImageDiv">
               <Jdenticon size={250} value={address.toString().toLocaleLowerCase()} />
@@ -108,7 +108,7 @@ export default function CreatorProfile() {
                   <div style={{color: "grey", fontWeight:"bold", fontSize: "18px", marginTop: "20px", marginBottom: "12px"}}>Price</div>
                   <div style={{display: "flex", flexDirection: "row", marginLeft:"20px", marginBottom:"10px"}}>
                     <div style={{color: "grey", fontSize: "18px",paddingTop: "2px", marginRight: "2px"}}>Native:</div>
-                    <div style={{color: "white"}}>{nativeCreatorPrice} {nativeTokenSymbol}</div>
+                    <div style={{color: "white"}}>{nativeCreatorPrice} {currencyName(chainId)}</div>
                   </div>
                   <div style={{display: "flex", flexDirection: "row", marginLeft:"20px", marginBottom:"10px"}}>
                     <div style={{color: "grey", fontSize: "18px",paddingTop: "2px", marginRight: "2px"}}>USD:</div>

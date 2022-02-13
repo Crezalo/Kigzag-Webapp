@@ -63,7 +63,7 @@ const DAOAllowances = ({ dao }: DAOAllowancesProp) => {
   const creator = useDAOCreator(dao).data??"";
 
   return (
-    <div className="greenTextBlackBackground" style={{textAlign: 'center'}}>
+    <div className="blueTextBlackBackground" style={{textAlign: 'center'}}>
       <>
         {creator===account ? (
           <div className="RedeemTreasuryButton">

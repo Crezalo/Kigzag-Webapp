@@ -60,7 +60,7 @@ const TokenCardGrid = () => {
   }
 
   return (
-    <div className="greenTextBlackBackground">
+    <div className="blueTextBlackBackground">
       <Grid container spacing={1}>
         {alltokens.map((tokenAddress) => (
           // Resolve Render more hooks issue over here to only show those tokens that have non zero balance

@@ -17,7 +17,7 @@ const GridItem = ({ trait_type, value }: GridItemProps) => {
       sm={6}
       md={3}
     >
-      <p className="greenTextBlackBackground" style={{ fontSize: 12 }}>
+      <p className="blueTextBlackBackground" style={{ fontSize: 12 }}>
         {trait_type}
       </p>
       <p className="text-white font-bold py-2 px-2" style={{ fontSize: 15 }}>

@@ -12,7 +12,12 @@ import {
 } from "../hooks/LoyaltyTokenContract/useCreatorDAOContract";
 import useENSName from "../hooks/useENSName";
 import { getDAOAllProposals } from "../services/api-service";
-import { currencyName, formatBlockExplorerLink, parseBalance, shortenHex } from "../util";
+import {
+  currencyName,
+  formatBlockExplorerLink,
+  parseBalance,
+  shortenHex,
+} from "../util";
 import BasicModal from "./BasicModal";
 import CreateProposalModal from "./CreateProposalModal";
 
@@ -113,18 +118,18 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
     var isnative = false;
   }
 
-  var allowanceData = [];
+  // var allowanceData = [];
 
-  for (var i = 0; i < managers.length; i++) {
-    if (managers[i] !== "") {
-      allowanceData.push({
-        manager: managers[i],
-        allowance: allowances[i],
-      });
-    }
-  }
+  // for (var i = 0; i < managers.length; i++) {
+  //   if (managers[i] !== "") {
+  //     allowanceData.push({
+  //       manager: managers[i],
+  //       allowance: allowances[i],
+  //     });
+  //   }
+  // }
 
-  console.log(allowanceData);
+  // console.log(allowanceData);
 
   return (
     <>
@@ -135,7 +140,9 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
           <section className="proposalCard">
             {!proposal.isallowancesproposal ? (
               <div className="proposalDetails">
-                <h2>{proposal.proposaltitle}</h2>
+                <h2>
+                  {proposal.proposalid + 1}. {proposal.proposaltitle}
+                </h2>
                 <p
                   style={{
                     fontSize: "15px",
@@ -209,7 +216,7 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
               </div>
             ) : (
               <div className="proposalDetails">
-                <h2>Allowances Proposal</h2>
+                <h2>{proposal.proposalid + 1}. Allowances Proposal</h2>
                 <p
                   style={{
                     fontSize: "15px",
@@ -271,68 +278,96 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                 >
                   {votingTimeLeft}
                 </p>
-                <p
+                <div
                   style={{
                     fontSize: "18px",
                     margin: "10px",
                     textAlign: "center",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-evenly"
                   }}
                 >
-                  <p style={{ color: "grey" }}>Managers</p>
-                  {allowanceData.map((adata) => (
-                    <p
-                      style={{
-                        fontSize: "18px",
-                        marginTop: "10px",
-                        marginLeft: "10px",
-                        textAlign: "center",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <a
-                        {...{
-                          href: formatBlockExplorerLink("Account", [
-                            chainId,
-                            adata.manager,
-                            "",
-                          ]),
-                          target: "_blank",
-                          rel: "noopener noreferrer",
-                        }}
+                  <div>
+                    <p style={{ color: "grey" }}>Managers</p>
+                    {managers.map((adata) => (
+                      <p
                         style={{
+                          fontSize: "18px",
+                          marginTop: "10px",
+                          marginLeft: "10px",
+                          textAlign: "center",
                           display: "flex",
                           flexDirection: "row",
-                          width: "30%",
+                          justifyContent: "center",
                         }}
                       >
-                        (
-                        {useENSName(adata.manager) ||
-                          shortenHex(adata.manager, 4)}
-                        )
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="17px"
-                          height="17px"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#C3C5CB"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          style={{ marginLeft: "12px" }}
+                        <a
+                          {...{
+                            href: formatBlockExplorerLink("Account", [
+                              chainId,
+                              adata,
+                              "",
+                            ]),
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                          }}
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                          }}
                         >
-                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                          <polyline points="15 3 21 3 21 9"></polyline>
-                          <line x1="10" y1="14" x2="21" y2="3"></line>
-                        </svg>
-                      </a>
-                      <p>
-                        {parseBalance(adata.allowance)} {isnative ? currencyName(chainId) : "USD"}
+                          ({useENSName(adata) || shortenHex(adata, 4)})
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="17px"
+                            height="17px"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#C3C5CB"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            style={{ marginLeft: "12px" }}
+                          >
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                          </svg>
+                        </a>
                       </p>
-                    </p>
-                  ))}
+                    ))}
+                  </div>
+                  <div>
+                    <p style={{ color: "grey" }}>Allowance</p>
+                    {allowances.map((adata) => (
+                      <p
+                        style={{
+                          fontSize: "18px",
+                          marginTop: "10px",
+                          marginLeft: "10px",
+                          textAlign: "center",
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <p>
+                          {parseBalance(adata)}{" "}
+                          {isnative ? currencyName(chainId) : "USD"}
+                        </p>
+                      </p>
+                    ))}
+                  </div>
+                </div>
+                <p
+                  style={{
+                    fontSize: "18px",
+                    margin: "10px",
+                    textAlign: "left",
+                  }}
+                >
+                  {proposal.proposaldescription}
                 </p>
               </div>
             )}
@@ -451,7 +486,7 @@ const DAOProposalGridCard = ({ dao }: ProposalCardGridProp) => {
   }
 
   return (
-    <div className="greenTextBlackBackground">
+    <div className="blueTextBlackBackground">
       <BasicModal
         modalButtonText="Create Proposal"
         modalBody={<CreateProposalModal />}

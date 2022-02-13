@@ -4,7 +4,7 @@ import Router from "next/router";
 import { useCreatorFactoryCreatorSaleFee, useCreatorFactoryCreatorToken } from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
 import { useTokenName, useTokenSymbol } from "../hooks/ERC20/useTokenContract";
 import { LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST } from "../constants/chains";
-import { parseBalance } from "../util";
+import { currencyName, parseBalance } from "../util";
 
 interface CreatorCardProp {
   creator: string;
@@ -40,7 +40,8 @@ const CreatorCard = ({ creator }: CreatorCardProp) => {
       </div>
       <div style={{padding:"0px 5px 8px 15px"}}>
         <h2>{name.length>25?name.substring(0,25)+"..": name} ({symbol})</h2>
-        <h3>{nativeCreatorPrice} ({symbol})</h3>
+        <h3>{nativeCreatorPrice} ({currencyName(chainId)})</h3>
+        <h3>{usdCreatorPrice} (USD)</h3>
         {/* <div className="rightAlignCard">
           <p>{note}</p>
           <p style={{ fontSize: "smaller" }}>Holders</p>

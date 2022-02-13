@@ -3,7 +3,7 @@ import React from "react";
 const Footer = () => {
   return (
     <footer
-      className="greenTextBlackBackground"
+      className="blueTextBlackBackground"
       style={{
         display: "flex",
         justifyContent: "space-around",

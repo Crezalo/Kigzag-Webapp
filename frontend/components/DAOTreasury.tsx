@@ -59,7 +59,7 @@ const DAOTreasury = ({ dao }: DAOTreasuryProp) => {
   const DAIBalance = parseBalance(useTokenBalance(dao, DAI_SUPPORTED_ADDRESS[chainId].toString()).data??0);
 
   return (
-    <div className="greenTextBlackBackground">
+    <div className="blueTextBlackBackground">
       <Grid container spacing={1}>
         <Grid container spacing={1}>
           <GridItem tokenName={nativeTokenName} tokenSymbol={nativeTokenSymbol} tokenBalance={nativeTokenBalance} classes={classes}/>

@@ -11,31 +11,31 @@ import { getNFTForGivenTokenId } from "../services/api-service";
 
 export default function NFT() {
   const router = useRouter();
-  const { contract, tokenId } = router.query;
+  const { contract, tokenId, creator, status, vault } = router.query;
 
   const { chainId, account, library } = useWeb3React();
 
   const [nft, setNft] = useState({
-    chainid: 0,
-    creator: "",
-    id: "",
-    nftaddress: "",
-    status: "",
-    tokenid: 0,
     tokenuri: "",
   });
 
-  const getCreatorList = () => {
+  const getNFT = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getNFTForGivenTokenId(account, library, contract.toString() ,chainId, tokenId.toString());
+        const res = await getNFTForGivenTokenId(
+          account,
+          library,
+          contract.toString(),
+          chainId,
+          tokenId.toString()
+        );
         setNft(res);
       }
       getData();
-    },[contract, tokenId, chainId]);
+    }, [contract, tokenId, chainId]);
   };
 
-  getCreatorList();
+  getNFT();
 
   const tokenURI = useCreatorNFTTokenURI(
     contract.toString(),
@@ -68,10 +68,9 @@ export default function NFT() {
 
   let external_url;
 
-  if(nft[0]){
+  if (nft[0]) {
     external_url = nft[0].tokenuri ?? "";
-  }
-  else{
+  } else {
     external_url = "";
   }
   const name = metadata["name"] ?? "";
@@ -95,7 +94,14 @@ export default function NFT() {
                 <Image src={image} alt="Loading ..." width={550} height={550} />
               )}
             </div>
-            <NFTDetails notes={router.query} name={name} />
+            <NFTDetails
+              contract={contract.toString()}
+              tokenid={tokenId.toString()}
+              creator={creator.toString()}
+              status={status.toString()}
+              vault={vault.toString()}
+              name={name}
+            />
           </div>
           <NFTProperties properties={attributes} description={description} />
         </div>
@@ -103,8 +109,6 @@ export default function NFT() {
         <CircularProgress
           style={{ display: "flex", margin: "auto", height: "80vh" }}
         />
-        // <Spinner />
-        // <p>Loading</p>
       )}
     </div>
   );

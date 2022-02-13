@@ -23,7 +23,7 @@ import {
   useCreatorFactoryCreatorSaleFee,
   useCreatorFactoryCreatorToken,
 } from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
-import { creatorFactoryLT, parseBalance } from "../util";
+import { creatorFactoryLT, currencyName, parseBalance } from "../util";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getNFTsOfCreator, getUserData } from "../services/api-service";
@@ -72,7 +72,7 @@ export default function Home() {
     useTokenTotalSupply(creatorToken).data ?? 0
   );
 
-  const nativeTokenSymbol = useTokenSymbol(nativeToken.toString()).data;
+  // const nativeTokenSymbol = useTokenSymbol(nativeToken.toString()).data;
 
   const { nativefee, usdfee } = useCreatorFactoryCreatorSaleFee(
     LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
@@ -85,7 +85,7 @@ export default function Home() {
   return (
     <div>
       {creatorToken ? (
-        <div className="greenTextBlackBackground" style={{ fontSize: 25 }}>
+        <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
           <div style={{ display: "flex" }}>
             <div className="creatorImageDiv">
               <Jdenticon size={250} value={account.toLocaleLowerCase()} />
@@ -139,7 +139,7 @@ export default function Home() {
                       Native:
                     </div>
                     <div style={{ color: "white" }}>
-                      {nativeCreatorPrice} {nativeTokenSymbol}
+                      {nativeCreatorPrice} {currencyName(chainId)}
                     </div>
                   </div>
                   <div

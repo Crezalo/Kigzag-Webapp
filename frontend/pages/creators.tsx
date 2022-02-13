@@ -35,7 +35,7 @@ export default function Creators() {
     <div>
       {creatorsList != [] ? (
         <div
-          className="greenTextBlackBackground"
+          className="blueTextBlackBackground"
           style={{
             justifyContent: "center",
             fontSize: 25,
