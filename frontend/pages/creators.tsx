@@ -14,7 +14,7 @@ export default function Creators() {
   const getCreatorList = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getCreators(account, library);
+        const res = await getCreators(account, chainId, library);
         setCreatorsList(res);
       }
       getData();

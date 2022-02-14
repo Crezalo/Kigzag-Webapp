@@ -20,9 +20,9 @@ const Header = () => {
       <Link href="/">
         <a style={{marginTop:"5px",marginLeft:"5px"}}>
           <Image
-            src="/../public/Kigzaglogo.png"
+            src="/../public/kigzaglogo.png"
             alt="Picture of the author"
-            width={100}
+            width={90}
             height={30}
           />
         </a>

@@ -23,6 +23,7 @@ import {
   getAllNFTs,
   getTokens,
 } from "../services/api-service";
+import ContentCardGrid from "./ContentCardGrid";
 
 const useStyles = makeStyles({
   tab: {
@@ -72,6 +73,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
     // on dashboard
     if (creatorToken !== ZERO_ADDRESS) {
       tabs_array = [
+        <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile}/>,
         <NFTTabs creator={creator} onCreatorProfile={onCreatorProfile} creatorVault={creatorVault}/>,
         <DAOTabs dao={creatorDAO} />,
         <CollectedTabs creatorVault={creatorVault}/>,
@@ -97,6 +99,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                   style: { backgroundColor: "#3B82F6" },
                 }}
               >
+                <Tab label="Content" className={classes.tab} />
                 <Tab label="NFT" className={classes.tab} />
                 <Tab label="DAO" className={classes.tab} />
               </Tabs>
@@ -116,6 +119,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                       style: { backgroundColor: "#3B82F6" },
                     }}
                   >
+                    <Tab label="Content" className={classes.tab} />
                     <Tab label="NFT" className={classes.tab} />
                     <Tab label="DAO" className={classes.tab} />
                     <Tab label="Collected" className={classes.tab} />

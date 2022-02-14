@@ -33,6 +33,7 @@ export default function CreatorProfile() {
   }
   else{
     console.log(router.pathname);
+    console.log(router.pathname);
     const url = router.pathname;
     address = url.split("=")[1]
     console.log(address)

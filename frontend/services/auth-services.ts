@@ -18,7 +18,6 @@ class AuthService {
       });
 
       console.log("expired: " + expired);
-      // console.log("address: "+ address+ " domain: "+ body.domain+ " statement: "+ body.statement+ " expires_in: "+ body.expires_in);
       if(address && body && !expired)
       {
         return user;
@@ -28,8 +27,6 @@ class AuthService {
       }
     }
 
-    
-    
     // generating a token with 1 day of expiration time by default
     const token = await Web3Token.sign(async msg => await library.getSigner().signMessage(msg), {
       domain: 'app.kigzag.com',
@@ -55,8 +52,6 @@ class AuthService {
   }
 
   getCurrentUser(account) {
-    // console.log("LOCAL STORAGE IS DEFINED!!!!!!!!!!!!!");
-    // console.log(localStorage);
     return JSON.parse(localStorage.getItem("user_"+account));
   }
 }

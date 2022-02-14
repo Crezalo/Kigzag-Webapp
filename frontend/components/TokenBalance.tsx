@@ -33,7 +33,6 @@ const TokenBalance = ({ tokenAddress, symbol }: TokenBalanceProps) => {
   const creatorfactory = useCreatorFactoryContract(
     "0x00eb20674CD2039B524CC74ed7F23A355D9B3861"
   );
-  console.log(creatorfactory);
   return (
     <>
       <p>

@@ -34,7 +34,6 @@ interface NFTPropertiesProp {
 }
 
 const NFTProperties = ({ properties, description }: NFTPropertiesProp) => {
-  console.log(properties);
   const dummy =
     "Drop 2 of Semiosis is 10 animated pieces, created to reflect the movement all around us. Signs, symbols and signals are everywhere around us in the built environment. They show us the way, warn us, excite us. But on their own they have no meaning. We all learn a shared visual language, devoid of words, to help us navigate the world. Semiosis is my first generative collection, featuring 25 unique symbols and 8 different colours.";
   return (

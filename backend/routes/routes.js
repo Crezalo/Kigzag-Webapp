@@ -10,7 +10,7 @@ const isTimestamp = require('validate.io-timestamp');
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // add new user
-router.post("/", async (req, res) => {
+router.post("/", authorise, async (req, res) => {
   try {
     const {
       useraddress,
@@ -112,9 +112,12 @@ router.put("/:address", authorise, async (req, res) => {
 });
 
 // get creators profile data
-router.get("/creators", async (req, res) => {
+router.get("/creators/:chainid", async (req, res) => {
   try {
-    const ud = await pool.query("SELECT * FROM Users WHERE IsCreator = true;");
+    const {
+      chainid
+    } = req.params;
+    const ud = await pool.query("SELECT Users.*, User_chain.chainid FROM Users INNER JOIN User_chain ON(Users.useraddress=User_chain.useraddress) WHERE IsCreator = true AND ChainId=$1;", [chainid]);
     res.json(ud.rows);
   } catch (err) {
     res.json(err);
@@ -189,6 +192,29 @@ router.get("/cn/:column/:address", async (req, res) => {
   }
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////          User Chain TABLE           ////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// add new user chain data
+router.post("/user_chain", authorise, async (req, res) => {
+  try {
+    const {
+      useraddress,
+      chainid
+    } = req.body;
+    var valid = WAValidator.validate(useraddress, "ETH");
+    if (valid) {
+      const new_user_chain = await pool.query("INSERT INTO User_chain (UserAddress, ChainId) VALUES ($1,$2) RETURNING*;", [useraddress.toLowerCase(), chainid]);
+      res.json(new_user_chain.rows);
+    } else {
+      res.json("Address INVALID");
+    }
+  } catch (err) {
+    res.json(err);
+  }
+});
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////          Token TABLE            ////////////////////////////////////////////////
@@ -244,7 +270,7 @@ router.post("/nft", authorise, async (req, res) => {
       if (status == 'UNLISTED' || status == 'LISTED' || status == 'SOLD') {
         const new_token = await pool.query(
           "INSERT INTO Creator_nft (NFTAddress, TokenId, TokenURI, Status, ChainId, Creator) VALUES ($1,$2,$3,$4,$5,$6) RETURNING*;",
-          [address.toLowerCase(), tokenid, tokenuri, status, chainid,creator.toLowerCase()]
+          [address.toLowerCase(), tokenid, tokenuri, status, chainid, creator.toLowerCase()]
         );
         res.json(new_token.rows);
       } else {
@@ -331,8 +357,8 @@ router.post("/dao", authorise, async (req, res) => {
       proposalid,
       author,
       isallowancesproposal,
-      managers, 
-      allowances, 
+      managers,
+      allowances,
       isnative,
       proposallink,
       proposaltitle,
@@ -353,8 +379,8 @@ router.post("/dao", authorise, async (req, res) => {
           proposalid,
           author.toLowerCase(),
           isallowancesproposal,
-          managers.toLowerCase(), 
-          allowances, 
+          managers.toLowerCase(),
+          allowances,
           isnative,
           proposallink,
           proposaltitle,

@@ -74,8 +74,12 @@ export async function updateUserData(
   return false;
 }
 
-export async function getCreators(account: string, library: any) {
-  const response = await axios.get(API_URL + "creators", {
+export async function getCreators(
+  account: string,
+  chainId: number,
+  library: any
+) {
+  const response = await axios.get(API_URL + "creators/" + chainId, {
     headers: await authHeader(account, library),
   });
   const data = await response.data;
@@ -250,7 +254,13 @@ export async function getNFTForGivenTokenId(
   tokenid: string
 ) {
   const response = await axios.get(
-    API_URL + "nft/address/" + chainId.toString() + "/" + address + "/" + tokenid,
+    API_URL +
+      "nft/address/" +
+      chainId.toString() +
+      "/" +
+      address +
+      "/" +
+      tokenid,
     { headers: await authHeader(account, library) }
   );
   const data = await response.data;
@@ -270,8 +280,8 @@ export async function addDAOProposal(
   proposalid: number,
   author: string,
   isallowancesproposal: boolean,
-  managers: string, 
-  allowances: string, 
+  managers: string,
+  allowances: string,
   isnative: boolean,
   proposallink: string,
   proposaltitle: string,
@@ -286,8 +296,8 @@ export async function addDAOProposal(
     proposalid: proposalid,
     author: author,
     isallowancesproposal: isallowancesproposal,
-    managers: managers, 
-    allowances: allowances, 
+    managers: managers,
+    allowances: allowances,
     isnative: isnative,
     proposallink: proposallink,
     proposaltitle: proposaltitle,
@@ -317,7 +327,6 @@ export async function getDAOAllProposals(
     }
   );
   const data = await response.data;
-  console.log(data);
   return data;
 }
 

@@ -28,8 +28,6 @@ interface CreatorCardGridProp {
 }
 const CreatorCardGrid = ({ creators }: CreatorCardGridProp) => {
   const classes = useStyles();
-  console.log("creators");
-  console.log(creators);
   return (
     <div className="blueTextBlackBackground">
       <Grid container spacing={1}>
