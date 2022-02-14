@@ -68,20 +68,43 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
 
   if (onCreatorProfile) {
     // on creator profile
-    tabs_array = [<NFTTabs creator={creator} onCreatorProfile={onCreatorProfile} creatorVault={creatorVault}/>, <DAOTabs dao={creatorDAO} />];
+    tabs_array = [
+      <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
+      <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
+      <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
+      <NFTTabs
+        creator={creator}
+        onCreatorProfile={onCreatorProfile}
+        creatorVault={creatorVault}
+      />,
+      <DAOTabs dao={creatorDAO} />,
+    ];
   } else {
     // on dashboard
     if (creatorToken !== ZERO_ADDRESS) {
       tabs_array = [
-        <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile}/>,
-        <NFTTabs creator={creator} onCreatorProfile={onCreatorProfile} creatorVault={creatorVault}/>,
+        <ContentCardGrid
+          creator={creator}
+          onCreatorProfile={onCreatorProfile}
+        />,
+        <ContentCardGrid
+          creator={creator}
+          onCreatorProfile={onCreatorProfile}
+        />,
+        <ContentCardGrid
+          creator={creator}
+          onCreatorProfile={onCreatorProfile}
+        />,
+        <NFTTabs
+          creator={creator}
+          onCreatorProfile={onCreatorProfile}
+          creatorVault={creatorVault}
+        />,
         <DAOTabs dao={creatorDAO} />,
-        <CollectedTabs creatorVault={creatorVault}/>,
+        <CollectedTabs creatorVault={creatorVault} />,
       ];
     } else {
-      tabs_array = [
-        <CollectedTabs creatorVault={creatorVault}/>,
-      ];
+      tabs_array = [<CollectedTabs creatorVault={creatorVault} />];
     }
   }
 
@@ -100,6 +123,8 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                 }}
               >
                 <Tab label="Content" className={classes.tab} />
+                <Tab label="Live" className={classes.tab} />
+                <Tab label="Chit Chat" className={classes.tab} />
                 <Tab label="NFT" className={classes.tab} />
                 <Tab label="DAO" className={classes.tab} />
               </Tabs>
@@ -120,6 +145,8 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                     }}
                   >
                     <Tab label="Content" className={classes.tab} />
+                    <Tab label="Live" className={classes.tab} />
+                    <Tab label="Chit Chat" className={classes.tab} />
                     <Tab label="NFT" className={classes.tab} />
                     <Tab label="DAO" className={classes.tab} />
                     <Tab label="Collected" className={classes.tab} />

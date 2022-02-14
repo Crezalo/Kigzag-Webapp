@@ -2,7 +2,7 @@ import axios from "axios";
 import authHeader from "./auth-header";
 
 // Backend Url
-const API_URL = "http://localhost:5000/";
+const MAIN_API_URL = "http://localhost:5000/";
 
 /////////////////////////////////////////////////////////////////////////
 //////////////////     User Table            ////////////////////////////
@@ -32,7 +32,7 @@ export async function addNewUser(
     youtube: youtube,
     website: website,
   };
-  const response = await axios.post(API_URL, data, {
+  const response = await axios.post(MAIN_API_URL, data, {
     headers: await authHeader(account, library),
   });
   if (response.data[0]["useraddress"] == useraddress.toLowerCase()) {
@@ -51,7 +51,7 @@ export async function addUserNewChain(
     useraddress: useraddress,
     chainid: chainId,
   };
-  const response = await axios.post(API_URL+"user_chain", data, {
+  const response = await axios.post(MAIN_API_URL+"user_chain", data, {
     headers: await authHeader(account, library),
   });
   if (response.data[0]["useraddress"] == useraddress.toLowerCase()) {
@@ -84,7 +84,7 @@ export async function updateUserData(
     youtube: youtube,
     website: website,
   };
-  const response = await axios.put(API_URL + useraddress, data, {
+  const response = await axios.put(MAIN_API_URL + useraddress, data, {
     headers: await authHeader(account, library),
   });
   if (response.data[0]["useraddress"] == useraddress.toLowerCase()) {
@@ -98,7 +98,7 @@ export async function getCreators(
   chainId: number,
   library: any
 ) {
-  const response = await axios.get(API_URL + "creators/" + chainId, {
+  const response = await axios.get(MAIN_API_URL + "creators/" + chainId, {
     headers: await authHeader(account, library),
   });
   const data = await response.data;
@@ -110,7 +110,7 @@ export async function getUserData(
   library: any,
   address: string
 ) {
-  const response = await axios.get(API_URL + address, {
+  const response = await axios.get(MAIN_API_URL + address, {
     headers: await authHeader(account, library),
   });
   const data = await response.data;
@@ -123,7 +123,7 @@ export async function getUserColumnData(
   address: string,
   column: string
 ) {
-  const response = await axios.get(API_URL + "cn/" + column + "/" + address, {
+  const response = await axios.get(MAIN_API_URL + "cn/" + column + "/" + address, {
     headers: await authHeader(account, library),
   });
   const data = await response.data;
@@ -144,7 +144,7 @@ export async function addNewToken(
     address: address,
     chainId: chainId,
   };
-  const response = await axios.post(API_URL + "token", data, {
+  const response = await axios.post(MAIN_API_URL + "token", data, {
     headers: await authHeader(account, library),
   });
   if (response.data[0]["tokenaddress"] == address.toLowerCase()) {
@@ -158,7 +158,7 @@ export async function getTokens(
   library: any,
   chainId: number
 ) {
-  const response = await axios.get(API_URL + "token/" + chainId.toString(), {
+  const response = await axios.get(MAIN_API_URL + "token/" + chainId.toString(), {
     headers: await authHeader(account, library),
   });
   const data = await response.data;
@@ -185,7 +185,7 @@ export async function addNewNFT(
     status: status,
     chainid: chainid,
   };
-  const response = await axios.post(API_URL + "nft", data, {
+  const response = await axios.post(MAIN_API_URL + "nft", data, {
     headers: await authHeader(account, library),
   });
   if (response.data[0]["nftaddress"] == address.toLowerCase()) {
@@ -203,7 +203,7 @@ export async function updateNFTData(
   chainid: number
 ) {
   const response = await axios.put(
-    API_URL +
+    MAIN_API_URL +
       "nft/" +
       address +
       "/" +
@@ -225,7 +225,7 @@ export async function getAllNFTs(
   library: any,
   chainId: number
 ) {
-  const response = await axios.get(API_URL + "nft/" + chainId.toString(), {
+  const response = await axios.get(MAIN_API_URL + "nft/" + chainId.toString(), {
     headers: await authHeader(account, library),
   });
   const data = await response.data;
@@ -240,7 +240,7 @@ export async function getNFTsOfCreator(
 ) {
   try {
     const response = await axios.get(
-      API_URL + "nft/address/" + chainId.toString() + "/" + address,
+      MAIN_API_URL + "nft/address/" + chainId.toString() + "/" + address,
       { headers: await authHeader(account, library) }
     );
     const data = await response.data;
@@ -258,7 +258,7 @@ export async function getNFTFromStatus(
   status: string
 ) {
   const response = await axios.get(
-    API_URL + "nft/status/" + chainId.toString() + "/" + address + "/" + status,
+    MAIN_API_URL + "nft/status/" + chainId.toString() + "/" + address + "/" + status,
     { headers: await authHeader(account, library) }
   );
   const data = await response.data;
@@ -273,7 +273,7 @@ export async function getNFTForGivenTokenId(
   tokenid: string
 ) {
   const response = await axios.get(
-    API_URL +
+    MAIN_API_URL +
       "nft/address/" +
       chainId.toString() +
       "/" +
@@ -324,7 +324,7 @@ export async function addDAOProposal(
     choices: choices,
     duration: duration,
   };
-  const response = await axios.post(API_URL + "dao", data, {
+  const response = await axios.post(MAIN_API_URL + "dao", data, {
     headers: await authHeader(account, library),
   });
   if (response.data[0]["daoaddress"] == address.toLowerCase()) {
@@ -340,7 +340,7 @@ export async function getDAOAllProposals(
   address: string
 ) {
   const response = await axios.get(
-    API_URL + "dao/" + chainId.toString() + "/" + address,
+    MAIN_API_URL + "dao/" + chainId.toString() + "/" + address,
     {
       headers: await authHeader(account, library),
     }
@@ -357,7 +357,7 @@ export async function getDAOProposal(
   proposalid: number
 ) {
   const response = await axios.get(
-    API_URL + "dao/" + chainId.toString() + "/" + address + "/" + proposalid,
+    MAIN_API_URL + "dao/" + chainId.toString() + "/" + address + "/" + proposalid,
     {
       headers: await authHeader(account, library),
     }
