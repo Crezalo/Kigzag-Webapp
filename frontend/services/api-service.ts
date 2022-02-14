@@ -35,7 +35,26 @@ export async function addNewUser(
   const response = await axios.post(API_URL, data, {
     headers: await authHeader(account, library),
   });
-  if (response.data[0]["useraddress"] == useraddress) {
+  if (response.data[0]["useraddress"] == useraddress.toLowerCase()) {
+    return true;
+  }
+  return false;
+}
+
+export async function addUserNewChain(
+  account: string,
+  chainId: number,
+  library: any,
+  useraddress: string,
+) {
+  const data = {
+    useraddress: useraddress,
+    chainid: chainId,
+  };
+  const response = await axios.post(API_URL+"user_chain", data, {
+    headers: await authHeader(account, library),
+  });
+  if (response.data[0]["useraddress"] == useraddress.toLowerCase()) {
     return true;
   }
   return false;
@@ -68,7 +87,7 @@ export async function updateUserData(
   const response = await axios.put(API_URL + useraddress, data, {
     headers: await authHeader(account, library),
   });
-  if (response.data[0]["useraddress"] == useraddress) {
+  if (response.data[0]["useraddress"] == useraddress.toLowerCase()) {
     return true;
   }
   return false;
@@ -128,7 +147,7 @@ export async function addNewToken(
   const response = await axios.post(API_URL + "token", data, {
     headers: await authHeader(account, library),
   });
-  if (response.data[0]["tokenaddress"] == address) {
+  if (response.data[0]["tokenaddress"] == address.toLowerCase()) {
     return true;
   }
   return false;
@@ -169,7 +188,7 @@ export async function addNewNFT(
   const response = await axios.post(API_URL + "nft", data, {
     headers: await authHeader(account, library),
   });
-  if (response.data[0]["nftaddress"] == address) {
+  if (response.data[0]["nftaddress"] == address.toLowerCase()) {
     return true;
   }
   return false;
@@ -195,7 +214,7 @@ export async function updateNFTData(
       status,
     { headers: await authHeader(account, library) }
   );
-  if (response.data[0]["nftaddress"] == address) {
+  if (response.data[0]["nftaddress"] == address.toLowerCase()) {
     return true;
   }
   return false;
@@ -308,7 +327,7 @@ export async function addDAOProposal(
   const response = await axios.post(API_URL + "dao", data, {
     headers: await authHeader(account, library),
   });
-  if (response.data[0]["daoaddress"] == address) {
+  if (response.data[0]["daoaddress"] == address.toLowerCase()) {
     return true;
   }
   return false;
@@ -346,9 +365,3 @@ export async function getDAOProposal(
   const data = await response.data;
   return data;
 }
-
-// getPublicContent() {
-//   return await axios.get(API_URL + "all");
-// }
-
-// export default new APIService();
