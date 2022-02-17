@@ -27,7 +27,7 @@ const CreatorCard = ({ creator }: CreatorCardProp) => {
 
   return (
     <section
-      className="creatorCard"
+      className="creatorCard pointer"
       onClick={() =>
         Router.push({
           pathname: "/creatorprofile",

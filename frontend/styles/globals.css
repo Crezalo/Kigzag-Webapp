@@ -10,6 +10,89 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
+.videoDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #3b82f6;
+}
+
+.videoDiv .h1 {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}
+
+.videoDiv .p {
+  font-size: 15px;
+  color: white;
+  text-align: left;
+  margin: 10px 25px 20px 25px;
+}
+
+.videoDiv .h2 {
+  font-size: 18px;
+  color: #3b82f6;
+  text-align: left;
+  margin: 10px 25px 20px 10px;
+}
+
+.videoCard {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 1px 1px 3px #3b82f6;
+  transition: 0.3s;
+  width: 250px;
+  height: 250px;
+  margin: 20px auto;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 1%;
+  font-size: 20px;
+}
+
+/* On mouse-over, add a deeper shadow */
+.videoCard:hover {
+  box-shadow: 0 10px 18px 8px #173464;
+  border-radius: 2%;
+}
+
+.videoCardImage {
+  margin: auto;
+  display: table;
+  position: relative;
+  text-align: center;
+  border-radius: 2%;
+}
+
+.bottom-right {
+  position: absolute;
+  bottom: 10px;
+  right: 16px;
+}
+.creatorIdent {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 25px 20px 25px;
+}
+
+video {
+  height: 85vh;
+  width: 95vw;
+  object-fit: fill;
+  margin: 7.5px 2.5vw 7.5vh 1.75vw;
+  border-radius: 10px;
+  box-shadow: 0 1px 1px 3px #173464;
+}
+
+video:hover {
+  box-shadow: 0 0px 5px 5px #173464;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -20,12 +103,12 @@ a {
 }
 
 .blueTextBlackBackground {
-  color: #3B82F6;
+  color: #3b82f6;
   padding: 0.5rem;
   background: black;
 }
 
-.RedeemTreasuryButton{  
+.RedeemTreasuryButton {
   margin-top: 50px;
   margin-bottom: 50px;
 }
@@ -39,12 +122,12 @@ a {
 
 .creatorCard {
   /* Add shadows to create the "card" effect */
-  box-shadow: 0 1px 1px 3px #3B82F6;
+  box-shadow: 0 1px 1px 3px #3b82f6;
   transition: 0.3s;
   width: 250px;
   height: 280px;
   margin: 20px auto;
-  background-color: #3B82F6;
+  background-color: #3b82f6;
   color: white;
   border-radius: 5%;
   font-size: 20px;
@@ -57,7 +140,7 @@ a {
 
 .proposalCard {
   /* Add shadows to create the "card" effect */
-  box-shadow: 0 1px 1px 3px #3B82F6;
+  box-shadow: 0 1px 1px 3px #3b82f6;
   transition: 0.3s;
   width: 800px;
   height: auto;
@@ -78,7 +161,7 @@ a {
   margin-bottom: 5px;
 }
 
-.choiceButton:hover{
+.choiceButton:hover {
   color: white;
 }
 
@@ -109,7 +192,7 @@ a {
   text-decoration: underline;
 }
 
-.choiceVote{
+.choiceVote {
   display: flex;
   flex-direction: row;
   justify-content: left;
@@ -174,9 +257,9 @@ a {
   font-size: 20px;
 }
 
-.creatorTokenPrice{
+.creatorTokenPrice {
   font-size: 15px;
-  margin-left: 50px; 
+  margin-left: 50px;
   width: 10vw;
   text-align: center;
 }
@@ -203,13 +286,13 @@ a {
 
 .tokenCard {
   /* Add shadows to create the "card" effect */
-  box-shadow: 0 1px 1px 3px #3B82F6;
+  box-shadow: 0 1px 1px 3px #3b82f6;
   transition: 0.3s;
   width: 250px;
   height: 110px;
   padding: 15px;
   margin: 20px auto;
-  background-color: #3B82F6;
+  background-color: #3b82f6;
   border-radius: 20%;
   color: white;
 }
@@ -242,7 +325,7 @@ a {
   text-align: center;
 }
 
-.treasuryDiv{
+.treasuryDiv {
   width: 90vw;
   height: 25vh;
   display: flex;
@@ -250,33 +333,36 @@ a {
   justify-content: space-around;
 }
 
-.nftTabs{
+.nftTabs {
   /* background-color:black; */
   display: flex;
-  color: #3B82F6;
+  color: #3b82f6;
 }
 
 .nftCard {
   /* Add shadows to create the "card" effect */
-  box-shadow: 0 1px 1px 3px #3B82F6;
+  box-shadow: 0 1px 1px 3px #3b82f6;
   transition: 0.3s;
   width: 250px;
-  height: 305px;
+  height: 320px;
   margin: 20px auto;
-  background-color: #3B82F6;
+  background-color: #3b82f6;
   color: white;
-  border-radius: 5%;
+  border-radius: 1%;
 }
 
 /* On mouse-over, add a deeper shadow */
 .nftCard:hover {
   box-shadow: 0 10px 18px 8px #173464;
+  border-radius: 2%;
 }
 
 .nftCardImage {
   margin: auto;
   display: table;
-  padding: 10px;
+  position: relative;
+  text-align: center;
+  border-radius: 2%;
 }
 
 .nftCardDetails {
@@ -326,11 +412,11 @@ a {
 }
 
 .link {
-  text-decoration-color: #3B82F6;
+  text-decoration-color: #3b82f6;
 }
 
 .bidButton:hover {
-  color: #3B82F6;
+  color: #3b82f6;
 }
 .buyButton:hover {
   background-color: rgb(76, 175, 80);

@@ -83,7 +83,7 @@ const NFTCard = ({ nft }: NFTCardProp) => {
     <div>
       {image || external_url ? (
         <section
-          className="nftCard"
+          className="nftCard pointer"
           onClick={() =>
             Router.push({
               pathname: "/nft",
@@ -102,8 +102,9 @@ const NFTCard = ({ nft }: NFTCardProp) => {
               <Image
                 src={external_url}
                 alt="Loading ..."
-                width={170}
-                height={170}
+                width={250}
+                height={225}
+                className="nftCardImage"
               />
             ) : (
               <Image src={image} alt="Loading ..." width={170} height={170} />

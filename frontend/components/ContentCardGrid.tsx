@@ -5,7 +5,11 @@ import { Paper } from "@material-ui/core";
 import NFTCard from "./NFTCard";
 import { useWeb3React } from "@web3-react/core";
 import { useCreatorNFTOwnerOf } from "../hooks/ERC721/useCreatorNFTContract";
-import { getNFTsOfCreator } from "../services/api-service";
+import {
+  getCreatorAllVideoDetails,
+  getNFTsOfCreator,
+} from "../services/api-service";
+import VideoCard from "./VideoCard";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -16,16 +20,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface GridItemProps {
-  nft: any;
+  vid: {
+    videoid: string;
+    title: string;
+    description: string;
+    creator: string;
+    duration: number;
+  };
   classes: any;
 }
-const GridItem = ({ nft, classes }: GridItemProps) => {
+const GridItem = ({ vid, classes }: GridItemProps) => {
   return (
     // From 0 to 600px wide (smart-phones), I take up 12 columns, or the whole device width!
     // From 600-690px wide (tablets), I take up 6 out of 12 columns, so 2 columns fit the screen.
     // From 960px wide and above, I take up 25% of the device (3/12), so 4 columns fit the screen.
     <Grid item xs={12} sm={6} md={3}>
-      <NFTCard nft={nft} />
+      <VideoCard vid={vid} />
       {/* <Paper className={classes.paper}>item</Paper> */}
     </Grid>
   );
@@ -35,37 +45,46 @@ interface ContentCardGridProp {
   creator: string;
   onCreatorProfile: boolean;
 }
-const ContentCardGrid = ({ creator, onCreatorProfile }: ContentCardGridProp) => {
+const ContentCardGrid = ({
+  creator,
+  onCreatorProfile,
+}: ContentCardGridProp) => {
   const classes = useStyles();
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
+
+  const [videoDetails, setVideoDetails] = useState([
+    {
+      title: "",
+      description: "",
+      creator: "",
+      duration: 0,
+      videoid: "",
+    },
+  ]);
+
+  const getVidDetails = () => {
+    useEffect(() => {
+      async function getData() {
+        const res = await getCreatorAllVideoDetails(account, library, creator);
+        setVideoDetails(res);
+      }
+      getData();
+    }, [creator]);
+  };
+
+  getVidDetails();
+
+  console.log("videoDetails");
+  console.log(videoDetails);
 
   return (
     <div className="blueTextBlackBackground">
       <Grid container spacing={1}>
-        {/* {nfts.map((nft) => (
-          <>
-            {nft.status == status || status == "ALL" ? (
-              <GridItem nft={nft} classes={classes} />
-            ) : (
-              <>
-                {status == "OWNED" ? (
-                  <>
-                    {useCreatorNFTOwnerOf(nft.nftaddress, nft.tokenid).data==account ? (
-                      <GridItem nft={nft} classes={classes} />
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                ) : (
-                  <></>
-                )}
-              </>
-            )}
-          </>
-        ))} */}
+        {videoDetails.map((vid) => (
+          <>{vid.videoid ? <GridItem vid={vid} classes={classes} /> : <></>}</>
+        ))}
       </Grid>
     </div>
   );
 };
 export default ContentCardGrid;
-

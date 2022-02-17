@@ -83,21 +83,12 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
     // on dashboard
     if (creatorToken !== ZERO_ADDRESS) {
       tabs_array = [
-        <ContentCardGrid
-          creator={creator}
-          onCreatorProfile={onCreatorProfile}
-        />,
-        <ContentCardGrid
-          creator={creator}
-          onCreatorProfile={onCreatorProfile}
-        />,
-        <ContentCardGrid
-          creator={creator}
-          onCreatorProfile={onCreatorProfile}
-        />,
+        <ContentCardGrid creator={account} onCreatorProfile={false} />,
+        <ContentCardGrid creator={account} onCreatorProfile={false} />,
+        <ContentCardGrid creator={account} onCreatorProfile={false} />,
         <NFTTabs
-          creator={creator}
-          onCreatorProfile={onCreatorProfile}
+          creator={account}
+          onCreatorProfile={false}
           creatorVault={creatorVault}
         />,
         <DAOTabs dao={creatorDAO} />,
@@ -124,7 +115,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
               >
                 <Tab label="Content" className={classes.tab} />
                 <Tab label="Live" className={classes.tab} />
-                <Tab label="Chit Chat" className={classes.tab} />
+                <Tab label="CHAT" className={classes.tab} />
                 <Tab label="NFT" className={classes.tab} />
                 <Tab label="DAO" className={classes.tab} />
               </Tabs>
@@ -146,7 +137,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                   >
                     <Tab label="Content" className={classes.tab} />
                     <Tab label="Live" className={classes.tab} />
-                    <Tab label="Chit Chat" className={classes.tab} />
+                    <Tab label="CHAT" className={classes.tab} />
                     <Tab label="NFT" className={classes.tab} />
                     <Tab label="DAO" className={classes.tab} />
                     <Tab label="Collected" className={classes.tab} />

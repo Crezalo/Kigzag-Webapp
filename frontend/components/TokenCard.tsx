@@ -13,7 +13,7 @@ const TokenCard = ({ tokenAddress }: TokenCardProp) => {
   const tokenBalance = parseBalance(useTokenBalance(account, tokenAddress).data??0);
 
   return (
-    <section className="tokenCard">
+    <section className="tokenCard pointer">
       <a
           {...{
             href: formatBlockExplorerLink("Owner", [chainId, tokenAddress, account]),

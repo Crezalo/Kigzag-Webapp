@@ -4,7 +4,7 @@ const pool = require("../../video-streaming-server/db_creation/db");
 
 module.exports = (optional = false) => async (req, res, next) => {
     try {
-        console.log("middleware");
+        console.log("req header auth middleware");
         // getting a token from authorization header
         console.log(req.headers);
         const token = req.headers['authorization']

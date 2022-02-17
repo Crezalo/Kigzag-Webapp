@@ -7,7 +7,7 @@ module.exports = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["ipfs.io", "ik.imagekit.io"],
+    domains: ["ipfs.io", "ik.imagekit.io", "localhost"],
     formats: ["image/webp"],
   },
 };

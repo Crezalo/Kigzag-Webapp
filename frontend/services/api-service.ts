@@ -1,8 +1,12 @@
 import axios from "axios";
+import AuthService from "./auth-services";
 import authHeader from "./auth-header";
 
 // Backend Url
 const MAIN_API_URL = "http://localhost:5000/";
+
+// Video Streaming Server Url
+const VIDEO_API_URL = "http://localhost:4000/";
 
 /////////////////////////////////////////////////////////////////////////
 //////////////////     User Table            ////////////////////////////
@@ -45,13 +49,13 @@ export async function addUserNewChain(
   account: string,
   chainId: number,
   library: any,
-  useraddress: string,
+  useraddress: string
 ) {
   const data = {
     useraddress: useraddress,
     chainid: chainId,
   };
-  const response = await axios.post(MAIN_API_URL+"user_chain", data, {
+  const response = await axios.post(MAIN_API_URL + "user_chain", data, {
     headers: await authHeader(account, library),
   });
   if (response.data[0]["useraddress"] == useraddress.toLowerCase()) {
@@ -123,9 +127,12 @@ export async function getUserColumnData(
   address: string,
   column: string
 ) {
-  const response = await axios.get(MAIN_API_URL + "cn/" + column + "/" + address, {
-    headers: await authHeader(account, library),
-  });
+  const response = await axios.get(
+    MAIN_API_URL + "cn/" + column + "/" + address,
+    {
+      headers: await authHeader(account, library),
+    }
+  );
   const data = await response.data;
   return data;
 }
@@ -158,9 +165,12 @@ export async function getTokens(
   library: any,
   chainId: number
 ) {
-  const response = await axios.get(MAIN_API_URL + "token/" + chainId.toString(), {
-    headers: await authHeader(account, library),
-  });
+  const response = await axios.get(
+    MAIN_API_URL + "token/" + chainId.toString(),
+    {
+      headers: await authHeader(account, library),
+    }
+  );
   const data = await response.data;
   return data;
 }
@@ -258,7 +268,13 @@ export async function getNFTFromStatus(
   status: string
 ) {
   const response = await axios.get(
-    MAIN_API_URL + "nft/status/" + chainId.toString() + "/" + address + "/" + status,
+    MAIN_API_URL +
+      "nft/status/" +
+      chainId.toString() +
+      "/" +
+      address +
+      "/" +
+      status,
     { headers: await authHeader(account, library) }
   );
   const data = await response.data;
@@ -357,11 +373,138 @@ export async function getDAOProposal(
   proposalid: number
 ) {
   const response = await axios.get(
-    MAIN_API_URL + "dao/" + chainId.toString() + "/" + address + "/" + proposalid,
+    MAIN_API_URL +
+      "dao/" +
+      chainId.toString() +
+      "/" +
+      address +
+      "/" +
+      proposalid,
     {
       headers: await authHeader(account, library),
     }
   );
+  const data = await response.data;
+  return data;
+}
+
+/////////////////////////////////////////////////////////////////////////
+//////////////////     Video Table            ///////////////////////////
+/////////////////////////////////////////////////////////////////////////
+
+export async function addVideoDetail(
+  account: string,
+  library: any,
+  creator: string,
+  title: string,
+  description: string,
+  duration: number
+) {
+  const data = {
+    creator: creator,
+    title: title,
+    description: description,
+    duration: duration,
+  };
+  const response = await axios.post(VIDEO_API_URL + "details", data, {
+    headers: await authHeader(account, library),
+  });
+  if (response.data[0]["creator"] == creator.toLowerCase()) {
+    return true;
+  }
+  return false;
+}
+
+export async function updateVideoDetail(
+  account: string,
+  library: any,
+  videoid: string,
+  creator: string,
+  title: string,
+  description: string
+) {
+  const data = {
+    videoid: videoid,
+    creator: creator,
+    title: title,
+    description: description,
+  };
+  const response = await axios.put(VIDEO_API_URL + videoid, data, {
+    headers: await authHeader(account, library),
+  });
+  if (creator != "") {
+    if (response.data[0]["creator"] == creator.toLowerCase()) {
+      return true;
+    }
+  } else if (title != "") {
+    if (response.data[0]["title"] == title) {
+      return true;
+    }
+  } else if (description != "") {
+    if (response.data[0]["description"] == description) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export async function getVideo(account: string, videoid: string) {
+  const authToken = AuthService.getCurrentUser(account);
+  return [VIDEO_API_URL, authToken];
+}
+
+export async function getVideoDetails(
+  account: string,
+  library: any,
+  videoid: string
+) {
+  const response = await axios.get(VIDEO_API_URL + "details/" + videoid, {
+    headers: await authHeader(account, library),
+  });
+  console.log(VIDEO_API_URL + "details/" + videoid);
+  const data = await response.data;
+  return data;
+}
+
+export async function getCreatorAllVideoDetails(
+  account: string,
+  library: any,
+  creator: string
+) {
+  console.log("creator");
+  console.log( VIDEO_API_URL + "details/creator/" + creator);
+  const response = await axios.get(
+    VIDEO_API_URL + "details/creator/" + creator,
+    {
+      headers: await authHeader(account, library),
+    }
+  );
+  const data = await response.data;
+  console.log("data");
+  console.log(data);
+  return data;
+}
+
+export async function getVideoThumbnail(
+  account: string,
+  library: any,
+  videoid: string
+) {
+  const response = await axios.get(VIDEO_API_URL + "thumbnail/" + videoid, {
+    headers: await authHeader(account, library),
+  });
+  const data = await response.data;
+  return data;
+}
+
+export async function getVideoCaptions(
+  account: string,
+  library: any,
+  videoid: string
+) {
+  const response = await axios.get(VIDEO_API_URL + "captions/" + videoid, {
+    headers: await authHeader(account, library),
+  });
   const data = await response.data;
   return data;
 }

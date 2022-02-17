@@ -27,6 +27,7 @@ import { creatorFactoryLT, currencyName, parseBalance } from "../util";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getNFTsOfCreator, getUserData } from "../services/api-service";
+import Router, { useRouter } from "next/router";
 
 export default function Home() {
   const { chainId, account, library } = useWeb3React();
@@ -216,7 +217,7 @@ export default function Home() {
                     <div style={{ marginRight: "10px" }}>
                       {user[0] && user[0].discord ? (
                         <a
-                          href={"https://discord.com/invite/"+user[0].discord}
+                          href={"https://discord.com/invite/" + user[0].discord}
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
                         >
@@ -234,7 +235,7 @@ export default function Home() {
                     <div style={{ marginRight: "10px" }}>
                       {user[0] && user[0].tiktok ? (
                         <a
-                          href={"https://www.tiktok.com/@"+user[0].tiktok}
+                          href={"https://www.tiktok.com/@" + user[0].tiktok}
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
                         >
@@ -252,7 +253,7 @@ export default function Home() {
                     <div style={{ marginRight: "10px" }}>
                       {user[0] && user[0].instagram ? (
                         <a
-                          href={"https://instagram.com/"+user[0].instagram}
+                          href={"https://instagram.com/" + user[0].instagram}
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
                         >
@@ -270,7 +271,13 @@ export default function Home() {
                     <div style={{ marginRight: "10px" }}>
                       {user[0] && user[0].youtube ? (
                         <a
-                          href={"https://www.youtube.com/c/"+user[0].youtube.toString().toLocaleLowerCase().replace(" ","")}
+                          href={
+                            "https://www.youtube.com/c/" +
+                            user[0].youtube
+                              .toString()
+                              .toLocaleLowerCase()
+                              .replace(" ", "")
+                          }
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
                         >
@@ -305,9 +312,18 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                {/* <div>
-                  <Settings style={{color:"green",height:"40px", width:"40px"}}/>
-                </div> */}
+                <div
+                  onClick={() =>
+                    Router.push({
+                      pathname: "/videoplayer",
+                      query: { videoid: "1pNn6Gs51xRQ6z7X" },
+                    })
+                  }
+                >
+                  <Settings
+                    style={{ color: "green", height: "40px", width: "40px" }}
+                  />
+                </div>
               </div>
             )}
           </div>
