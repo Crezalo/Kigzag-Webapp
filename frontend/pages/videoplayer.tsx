@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import Jdenticon from "react-jdenticon";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useWeb3React } from "@web3-react/core";
-import { getVideo, getVideoDetails } from "../services/api-service";
+import {
+  getVideoDetails,
+  getVideoSignedUrl,
+  VIDEO_API_URL,
+} from "../services/api-service";
 import { shortenHex } from "../util";
 import { ZERO_ADDRESS } from "../constants/misc";
 import useENSName from "../hooks/useENSName";
@@ -14,23 +18,23 @@ export default function NFT() {
 
   const { chainId, account, library } = useWeb3React();
 
-  const [VIDEO_API_URL, setVIDEO_API_URL] = useState("");
-  const [authToken, setAuthToken] = useState("Empty");
+  var [signedURl, setSignedURl] = useState("");
 
   const getVideoUrl = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getVideo(account, videoid.toString());
-        setVIDEO_API_URL(res[0]);
-        setAuthToken(res[1]);
+        const res = await getVideoSignedUrl(
+          account,
+          library,
+          videoid.toString()
+        );
+        setSignedURl(res["signedurl"]);
       }
       getData();
-    }, []);
+    }, [account, chainId]);
   };
 
   getVideoUrl();
-
-  const videoUrl = VIDEO_API_URL + "video/" + videoid + "/" + authToken;
 
   const [videoDetails, setVideoDetails] = useState({
     title: "",
@@ -54,26 +58,29 @@ export default function NFT() {
   const description = videoDetails[0]?.description;
   const creator = videoDetails[0]?.creator;
 
+  console.log("signedURl");
+  console.log(signedURl);
+
   return (
     <div className="videoDiv">
-      {authToken != "" && authToken ? (
+      {signedURl != "" && signedURl && title && description && creator ? (
         <>
-          <h1 className="VideoDiv h1">{title}</h1>
           <video
             controls
             autoPlay
             crossOrigin="anonymous"
             controlsList="nodownload"
           >
-            <source src={videoUrl} type="video/mp4" />
-            <track
+            <source src={signedURl} type="video/mp4" />
+            {/* <track
               label="English"
               kind="captions"
               srcLang="en"
               src={VIDEO_API_URL + "captions/" + videoid}
               default
-            />
+            /> */}
           </video>
+          <h1 className="videoDiv h1">{title}</h1>
           <section
             onClick={() => {
               Router.push({
@@ -85,10 +92,10 @@ export default function NFT() {
             }}
             className="creatorIdent pointer"
           >
-            <Jdenticon size={50} value={account.toLocaleLowerCase()} />
+            <Jdenticon size={50} value={account.toLowerCase()} />
             <h2 className="VideoDiv h2">
-              {useENSName(creator ? creator : ZERO_ADDRESS) ||
-                shortenHex(creator ? creator : "Loading...", 4)}
+              {/* {useENSName(creator ? creator : ZERO_ADDRESS) || */}
+              {shortenHex(creator ? creator : "Loading...", 4)}
             </h2>
           </section>
           <h1 className="VideoDiv p">{description}</h1>

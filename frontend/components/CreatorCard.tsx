@@ -36,7 +36,7 @@ const CreatorCard = ({ creator }: CreatorCardProp) => {
       }
     >
       <div className="creatorCardImage">
-        <Jdenticon size={180} value={creator.toLocaleLowerCase()} />
+        <Jdenticon size={180} value={creator.toLowerCase()} />
       </div>
       <div style={{padding:"0px 5px 8px 15px"}}>
         <h2>{name.length>25?name.substring(0,25)+"..": name} ({symbol})</h2>

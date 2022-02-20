@@ -119,7 +119,6 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                 <Tab label="NFT" className={classes.tab} />
                 <Tab label="DAO" className={classes.tab} />
               </Tabs>
-              <br />
               <Paper>{tabs_array[value]}</Paper>
             </>
           ) : (
@@ -142,7 +141,6 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                     <Tab label="DAO" className={classes.tab} />
                     <Tab label="Collected" className={classes.tab} />
                   </Tabs>
-                  <br />
                   <Paper>{tabs_array[value]}</Paper>
                 </>
               ) : (
@@ -157,7 +155,6 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                   >
                     <Tab label="Collected" className={classes.tab} />
                   </Tabs>
-                  <br />
                   <Paper>{tabs_array[value]}</Paper>
                 </>
               )}

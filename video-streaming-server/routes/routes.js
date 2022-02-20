@@ -2,45 +2,114 @@ const router = require("express").Router();
 const pool = require("../db_creation/db");
 const authorise = require("../middleware/authorise")();
 const urlAuthorise = require("../middleware/urlAuthorise")();
-var generator = require('generate-password');
-var WAValidator = require("wallet-address-validator");
+const generator = require('generate-password');
+const WAValidator = require("wallet-address-validator");
 const fs = require('fs');
+const fileType = require('detect-file-type');
+const multiparty = require('multiparty');
 const Web3Token = require('web3-token');
 const thumbsupply = require('thumbsupply');
+const awsConfig = require('aws-config');
+const AWS = require('aws-sdk');
+const aws_cf = require('aws-cloudfront-sign');
+require('dotenv').config();
+const {
+  getVideoDurationInSeconds
+} = require('get-video-duration');
+// var ImageKit = require("imagekit");
 
-// add new Creator Video details
-router.post("/details", authorise, async (req, res) => {
-  try {
-    const {
-      creator,
-      title,
-      description,
-      duration
-    } = req.body;
-    var valid = WAValidator.validate(creator, "ETH");
-    var videoid = generator.generate({
-      length: 16,
-      numbers: true
-    });
-    if (valid) {
-      const new_video_details = await pool.query(
-        "INSERT INTO Creator_video (VideoId, Creator, Title, Description, Duration, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,TO_TIMESTAMP($6),TO_TIMESTAMP($7)) RETURNING*;",
-        [
-          videoid,
-          creator,
-          title,
-          description,
-          duration,
-          Date.now() / 1000,
-          Date.now() / 1000,
-        ]
-      );
-      res.json(new_video_details.rows);
-    } else {
-      res.json("Address INVALID");
+// var imagekit = new ImageKit({
+//   publicKey: process.env.IMAGEKIT_PUBLIC_API_KEY,
+//   privateKey: process.env.IMAGEKIT_PRIVATE_API_KEY,
+//   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
+// });
+
+var s3 = new AWS.S3(awsConfig({
+  accessKeyId: process.env.ACCESSKEYID,
+  secretAccessKey: process.env.SECRETACCESSKEY,
+  region: process.env.REGION
+}));
+
+// upload file to S3 bucket
+const uploadFile = (buffer, bucket, name) => {
+  const params = {
+    Body: buffer,
+    Bucket: bucket,
+    ContentType: "",
+    Key: name,
+    Metadata: {
+      isprivatefile: "true"
     }
-  } catch (err) {
-    res.json(err);
+  };
+  return s3.upload(params).promise();
+};
+
+// upload file to S3 bucket
+const getFile = (name) => {
+  const params = {
+    Bucket: process.env.S3_BUCKET_VIDEO,
+    Key: name
+  };
+  return s3.getObject(params).promise();
+};
+
+//  add new creator video
+router.post('/upload', authorise, (req, res) => {
+  const form = new multiparty.Form();
+  const authBody = req.authBody;
+  const authAddress = req.authAddress;
+  var valid = WAValidator.validate(authAddress, "ETH");
+  if (valid) {
+    form.parse(req, async (error, fields, files) => {
+      try {
+        console.log("fields");
+        console.log(fields);
+        console.log("files");
+        console.log(files);
+
+        // video file
+        const videopath = files.video[0].path;
+        const videobuffer = fs.readFileSync(videopath);
+        const narray = videopath.split("/");
+        const name = narray[narray.length - 1];
+        const videoFileName = authAddress + "/" + name;
+        const videoData = await uploadFile(videobuffer, process.env.S3_BUCKET_VIDEO, videoFileName);
+
+        // thumbnail file
+        const thumbpath = files.thumbnail[0].path;
+        const thumbbuffer = fs.readFileSync(thumbpath);
+        const thumbFileName = authAddress + "/" + name.split(".")[0] + ".png";
+        const thumbData = await uploadFile(thumbbuffer, process.env.S3_BUCKET_THUMBNAIL, thumbFileName);
+
+        // video duration
+        const duration = await getVideoDurationInSeconds(videopath);
+
+        console.log("DURATION");
+        console.log(duration);
+
+        const videoid = name.split(".")[0];
+        const new_video_details = await pool.query(
+          "INSERT INTO Creator_video (VideoId, Creator, Title, Description, Duration, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,TO_TIMESTAMP($6),TO_TIMESTAMP($7)) RETURNING*;",
+          [
+            videoid,
+            authAddress,
+            fields['title'][0],
+            fields['description'][0],
+            Math.round(duration),
+            Date.now() / 1000,
+            Date.now() / 1000,
+          ]
+        );
+        console.log(videoData);
+        console.log(thumbData);
+        return res.status(200).send([videoData, thumbData, new_video_details.rows[0]]);
+      } catch (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+    });
+  } else {
+    res.json("Address INVALID");
   }
 });
 
@@ -77,55 +146,29 @@ router.put("/:videoid", authorise, async (req, res) => {
   }
 });
 
-router.get('/video/:videoid/:authToken', async (req, res) => {
+router.get('/video/:videoid/', authorise, async (req, res) => {
   try {
     const {
       videoid,
-      authToken,
     } = req.params;
+    const address = req.authAddress;
+    const body = req.authBody;
+    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+    const creator = ud.rows[0].creator;
+    console.log(ud.rows[0]);
+    const duration = ud.rows[0].duration;
 
-    const [verification, address, body] = await urlAuthorise(urlAuthToken = authToken);
-
-    if (verification == "SUCCESS") {
-      const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
-      const creator = ud.rows[0].creator;
-      const path = process.cwd() + `/assets/${creator}/${videoid}.mp4`;
-      const stat = fs.statSync(path);
-      const fileSize = stat.size;
-      const range = req.headers.range;
-      if (range) {
-        console.log('we have range', range);
-        const parts = range.replace(/bytes=/, "").split("-")
-        const start = parseInt(parts[0], 10)
-        const end = parts[1] ?
-          parseInt(parts[1], 10) :
-          fileSize - 1
-        console.log(parts)
-        const chunksize = (end - start) + 1
-        const file = fs.createReadStream(path, {
-          start,
-          end
-        })
-        const head = {
-          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-          'Accept-Ranges': 'bytes',
-          'Content-Length': chunksize,
-          'Content-Type': 'video/mp4',
-        }
-        res.writeHead(206, head);
-        file.pipe(res);
-      } else {
-        console.log('no range', range);
-        const head = {
-          'Content-Length': fileSize,
-          'Content-Type': 'video/mp4',
-        }
-        res.writeHead(200, head)
-        fs.createReadStream(path).pipe(res)
-      }
-    } else {
-      res.json(verification);
+    // AWS Cloudfront CDN and other optimizations
+    var aws_cf_config = {
+      keypairId: process.env.CLOUDFRONT_KEYPAIR_ID,
+      privateKeyPath: process.env.CLOUDFRONT_PRIVATE_KEY_PATH,
+      expireTime: (new Date().getTime() + (duration * 1000)),
     }
+    var signedUrl = aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator.toLowerCase()}/${videoid}.mp4`, aws_cf_config);
+    console.log('Signed URL: ' + signedUrl);
+    res.json({
+      "signedurl": signedUrl
+    })
   } catch (err) {
     res.json(err);
   }
@@ -158,22 +201,27 @@ router.get("/details/creator/:creator", async (req, res) => {
 });
 
 // get video thumbnail
-router.get("/thumbnail/:videoid", async (req, res) => {
+router.get("/thumbnail/:videoid", authorise, async (req, res) => {
   try {
     const {
-      videoid
+      videoid,
     } = req.params;
+
+    const address = req.authAddress;
+    const body = req.authBody;
     const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
-    thumbsupply.generateThumbnail(process.cwd() + `/assets/${creator}/${videoid}.mp4`)
-      .then(thumb => res.sendFile(thumb))
-      .catch(err => console.log(err));
+
+    // simply use AWS S3 bucket with public read access
+    res.status(200).json({
+      signedurl: process.env.S3_BUCKET_THUMBNAIL_URL + creator.toLowerCase() + "/" + videoid + ".png"
+    });
   } catch (err) {
     res.json(err);
   }
 });
 
-// get video thumbnail
+// get video captions if available
 router.get("/captions/:videoid", async (req, res) => {
   try {
     const {

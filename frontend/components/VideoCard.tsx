@@ -24,13 +24,14 @@ interface VideoCardProp {
 const VideoCard = ({ vid }: VideoCardProp) => {
   const { account, chainId, library } = useWeb3React();
 
-  const [videoThumb, setVideoThumb] = useState();
+  const [videoThumb, setVideoThumb] = useState("");
 
   const getVidThumbnail = () => {
     useEffect(() => {
       async function getData() {
         const res = await getVideoThumbnail(account, library, vid.videoid);
-        setVideoThumb(res);
+        setVideoThumb(res["signedurl"]);
+        console.log(videoThumb);
       }
       getData();
     }, [account]);
@@ -73,18 +74,37 @@ const VideoCard = ({ vid }: VideoCardProp) => {
       {vid.videoid != "" && vid.videoid ? (
         <>
           <div className="videoCardImage">
-            <Image
-              src={"http://localhost:4000/thumbnail/" + vid.videoid}
+            {videoThumb.includes("https://") ? (
+              <Image
+                src={videoThumb}
+                alt="Loading ..."
+                width={300}
+                height={225}
+                className="videoCardImage"
+              />
+            ) : (
+              <></>
+            )}
+            {/* <Image
+              src={videoThumb}
               alt="Loading ..."
               width={300}
               height={225}
               className="videoCardImage"
-            />
-            <h3 className ="bottom-right" style={{fontSize:"13px", backgroundColor:"black", padding: "1px"}}>{seconds2time(vid.duration)}</h3>
+            /> */}
+            <h3
+              className="bottom-right"
+              style={{
+                fontSize: "13px",
+                backgroundColor: "black",
+                padding: "1px",
+              }}
+            >
+              {seconds2time(vid.duration)}
+            </h3>
           </div>
           <div style={{ padding: "0px 5px 8px 15px" }}>
-            <h1 style={{fontSize:"16px"}}>{vid.title}</h1>
-            
+            <h1 style={{ fontSize: "16px" }}>{vid.title}</h1>
           </div>
         </>
       ) : (

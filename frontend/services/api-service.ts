@@ -3,10 +3,13 @@ import AuthService from "./auth-services";
 import authHeader from "./auth-header";
 
 // Backend Url
-const MAIN_API_URL = "http://localhost:5000/";
+export const MAIN_API_URL = "http://localhost:5000/";
 
 // Video Streaming Server Url
-const VIDEO_API_URL = "http://localhost:4000/";
+export const VIDEO_API_URL = "http://localhost:4000/";
+
+// Thumbnail S3 Bucket Storage
+export const S3_BUCKET_THUMBNAIL_URL = "https://kigzag-video-thumbnail.s3.eu-north-1.amazonaws.com/"
 
 /////////////////////////////////////////////////////////////////////////
 //////////////////     User Table            ////////////////////////////
@@ -392,29 +395,6 @@ export async function getDAOProposal(
 //////////////////     Video Table            ///////////////////////////
 /////////////////////////////////////////////////////////////////////////
 
-export async function addVideoDetail(
-  account: string,
-  library: any,
-  creator: string,
-  title: string,
-  description: string,
-  duration: number
-) {
-  const data = {
-    creator: creator,
-    title: title,
-    description: description,
-    duration: duration,
-  };
-  const response = await axios.post(VIDEO_API_URL + "details", data, {
-    headers: await authHeader(account, library),
-  });
-  if (response.data[0]["creator"] == creator.toLowerCase()) {
-    return true;
-  }
-  return false;
-}
-
 export async function updateVideoDetail(
   account: string,
   library: any,
@@ -448,9 +428,17 @@ export async function updateVideoDetail(
   return false;
 }
 
-export async function getVideo(account: string, videoid: string) {
-  const authToken = AuthService.getCurrentUser(account);
-  return [VIDEO_API_URL, authToken];
+export async function getVideoSignedUrl(
+  account: string,
+  library: any,
+  videoid: string
+) {
+  const response = await axios.get(VIDEO_API_URL + "video/" + videoid, {
+    headers: await authHeader(account, library),
+  });
+  const data = await response.data;
+  console.log(data);
+  return data;
 }
 
 export async function getVideoDetails(
@@ -472,7 +460,7 @@ export async function getCreatorAllVideoDetails(
   creator: string
 ) {
   console.log("creator");
-  console.log( VIDEO_API_URL + "details/creator/" + creator);
+  console.log(VIDEO_API_URL + "details/creator/" + creator);
   const response = await axios.get(
     VIDEO_API_URL + "details/creator/" + creator,
     {
@@ -490,6 +478,7 @@ export async function getVideoThumbnail(
   library: any,
   videoid: string
 ) {
+  console.log(VIDEO_API_URL + "thumbnail/" + videoid);
   const response = await axios.get(VIDEO_API_URL + "thumbnail/" + videoid, {
     headers: await authHeader(account, library),
   });

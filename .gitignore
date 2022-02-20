@@ -106,3 +106,9 @@ dist
 # Assets / Videos
 assets
 
+# aws config
+config.json
+config_notused.json
+
+# cloudfront private key
+*.pem

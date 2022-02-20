@@ -14,6 +14,32 @@ body {
   cursor: pointer;
 }
 
+.form{
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  justify-content: center;
+}
+
+.form .label{
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form .inputFile{
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form .inputSingleLineText{
+  justify-content: center;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
 .videoDiv {
   display: flex;
   flex-direction: column;
@@ -25,7 +51,8 @@ body {
   font-size: 20px;
   font-weight: bold;
   color: white;
-  text-align: center;
+  text-align: left;
+  margin: 5px 25px 5px 25px;
 }
 
 .videoDiv .p {
@@ -46,8 +73,8 @@ body {
   /* Add shadows to create the "card" effect */
   box-shadow: 0 1px 1px 3px #3b82f6;
   transition: 0.3s;
-  width: 250px;
-  height: 250px;
+  width: 300px;
+  height: 280px;
   margin: 20px auto;
   background-color: #3b82f6;
   color: white;
@@ -81,16 +108,16 @@ body {
 }
 
 video {
-  height: 85vh;
-  width: 95vw;
+  height: 95vh;
+  width: 90vw;
   object-fit: fill;
-  margin: 7.5px 2.5vw 7.5vh 1.75vw;
-  border-radius: 10px;
-  box-shadow: 0 1px 1px 3px #173464;
+  margin: 5vh 4vw 7.5vh 4.5vw;
+  /* border-radius: 10px; */
+  /* box-shadow: 0 1px 1px 3px #173464; */
 }
 
 video:hover {
-  box-shadow: 0 0px 5px 5px #173464;
+  /* box-shadow: 0 0px 5px 5px #173464; */
 }
 
 a {
@@ -221,7 +248,7 @@ a {
 }
 
 .creatorImageDiv {
-  width: 50%;
+  width: 20%;
   float: left;
   padding: 20px;
   display: flex;
@@ -229,7 +256,7 @@ a {
 }
 
 .becomeCreatorButton {
-  margin: 100px 0px 0px 50px;
+  margin: 70px 0px 0px 50px;
 }
 
 /* border: 2px solid red; */
@@ -237,7 +264,7 @@ a {
 .description {
   width: 50%;
   float: left;
-  padding: 20px 20px 20px 20px;
+  padding: 20px 20px 10px 20px;
   /* border: 2px solid red; */
   display: flex;
   font-size: larger;
@@ -249,7 +276,7 @@ a {
 .creatorProfileDescription {
   width: 50%;
   float: left;
-  padding: 20px 20px 20px 60px;
+  padding: 20px 20px 10px 60px;
   /* border: 2px solid red; */
   display: flex;
   font-size: larger;

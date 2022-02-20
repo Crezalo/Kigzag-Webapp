@@ -40,8 +40,8 @@ const NFTTabs = ({ creator, onCreatorProfile, creatorVault }: NFTTabsProp) => {
           account,
           library,
           onCreatorProfile
-            ? creator.toLocaleLowerCase()
-            : account.toLocaleLowerCase(),
+            ? creator.toLowerCase()
+            : account.toLowerCase(),
           chainId
         );
         setNftsList(res);

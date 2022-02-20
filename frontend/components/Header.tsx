@@ -12,13 +12,13 @@ const Header = () => {
   return (
     <nav
       style={{
-        padding: "4px",
+        padding: "1px",
         display: "flex",
         justifyContent: "space-between",
       }}
     >
       <Link href="/">
-        <a style={{marginTop:"5px",marginLeft:"5px"}}>
+        <a style={{marginTop:"2px",marginLeft:"5px"}}>
           <Image
             src="/../public/kigzaglogo.png"
             alt="Picture of the author"
@@ -28,7 +28,7 @@ const Header = () => {
         </a>
       </Link>
       <Link href="/creators">
-        <a className="mr-6 py-2" style={{ fontSize: 18, color: "#3B82F6" }}>
+        <a className="mr-6 py-1" style={{ fontSize: 18, color: "#3B82F6" }}>
           Creators
         </a>
       </Link>

@@ -89,7 +89,7 @@ export default function Home() {
         <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
           <div style={{ display: "flex" }}>
             <div className="creatorImageDiv">
-              <Jdenticon size={250} value={account.toLocaleLowerCase()} />
+              <Jdenticon size={150} value={account.toLowerCase()} />
             </div>
             {creatorToken === ZERO_ADDRESS ? (
               <div className="becomeCreatorButton">
@@ -107,86 +107,83 @@ export default function Home() {
                     justifyContent: "center",
                   }}
                 >
-                  <div style={{ fontSize: "25px", fontWeight: "bold" }}>
+                  <div style={{ fontSize: "18px", fontWeight: "bold" }}>
                     {creatorTokenName} ({creatorTokenSymbol})
                   </div>
                   <div
                     style={{
-                      color: "grey",
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      marginTop: "20px",
-                      marginBottom: "12px",
-                    }}
-                  >
-                    Price
-                  </div>
-                  <div
-                    style={{
                       display: "flex",
                       flexDirection: "row",
-                      marginLeft: "20px",
-                      marginBottom: "10px",
                     }}
                   >
                     <div
                       style={{
-                        color: "grey",
-                        fontSize: "18px",
-                        paddingTop: "2px",
-                        marginRight: "2px",
+                        display: "flex",
+                        flexDirection: "column",
                       }}
-                    >
-                      Native:
-                    </div>
-                    <div style={{ color: "white" }}>
-                      {nativeCreatorPrice} {currencyName(chainId)}
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginLeft: "20px",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        color: "grey",
-                        fontSize: "18px",
-                        paddingTop: "2px",
-                        marginRight: "2px",
-                      }}
-                    >
-                      USD:
-                    </div>
-                    <div style={{ color: "white" }}>{usdCreatorPrice} USD</div>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div
-                      className="w-full bg-grey text-white px-2 py-2 rounded"
-                      style={{ width: "150px" }}
                     >
                       <div
                         style={{
                           color: "grey",
                           fontWeight: "bold",
                           fontSize: "18px",
+                          marginTop: "20px",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        Native
+                      </div>
+                      <div style={{ color: "white" }}>
+                        {nativeCreatorPrice} {currencyName(chainId)}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginLeft: "20px",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          color: "grey",
+                          fontWeight: "bold",
+                          fontSize: "18px",
+                          marginTop: "20px",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        US Dollar
+                      </div>
+                      <div style={{ color: "white" }}>
+                        {usdCreatorPrice} USD
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginLeft: "20px",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          color: "grey",
+                          fontWeight: "bold",
+                          fontSize: "18px",
+                          marginTop: "20px",
+                          marginBottom: "5px",
                         }}
                       >
                         Total Supply
                       </div>
-                      <h2
-                        style={{
-                          color: "white",
-                          fontWeight: "bold",
-                          fontSize: "18px",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        {creatorTokenTotalSupply}
-                      </h2>
+                      <div style={{ color: "white" }}>
+                      {creatorTokenTotalSupply}
+                      </div>
                     </div>
                   </div>
                   <div
@@ -275,7 +272,7 @@ export default function Home() {
                             "https://www.youtube.com/c/" +
                             user[0].youtube
                               .toString()
-                              .toLocaleLowerCase()
+                              .toLowerCase()
                               .replace(" ", "")
                           }
                           style={{ marginTop: "5px", marginLeft: "5px" }}
@@ -320,9 +317,9 @@ export default function Home() {
                     })
                   }
                 >
-                  <Settings
+                  {/* <Settings
                     style={{ color: "green", height: "40px", width: "40px" }}
-                  />
+                  /> */}
                 </div>
               </div>
             )}

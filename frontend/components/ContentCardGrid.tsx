@@ -10,6 +10,9 @@ import {
   getNFTsOfCreator,
 } from "../services/api-service";
 import VideoCard from "./VideoCard";
+import BasicModal from "./BasicModal";
+import CreateProposalModal from "./CreateProposalModal";
+import UploadVideoModal from "./UploadVideoModal";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -74,11 +77,18 @@ const ContentCardGrid = ({
 
   getVidDetails();
 
-  console.log("videoDetails");
-  console.log(videoDetails);
-
   return (
     <div className="blueTextBlackBackground">
+      {!onCreatorProfile ? (
+        <div style={{margin: "10px"}}>
+          <BasicModal
+            modalButtonText="Add Video"
+            modalBody={<UploadVideoModal />}
+          />
+        </div>
+      ) : (
+        <></>
+      )}
       <Grid container spacing={1}>
         {videoDetails.map((vid) => (
           <>{vid.videoid ? <GridItem vid={vid} classes={classes} /> : <></>}</>

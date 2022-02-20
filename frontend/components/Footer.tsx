@@ -6,12 +6,13 @@ const Footer = () => {
       className="blueTextBlackBackground"
       style={{
         display: "flex",
-        justifyContent: "space-around",
+        justifyContent: "left",
+        paddingLeft: "50px",
         paddingBottom: 13,
+        fontSize:"12px"
       }}
     >
-      <h1>© 2022 Xeldorado</h1> |<h1>All Rights Reserved</h1> |
-      <h1>Made with ❤️</h1>
+      <h1>© 2022 <a href="https://kigzag.com" target="_blank">kigzag.com</a></h1>
     </footer>
   );
 };

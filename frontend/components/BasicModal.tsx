@@ -12,9 +12,12 @@ const useStylesModal = makeStyles((theme) => ({
     justifyContent: "center",
   },
   paper: {
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
     // border: "2px solid #000",
+    borderRadius: "5px",
     boxShadow: theme.shadows[5],
+    color: "white",
+    backgroundColor: "#3b82f6",
     padding: theme.spacing(2, 4, 3),
   },
 }));
