@@ -66,42 +66,42 @@ router.put("/:address", authorise, async (req, res) => {
     var new_User;
     if (username != "")
       new_User = await pool.query(
-        "UPDATE Users SET UserName=$1 WHERE UserAddress=$2 RETURNING*",
+        "UPDATE Users SET UserName=$1 WHERE UserAddress=$2 RETURNING*;",
         [username, address.toLowerCase()]
       );
     if (iscreator != null)
       new_User = await pool.query(
-        "UPDATE Users SET IsCreator=$1 WHERE UserAddress=$2 RETURNING*",
+        "UPDATE Users SET IsCreator=$1 WHERE UserAddress=$2 RETURNING*;",
         [iscreator, address.toLowerCase()]
       );
     if (twitterhandle != "")
       new_User = await pool.query(
-        "UPDATE Users SET TwitterHandle=$1 WHERE UserAddress=$2 RETURNING*",
+        "UPDATE Users SET TwitterHandle=$1 WHERE UserAddress=$2 RETURNING*;",
         [twitterhandle, address.toLowerCase()]
       );
     if (discord != "")
       new_User = await pool.query(
-        "UPDATE Users SET Discord=$1 WHERE UserAddress=$2 RETURNING*",
+        "UPDATE Users SET Discord=$1 WHERE UserAddress=$2 RETURNING*;",
         [discord, address.toLowerCase()]
       );
     if (tiktok != "")
       new_User = await pool.query(
-        "UPDATE Users SET Tiktok=$1 WHERE UserAddress=$2 RETURNING*",
+        "UPDATE Users SET Tiktok=$1 WHERE UserAddress=$2 RETURNING*;",
         [tiktok, address.toLowerCase()]
       );
     if (instagram != "")
       new_User = await pool.query(
-        "UPDATE Users SET Instagram=$1 WHERE UserAddress=$2 RETURNING*",
+        "UPDATE Users SET Instagram=$1 WHERE UserAddress=$2 RETURNING*;",
         [instagram, address.toLowerCase()]
       );
     if (youtube != "")
       new_User = await pool.query(
-        "UPDATE Users SET Youtube=$1 WHERE UserAddress=$2 RETURNING*",
+        "UPDATE Users SET Youtube=$1 WHERE UserAddress=$2 RETURNING*;",
         [youtube, address.toLowerCase()]
       );
     if (website != "")
       new_User = await pool.query(
-        "UPDATE Users SET Website=$1 WHERE UserAddress=$2 RETURNING*",
+        "UPDATE Users SET Website=$1 WHERE UserAddress=$2 RETURNING*;",
         [website, address.toLowerCase()]
       );
 
