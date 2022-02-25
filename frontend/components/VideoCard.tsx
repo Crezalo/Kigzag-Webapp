@@ -26,7 +26,7 @@ const VideoCard = ({ vid }: VideoCardProp) => {
 
   const [videoThumb, setVideoThumb] = useState("");
 
-  const getVidThumbnail = () => {
+  const GetVidThumbnail = () => {
     useEffect(() => {
       async function getData() {
         const res = await getVideoThumbnail(account, library, vid.videoid);
@@ -37,7 +37,7 @@ const VideoCard = ({ vid }: VideoCardProp) => {
     }, [account]);
   };
 
-  getVidThumbnail();
+  GetVidThumbnail();
 
   function seconds2time(sec) {
     var hours = Math.floor(sec / 3600);

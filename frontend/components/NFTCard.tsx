@@ -36,7 +36,7 @@ const NFTCard = ({ nft }: NFTCardProp) => {
     metadata: [],
   });
 
-  const getMetadata = (metadataUrl: string) => {
+  const GetMetadata = (metadataUrl: string) => {
     useEffect(() => {
       async function fetchData() {
         if (metadataUrl != "https://ipfs.io/ipfs/") {
@@ -53,7 +53,7 @@ const NFTCard = ({ nft }: NFTCardProp) => {
   if (tokenURI) {
     metadataUrl = metadataUrl + tokenURI.substring(7);
   }
-  getMetadata(metadataUrl);
+  GetMetadata(metadataUrl);
 
   const image =
     "https://ipfs.io/ipfs/" + (metadata["image"] ?? "").substring(7);

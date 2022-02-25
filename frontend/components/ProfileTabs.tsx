@@ -69,35 +69,53 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
   if (onCreatorProfile) {
     // on creator profile
     tabs_array = [
-      <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
-      <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
-      <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
-      <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
+      <ContentCardGrid
+        creator={creator}
+        onCreatorProfile={onCreatorProfile}
+        key={1}
+      />,
+      <ContentCardGrid
+        creator={creator}
+        onCreatorProfile={onCreatorProfile}
+        key={2}
+      />,
+      <ContentCardGrid
+        creator={creator}
+        onCreatorProfile={onCreatorProfile}
+        key={3}
+      />,
+      <ContentCardGrid
+        creator={creator}
+        onCreatorProfile={onCreatorProfile}
+        key={4}
+      />,
       <NFTTabs
         creator={creator}
         onCreatorProfile={onCreatorProfile}
         creatorVault={creatorVault}
+        key={5}
       />,
-      <DAOTabs dao={creatorDAO} />,
+      <DAOTabs dao={creatorDAO} key={6} />,
     ];
   } else {
     // on dashboard
     if (creatorToken !== ZERO_ADDRESS) {
       tabs_array = [
-        <ContentCardGrid creator={account} onCreatorProfile={false} />,
-        <ContentCardGrid creator={account} onCreatorProfile={false} />,
-        <ContentCardGrid creator={account} onCreatorProfile={false} />,
-        <ContentCardGrid creator={account} onCreatorProfile={false} />,
+        <ContentCardGrid creator={account} onCreatorProfile={false} key={1} />,
+        <ContentCardGrid creator={account} onCreatorProfile={false} key={2} />,
+        <ContentCardGrid creator={account} onCreatorProfile={false} key={3} />,
+        <ContentCardGrid creator={account} onCreatorProfile={false} key={4} />,
         <NFTTabs
           creator={account}
           onCreatorProfile={false}
           creatorVault={creatorVault}
+          key={5}
         />,
-        <DAOTabs dao={creatorDAO} />,
-        <CollectedTabs creatorVault={creatorVault} />,
+        <DAOTabs dao={creatorDAO} key={6} />,
+        <CollectedTabs creatorVault={creatorVault} key={7} />,
       ];
     } else {
-      tabs_array = [<CollectedTabs creatorVault={creatorVault} />];
+      tabs_array = [<CollectedTabs creatorVault={creatorVault} key={1} />];
     }
   }
 

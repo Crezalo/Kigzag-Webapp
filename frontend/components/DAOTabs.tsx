@@ -37,9 +37,9 @@ const DAOTabs = ({ dao }: DAOTabsProp) => {
   ];
 
   let tabs_array = [
-    <DAOTreasury dao={dao} />, // Listed for Sale
-    <DAOAllowances dao={dao} />, // Listed for Sale
-    <DAOProposalGridCard dao={dao} />, // Listed for Sale
+    <DAOTreasury dao={dao} key={1}/>, // Listed for Sale
+    <DAOAllowances dao={dao} key={2}/>, // Listed for Sale
+    <DAOProposalGridCard dao={dao} key={3}/>, // Listed for Sale
   ];
 
   return (

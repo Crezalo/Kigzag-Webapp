@@ -11,30 +11,37 @@ import { shortenHex } from "../util";
 import { ZERO_ADDRESS } from "../constants/misc";
 import useENSName from "../hooks/useENSName";
 import Router, { useRouter } from "next/router";
+import ConnectToWallet from "../components/ConnectToWallet";
+import queryString from "query-string";
 
 export default function NFT() {
   const router = useRouter();
-  const { videoid } = router.query;
+  let { videoid } = router.query;
+
+  if (!videoid) {
+    const url = router.asPath;
+    videoid = queryString.parseUrl(url).query.videoid;
+  }
 
   const { chainId, account, library } = useWeb3React();
 
   var [signedURl, setSignedURl] = useState("");
 
-  const getVideoUrl = () => {
+  const GetVideoUrl = () => {
     useEffect(() => {
       async function getData() {
         const res = await getVideoSignedUrl(
           account,
           library,
-          videoid.toString()
+          (videoid ?? "").toString()
         );
         setSignedURl(res["signedurl"]);
       }
       getData();
-    }, [account, chainId]);
+    }, [account, chainId, videoid]);
   };
 
-  getVideoUrl();
+  GetVideoUrl();
 
   const [videoDetails, setVideoDetails] = useState({
     title: "",
@@ -42,17 +49,21 @@ export default function NFT() {
     creator: "",
   });
 
-  const getDetails = () => {
+  const GetDetails = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getVideoDetails(account, library, videoid.toString());
+        const res = await getVideoDetails(
+          account,
+          library,
+          (videoid ?? "").toString()
+        );
         setVideoDetails(res);
       }
       getData();
     }, [account, chainId]);
   };
 
-  getDetails();
+  GetDetails();
 
   const title = videoDetails[0]?.title;
   const description = videoDetails[0]?.description;
@@ -63,7 +74,13 @@ export default function NFT() {
 
   return (
     <div className="videoDiv">
-      {signedURl != "" && signedURl && title && description && creator ? (
+      {signedURl != "" &&
+      signedURl &&
+      title &&
+      description &&
+      creator &&
+      account &&
+      videoid ? (
         <>
           <video
             controls
@@ -101,9 +118,17 @@ export default function NFT() {
           <h1 className="VideoDiv p">{description}</h1>
         </>
       ) : (
-        <CircularProgress
-          style={{ display: "flex", margin: "auto", height: "80vh" }}
-        />
+        <>
+          {typeof account !== "string" ? (
+            <ConnectToWallet />
+          ) : (
+            <>
+              <CircularProgress
+                style={{ display: "flex", margin: "auto", height: "80vh" }}
+              />
+            </>
+          )}
+        </>
       )}
     </div>
   );

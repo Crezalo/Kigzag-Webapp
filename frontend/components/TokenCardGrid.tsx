@@ -39,7 +39,7 @@ const TokenCardGrid = () => {
   ////////////////////// getting all tokens
   const [alltokensList, setAlltokensList] = useState([]);
 
-  const getAllTokenList = () => {
+  const GetAllTokenList = () => {
     useEffect(() => {
       async function getData() {
         const res = await getTokens(account, library, chainId);
@@ -49,7 +49,7 @@ const TokenCardGrid = () => {
     }, [account, chainId]);
   };
 
-  getAllTokenList();
+  GetAllTokenList();
 
   const alltokens = [];
 
@@ -71,7 +71,7 @@ const TokenCardGrid = () => {
           //     <></>
           //   )}
           // </>
-          <GridItem tokenAddress={tokenAddress} classes={classes} />
+          <GridItem tokenAddress={tokenAddress} classes={classes} key={tokenAddress}/>
         ))}
       </Grid>
     </div>

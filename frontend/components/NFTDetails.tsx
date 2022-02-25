@@ -154,9 +154,9 @@ const NFTDetails = ({
             viewBox="0 0 24 24"
             fill="none"
             stroke="#C3C5CB"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             style={{ marginLeft: "12px" }}
           >
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -192,7 +192,9 @@ const NFTDetails = ({
         >
           {status === "UNLISTED" || status === "LISTED"
             ? "Vault"
-            : useENSName(ownedBy) || shortenHex(ownedBy, 2)}
+            : 
+            // useENSName(ownedBy) || 
+            shortenHex(ownedBy, 2)}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="17px"
@@ -200,9 +202,9 @@ const NFTDetails = ({
             viewBox="0 0 24 24"
             fill="none"
             stroke="#C3C5CB"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             style={{ marginLeft: "12px" }}
           >
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>

@@ -29,6 +29,7 @@ import { fontWeight, textAlign, width } from "@mui/system";
 import Image from "next/image";
 import { getUserData } from "../services/api-service";
 import { useEffect, useState } from "react";
+import queryString from "query-string";
 
 export default function CreatorProfile() {
   const { chainId, account, library } = useWeb3React();
@@ -36,14 +37,9 @@ export default function CreatorProfile() {
 
   let { address } = router.query;
 
-  if (address) {
-    console.log(address);
-  } else {
-    console.log(router.pathname);
-    console.log(router.pathname);
-    const url = router.pathname;
-    address = url.split("=")[1];
-    console.log(address);
+  if (!address) {
+    const url = router.asPath;
+    address = queryString.parseUrl(url).query.address;
   }
 
   /////////////////////// getting user data
@@ -59,22 +55,26 @@ export default function CreatorProfile() {
     website: "",
   });
 
-  const getUser = () => {
+  const GetUser = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getUserData(account, library, address.toString());
+        const res = await getUserData(
+          account,
+          library,
+          (address ?? "").toString()
+        );
         setUser(res);
       }
       getData();
     }, [account, chainId]);
   };
 
-  getUser();
+  GetUser();
 
   const creatorToken =
     useCreatorFactoryCreatorToken(
       LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
-      address.toString()
+      (address ?? "").toString()
     ).data ?? "";
 
   const nativeToken = NATIVE_TOKEN_SUPPORTED_ADDRESS[chainId] ?? "";
@@ -91,7 +91,7 @@ export default function CreatorProfile() {
 
   const { nativefee, usdfee } = useCreatorFactoryCreatorSaleFee(
     LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
-    address.toString()
+    (address ?? "").toString()
   ).data ?? { nativefee: 0, usdfee: 0 };
 
   const nativeCreatorPrice = parseBalance(nativefee ?? 0);
@@ -103,10 +103,7 @@ export default function CreatorProfile() {
         <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
           <div style={{ display: "flex" }}>
             <div className="creatorImageDiv">
-              <Jdenticon
-                size={150}
-                value={address.toString().toLowerCase()}
-              />
+              <Jdenticon size={150} value={address.toString().toLowerCase()} />
             </div>
             <div className="creatorProfileDescription">
               <div
@@ -231,6 +228,7 @@ export default function CreatorProfile() {
                         href={"https://twitter.com/" + user[0].twitterhandle}
                         style={{ marginTop: "5px", marginLeft: "5px" }}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         <Image
                           src="/../public/twitter.png"
@@ -249,6 +247,7 @@ export default function CreatorProfile() {
                         href={"https://discord.com/invite/" + user[0].discord}
                         style={{ marginTop: "5px", marginLeft: "5px" }}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         <Image
                           src="/../public/discord.png"
@@ -267,6 +266,7 @@ export default function CreatorProfile() {
                         href={"https://www.tiktok.com/@" + user[0].tiktok}
                         style={{ marginTop: "5px", marginLeft: "5px" }}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         <Image
                           src="/../public/tiktok.png"
@@ -285,6 +285,7 @@ export default function CreatorProfile() {
                         href={"https://instagram.com/" + user[0].instagram}
                         style={{ marginTop: "5px", marginLeft: "5px" }}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         <Image
                           src="/../public/instagram.png"
@@ -309,6 +310,7 @@ export default function CreatorProfile() {
                         }
                         style={{ marginTop: "5px", marginLeft: "5px" }}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         <Image
                           src="/../public/youtube.png"
@@ -327,6 +329,7 @@ export default function CreatorProfile() {
                         href={user[0].website}
                         style={{ marginTop: "5px", marginLeft: "5px" }}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         <Image
                           src="/../public/website.png"
@@ -347,7 +350,7 @@ export default function CreatorProfile() {
         </div>
       ) : (
         <>
-          {typeof address.toString() !== "string" ? (
+          {typeof account !== "string" ? (
             <ConnectToWallet />
           ) : (
             <>

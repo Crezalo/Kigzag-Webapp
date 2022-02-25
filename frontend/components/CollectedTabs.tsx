@@ -32,7 +32,7 @@ const CollectedTabs = ({ creatorVault }: CollectedTabsProp) => {
   //////////////////////// getting all NFTs
   const [allnftsList, setAllnftsList] = useState([]);
 
-  const getAllNftList = () => {
+  const GetAllNftList = () => {
     useEffect(() => {
       async function getData() {
         const res = await getAllNFTs(account, library, chainId);
@@ -42,7 +42,7 @@ const CollectedTabs = ({ creatorVault }: CollectedTabsProp) => {
     }, [account, chainId]);
   };
 
-  getAllNftList();
+  GetAllNftList();
 
   const allnfts = [];
 
@@ -54,9 +54,9 @@ const CollectedTabs = ({ creatorVault }: CollectedTabsProp) => {
   }
 
   let tabs_array = [
-    <TokenCardGrid />,
-    <TokenCardGrid />,
-    <NFTCardGrid nfts={allnfts} status="OWNED" />,
+    <TokenCardGrid key={1}/>,
+    <TokenCardGrid key={2}/>,
+    <NFTCardGrid nfts={allnfts} status="OWNED" key={3}/>,
   ];
 
   return (

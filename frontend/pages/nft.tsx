@@ -8,10 +8,21 @@ import { Spinner } from "reactstrap";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useWeb3React } from "@web3-react/core";
 import { getNFTForGivenTokenId } from "../services/api-service";
+import ConnectToWallet from "../components/ConnectToWallet";
+import queryString from "query-string";
 
 export default function NFT() {
   const router = useRouter();
-  const { contract, tokenId, creator, status, vault } = router.query;
+  var { contract, tokenId, creator, status, vault } = router.query;
+
+  if (!contract) {
+    const url = router.asPath;
+    contract = queryString.parseUrl(url).query.contract;
+    tokenId = queryString.parseUrl(url).query.tokenId;
+    creator = queryString.parseUrl(url).query.creator;
+    status = queryString.parseUrl(url).query.status;
+    vault = queryString.parseUrl(url).query.vault;
+  }
 
   const { chainId, account, library } = useWeb3React();
 
@@ -19,34 +30,36 @@ export default function NFT() {
     tokenuri: "",
   });
 
-  const getNFT = () => {
+  const GetNFT = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getNFTForGivenTokenId(
-          account,
-          library,
-          contract.toString(),
-          chainId,
-          tokenId.toString()
-        );
-        setNft(res);
+        if (contract && chainId && tokenId) {
+          const res = await getNFTForGivenTokenId(
+            account,
+            library,
+            contract.toString(),
+            chainId,
+            tokenId.toString()
+          );
+          setNft(res);
+        }
       }
       getData();
     }, [contract, tokenId, chainId]);
   };
 
-  getNFT();
+  GetNFT();
 
   const tokenURI = useCreatorNFTTokenURI(
-    contract.toString(),
-    parseInt(tokenId.toString())
+    (contract ?? "").toString(),
+    parseInt((tokenId ?? "0").toString())
   ).data;
 
   const [metadata, setmetadata] = useState({
     metadata: [],
   });
 
-  const getMetadata = (metadataUrl: string) => {
+  const GetMetadata = (metadataUrl: string) => {
     useEffect(() => {
       async function fetchData() {
         const response = await fetch(metadataUrl);
@@ -61,7 +74,7 @@ export default function NFT() {
   if (tokenURI) {
     metadataUrl = metadataUrl + tokenURI.substring(7);
   }
-  getMetadata(metadataUrl);
+  GetMetadata(metadataUrl);
 
   const image =
     "https://ipfs.io/ipfs/" + (metadata["image"] ?? "").substring(7);
@@ -95,20 +108,28 @@ export default function NFT() {
               )}
             </div>
             <NFTDetails
-              contract={contract.toString()}
-              tokenid={tokenId.toString()}
-              creator={creator.toString()}
-              status={status.toString()}
-              vault={vault.toString()}
+              contract={(contract ?? "").toString()}
+              tokenid={(tokenId ?? "").toString()}
+              creator={(creator ?? "").toString()}
+              status={(status ?? "").toString()}
+              vault={(vault ?? "").toString()}
               name={name}
             />
           </div>
           <NFTProperties properties={attributes} description={description} />
         </div>
       ) : (
-        <CircularProgress
-          style={{ display: "flex", margin: "auto", height: "80vh" }}
-        />
+        <>
+          {typeof account !== "string" ? (
+            <ConnectToWallet />
+          ) : (
+            <>
+              <CircularProgress
+                style={{ display: "flex", margin: "auto", height: "80vh" }}
+              />
+            </>
+          )}
+        </>
       )}
     </div>
   );

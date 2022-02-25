@@ -41,8 +41,12 @@ const NFTProperties = ({ properties, description }: NFTPropertiesProp) => {
       <div className="nftPageProp">
         <p className="text-white font-bold py-2 px-2">Properties</p>
         <Grid className="nftPagePropGrid" container spacing={1}>
-          {properties.map((prop) => (
-            <GridItem trait_type={prop["trait_type"]} value={prop["value"]} />
+          {properties.map((prop, index) => (
+            <GridItem
+              trait_type={prop["trait_type"]}
+              value={prop["value"]}
+              key={index}
+            />
           ))}
         </Grid>
       </div>

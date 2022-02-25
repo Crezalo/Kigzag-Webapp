@@ -9,10 +9,15 @@ const Footer = () => {
         justifyContent: "left",
         paddingLeft: "50px",
         paddingBottom: 13,
-        fontSize:"12px"
+        fontSize: "12px",
       }}
     >
-      <h1>© 2022 <a href="https://kigzag.com" target="_blank">kigzag.com</a></h1>
+      <h1>
+        © 2022{" "}
+        <a href="https://kigzag.com" target="_blank" rel="noreferrer">
+          kigzag.com
+        </a>
+      </h1>
     </footer>
   );
 };

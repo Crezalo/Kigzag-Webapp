@@ -5,35 +5,45 @@ import { getCreators } from "../services/api-service";
 import axios from "axios";
 import { CircularProgress } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
+import ConnectToWallet from "../components/ConnectToWallet";
 
 export default function Creators() {
   const { account, chainId, library } = useWeb3React();
 
-  const [creatorsList, setCreatorsList] = useState([]);
+  const [creatorsList, setCreatorsList] = useState([
+    {
+      useraddress: "",
+    },
+  ]);
 
-  const getCreatorList = () => {
+  const GetCreatorList = () => {
     useEffect(() => {
       async function getData() {
         const res = await getCreators(account, chainId, library);
         setCreatorsList(res);
       }
       getData();
-    },[account, chainId]);
+    }, [account, chainId]);
   };
 
-  getCreatorList();
+  GetCreatorList();
 
   const creators = [];
-
-  if(creatorsList){
-    for(const x of creatorsList){
-      creators.push(x.useraddress);
+  console.log(creatorsList);
+  console.log(creatorsList.length);
+  if (creatorsList) {
+    for (var i = 0; i < creatorsList.length; i++) {
+      if (creatorsList[i] && creatorsList[i].useraddress != "") {
+        creators.push(creatorsList[i].useraddress);
+      }
     }
   }
-  
+
+  console.log(account);
+
   return (
     <div>
-      {creatorsList != [] ? (
+      {creatorsList != [] && account ? (
         <div
           className="blueTextBlackBackground"
           style={{
@@ -46,9 +56,17 @@ export default function Creators() {
           </div>
         </div>
       ) : (
-        <CircularProgress
-          style={{ display: "flex", margin: "auto", height: "80vh" }}
-        />
+        <>
+          {typeof account !== "string" ? (
+            <ConnectToWallet />
+          ) : (
+            <>
+              <CircularProgress
+                style={{ display: "flex", margin: "auto", height: "80vh" }}
+              />
+            </>
+          )}
+        </>
       )}
     </div>
   );

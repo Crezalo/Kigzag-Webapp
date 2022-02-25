@@ -33,7 +33,7 @@ const NFTTabs = ({ creator, onCreatorProfile, creatorVault }: NFTTabsProp) => {
   /////////////////////// getting creator NFTs
   const [nftsList, setNftsList] = useState([]);
 
-  const getNftOfCreatorList = () => {
+  const GetNftOfCreatorList = () => {
     useEffect(() => {
       async function getData() {
         const res = await getNFTsOfCreator(
@@ -50,7 +50,7 @@ const NFTTabs = ({ creator, onCreatorProfile, creatorVault }: NFTTabsProp) => {
     }, [account, chainId]);
   };
 
-  getNftOfCreatorList();
+  GetNftOfCreatorList();
 
   const nfts = [];
 
@@ -62,10 +62,10 @@ const NFTTabs = ({ creator, onCreatorProfile, creatorVault }: NFTTabsProp) => {
   }
 
   let tabs_array = [
-    <NFTCardGrid nfts={nfts} status="ALL"/>, // All
-    <NFTCardGrid nfts={nfts} status="LISTED"/>, // Listed for Sale
-    <NFTCardGrid nfts={nfts} status="UNLISTED"/>, // Unlisted
-    <NFTCardGrid nfts={nfts} status="SOLD"/>  // Sold
+    <NFTCardGrid nfts={nfts} status="ALL" key={1}/>, // All
+    <NFTCardGrid nfts={nfts} status="LISTED" key={2}/>, // Listed for Sale
+    <NFTCardGrid nfts={nfts} status="UNLISTED" key={3}/>, // Unlisted
+    <NFTCardGrid nfts={nfts} status="SOLD" key={4}/>  // Sold
   ];
 
   return (

@@ -65,7 +65,7 @@ const ContentCardGrid = ({
     },
   ]);
 
-  const getVidDetails = () => {
+  const GetVidDetails = () => {
     useEffect(() => {
       async function getData() {
         const res = await getCreatorAllVideoDetails(account, library, creator);
@@ -75,7 +75,7 @@ const ContentCardGrid = ({
     }, [creator]);
   };
 
-  getVidDetails();
+  GetVidDetails();
 
   return (
     <div className="blueTextBlackBackground">
@@ -91,7 +91,7 @@ const ContentCardGrid = ({
       )}
       <Grid container spacing={1}>
         {videoDetails.map((vid) => (
-          <>{vid.videoid ? <GridItem vid={vid} classes={classes} /> : <></>}</>
+          <>{vid.videoid ? <GridItem vid={vid} classes={classes} key={vid.videoid}/> : <></>}</>
         ))}
       </Grid>
     </div>

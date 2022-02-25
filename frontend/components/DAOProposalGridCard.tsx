@@ -170,10 +170,8 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                       width: "30%",
                     }}
                   >
-                    (
-                    {useENSName(proposal.author) ||
-                      shortenHex(proposal.author, 2)}
-                    )
+                    ({/* {useENSName(proposal.author) || */}
+                    {shortenHex(proposal.author, 2)})
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="17px"
@@ -181,9 +179,9 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="#C3C5CB"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       style={{ marginLeft: "12px" }}
                     >
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -244,10 +242,8 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                       width: "30%",
                     }}
                   >
-                    (
-                    {useENSName(proposal.author) ||
-                      shortenHex(proposal.author, 2)}
-                    )
+                    ({/* {useENSName(proposal.author) || */}
+                    {shortenHex(proposal.author, 2)})
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="17px"
@@ -255,9 +251,9 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="#C3C5CB"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       style={{ marginLeft: "12px" }}
                     >
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -285,12 +281,12 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                     textAlign: "center",
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: "space-evenly"
+                    justifyContent: "space-evenly",
                   }}
                 >
                   <div>
                     <p style={{ color: "grey" }}>Managers</p>
-                    {managers.map((adata) => (
+                    {managers.map((adata, index) => (
                       <p
                         style={{
                           fontSize: "18px",
@@ -301,6 +297,7 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                           flexDirection: "row",
                           justifyContent: "center",
                         }}
+                        key={index}
                       >
                         <a
                           {...{
@@ -317,7 +314,8 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                             flexDirection: "row",
                           }}
                         >
-                          ({useENSName(adata) || shortenHex(adata, 4)})
+                          {/* ({useENSName(adata) ||  */}
+                          {shortenHex(adata, 4)}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="17px"
@@ -325,9 +323,9 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="#C3C5CB"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             style={{ marginLeft: "12px" }}
                           >
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -340,7 +338,7 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                   </div>
                   <div>
                     <p style={{ color: "grey" }}>Allowance</p>
-                    {allowances.map((adata) => (
+                    {allowances.map((adata, index) => (
                       <p
                         style={{
                           fontSize: "18px",
@@ -351,6 +349,7 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
                           flexDirection: "row",
                           justifyContent: "center",
                         }}
+                        key={index}
                       >
                         <p>
                           {parseBalance(adata)}{" "}
@@ -373,7 +372,7 @@ export const ProposalCard = ({ proposal, dao }: ProposalCardProp) => {
             )}
             <div className="proposalVoting">
               {choiceData.map((choiceDataPoint, index) => (
-                <p className="choiceVote">
+                <p className="choiceVote" key={index}>
                   <BasicModal
                     modalButtonText={choiceDataPoint.choice}
                     modalBody={<CreateProposalModal />}
@@ -465,7 +464,7 @@ const DAOProposalGridCard = ({ dao }: ProposalCardGridProp) => {
 
   const [proposalsList, setProposalsList] = useState([]);
 
-  const getProposalList = () => {
+  const GetProposalList = () => {
     useEffect(() => {
       async function getData() {
         const res = await getDAOAllProposals(account, library, chainId, dao);
@@ -475,7 +474,7 @@ const DAOProposalGridCard = ({ dao }: ProposalCardGridProp) => {
     }, [account, chainId]);
   };
 
-  getProposalList();
+  GetProposalList();
 
   const proposals = [];
 
@@ -493,7 +492,12 @@ const DAOProposalGridCard = ({ dao }: ProposalCardGridProp) => {
       />
       <Grid container spacing={1}>
         {proposals.map((proposal) => (
-          <GridItem proposal={proposal} dao={dao} classes={classes} />
+          <GridItem
+            proposal={proposal}
+            dao={dao}
+            classes={classes}
+            key={proposal.id}
+          />
         ))}
       </Grid>
     </div>

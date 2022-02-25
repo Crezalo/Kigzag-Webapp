@@ -26,7 +26,7 @@ module.exports = (optional = false) => async (req, res, next) => {
         req.authBody = body
     } catch (e) {
         if (!optional) {
-            return res.status(401).send({
+            return res.send({
                 error: 'Please authenticate'
             })
         }

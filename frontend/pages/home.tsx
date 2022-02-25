@@ -45,7 +45,7 @@ export default function Home() {
     website: "",
   });
 
-  const getUser = () => {
+  const GetUser = () => {
     useEffect(() => {
       async function getData() {
         const res = await getUserData(account, library, account);
@@ -55,7 +55,7 @@ export default function Home() {
     }, [account, chainId]);
   };
 
-  getUser();
+  GetUser();
 
   const creatorToken =
     useCreatorFactoryCreatorToken(
@@ -182,7 +182,7 @@ export default function Home() {
                         Total Supply
                       </div>
                       <div style={{ color: "white" }}>
-                      {creatorTokenTotalSupply}
+                        {creatorTokenTotalSupply}
                       </div>
                     </div>
                   </div>
@@ -199,6 +199,7 @@ export default function Home() {
                           href={"https://twitter.com/" + user[0].twitterhandle}
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
+                          rel="noreferrer"
                         >
                           <Image
                             src="/../public/twitter.png"
@@ -217,6 +218,7 @@ export default function Home() {
                           href={"https://discord.com/invite/" + user[0].discord}
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
+                          rel="noreferrer"
                         >
                           <Image
                             src="/../public/discord.png"
@@ -235,6 +237,7 @@ export default function Home() {
                           href={"https://www.tiktok.com/@" + user[0].tiktok}
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
+                          rel="noreferrer"
                         >
                           <Image
                             src="/../public/tiktok.png"
@@ -253,6 +256,7 @@ export default function Home() {
                           href={"https://instagram.com/" + user[0].instagram}
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
+                          rel="noreferrer"
                         >
                           <Image
                             src="/../public/instagram.png"
@@ -277,6 +281,7 @@ export default function Home() {
                           }
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
+                          rel="noreferrer"
                         >
                           <Image
                             src="/../public/youtube.png"
@@ -295,6 +300,7 @@ export default function Home() {
                           href={user[0].website}
                           style={{ marginTop: "5px", marginLeft: "5px" }}
                           target="_blank"
+                          rel="noreferrer"
                         >
                           <Image
                             src="/../public/website.png"
