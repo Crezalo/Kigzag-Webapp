@@ -10208,6 +10208,11 @@ next@latest:
     "@next/swc-win32-ia32-msvc" "12.0.7"
     "@next/swc-win32-x64-msvc" "12.0.7"
 
+nextjs-redirect@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/nextjs-redirect/-/nextjs-redirect-5.2.1.tgz#56740c14cc8b942e6436778082ec8365f961be24"
+  integrity sha512-wfJGS289/nygvwS75lkLGJTi20j1VEak4OlDODa8zpK4c3eKMcGxs/xXhLUcpI5lzO/Whbcu8EBm5P7pDxnS3g==
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"

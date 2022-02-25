@@ -72,6 +72,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
       <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
       <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
       <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
+      <ContentCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />,
       <NFTTabs
         creator={creator}
         onCreatorProfile={onCreatorProfile}
@@ -83,6 +84,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
     // on dashboard
     if (creatorToken !== ZERO_ADDRESS) {
       tabs_array = [
+        <ContentCardGrid creator={account} onCreatorProfile={false} />,
         <ContentCardGrid creator={account} onCreatorProfile={false} />,
         <ContentCardGrid creator={account} onCreatorProfile={false} />,
         <ContentCardGrid creator={account} onCreatorProfile={false} />,
@@ -114,7 +116,8 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                 }}
               >
                 <Tab label="Content" className={classes.tab} />
-                <Tab label="Live" className={classes.tab} />
+                <Tab label="Streams" className={classes.tab} />
+                <Tab label="Meets" className={classes.tab} />
                 <Tab label="CHAT" className={classes.tab} />
                 <Tab label="NFT" className={classes.tab} />
                 <Tab label="DAO" className={classes.tab} />
@@ -135,7 +138,8 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                     }}
                   >
                     <Tab label="Content" className={classes.tab} />
-                    <Tab label="Live" className={classes.tab} />
+                    <Tab label="Streams" className={classes.tab} />
+                    <Tab label="Meets" className={classes.tab} />
                     <Tab label="CHAT" className={classes.tab} />
                     <Tab label="NFT" className={classes.tab} />
                     <Tab label="DAO" className={classes.tab} />

@@ -1,7 +1,10 @@
 import { useWeb3React } from "@web3-react/core";
 import Jdenticon from "react-jdenticon";
 import Router from "next/router";
-import { useCreatorFactoryCreatorSaleFee, useCreatorFactoryCreatorToken } from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
+import {
+  useCreatorFactoryCreatorSaleFee,
+  useCreatorFactoryCreatorToken,
+} from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
 import { useTokenName, useTokenSymbol } from "../hooks/ERC20/useTokenContract";
 import { LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST } from "../constants/chains";
 import { currencyName, parseBalance } from "../util";
@@ -10,17 +13,21 @@ interface CreatorCardProp {
   creator: string;
 }
 const CreatorCard = ({ creator }: CreatorCardProp) => {
-  const { account, chainId} = useWeb3React();
+  const { account, chainId } = useWeb3React();
 
-  const creatorToken = useCreatorFactoryCreatorToken(LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId], creator).data??"";
+  const creatorToken =
+    useCreatorFactoryCreatorToken(
+      LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
+      creator
+    ).data ?? "";
 
-  const name = useTokenName(creatorToken).data??"";
-  const symbol = useTokenSymbol(creatorToken).data??"";
-  
-  const {nativefee, usdfee} = useCreatorFactoryCreatorSaleFee(
+  const name = useTokenName(creatorToken).data ?? "";
+  const symbol = useTokenSymbol(creatorToken).data ?? "";
+
+  const { nativefee, usdfee } = useCreatorFactoryCreatorSaleFee(
     LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
     creator
-  ).data?? {nativefee: 0, usdfee: 0};
+  ).data ?? { nativefee: 0, usdfee: 0 };
 
   const nativeCreatorPrice = parseBalance(nativefee ?? 0);
   const usdCreatorPrice = parseBalance(usdfee ?? 0);
@@ -38,9 +45,13 @@ const CreatorCard = ({ creator }: CreatorCardProp) => {
       <div className="creatorCardImage">
         <Jdenticon size={180} value={creator.toLowerCase()} />
       </div>
-      <div style={{padding:"0px 5px 8px 15px"}}>
-        <h2>{name.length>25?name.substring(0,25)+"..": name} ({symbol})</h2>
-        <h3>{nativeCreatorPrice} ({currencyName(chainId)})</h3>
+      <div style={{ padding: "0px 5px 8px 15px" }}>
+        <h2>
+          {name.length > 25 ? name.substring(0, 25) + ".." : name} ({symbol})
+        </h2>
+        <h3>
+          {nativeCreatorPrice} ({currencyName(chainId)})
+        </h3>
         <h3>{usdCreatorPrice} (USD)</h3>
         {/* <div className="rightAlignCard">
           <p>{note}</p>

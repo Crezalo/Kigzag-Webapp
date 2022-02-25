@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 });
 
 interface CollectedTabsProp {
-  creatorVault:string;
+  creatorVault: string;
 }
 
 const CollectedTabs = ({ creatorVault }: CollectedTabsProp) => {
@@ -52,32 +52,40 @@ const CollectedTabs = ({ creatorVault }: CollectedTabsProp) => {
       allnfts.push(allnftsList[i]);
     }
   }
-  
+
   let tabs_array = [
-    <TokenCardGrid/>,
-    <NFTCardGrid nfts={allnfts} status="OWNED"/>
+    <TokenCardGrid />,
+    <TokenCardGrid />,
+    <NFTCardGrid nfts={allnfts} status="OWNED" />,
   ];
 
   return (
-    <div style={{backgroundColor:"black", display: "flex", flexDirection: "row"}}>
-        <div style={{width: "10vw"}}>
-            <Tabs
-                value={value}
-                onChange={handleChange}
-                centered
-                TabIndicatorProps={{
-                style: { backgroundColor: "#3B82F6" },
-                }}
-                className="nftTabs"
-                orientation="vertical"
-            >
-                <Tab label="Tokens" className={classes.tab} />
-                <Tab label="NFT" className={classes.tab} />
-            </Tabs>
-        </div>
-        <div style={{width: "90vw"}}>
-            <Paper>{tabs_array[value]}</Paper>
-        </div>
+    <div
+      style={{
+        backgroundColor: "black",
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
+      <div style={{ width: "10vw" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          centered
+          TabIndicatorProps={{
+            style: { backgroundColor: "#3B82F6" },
+          }}
+          className="nftTabs"
+          orientation="vertical"
+        >
+          <Tab label="Plans" className={classes.tab} />
+          <Tab label="Tokens" className={classes.tab} />
+          <Tab label="NFT" className={classes.tab} />
+        </Tabs>
+      </div>
+      <div style={{ width: "90vw" }}>
+        <Paper>{tabs_array[value]}</Paper>
+      </div>
     </div>
   );
 };

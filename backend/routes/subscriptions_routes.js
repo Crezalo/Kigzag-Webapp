@@ -94,7 +94,7 @@ router.get("/1m/:creator", async (req, res) => {
         const {
             creator
         } = req.params;
-        const ud = await pool.query("SELECT * FROM Creator_Sub_1M WHERE Creator=$1;", [creator]);
+        const ud = await pool.query("SELECT * FROM Creator_Sub_1M WHERE Creator=$1;", [creator.toLowerCase()]);
         res.json(ud.rows[0]);
     } catch (err) {
         res.json(err);
@@ -110,15 +110,15 @@ router.get("/1m/:creator/:key", async (req, res) => {
         } = req.params;
         var ud;
         if (key == 'discord_server_id')
-            ud = await pool.query("SELECT discord_server_id FROM Creator_Sub_1M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT discord_server_id FROM Creator_Sub_1M WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'discord')
-            ud = await pool.query("SELECT discord FROM Creator_Sub_1M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT discord FROM Creator_Sub_1M WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'video_on_demand')
-            ud = await pool.query("SELECT video_on_demand FROM Creator_Sub_1M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT video_on_demand FROM Creator_Sub_1M WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'live_streaming')
-            ud = await pool.query("SELECT live_streaming FROM Creator_Sub_1M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT live_streaming FROM Creator_Sub_1M WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'video_call')
-            ud = await pool.query("SELECT video_call FROM Creator_Sub_1M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT video_call FROM Creator_Sub_1M WHERE Creator=$1;", [creator.toLowerCase()]);
         else
             res.json("WRONG KEY!")
         res.json(ud.rows[0]);
@@ -126,6 +126,7 @@ router.get("/1m/:creator/:key", async (req, res) => {
         res.json(err);
     }
 });
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////          3 Month Sub TABLE            //////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -215,7 +216,7 @@ router.get("/3m/:creator", async (req, res) => {
         const {
             creator
         } = req.params;
-        const ud = await pool.query("SELECT * FROM Creator_Sub_3M WHERE Creator=$1;", [creator]);
+        const ud = await pool.query("SELECT * FROM Creator_Sub_3M WHERE Creator=$1;", [creator.toLowerCase()]);
         res.json(ud.rows[0]);
     } catch (err) {
         res.json(err);
@@ -231,15 +232,15 @@ router.get("/3m/:creator/:key", async (req, res) => {
         } = req.params;
         var ud;
         if (key == 'discord_server_id')
-            ud = await pool.query("SELECT discord_server_id FROM Creator_Sub_3M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT discord_server_id FROM Creator_Sub_3M WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'discord')
-            ud = await pool.query("SELECT discord FROM Creator_Sub_3M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT discord FROM Creator_Sub_3M WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'video_on_demand')
-            ud = await pool.query("SELECT video_on_demand FROM Creator_Sub_3M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT video_on_demand FROM Creator_Sub_3M WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'live_streaming')
-            ud = await pool.query("SELECT live_streaming FROM Creator_Sub_3M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT live_streaming FROM Creator_Sub_3M WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'video_call')
-            ud = await pool.query("SELECT video_call FROM Creator_Sub_3M WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT video_call FROM Creator_Sub_3M WHERE Creator=$1;", [creator.toLowerCase()]);
         else
             res.json("WRONG KEY!")
         res.json(ud.rows[0]);
@@ -337,7 +338,7 @@ router.get("/1y/:creator", async (req, res) => {
         const {
             creator
         } = req.params;
-        const ud = await pool.query("SELECT * FROM Creator_Sub_1Y WHERE Creator=$1;", [creator]);
+        const ud = await pool.query("SELECT * FROM Creator_Sub_1Y WHERE Creator=$1;", [creator.toLowerCase()]);
         res.json(ud.rows[0]);
     } catch (err) {
         res.json(err);
@@ -353,15 +354,15 @@ router.get("/1y/:creator/:key", async (req, res) => {
         } = req.params;
         var ud;
         if (key == 'discord_server_id')
-            ud = await pool.query("SELECT discord_server_id FROM Creator_Sub_1Y WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT discord_server_id FROM Creator_Sub_1Y WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'discord')
-            ud = await pool.query("SELECT discord FROM Creator_Sub_1Y WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT discord FROM Creator_Sub_1Y WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'video_on_demand')
-            ud = await pool.query("SELECT video_on_demand FROM Creator_Sub_1Y WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT video_on_demand FROM Creator_Sub_1Y WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'live_streaming')
-            ud = await pool.query("SELECT live_streaming FROM Creator_Sub_1Y WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT live_streaming FROM Creator_Sub_1Y WHERE Creator=$1;", [creator.toLowerCase()]);
         else if (key == 'video_call')
-            ud = await pool.query("SELECT video_call FROM Creator_Sub_1Y WHERE Creator=$1;", [creator]);
+            ud = await pool.query("SELECT video_call FROM Creator_Sub_1Y WHERE Creator=$1;", [creator.toLowerCase()]);
         else
             res.json("WRONG KEY!")
         res.json(ud.rows[0]);
