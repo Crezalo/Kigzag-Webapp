@@ -13,7 +13,6 @@ const createTablesInPostgresDB_subs_discord = require("./db_table_creation_subs_
 const createTablesInPostgresDB_subs_video_on_demand = require("./db_table_creation_subs_video_on_demand");
 const createTablesInPostgresDB_subs_live_streaming = require("./db_table_creation_subs_live_streaming");
 const createTablesInPostgresDB_subs_video_call = require("./db_table_creation_subs_video_call");
-const createTablesInPostgresDB = require("./db_table_creation");
 
 createTablesInPostgresDB(pool);
 createTablesInPostgresDB_subs(pool);
@@ -21,5 +20,6 @@ createTablesInPostgresDB_subs_discord(pool);
 createTablesInPostgresDB_subs_video_on_demand(pool);
 createTablesInPostgresDB_subs_live_streaming(pool);
 createTablesInPostgresDB_subs_video_call(pool);
+createTablesInPostgresDB(pool);
 
 module.exports = pool;
