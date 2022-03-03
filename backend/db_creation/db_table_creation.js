@@ -11,7 +11,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   //2. Token Address table creation
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS Creator_token (TokenId BIGSERIAL PRIMARY KEY, TokenAddress VARCHAR(255) NOT NULL UNIQUE, ChainId INTEGER NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS Creator_token (TokenId BIGSERIAL PRIMARY KEY, TokenAddress VARCHAR(255) NOT NULL, Creator VARCHAR(255) NOT NULL, Name VARCHAR(255) NOT NULL, Symbol VARCHAR(255) NOT NULL, ChainId INTEGER NOT NULL);"
     )
     .catch((err) => console.log("PG ERROR 2", err));
 
@@ -42,6 +42,18 @@ module.exports = async function createTablesInPostgresDB(pool) {
     .catch((err) => console.log("PG ERROR 5", err));
 
   ////////////////////////////////////// Foreign key Constraints Add//////////////////////////////////////////////////////
+
+  // NFT Table Creator is User
+  await pool.query("DO $$ \
+  BEGIN \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_token_creator') THEN \
+          ALTER TABLE Creator_token \
+              ADD CONSTRAINT fk_token_creator \
+              FOREIGN KEY (Creator) REFERENCES Users(UserAddress); \
+      END IF; \
+  END; \
+  $$;")
+    .catch(err => console.log("fk ERROR 1", err));
 
   // NFT Table Creator is User
   await pool.query("DO $$ \

@@ -14,27 +14,27 @@ body {
   cursor: pointer;
 }
 
-.form{
+.form {
   display: flex;
   flex-direction: column;
   margin: 5px;
   justify-content: center;
 }
 
-.form .label{
+.form .label {
   font-size: 20px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
 }
 
-.form .inputFile{
+.form .inputFile {
   justify-content: center;
   text-align: center;
   margin-bottom: 20px;
 }
 
-.form .inputSingleLineText{
+.form .inputSingleLineText {
   justify-content: center;
   margin-bottom: 20px;
   border-radius: 5px;
@@ -281,6 +281,28 @@ a {
   display: flex;
   font-size: larger;
   flex-direction: row;
+  font-size: 20px;
+}
+
+.creatorDiscordPageImageDiv {
+  width: 20%;
+  float: left;
+  padding: 20px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 0 0 50px
+}
+
+.creatorDiscordPlans {
+  width: 40%;
+  float: left;
+  padding: 20px 20px 10px 60px;
+  text-align: left;
+  justify-content: left;
+  /* border: 2px solid red; */
+  display: flex;
+  font-size: larger;
+  flex-direction: column;
   font-size: 20px;
 }
 

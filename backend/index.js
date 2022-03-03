@@ -22,7 +22,6 @@ const logger = new Signale({
 });
 const port = process.env.HTTPS == 'true' ? 443 : process.env.HTTP_PORT;
 
-
 const app = express();
 
 // Define render engine and assets path
@@ -37,10 +36,11 @@ app.use(express.urlencoded({
 // define routes
 app.use("/", router); // core frontend routes
 app.use("/subs", subs_router); // subscription data routes
-app.use("/discord", dis_router); // discord token gating data routes
+app.use("/discord", dis_router.router); // discord token gating data routes
 
 // run discord bot
 discord_bot.run();
+dis_router.validateLinkPoolTable();
 
 app.listen(5000, (err) => {
   console.log("server is listening on port 5000");

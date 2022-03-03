@@ -7,8 +7,8 @@ module.exports = (optional = false) => async (req, res, next) => {
         console.log("middleware");
         // getting a token from authorization header
         console.log(req.headers);
-        const token = req.headers['authorization']
-        console.log(token);
+        const token = req.headers['authorization'];
+        // console.log(token);
 
         const {
             address,

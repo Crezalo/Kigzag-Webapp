@@ -21,7 +21,7 @@ router.post("/1m", authorise, async (req, res) => {
             video_call
         } = req.body;
         var valid = WAValidator.validate(creator, "ETH");
-        if (valid) {
+        if (valid && req.useraddress.toLowerCase() == creator.toLowerCase()) {
             const new_User = await pool.query(
                 "INSERT INTO Creator_Sub_1M (creator, discord_server_id, discord , video_on_demand , live_streaming, video_call) VALUES ($1,$2,$3,$4,$5,$6) RETURNING*;",
                 [
@@ -56,33 +56,38 @@ router.put("/1m/:creator", authorise, async (req, res) => {
             video_call
         } = req.body;
         var new_User;
-        if (discord_server_id != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1M SET discord_server_id=$1 WHERE Creator=$2 RETURNING*;",
-                [discord_server_id, creator.toLowerCase()]
-            );
-        if (discord != null)
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1M SET discord=$1 WHERE Creator=$2 RETURNING*;",
-                [discord, creator.toLowerCase()]
-            );
-        if (video_on_demand != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1M SET video_on_demand=$1 WHERE Creator=$2 RETURNING*;",
-                [video_on_demand, creator.toLowerCase()]
-            );
-        if (live_streaming != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1M SET live_streaming=$1 WHERE Creator=$2 RETURNING*;",
-                [live_streaming, creator.toLowerCase()]
-            );
-        if (video_call != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1M SET video_call=$1 WHERE Creator=$2 RETURNING*;",
-                [video_call, creator.toLowerCase()]
-            );
+        if (req.useraddress.toLowerCase() == creator.toLowerCase()) {
+            if (discord_server_id != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1M SET discord_server_id=$1 WHERE Creator=$2 RETURNING*;",
+                    [discord_server_id, creator.toLowerCase()]
+                );
+            if (discord != null)
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1M SET discord=$1 WHERE Creator=$2 RETURNING*;",
+                    [discord, creator.toLowerCase()]
+                );
+            if (video_on_demand != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1M SET video_on_demand=$1 WHERE Creator=$2 RETURNING*;",
+                    [video_on_demand, creator.toLowerCase()]
+                );
+            if (live_streaming != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1M SET live_streaming=$1 WHERE Creator=$2 RETURNING*;",
+                    [live_streaming, creator.toLowerCase()]
+                );
+            if (video_call != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1M SET video_call=$1 WHERE Creator=$2 RETURNING*;",
+                    [video_call, creator.toLowerCase()]
+                );
 
-        res.json(new_User.rows[0]);
+            res.json(new_User.rows[0]);
+        } else {
+            res.json("Sendor is not same as Creator");
+        }
+
     } catch (err) {
         res.json(err);
     }
@@ -143,7 +148,7 @@ router.post("/3m", authorise, async (req, res) => {
             video_call
         } = req.body;
         var valid = WAValidator.validate(creator, "ETH");
-        if (valid) {
+        if (valid && req.useraddress.toLowerCase() == creator.toLowerCase()) {
             const new_User = await pool.query(
                 "INSERT INTO Creator_Sub_3M (creator, discord_server_id, discord , video_on_demand , live_streaming, video_call) VALUES ($1,$2,$3,$4,$5,$6) RETURNING*;",
                 [
@@ -178,33 +183,37 @@ router.put("/3m/:creator", authorise, async (req, res) => {
             video_call
         } = req.body;
         var new_User;
-        if (discord_server_id != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_3M SET discord_server_id=$1 WHERE Creator=$2 RETURNING*;",
-                [discord_server_id, creator.toLowerCase()]
-            );
-        if (discord != null)
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_3M SET discord=$1 WHERE Creator=$2 RETURNING*;",
-                [discord, creator.toLowerCase()]
-            );
-        if (video_on_demand != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_3M SET video_on_demand=$1 WHERE Creator=$2 RETURNING*;",
-                [video_on_demand, creator.toLowerCase()]
-            );
-        if (live_streaming != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_3M SET live_streaming=$1 WHERE Creator=$2 RETURNING*;",
-                [live_streaming, creator.toLowerCase()]
-            );
-        if (video_call != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_3M SET video_call=$1 WHERE Creator=$2 RETURNING*;",
-                [video_call, creator.toLowerCase()]
-            );
+        if (req.useraddress.toLowerCase() == creator.toLowerCase()) {
+            if (discord_server_id != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_3M SET discord_server_id=$1 WHERE Creator=$2 RETURNING*;",
+                    [discord_server_id, creator.toLowerCase()]
+                );
+            if (discord != null)
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_3M SET discord=$1 WHERE Creator=$2 RETURNING*;",
+                    [discord, creator.toLowerCase()]
+                );
+            if (video_on_demand != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_3M SET video_on_demand=$1 WHERE Creator=$2 RETURNING*;",
+                    [video_on_demand, creator.toLowerCase()]
+                );
+            if (live_streaming != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_3M SET live_streaming=$1 WHERE Creator=$2 RETURNING*;",
+                    [live_streaming, creator.toLowerCase()]
+                );
+            if (video_call != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_3M SET video_call=$1 WHERE Creator=$2 RETURNING*;",
+                    [video_call, creator.toLowerCase()]
+                );
 
-        res.json(new_User.rows[0]);
+            res.json(new_User.rows[0]);
+        } else {
+            res.json("Sendor is not same as Creator");
+        }
     } catch (err) {
         res.json(err);
     }
@@ -265,7 +274,7 @@ router.post("/1y", authorise, async (req, res) => {
             video_call
         } = req.body;
         var valid = WAValidator.validate(creator, "ETH");
-        if (valid) {
+        if (valid && req.useraddress.toLowerCase() == creator.toLowerCase()) {
             const new_User = await pool.query(
                 "INSERT INTO Creator_Sub_1Y (creator, discord_server_id, discord , video_on_demand , live_streaming, video_call) VALUES ($1,$2,$3,$4,$5,$6) RETURNING*;",
                 [
@@ -300,33 +309,37 @@ router.put("/1y/:creator", authorise, async (req, res) => {
             video_call
         } = req.body;
         var new_User;
-        if (discord_server_id != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1Y SET discord_server_id=$1 WHERE Creator=$2 RETURNING*;",
-                [discord_server_id, creator.toLowerCase()]
-            );
-        if (discord != null)
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1Y SET discord=$1 WHERE Creator=$2 RETURNING*;",
-                [discord, creator.toLowerCase()]
-            );
-        if (video_on_demand != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1Y SET video_on_demand=$1 WHERE Creator=$2 RETURNING*;",
-                [video_on_demand, creator.toLowerCase()]
-            );
-        if (live_streaming != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1Y SET live_streaming=$1 WHERE Creator=$2 RETURNING*;",
-                [live_streaming, creator.toLowerCase()]
-            );
-        if (video_call != "")
-            new_User = await pool.query(
-                "UPDATE Creator_Sub_1Y SET video_call=$1 WHERE Creator=$2 RETURNING*;",
-                [video_call, creator.toLowerCase()]
-            );
+        if (req.useraddress.toLowerCase() == creator.toLowerCase()) {
+            if (discord_server_id != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1Y SET discord_server_id=$1 WHERE Creator=$2 RETURNING*;",
+                    [discord_server_id, creator.toLowerCase()]
+                );
+            if (discord != null)
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1Y SET discord=$1 WHERE Creator=$2 RETURNING*;",
+                    [discord, creator.toLowerCase()]
+                );
+            if (video_on_demand != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1Y SET video_on_demand=$1 WHERE Creator=$2 RETURNING*;",
+                    [video_on_demand, creator.toLowerCase()]
+                );
+            if (live_streaming != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1Y SET live_streaming=$1 WHERE Creator=$2 RETURNING*;",
+                    [live_streaming, creator.toLowerCase()]
+                );
+            if (video_call != "")
+                new_User = await pool.query(
+                    "UPDATE Creator_Sub_1Y SET video_call=$1 WHERE Creator=$2 RETURNING*;",
+                    [video_call, creator.toLowerCase()]
+                );
 
-        res.json(new_User.rows[0]);
+            res.json(new_User.rows[0]);
+        } else {
+            res.json("Sendor is not same as Creator");
+        }
     } catch (err) {
         res.json(err);
     }

@@ -209,7 +209,7 @@ export default function CreatorProfile() {
                       }}
                     >
                       <BasicModal
-                        modalButtonText="Join My Fam"
+                        modalButtonText={"Get " + creatorTokenSymbol}
                         modalBody={<CreateProposalModal />}
                       />
                     </div>

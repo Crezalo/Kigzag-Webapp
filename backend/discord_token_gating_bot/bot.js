@@ -11,7 +11,7 @@ const {
 const {
   Signale
 } = require('signale');
-const pool = require('./pool');
+const dis_router = require('../routes/discord_routes');
 const {
   MessageActionRow,
   MessageEmbed,
@@ -54,29 +54,11 @@ client.on('ready', () => {
   });
   logger.success('Status Set!');
   const channel = client.channels.cache.find(channel => channel.name === 'kigzag-rules');
-  // const Guilds = client.guilds.cache.map(guild => guild);
-  // logger.info(Guilds);
-  // const channel = Guilds[0].channels.cache.filter(chx => chx.type === "text").find(x => x.position === 0);
-  // logger.info(channel);
   channel.send('hello I am test bot 1');
-  // client.emit('message', 'message');
-  // channel.messages.fetch({
-  //   limit: 100
-  // }).then(messages => {
-  //   logger.info(`Received ${messages.size} messages`);
-  //   //Iterate through the messages here with the variable "messages".
-  //   messages.forEach(message => logger.info(message.content))
-  // });
-  // logger.info("users");
-  // logger.info(Guilds[0].name);
-  // Guilds[0].members.cache.forEach(member => logger.info(member.user.username)); 
-  // logger.info("done");
-  // logger.info(Guilds[0]);
-  // client.users.cache.get(Guilds[0].ownerId).send('<message>');
 });
 
 // Interactions
-client.on('interactionCreate', interaction => {
+client.on('interactionCreate', async (interaction) => {
   // Embed define
   const sucess = new MessageEmbed()
     .setColor('#0099ff')
@@ -88,28 +70,39 @@ client.on('interactionCreate', interaction => {
     interaction.deferUpdate();
     const user = client.users.cache.get(interaction.user.id);
     user.send("You have sucessfully agreed to rules.").catch(console.error);
-    const linkID = pool.createLink(user.id);
+    const {
+      linkID
+    } = await dis_router.createLink(user.id, interaction.guild.id);
+    const planDetails = await dis_router.getPlanDetailsFromLinkId(linkID);
+    if (planDetails != 'Link Not Available') {
 
-    const embed2 = new MessageEmbed()
-      .setTitle(message.guild.name + " Subcription Plans")
-      .setURL(`${process.env.HTTPS == 'true' ? 'https://' : 'http://'}${process.env.DOMAIN}:${process.env.HTTPS == 'true' ? '443' : process.env.HTTP_PORT}/verify/${linkID}`)
-      // .setDescription("Following are the subscription plans to join "+ message.guild.name)
-      .setTimestamp()
-      .setColor('BLUE')
-      // .setFooter("This is a footer")
-      // .setAuthor("This is the author's name") //and this its profile pic
-      .addField("5 Creator Tokens", "1 Month", true)
-      .addField("12 Creator Tokens", "3 Months", true)
-      .addField("45 Creator Tokens", "1 Year", true)
-      .setImage("https://ik.imagekit.io/kaisraicttcdnimage/7d744a684fe03ebc7e8de545f97739dd_iGYyBLcyM1.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1626192758870")
-    // .setThumbnail("https://ik.imagekit.io/kaisraicttcdnimage/se-image-85e0e9ab23134961c88e4ecea2bff53f_NUtUPP5Oq.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1626192728422")
+      const embed2 = new MessageEmbed()
+        .setTitle(message.guild.name + " Subcription Plans")
+        .setURL(process.env.DISCORD_PLANS_API_ENDPOINT + linkID)
+        .setTimestamp()
+        .setColor('BLUE')
+        .addFields({
+          name: '1 Month',
+          value: planDetails['1month'] + " " + planDetails['symbol'],
+          inline: true,
+        }, {
+          name: '3 Months',
+          value: planDetails['3months'] + " " + planDetails['symbol'],
+          inline: true,
+        }, {
+          name: '1 Year',
+          value: planDetails['1year'] + " " + planDetails['symbol'],
+          inline: true
+        })
+        .setDescription("_***Link will expire in 30 mins***_");
 
-    user.send({
-      embed2
-    }).catch((err) => {
-      logger.error(err);
-      logger.error(`Failed to send captcha to user! (Maybe they have DMs turned off?)`);
-    });
+      message.author.send(embed2).then(message.author.send("Link will expire in 30 mins")).catch((err) => {
+        logger.error(err);
+        logger.error(`Failed to send captcha to user! (Maybe they have DMs turned off?)`);
+      });
+    } else {
+      logger.error(`Invalid Link Generated, planDetails failed, should not reach here!`);
+    }
   }
 });
 
@@ -124,68 +117,78 @@ client.on("message", async (message) => {
   }
   if (message.content.startsWith(`${prefix}verify`)) {
     message.channel.send('Please check your DMs!')
-    const linkID = pool.createLink(message.author.id);
+    const {
+      linkID
+    } = await dis_router.createLink(message.author.id, message.guild.id);
+    const planDetails = await dis_router.getPlanDetailsFromLinkId(linkID);
+    if (planDetails != 'Link Not Available') {
 
-    const embed2 = new MessageEmbed()
-      .setTitle(message.guild.name + " Subcription Plans")
-      .setURL(`${process.env.HTTPS == 'true' ? 'https://' : 'http://'}${process.env.DOMAIN}:${process.env.HTTPS == 'true' ? '443' : process.env.HTTP_PORT}/verify/${linkID}`)
-      // .setDescription("Following are the subscription plans to join "+ message.guild.name)
-      .setTimestamp()
-      .setColor('BLUE')
-      // .setFooter("This is a footer")
-      // .setAuthor("This is the author's name") //and this its profile pic
-      // .addField("5 Creator Tokens", "\n_***1 Month***_\n")
-      // .addField("12 Creator Tokens", "\n_***3 Months***_\n")
-      // .addField("45 Creator Tokens", "\n_***1 Year***_\n")
-      .addFields({
-        name: '1 Month',
-        value: "```5 Creator Tokens```",
-        inline: true,
-      }, {
-        name: '3 Months',
-        value: "```12 Creator Tokens```",
-        inline: true,
-      }, {
-        name: '1 Year',
-        value: "```45 Creator Tokens```",
-        inline: true
+      const embed2 = new MessageEmbed()
+        .setTitle(message.guild.name + " Subcription Plans")
+        .setURL(process.env.DISCORD_PLANS_API_ENDPOINT + linkID)
+        .setTimestamp()
+        .setColor('BLUE')
+        .addFields({
+          name: '1 Month',
+          value: planDetails['1month'] + " " + planDetails['symbol'],
+          inline: true,
+        }, {
+          name: '3 Months',
+          value: planDetails['3months'] + " " + planDetails['symbol'],
+          inline: true,
+        }, {
+          name: '1 Year',
+          value: planDetails['1year'] + " " + planDetails['symbol'],
+          inline: true
+        })
+        .setDescription("_***Link will expire in 30 mins***_");
 
-      })
-      .setDescription("_***Link will expire in 20 mins***_");
-    // .setImage("https://ik.imagekit.io/kaisraicttcdnimage/7d744a684fe03ebc7e8de545f97739dd_iGYyBLcyM1.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1626192758870")
-    // .setThumbnail("https://ik.imagekit.io/kaisraicttcdnimage/se-image-85e0e9ab23134961c88e4ecea2bff53f_NUtUPP5Oq.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1626192728422")
-
-    message.author.send(embed2).then(message.author.send("Link will expire in 20 mins")).catch((err) => {
-      logger.error(err);
-      logger.error(`Failed to send captcha to user! (Maybe they have DMs turned off?)`);
-    });
+      message.author.send(embed2).then(message.author.send("Link will expire in 30 mins")).catch((err) => {
+        logger.error(err);
+        logger.error(`Failed to send captcha to user! (Maybe they have DMs turned off?)`);
+      });
+    } else {
+      logger.error(`Invalid Link Generated, planDetails failed, should not reach here!`);
+    }
   }
 });
 
 // Events
 // Send new user the subcription plan and link when they join the server
-client.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', async (member) => {
   logger.info(`New User "${member.user.username}" has joined "${member.guild.name}"`);
-  const linkID = pool.createLink(member.id);
+  const {
+    linkID
+  } = await dis_router.createLink(member.id, member.guild.id);
+  const planDetails = await dis_router.getPlanDetailsFromLinkId(linkID);
+  if (planDetails != 'Link Not Available') {
+    const embed2 = new MessageEmbed()
+      .setTitle(message.guild.name + " Subcription Plans")
+      .setURL(process.env.DISCORD_PLANS_API_ENDPOINT + linkID)
+      .setTimestamp()
+      .setColor('BLUE')
+      .addFields({
+        name: '1 Month',
+        value: planDetails['1month'] + " " + planDetails['symbol'],
+        inline: true,
+      }, {
+        name: '3 Months',
+        value: planDetails['3months'] + " " + planDetails['symbol'],
+        inline: true,
+      }, {
+        name: '1 Year',
+        value: planDetails['1year'] + " " + planDetails['symbol'],
+        inline: true
+      })
+      .setDescription("_***Link will expire in 30 mins***_");
 
-  const embed2 = new MessageEmbed()
-    .setTitle(message.guild.name + " Subcription Plans")
-    .setURL(`${process.env.HTTPS == 'true' ? 'https://' : 'http://'}${process.env.DOMAIN}:${process.env.HTTPS == 'true' ? '443' : process.env.HTTP_PORT}/verify/${linkID}`)
-    // .setDescription("Following are the subscription plans to join "+ message.guild.name)
-    .setTimestamp()
-    .setColor('BLUE')
-    // .setFooter("This is a footer")
-    // .setAuthor("This is the author's name") //and this its profile pic
-    .addField("5 Creator Tokens", "1 Month", true)
-    .addField("12 Creator Tokens", "3 Months", true)
-    .addField("45 Creator Tokens", "1 Year", true)
-    .setImage("https://ik.imagekit.io/kaisraicttcdnimage/7d744a684fe03ebc7e8de545f97739dd_iGYyBLcyM1.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1626192758870")
-  // .setThumbnail("https://ik.imagekit.io/kaisraicttcdnimage/se-image-85e0e9ab23134961c88e4ecea2bff53f_NUtUPP5Oq.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1626192728422")
-
-  member.send(embed2).catch((err) => {
-    logger.error(err);
-    logger.error(`Failed to send captcha to user! (Maybe they have DMs turned off?)`);
-  });
+    message.author.send(embed2).then(message.author.send("Link will expire in 30 mins")).catch((err) => {
+      logger.error(err);
+      logger.error(`Failed to send captcha to user! (Maybe they have DMs turned off?)`);
+    });
+  } else {
+    logger.error(`Invalid Link Generated, planDetails failed, should not reach here!`);
+  }
 });
 
 module.exports = {

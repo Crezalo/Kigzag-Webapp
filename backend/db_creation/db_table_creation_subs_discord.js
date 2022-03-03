@@ -15,7 +15,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   //cron job will operate on this table every 1 min and remove processed or failed rows
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS User_Discord_Link_Pool (LinkId BIGSERIAL PRIMARY KEY, User_Discord_Id VARCHAR(255) NOT NULL, ServerId VARCHAR(255) NOT NULL, StartTime TIMESTAMP NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS User_Discord_Link_Pool (LinkId VARCHAR(255) PRIMARY KEY, User_Discord_Id VARCHAR(255) NOT NULL, ServerId VARCHAR(255) NOT NULL, StartTime TIMESTAMP NOT NULL);"
     )
     .catch((err) => console.log("PG ERROR 9.1", err));
 

@@ -9,7 +9,8 @@ export const MAIN_API_URL = "http://localhost:5000/";
 export const VIDEO_API_URL = "http://localhost:4000/";
 
 // Thumbnail S3 Bucket Storage
-export const S3_BUCKET_THUMBNAIL_URL = "https://kigzag-video-thumbnail.s3.eu-north-1.amazonaws.com/"
+export const S3_BUCKET_THUMBNAIL_URL =
+  "https://kigzag-video-thumbnail.s3.eu-north-1.amazonaws.com/";
 
 /////////////////////////////////////////////////////////////////////////
 //////////////////     User Table            ////////////////////////////
@@ -496,4 +497,56 @@ export async function getVideoCaptions(
   });
   const data = await response.data;
   return data;
+}
+
+/////////////////////////////////////////////////////////////////////////
+//////////////////     Discord Plans            /////////////////////////
+/////////////////////////////////////////////////////////////////////////
+
+export async function getDiscordPlanDetails(
+  account: string,
+  library: any,
+  linkid: string
+) {
+  const response = await axios.get(
+    MAIN_API_URL + "discord/linkdata/" + linkid.toLowerCase(),
+    {
+      headers: await authHeader(account, library),
+    }
+  );
+  const data = await response.data;
+  return data;
+}
+
+export async function buyDiscordPlan(
+  account: string,
+  library: any,
+  videoid: string,
+  creator: string,
+  title: string,
+  description: string
+) {
+  const data = {
+    videoid: videoid,
+    creator: creator,
+    title: title,
+    description: description,
+  };
+  const response = await axios.put(VIDEO_API_URL + videoid, data, {
+    headers: await authHeader(account, library),
+  });
+  if (creator != "") {
+    if (response.data[0]["creator"] == creator.toLowerCase()) {
+      return true;
+    }
+  } else if (title != "") {
+    if (response.data[0]["title"] == title) {
+      return true;
+    }
+  } else if (description != "") {
+    if (response.data[0]["description"] == description) {
+      return true;
+    }
+  }
+  return false;
 }

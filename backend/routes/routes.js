@@ -224,13 +224,22 @@ router.post("/token", authorise, async (req, res) => {
   try {
     const {
       address,
+      creator,
+      name,
+      symbol,
       chainid
     } = req.body;
     var valid = WAValidator.validate(address, "ETH");
     if (valid) {
       const new_token = await pool.query(
-        "INSERT INTO Creator_token (TokenAddress, ChainId) VALUES ($1, $2) RETURNING*;",
-        [address.toLowerCase(), chainid]
+        "INSERT INTO Creator_token (TokenAddress, Creator, Name, Symbol, ChainId) VALUES ($1, $2, $3, $4, $5) RETURNING*;",
+        [
+          address.toLowerCase(),
+          creator.toLowerCase(),
+          name,
+          symbol,
+          chainid
+        ]
       );
       res.json(new_token.rows);
     } else {
@@ -244,7 +253,7 @@ router.post("/token", authorise, async (req, res) => {
 router.get("/token/:chainid", async (req, res) => {
   try {
     const chainid = req.params["chainid"];
-    const td = await pool.query("SELECT TokenAddress FROM Creator_token WHERE ChainId=$1;", [chainid]);
+    const td = await pool.query("SELECT * FROM Creator_token WHERE ChainId=$1;", [chainid]);
     res.json(td.rows);
   } catch (err) {
     res.json(err);
