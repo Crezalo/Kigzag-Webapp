@@ -10,7 +10,7 @@ const isTimestamp = require('validate.io-timestamp');
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // add new user
-router.post("/", authorise, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const {
       useraddress,
