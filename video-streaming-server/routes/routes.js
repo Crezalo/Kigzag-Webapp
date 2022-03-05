@@ -155,7 +155,7 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
     const body = req.authBody;
     const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
-    console.log(ud.rows[0]);
+    // console.log(ud.rows[0]);
     const duration = ud.rows[0].duration;
 
     // AWS Cloudfront CDN and other optimizations
@@ -165,7 +165,7 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
       expireTime: (new Date().getTime() + (duration * 1000)),
     }
     var signedUrl = aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator.toLowerCase()}/${videoid}.mp4`, aws_cf_config);
-    console.log('Signed URL: ' + signedUrl);
+    // console.log('Signed URL: ' + signedUrl);
     res.json({
       "signedurl": signedUrl
     })
