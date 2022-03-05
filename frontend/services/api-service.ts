@@ -3,17 +3,17 @@ import AuthService from "./auth-services";
 import authHeader from "./auth-header";
 
 // Backend Url
-export const MAIN_API_URL = "http://localhost:5000/";
+export const MAIN_API_URL = process.env.NEXT_STATIC_MAIN_API_URL;
 
 // Video Streaming Server Url
-export const VIDEO_API_URL = "http://localhost:4000/";
+export const VIDEO_API_URL = process.env.NEXT_STATIC_VIDEO_API_URL;
 
 // Thumbnail S3 Bucket Storage
 export const S3_BUCKET_THUMBNAIL_URL =
-  "https://kigzag-video-thumbnail.s3.eu-north-1.amazonaws.com/";
+  process.env.NEXT_STATIC_S3_BUCKET_THUMBNAIL_URL;
 
 /////////////////////////////////////////////////////////////////////////
-//////////////////     User Table            ////////////////////////////
+/////////////////////          User Table            ////////////////////
 /////////////////////////////////////////////////////////////////////////
 
 export async function addNewUser(

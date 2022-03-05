@@ -3,7 +3,16 @@
 /**
  * @type {import('next').NextConfig}
  **/
-module.exports = {
+
+const test = require("@babel/core");
+const dotenvLoad = require('dotenv-load');
+const typescript = require('typescript');
+const withPlugins = require('next-compose-plugins');
+const nextEnv = require('next-env');
+
+dotenvLoad();
+
+const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
@@ -16,3 +25,19 @@ module.exports = {
     ignoreDuringBuilds: true,
   },
 };
+
+module.exports = withPlugins([
+
+  nextEnv({
+    staticPrefix: 'NEXT_STATIC_',
+    publicPrefix: 'NEXT_PUBLIC_',
+  }),
+
+  // another plugin with a configuration
+  [typescript, {
+    typescriptLoaderOptions: {
+      transpileOnly: false,
+    },
+  }],
+
+], nextConfig);
