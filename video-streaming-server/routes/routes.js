@@ -11,7 +11,8 @@ const Web3Token = require('web3-token');
 const thumbsupply = require('thumbsupply');
 const awsConfig = require('aws-config');
 const AWS = require('aws-sdk');
-const aws_cf = require('aws-cloudfront-sign');
+// const aws_cf = require('aws-cloudfront-sign');
+const aws_cf = require("../aws_cf");
 require('dotenv').config();
 const {
   getVideoDurationInSeconds
@@ -164,8 +165,8 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
       privateKeyPath: process.env.CLOUDFRONT_PRIVATE_KEY_PATH,
       expireTime: (new Date().getTime() + (duration * 1000)),
     }
-    var signedUrl = aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator.toLowerCase()}/${videoid}.mp4`, aws_cf_config);
-    // console.log('Signed URL: ' + signedUrl);
+    var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator.toLowerCase()}/${videoid}.mp4`, aws_cf_config);
+    console.log('Signed URL: ' + signedUrl);
     res.json({
       "signedurl": signedUrl
     })
