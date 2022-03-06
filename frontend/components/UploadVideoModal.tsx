@@ -6,6 +6,8 @@ import authHeader from "../services/auth-header";
 import Image from "next/image";
 import { ThemeProvider } from "@material-ui/core";
 import { maxHeight } from "@mui/system";
+import uploadingGif from "../public/uploading.gif";
+import greenTick from "../public/green-tick.gif";
 
 const UploadVideoModal = () => {
   const { chainId, account, library } = useWeb3React();
@@ -181,21 +183,11 @@ const UploadVideoModal = () => {
         <>
           {fileUploadStatus === "UPLOADING" ? (
             <div>
-              <Image
-                src="/../public/uploading.gif"
-                alt=""
-                width={200}
-                height={200}
-              />
+              <Image src={uploadingGif} alt="" width={200} height={200} />
             </div>
           ) : (
             <div>
-              <Image
-                src="/../public/green-tick.gif"
-                alt=""
-                width={200}
-                height={200}
-              />
+              <Image src={greenTick} alt="" width={200} height={200} />
             </div>
           )}
         </>

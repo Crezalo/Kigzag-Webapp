@@ -28,6 +28,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getNFTsOfCreator, getUserData } from "../services/api-service";
 import Router, { useRouter } from "next/router";
+import twitter from "../public/twitter.png";
+import discord from "../public/discord.png";
+import tiktok from "../public/tiktok.png";
+import instagram from "../public/instagram.png";
+import youtube from "../public/youtube.png";
+import website from "../public/website.png";
 
 export default function Home() {
   const { chainId, account, library } = useWeb3React();
@@ -201,12 +207,7 @@ export default function Home() {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          <Image
-                            src="/../public/twitter.png"
-                            alt=""
-                            width={25}
-                            height={20}
-                          />
+                          <Image src={twitter} alt="" width={25} height={20} />
                         </a>
                       ) : (
                         <></>
@@ -220,12 +221,7 @@ export default function Home() {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          <Image
-                            src="/../public/discord.png"
-                            alt=""
-                            width={25}
-                            height={25}
-                          />
+                          <Image src={discord} alt="" width={25} height={25} />
                         </a>
                       ) : (
                         <></>
@@ -239,12 +235,7 @@ export default function Home() {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          <Image
-                            src="/../public/tiktok.png"
-                            alt=""
-                            width={25}
-                            height={25}
-                          />
+                          <Image src={tiktok} alt="" width={25} height={25} />
                         </a>
                       ) : (
                         <></>
@@ -259,7 +250,7 @@ export default function Home() {
                           rel="noreferrer"
                         >
                           <Image
-                            src="/../public/instagram.png"
+                            src={instagram}
                             alt=""
                             width={25}
                             height={25}
@@ -283,12 +274,7 @@ export default function Home() {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          <Image
-                            src="/../public/youtube.png"
-                            alt=""
-                            width={25}
-                            height={20}
-                          />
+                          <Image src={youtube} alt="" width={25} height={20} />
                         </a>
                       ) : (
                         <></>
@@ -302,12 +288,7 @@ export default function Home() {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          <Image
-                            src="/../public/website.png"
-                            alt=""
-                            width={25}
-                            height={20}
-                          />
+                          <Image src={website} alt="" width={25} height={20} />
                         </a>
                       ) : (
                         <></>

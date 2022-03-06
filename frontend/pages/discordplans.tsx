@@ -39,6 +39,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
+import waitingGif from "../public/waiting.gif";
+import greenTick from "../public/green-tick.gif";
 import {
   formatBlockExplorerLink,
   retry,
@@ -148,8 +150,6 @@ export default function DiscordPlans() {
       })
       .catch((err) => console.log(err));
   }
-
-  
 
   const classesModal = useStylesModal();
   const [open, setOpen] = useState(false);
@@ -365,14 +365,14 @@ export default function DiscordPlans() {
                           </p>
                           {transactionStatus === "WAITING" ? (
                             <Image
-                              src="/../public/waiting.gif"
+                              src={waitingGif}
                               alt=""
                               width={200}
                               height={200}
                             />
                           ) : (
                             <Image
-                              src="/../public/green-tick.gif"
+                              src={greenTick}
                               alt=""
                               width={200}
                               height={200}

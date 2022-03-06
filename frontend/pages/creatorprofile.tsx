@@ -30,6 +30,12 @@ import Image from "next/image";
 import { getUserData } from "../services/api-service";
 import { useEffect, useState } from "react";
 import queryString from "query-string";
+import twitter from "../public/twitter.png";
+import discord from "../public/discord.png";
+import tiktok from "../public/tiktok.png";
+import instagram from "../public/instagram.png";
+import youtube from "../public/youtube.png";
+import website from "../public/website.png";
 
 export default function CreatorProfile() {
   const { chainId, account, library } = useWeb3React();
@@ -231,7 +237,7 @@ export default function CreatorProfile() {
                         rel="noreferrer"
                       >
                         <Image
-                          src="/../public/twitter.png"
+                          src={twitter}
                           alt=""
                           width={25}
                           height={20}
@@ -250,7 +256,7 @@ export default function CreatorProfile() {
                         rel="noreferrer"
                       >
                         <Image
-                          src="/../public/discord.png"
+                          src={discord}
                           alt=""
                           width={25}
                           height={25}
@@ -269,7 +275,7 @@ export default function CreatorProfile() {
                         rel="noreferrer"
                       >
                         <Image
-                          src="/../public/tiktok.png"
+                          src={tiktok}
                           alt=""
                           width={25}
                           height={25}
@@ -288,7 +294,7 @@ export default function CreatorProfile() {
                         rel="noreferrer"
                       >
                         <Image
-                          src="/../public/instagram.png"
+                          src={instagram}
                           alt=""
                           width={25}
                           height={25}
@@ -313,7 +319,7 @@ export default function CreatorProfile() {
                         rel="noreferrer"
                       >
                         <Image
-                          src="/../public/youtube.png"
+                          src={youtube}
                           alt=""
                           width={25}
                           height={20}
@@ -332,7 +338,7 @@ export default function CreatorProfile() {
                         rel="noreferrer"
                       >
                         <Image
-                          src="/../public/website.png"
+                          src={website}
                           alt=""
                           width={25}
                           height={20}

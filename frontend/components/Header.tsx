@@ -6,6 +6,7 @@ import useEagerConnect from "../hooks/useEagerConnect";
 import Account from "./Account";
 import ChainName from "./ChainName";
 import Image from "next/image";
+import kigzaglogo from "../public/kigzaglogo.png";
 
 const Header = () => {
   const triedToEagerConnect = useEagerConnect();
@@ -18,9 +19,9 @@ const Header = () => {
       }}
     >
       <Link href="/">
-        <a style={{marginTop:"2px",marginLeft:"5px"}}>
+        <a style={{ marginTop: "2px", marginLeft: "5px" }}>
           <Image
-            src="/../public/kigzaglogo.png"
+            src={kigzaglogo}
             alt="Picture of the author"
             width={90}
             height={30}
