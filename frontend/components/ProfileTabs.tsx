@@ -25,6 +25,7 @@ import {
 } from "../services/api-service";
 import ContentCardGrid from "./ContentCardGrid";
 import ChatTab from "./ChatTab";
+import LiveStream from "./LiveStreamTab";
 
 const useStyles = makeStyles({
   tab: {
@@ -75,7 +76,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
         onCreatorProfile={onCreatorProfile}
         key={1}
       />,
-      <ContentCardGrid
+      <LiveStream
         creator={creator}
         onCreatorProfile={onCreatorProfile}
         key={2}
@@ -103,7 +104,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
     if (creatorToken !== ZERO_ADDRESS) {
       tabs_array = [
         <ContentCardGrid creator={account} onCreatorProfile={false} key={1} />,
-        <ContentCardGrid creator={account} onCreatorProfile={false} key={2} />,
+        <LiveStream creator={account} onCreatorProfile={false} key={2} />,
         <ContentCardGrid creator={account} onCreatorProfile={false} key={3} />,
         <ChatTab creator={account} onCreatorProfile={false} key={4} />,
         <NFTTabs
