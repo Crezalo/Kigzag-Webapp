@@ -10,6 +10,7 @@ import { useWeb3React } from "@web3-react/core";
 import { getNFTForGivenTokenId } from "../services/api-service";
 import ConnectToWallet from "../components/ConnectToWallet";
 import queryString from "query-string";
+import Head from "next/head";
 
 export default function NFT() {
   const router = useRouter();
@@ -92,45 +93,56 @@ export default function NFT() {
 
   return (
     <div>
-      {attributes ? (
-        <div className="nftPage">
-          <div>
-            <div className="nftPageImage">
-              {external_url ? (
-                <Image
-                  src={external_url}
-                  alt="Loading ..."
-                  width={550}
-                  height={550}
-                />
-              ) : (
-                <Image src={image} alt="Loading ..." width={550} height={550} />
-              )}
-            </div>
-            <NFTDetails
-              contract={(contract ?? "").toString()}
-              tokenid={(tokenId ?? "").toString()}
-              creator={(creator ?? "").toString()}
-              status={(status ?? "").toString()}
-              vault={(vault ?? "").toString()}
-              name={name}
-            />
-          </div>
-          <NFTProperties properties={attributes} description={description} />
-        </div>
-      ) : (
-        <>
-          {typeof account !== "string" ? (
-            <ConnectToWallet />
-          ) : (
-            <>
-              <CircularProgress
-                style={{ display: "flex", margin: "auto", height: "80vh" }}
+      <Head>
+        <title>NFT Page</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <div>
+        {attributes ? (
+          <div className="nftPage">
+            <div>
+              <div className="nftPageImage">
+                {external_url ? (
+                  <Image
+                    src={external_url}
+                    alt="Loading ..."
+                    width={550}
+                    height={550}
+                  />
+                ) : (
+                  <Image
+                    src={image}
+                    alt="Loading ..."
+                    width={550}
+                    height={550}
+                  />
+                )}
+              </div>
+              <NFTDetails
+                contract={(contract ?? "").toString()}
+                tokenid={(tokenId ?? "").toString()}
+                creator={(creator ?? "").toString()}
+                status={(status ?? "").toString()}
+                vault={(vault ?? "").toString()}
+                name={name}
               />
-            </>
-          )}
-        </>
-      )}
+            </div>
+            <NFTProperties properties={attributes} description={description} />
+          </div>
+        ) : (
+          <>
+            {typeof account !== "string" ? (
+              <ConnectToWallet />
+            ) : (
+              <>
+                <CircularProgress
+                  style={{ display: "flex", margin: "auto", height: "80vh" }}
+                />
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

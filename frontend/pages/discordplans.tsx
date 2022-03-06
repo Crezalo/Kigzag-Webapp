@@ -48,6 +48,7 @@ import {
   shortenHex,
   RetryOptions,
 } from "../util";
+import Head from "next/head";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -218,295 +219,305 @@ export default function DiscordPlans() {
 
   return (
     <div>
-      {linkid && !linkExpired ? (
-        <>
-          {account ? (
-            <React.Fragment>
-              <GlobalStyles
-                styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
-              />
-              <CssBaseline />
-              <Container className="blueTextBlackBackground">
-                <Container
-                  disableGutters
-                  maxWidth="sm"
-                  component="main"
-                  sx={{ pt: 8, pb: 6 }}
-                >
-                  <Typography
-                    component="h6"
-                    variant="h5"
-                    align="center"
-                    color="#3b82f6"
-                    gutterBottom
+      <Head>
+        <title>Discord Plans</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <div>
+        {linkid && !linkExpired ? (
+          <>
+            {account ? (
+              <React.Fragment>
+                <GlobalStyles
+                  styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
+                />
+                <CssBaseline />
+                <Container className="blueTextBlackBackground">
+                  <Container
+                    disableGutters
+                    maxWidth="sm"
+                    component="main"
+                    sx={{ pt: 8, pb: 6 }}
                   >
-                    {planDetails.name} Discord Plans
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    align="center"
-                    color="white"
-                    component="p"
-                  >
-                    Exclusive interaction directly with me and my top fans.
-                  </Typography>
+                    <Typography
+                      component="h6"
+                      variant="h5"
+                      align="center"
+                      color="#3b82f6"
+                      gutterBottom
+                    >
+                      {planDetails.name} Discord Plans
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      align="center"
+                      color="white"
+                      component="p"
+                    >
+                      Exclusive interaction directly with me and my top fans.
+                    </Typography>
+                  </Container>
                 </Container>
-              </Container>
-              <Container maxWidth="md" component="main">
-                <Grid container spacing={5} alignItems="flex-end">
-                  {tiers.map((tier) => (
-                    // Enterprise card is full width at sm breakpoint
-                    <Grid
-                      item
-                      key={tier.title}
-                      xs={12}
-                      sm={tier.title === "1 Year" ? 12 : 6}
-                      md={4}
-                    >
-                      <Card>
-                        <CardHeader
-                          title={tier.title}
-                          subheader={tier.subheader}
-                          titleTypographyProps={{ align: "center" }}
-                          action={
-                            tier.title === "3 Months" ? <StarIcon /> : null
-                          }
-                          subheaderTypographyProps={{
-                            align: "center",
-                          }}
-                          sx={{
-                            backgroundColor: (theme) =>
-                              theme.palette.mode === "light"
-                                ? theme.palette.grey[200]
-                                : theme.palette.grey[700],
-                          }}
-                        />
-                        <CardContent>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "baseline",
-                              mb: 2,
-                            }}
-                          >
-                            <Typography
-                              component="h2"
-                              variant="h3"
-                              color="#3b82f6"
-                            >
-                              {tier.price} {planDetails.symbol}
-                            </Typography>
-                          </Box>
-                          <ul>
-                            {tier.description.map((line) => (
-                              <Typography
-                                component="li"
-                                variant="subtitle1"
-                                align="center"
-                                key={line}
-                              >
-                                {line}
-                              </Typography>
-                            ))}
-                          </ul>
-                        </CardContent>
-                        <CardActions>
-                          <Button
-                            fullWidth
-                            variant={
-                              tier.buttonVariant as "outlined" | "contained"
-                            }
-                            onClick={async () => {
-                              await BurnMyTokens(tier.price * 10 ** 18);
-                            }}
-                          >
-                            {tier.buttonText}
-                          </Button>
-                        </CardActions>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
-                <Modal
-                  aria-labelledby="transition-modal-title"
-                  aria-describedby="transition-modal-description"
-                  className={classesModal.modal}
-                  open={open}
-                  onClose={handleClose}
-                  closeAfterTransition
-                  BackdropComponent={Backdrop}
-                  BackdropProps={{
-                    timeout: 500,
-                  }}
-                >
-                  <Fade in={open}>
-                    <div className={classesModal.paper}>
-                      {transactionStatus === "NOT_STARTED" ? (
-                        <></>
-                      ) : (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                          }}
-                        >
-                          <p
-                            style={{
-                              color: "#3b82f6",
-                              fontWeight: "bold",
-                              fontSize: 20,
-                              textAlign: "center",
-                            }}
-                          >
-                            {transactionStatus === "WAITING"
-                              ? "Processing, Please Wait!"
-                              : "Succesful !!!"}
-                          </p>
-                          {transactionStatus === "WAITING" ? (
-                            <Image
-                              src={waitingGif}
-                              alt=""
-                              width={200}
-                              height={200}
-                            />
-                          ) : (
-                            <Image
-                              src={greenTick}
-                              alt=""
-                              width={200}
-                              height={200}
-                            />
-                          )}
-                          <Link>
-                            <a
-                              {...{
-                                href: formatBlockExplorerLink("Transaction", [
-                                  chainId,
-                                  txhash,
-                                  "",
-                                ]),
-                                target: "_blank",
-                                rel: "noopener noreferrer",
-                              }}
-                              style={{ fontSize: 20, fontWeight: "bold" }}
-                            >
-                              {shortenHex(txhash, 10)}
-                            </a>
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  </Fade>
-                </Modal>
-                <Container
-                  disableGutters
-                  maxWidth="sm"
-                  component="main"
-                  sx={{ pt: 4, pb: 2 }}
-                >
-                  <Typography
-                    variant="h6"
-                    align="center"
-                    color="white"
-                    component="p"
-                  >
-                    <Button
-                      fullWidth
-                      variant={"contained"}
-                      style={{ width: "40%", backgroundColor: "#3b82f6" }}
-                      onClick={() => {
-                        Router.push({
-                          pathname: "/creatorprofile",
-                          query: { address: planDetails.creator },
-                        });
-                      }}
-                    >
-                      Get {planDetails.symbol} here
-                    </Button>
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    align="center"
-                    color="white"
-                    component="p"
-                    style={{ marginTop: "10px" }}
-                  >
-                    For Accepted Payments refer{" "}
-                    <Link>
-                      <a
-                        href="https://kigzag.com/#payments"
-                        target="_blank"
-                        rel="noreferrer"
+                <Container maxWidth="md" component="main">
+                  <Grid container spacing={5} alignItems="flex-end">
+                    {tiers.map((tier) => (
+                      // Enterprise card is full width at sm breakpoint
+                      <Grid
+                        item
+                        key={tier.title}
+                        xs={12}
+                        sm={tier.title === "1 Year" ? 12 : 6}
+                        md={4}
                       >
-                        here
-                      </a>
-                    </Link>
-                  </Typography>
+                        <Card>
+                          <CardHeader
+                            title={tier.title}
+                            subheader={tier.subheader}
+                            titleTypographyProps={{ align: "center" }}
+                            action={
+                              tier.title === "3 Months" ? <StarIcon /> : null
+                            }
+                            subheaderTypographyProps={{
+                              align: "center",
+                            }}
+                            sx={{
+                              backgroundColor: (theme) =>
+                                theme.palette.mode === "light"
+                                  ? theme.palette.grey[200]
+                                  : theme.palette.grey[700],
+                            }}
+                          />
+                          <CardContent>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "baseline",
+                                mb: 2,
+                              }}
+                            >
+                              <Typography
+                                component="h2"
+                                variant="h3"
+                                color="#3b82f6"
+                              >
+                                {tier.price} {planDetails.symbol}
+                              </Typography>
+                            </Box>
+                            <ul>
+                              {tier.description.map((line) => (
+                                <Typography
+                                  component="li"
+                                  variant="subtitle1"
+                                  align="center"
+                                  key={line}
+                                >
+                                  {line}
+                                </Typography>
+                              ))}
+                            </ul>
+                          </CardContent>
+                          <CardActions>
+                            <Button
+                              fullWidth
+                              variant={
+                                tier.buttonVariant as "outlined" | "contained"
+                              }
+                              onClick={async () => {
+                                await BurnMyTokens(tier.price * 10 ** 18);
+                              }}
+                            >
+                              {tier.buttonText}
+                            </Button>
+                          </CardActions>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                  <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classesModal.modal}
+                    open={open}
+                    onClose={handleClose}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                      timeout: 500,
+                    }}
+                  >
+                    <Fade in={open}>
+                      <div className={classesModal.paper}>
+                        {transactionStatus === "NOT_STARTED" ? (
+                          <></>
+                        ) : (
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <p
+                              style={{
+                                color: "#3b82f6",
+                                fontWeight: "bold",
+                                fontSize: 20,
+                                textAlign: "center",
+                              }}
+                            >
+                              {transactionStatus === "WAITING"
+                                ? "Processing, Please Wait!"
+                                : "Succesful !!!"}
+                            </p>
+                            {transactionStatus === "WAITING" ? (
+                              <Image
+                                src={waitingGif}
+                                alt=""
+                                width={200}
+                                height={200}
+                              />
+                            ) : (
+                              <Image
+                                src={greenTick}
+                                alt=""
+                                width={200}
+                                height={200}
+                              />
+                            )}
+                            <Link>
+                              <a
+                                {...{
+                                  href: formatBlockExplorerLink("Transaction", [
+                                    chainId,
+                                    txhash,
+                                    "",
+                                  ]),
+                                  target: "_blank",
+                                  rel: "noopener noreferrer",
+                                }}
+                                style={{ fontSize: 20, fontWeight: "bold" }}
+                              >
+                                {shortenHex(txhash, 10)}
+                              </a>
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+                    </Fade>
+                  </Modal>
+                  <Container
+                    disableGutters
+                    maxWidth="sm"
+                    component="main"
+                    sx={{ pt: 4, pb: 2 }}
+                  >
+                    <Typography
+                      variant="h6"
+                      align="center"
+                      color="white"
+                      component="p"
+                    >
+                      <Button
+                        fullWidth
+                        variant={"contained"}
+                        style={{ width: "40%", backgroundColor: "#3b82f6" }}
+                        onClick={() => {
+                          Router.push({
+                            pathname: "/creatorprofile",
+                            query: { address: planDetails.creator },
+                          });
+                        }}
+                      >
+                        Get {planDetails.symbol} here
+                      </Button>
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      align="center"
+                      color="white"
+                      component="p"
+                      style={{ marginTop: "10px" }}
+                    >
+                      For Accepted Payments refer{" "}
+                      <Link>
+                        <a
+                          href="https://kigzag.com/#payments"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          here
+                        </a>
+                      </Link>
+                    </Typography>
+                  </Container>
                 </Container>
-              </Container>
-            </React.Fragment>
-          ) : (
-            <>
-              {typeof account !== "string" ? (
-                <ConnectToWallet />
-              ) : (
-                <>
-                  <CircularProgress
-                    style={{ display: "flex", margin: "auto", height: "80vh" }}
-                  />
-                </>
-              )}
-            </>
-          )}
-        </>
-      ) : (
-        <Container
-          disableGutters
-          maxWidth="lg"
-          component="main"
-          sx={{ pt: 8, pb: 6 }}
-        >
-          <Typography
-            component="h1"
-            variant="h3"
-            align="center"
-            color="#3b82f6"
-            gutterBottom
-            style={{ marginBottom: "40px", marginTop: "40px" }}
+              </React.Fragment>
+            ) : (
+              <>
+                {typeof account !== "string" ? (
+                  <ConnectToWallet />
+                ) : (
+                  <>
+                    <CircularProgress
+                      style={{
+                        display: "flex",
+                        margin: "auto",
+                        height: "80vh",
+                      }}
+                    />
+                  </>
+                )}
+              </>
+            )}
+          </>
+        ) : (
+          <Container
+            disableGutters
+            maxWidth="lg"
+            component="main"
+            sx={{ pt: 8, pb: 6 }}
           >
-            Invalid or Expired Link!!!
-          </Typography>
-          <Typography
-            variant="h6"
-            align="center"
-            color="white"
-            component="p"
-            style={{ marginBottom: "20px" }}
-          >
-            &#8688; Check if the link is same as shared by Kigzag Bot.
-          </Typography>
-          <Typography
-            variant="h6"
-            align="center"
-            color="white"
-            component="p"
-            style={{ marginBottom: "20px" }}
-          >
-            &#8688; Generated links are valid only for 30 mins.
-          </Typography>
-          <Typography
-            variant="h6"
-            align="center"
-            color="white"
-            component="p"
-            style={{ marginBottom: "20px" }}
-          >
-            `&#8688;` If it's beyond 30 mins please rejoin the Discord server,
-            Kigzag Bot will generate new link for you.
-          </Typography>
-        </Container>
-      )}
+            <Typography
+              component="h1"
+              variant="h3"
+              align="center"
+              color="#3b82f6"
+              gutterBottom
+              style={{ marginBottom: "40px", marginTop: "40px" }}
+            >
+              Invalid or Expired Link!!!
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              color="white"
+              component="p"
+              style={{ marginBottom: "20px" }}
+            >
+              &#8688; Check if the link is same as shared by Kigzag Bot.
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              color="white"
+              component="p"
+              style={{ marginBottom: "20px" }}
+            >
+              &#8688; Generated links are valid only for 30 mins.
+            </Typography>
+            <Typography
+              variant="h6"
+              align="center"
+              color="white"
+              component="p"
+              style={{ marginBottom: "20px" }}
+            >
+              `&#8688;` If it's beyond 30 mins please rejoin the Discord server,
+              Kigzag Bot will generate new link for you.
+            </Typography>
+          </Container>
+        )}
+      </div>
     </div>
   );
 }

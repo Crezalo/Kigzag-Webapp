@@ -24,6 +24,7 @@ import {
   getTokens,
 } from "../services/api-service";
 import ContentCardGrid from "./ContentCardGrid";
+import ChatTab from "./ChatTab";
 
 const useStyles = makeStyles({
   tab: {
@@ -84,7 +85,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
         onCreatorProfile={onCreatorProfile}
         key={3}
       />,
-      <ContentCardGrid
+      <ChatTab
         creator={creator}
         onCreatorProfile={onCreatorProfile}
         key={4}
@@ -104,7 +105,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
         <ContentCardGrid creator={account} onCreatorProfile={false} key={1} />,
         <ContentCardGrid creator={account} onCreatorProfile={false} key={2} />,
         <ContentCardGrid creator={account} onCreatorProfile={false} key={3} />,
-        <ContentCardGrid creator={account} onCreatorProfile={false} key={4} />,
+        <ChatTab creator={account} onCreatorProfile={false} key={4} />,
         <NFTTabs
           creator={account}
           onCreatorProfile={false}

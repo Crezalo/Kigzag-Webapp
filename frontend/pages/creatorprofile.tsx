@@ -36,6 +36,7 @@ import tiktok from "../public/tiktok.png";
 import instagram from "../public/instagram.png";
 import youtube from "../public/youtube.png";
 import website from "../public/website.png";
+import Head from "next/head";
 
 export default function CreatorProfile() {
   const { chainId, account, library } = useWeb3React();
@@ -105,268 +106,254 @@ export default function CreatorProfile() {
 
   return (
     <div>
-      {creatorToken ? (
-        <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
-          <div style={{ display: "flex" }}>
-            <div className="creatorImageDiv">
-              <Jdenticon size={150} value={address.toString().toLowerCase()} />
-            </div>
-            <div className="creatorProfileDescription">
-              <div
-                style={{
-                  minWidth: "60vw",
-                  // width: "30vw",
-                  justifyContent: "center",
-                }}
-              >
-                <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-                  {creatorTokenName} ({creatorTokenSymbol})
-                </div>
+      <Head>
+        <title>Profile</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <div>
+        {creatorToken ? (
+          <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
+            <div style={{ display: "flex" }}>
+              <div className="creatorImageDiv">
+                <Jdenticon
+                  size={150}
+                  value={address.toString().toLowerCase()}
+                />
+              </div>
+              <div className="creatorProfileDescription">
                 <div
                   style={{
-                    display: "flex",
-                    flexDirection: "row",
+                    minWidth: "60vw",
+                    // width: "30vw",
+                    justifyContent: "center",
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <div
-                      style={{
-                        color: "grey",
-                        fontWeight: "bold",
-                        fontSize: "18px",
-                        marginTop: "20px",
-                        marginBottom: "5px",
-                      }}
-                    >
-                      Native
-                    </div>
-                    <div style={{ color: "white" }}>
-                      {nativeCreatorPrice} {currencyName(chainId)}
-                    </div>
+                  <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+                    {creatorTokenName} ({creatorTokenSymbol})
                   </div>
-
                   <div
                     style={{
                       display: "flex",
-                      flexDirection: "column",
-                      marginLeft: "20px",
-                      marginBottom: "5px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        color: "grey",
-                        fontWeight: "bold",
-                        fontSize: "18px",
-                        marginTop: "20px",
-                        marginBottom: "5px",
-                      }}
-                    >
-                      US Dollar
-                    </div>
-                    <div style={{ color: "white" }}>{usdCreatorPrice} USD</div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      marginLeft: "20px",
-                      marginBottom: "5px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        color: "grey",
-                        fontWeight: "bold",
-                        fontSize: "18px",
-                        marginTop: "20px",
-                        marginBottom: "5px",
-                      }}
-                    >
-                      Total Supply
-                    </div>
-                    <div style={{ color: "white" }}>
-                      {creatorTokenTotalSupply}
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      marginLeft: "20px",
-                      marginBottom: "5px",
+                      flexDirection: "row",
                     }}
                   >
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "row",
-                        width: "150px",
-                        height: "45px",
-                        margin: "20px",
-                        textAlign: "center",
+                        flexDirection: "column",
                       }}
                     >
-                      <BasicModal
-                        modalButtonText={"Get " + creatorTokenSymbol}
-                        modalBody={<CreateProposalModal />}
-                      />
+                      <div
+                        style={{
+                          color: "grey",
+                          fontWeight: "bold",
+                          fontSize: "18px",
+                          marginTop: "20px",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        Native
+                      </div>
+                      <div style={{ color: "white" }}>
+                        {nativeCreatorPrice} {currencyName(chainId)}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginLeft: "20px",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          color: "grey",
+                          fontWeight: "bold",
+                          fontSize: "18px",
+                          marginTop: "20px",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        US Dollar
+                      </div>
+                      <div style={{ color: "white" }}>
+                        {usdCreatorPrice} USD
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginLeft: "20px",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          color: "grey",
+                          fontWeight: "bold",
+                          fontSize: "18px",
+                          marginTop: "20px",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        Total Supply
+                      </div>
+                      <div style={{ color: "white" }}>
+                        {creatorTokenTotalSupply}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        marginLeft: "20px",
+                        marginBottom: "5px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          width: "150px",
+                          height: "45px",
+                          margin: "20px",
+                          textAlign: "center",
+                        }}
+                      >
+                        <BasicModal
+                          modalButtonText={"Get " + creatorTokenSymbol}
+                          modalBody={<CreateProposalModal />}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginTop: "15px",
-                  }}
-                >
-                  <div style={{ marginRight: "10px" }}>
-                    {user[0] && user[0].twitterhandle ? (
-                      <a
-                        href={"https://twitter.com/" + user[0].twitterhandle}
-                        style={{ marginTop: "5px", marginLeft: "5px" }}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Image
-                          src={twitter}
-                          alt=""
-                          width={25}
-                          height={20}
-                        />
-                      </a>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                  <div style={{ marginRight: "10px" }}>
-                    {user[0] && user[0].discord ? (
-                      <a
-                        href={"https://discord.com/invite/" + user[0].discord}
-                        style={{ marginTop: "5px", marginLeft: "5px" }}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Image
-                          src={discord}
-                          alt=""
-                          width={25}
-                          height={25}
-                        />
-                      </a>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                  <div style={{ marginRight: "10px" }}>
-                    {user[0] && user[0].tiktok ? (
-                      <a
-                        href={"https://www.tiktok.com/@" + user[0].tiktok}
-                        style={{ marginTop: "5px", marginLeft: "5px" }}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Image
-                          src={tiktok}
-                          alt=""
-                          width={25}
-                          height={25}
-                        />
-                      </a>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                  <div style={{ marginRight: "10px" }}>
-                    {user[0] && user[0].instagram ? (
-                      <a
-                        href={"https://instagram.com/" + user[0].instagram}
-                        style={{ marginTop: "5px", marginLeft: "5px" }}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Image
-                          src={instagram}
-                          alt=""
-                          width={25}
-                          height={25}
-                        />
-                      </a>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                  <div style={{ marginRight: "10px" }}>
-                    {user[0] && user[0].youtube ? (
-                      <a
-                        href={
-                          "https://www.youtube.com/c/" +
-                          user[0].youtube
-                            .toString()
-                            .toLowerCase()
-                            .replace(" ", "")
-                        }
-                        style={{ marginTop: "5px", marginLeft: "5px" }}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Image
-                          src={youtube}
-                          alt=""
-                          width={25}
-                          height={20}
-                        />
-                      </a>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                  <div style={{ marginRight: "10px" }}>
-                    {user[0] && user[0].website ? (
-                      <a
-                        href={user[0].website}
-                        style={{ marginTop: "5px", marginLeft: "5px" }}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Image
-                          src={website}
-                          alt=""
-                          width={25}
-                          height={20}
-                        />
-                      </a>
-                    ) : (
-                      <></>
-                    )}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      marginTop: "15px",
+                    }}
+                  >
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].twitterhandle ? (
+                        <a
+                          href={"https://twitter.com/" + user[0].twitterhandle}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image src={twitter} alt="" width={25} height={20} />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].discord ? (
+                        <a
+                          href={"https://discord.com/invite/" + user[0].discord}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image src={discord} alt="" width={25} height={25} />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].tiktok ? (
+                        <a
+                          href={"https://www.tiktok.com/@" + user[0].tiktok}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image src={tiktok} alt="" width={25} height={25} />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].instagram ? (
+                        <a
+                          href={"https://instagram.com/" + user[0].instagram}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image
+                            src={instagram}
+                            alt=""
+                            width={25}
+                            height={25}
+                          />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].youtube ? (
+                        <a
+                          href={
+                            "https://www.youtube.com/c/" +
+                            user[0].youtube
+                              .toString()
+                              .toLowerCase()
+                              .replace(" ", "")
+                          }
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image src={youtube} alt="" width={25} height={20} />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      {user[0] && user[0].website ? (
+                        <a
+                          href={user[0].website}
+                          style={{ marginTop: "5px", marginLeft: "5px" }}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <Image src={website} alt="" width={25} height={20} />
+                        </a>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <ProfileTabs onCreatorProfile={true} creator={address.toString()} />
           </div>
-          <ProfileTabs onCreatorProfile={true} creator={address.toString()} />
-        </div>
-      ) : (
-        <>
-          {typeof account !== "string" ? (
-            <ConnectToWallet />
-          ) : (
-            <>
-              <CircularProgress
-                style={{ display: "flex", margin: "auto", height: "80vh" }}
-              />
-            </>
-          )}
-        </>
-      )}
+        ) : (
+          <>
+            {typeof account !== "string" ? (
+              <ConnectToWallet />
+            ) : (
+              <>
+                <CircularProgress
+                  style={{ display: "flex", margin: "auto", height: "80vh" }}
+                />
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

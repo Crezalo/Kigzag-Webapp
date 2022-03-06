@@ -13,6 +13,7 @@ import useENSName from "../hooks/useENSName";
 import Router, { useRouter } from "next/router";
 import ConnectToWallet from "../components/ConnectToWallet";
 import queryString from "query-string";
+import Head from "next/head";
 
 export default function NFT() {
   const router = useRouter();
@@ -73,63 +74,69 @@ export default function NFT() {
   console.log(signedURl);
 
   return (
-    <div className="videoDiv">
-      {signedURl != "" &&
-      signedURl &&
-      title &&
-      description &&
-      creator &&
-      account &&
-      videoid ? (
-        <>
-          <video
-            controls
-            autoPlay
-            crossOrigin="anonymous"
-            controlsList="nodownload"
-          >
-            <source src={signedURl} type="video/mp4" />
-            {/* <track
+    <div>
+      <Head>
+        <title>Profile</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <div className="videoDiv">
+        {signedURl != "" &&
+        signedURl &&
+        title &&
+        description &&
+        creator &&
+        account &&
+        videoid ? (
+          <>
+            <video
+              controls
+              autoPlay
+              crossOrigin="anonymous"
+              controlsList="nodownload"
+            >
+              <source src={signedURl} type="video/mp4" />
+              {/* <track
               label="English"
               kind="captions"
               srcLang="en"
               src={VIDEO_API_URL + "captions/" + videoid}
               default
             /> */}
-          </video>
-          <h1 className="videoDiv h1">{title}</h1>
-          <section
-            onClick={() => {
-              Router.push({
-                pathname: "/creatorprofile",
-                query: {
-                  address: creator,
-                },
-              });
-            }}
-            className="creatorIdent pointer"
-          >
-            <Jdenticon size={50} value={account.toLowerCase()} />
-            <h2 className="VideoDiv h2">
-              {/* {useENSName(creator ? creator : ZERO_ADDRESS) || */}
-              {shortenHex(creator ? creator : "Loading...", 4)}
-            </h2>
-          </section>
-          <h1 className="VideoDiv p">{description}</h1>
-        </>
-      ) : (
-        <>
-          {typeof account !== "string" ? (
-            <ConnectToWallet />
-          ) : (
-            <>
-              <CircularProgress
-                style={{ display: "flex", margin: "auto", height: "80vh" }}
-              />
-            </>
-          )}
-        </>
-      )}
+            </video>
+            <h1 className="videoDiv h1">{title}</h1>
+            <section
+              onClick={() => {
+                Router.push({
+                  pathname: "/creatorprofile",
+                  query: {
+                    address: creator,
+                  },
+                });
+              }}
+              className="creatorIdent pointer"
+            >
+              <Jdenticon size={50} value={account.toLowerCase()} />
+              <h2 className="VideoDiv h2">
+                {/* {useENSName(creator ? creator : ZERO_ADDRESS) || */}
+                {shortenHex(creator ? creator : "Loading...", 4)}
+              </h2>
+            </section>
+            <h1 className="VideoDiv p">{description}</h1>
+          </>
+        ) : (
+          <>
+            {typeof account !== "string" ? (
+              <ConnectToWallet />
+            ) : (
+              <>
+                <CircularProgress
+                  style={{ display: "flex", margin: "auto", height: "80vh" }}
+                />
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

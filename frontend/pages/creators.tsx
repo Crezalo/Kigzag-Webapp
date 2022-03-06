@@ -6,6 +6,7 @@ import axios from "axios";
 import { CircularProgress } from "@material-ui/core";
 import { useWeb3React } from "@web3-react/core";
 import ConnectToWallet from "../components/ConnectToWallet";
+import Head from "next/head";
 
 export default function Creators() {
   const { account, chainId, library } = useWeb3React();
@@ -43,31 +44,37 @@ export default function Creators() {
 
   return (
     <div>
-      {creatorsList != [] && account ? (
-        <div
-          className="blueTextBlackBackground"
-          style={{
-            justifyContent: "center",
-            fontSize: 25,
-          }}
-        >
-          <div style={{ marginTop: 25, marginLeft: 0 }}>
-            <CreatorCardGrid creators={creators} />
+      <Head>
+        <title>Kigzag: Creators</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <div>
+        {creatorsList != [] && account ? (
+          <div
+            className="blueTextBlackBackground"
+            style={{
+              justifyContent: "center",
+              fontSize: 25,
+            }}
+          >
+            <div style={{ marginTop: 25, marginLeft: 0 }}>
+              <CreatorCardGrid creators={creators} />
+            </div>
           </div>
-        </div>
-      ) : (
-        <>
-          {typeof account !== "string" ? (
-            <ConnectToWallet />
-          ) : (
-            <>
-              <CircularProgress
-                style={{ display: "flex", margin: "auto", height: "80vh" }}
-              />
-            </>
-          )}
-        </>
-      )}
+        ) : (
+          <>
+            {typeof account !== "string" ? (
+              <ConnectToWallet />
+            ) : (
+              <>
+                <CircularProgress
+                  style={{ display: "flex", margin: "auto", height: "80vh" }}
+                />
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
