@@ -11,8 +11,8 @@ const Web3Token = require('web3-token');
 const thumbsupply = require('thumbsupply');
 const awsConfig = require('aws-config');
 const AWS = require('aws-sdk');
-// const aws_cf = require('aws-cloudfront-sign');
-const aws_cf = require("../aws_cf");
+const aws_cf = require('aws-cloudfront-sign');
+// const aws_cf = require("../aws_cf");
 require('dotenv').config();
 const {
   getVideoDurationInSeconds
