@@ -30,6 +30,7 @@ const VideoCard = ({ vid }: VideoCardProp) => {
     useEffect(() => {
       async function getData() {
         const res = await getVideoThumbnail(account, library, vid.videoid);
+        console.log(res["signedurl"]);
         setVideoThumb(res["signedurl"]);
         console.log(videoThumb);
       }

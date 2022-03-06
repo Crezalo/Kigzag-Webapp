@@ -203,20 +203,46 @@ router.get("/details/creator/:creator", async (req, res) => {
 
 // get video thumbnail
 router.get("/thumbnail/:videoid", authorise, async (req, res) => {
+  // try {
+  //   const {
+  //     videoid,
+  //   } = req.params;
+
+  //   const address = req.authAddress;
+  //   const body = req.authBody;
+  //   const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+  //   const creator = ud.rows[0].creator;
+
+  //   // simply use AWS S3 bucket with public read access
+  //   res.status(200).json({
+  //     signedurl: process.env.S3_BUCKET_THUMBNAIL_URL + creator.toLowerCase() + "/" + videoid + ".png"
+  //   });
+  // } catch (err) {
+  //   res.json(err);
+  // }
+
   try {
     const {
       videoid,
     } = req.params;
-
     const address = req.authAddress;
     const body = req.authBody;
     const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
+    // console.log(ud.rows[0]);
+    const duration = ud.rows[0].duration;
 
-    // simply use AWS S3 bucket with public read access
-    res.status(200).json({
-      signedurl: process.env.S3_BUCKET_THUMBNAIL_URL + creator.toLowerCase() + "/" + videoid + ".png"
-    });
+    // AWS Cloudfront CDN and other optimizations
+    var aws_cf_config = {
+      keypairId: process.env.CLOUDFRONT_KEYPAIR_ID,
+      privateKeyPath: process.env.CLOUDFRONT_PRIVATE_KEY_PATH,
+      expireTime: (new Date().getTime() + (duration * 1000)),
+    }
+    var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator.toLowerCase()}/${videoid}.png`, aws_cf_config);
+    // console.log('Signed URL: ' + signedUrl);
+    res.json({
+      "signedurl": signedUrl
+    })
   } catch (err) {
     res.json(err);
   }
