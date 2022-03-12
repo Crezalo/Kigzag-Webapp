@@ -26,6 +26,7 @@ import {
 import ContentCardGrid from "./ContentCardGrid";
 import ChatTab from "./ChatTab";
 import LiveStream from "./LiveStreamTab";
+import VideoMeetTab from "./VideoMeetTab";
 
 const useStyles = makeStyles({
   tab: {
@@ -81,16 +82,8 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
         onCreatorProfile={onCreatorProfile}
         key={2}
       />,
-      <ContentCardGrid
-        creator={creator}
-        onCreatorProfile={onCreatorProfile}
-        key={3}
-      />,
-      <ChatTab
-        creator={creator}
-        onCreatorProfile={onCreatorProfile}
-        key={4}
-      />,
+      <VideoMeetTab creator={account} onCreatorProfile={onCreatorProfile} key={3} />,
+      <ChatTab creator={creator} onCreatorProfile={onCreatorProfile} key={4} />,
       <NFTTabs
         creator={creator}
         onCreatorProfile={onCreatorProfile}
@@ -105,7 +98,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
       tabs_array = [
         <ContentCardGrid creator={account} onCreatorProfile={false} key={1} />,
         <LiveStream creator={account} onCreatorProfile={false} key={2} />,
-        <ContentCardGrid creator={account} onCreatorProfile={false} key={3} />,
+        <VideoMeetTab creator={account} onCreatorProfile={false} key={3} />,
         <ChatTab creator={account} onCreatorProfile={false} key={4} />,
         <NFTTabs
           creator={account}

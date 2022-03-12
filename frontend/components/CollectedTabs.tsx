@@ -54,7 +54,7 @@ const CollectedTabs = ({ creatorVault }: CollectedTabsProp) => {
   }
 
   let tabs_array = [
-    <TokenCardGrid key={1}/>,
+    // <TokenCardGrid key={1}/>,
     <TokenCardGrid key={2}/>,
     <NFTCardGrid nfts={allnfts} status="OWNED" key={3}/>,
   ];
@@ -78,7 +78,7 @@ const CollectedTabs = ({ creatorVault }: CollectedTabsProp) => {
           className="nftTabs"
           orientation="vertical"
         >
-          <Tab label="Plans" className={classes.tab} />
+          {/* <Tab label="Plans" className={classes.tab} /> */}
           <Tab label="Tokens" className={classes.tab} />
           <Tab label="NFT" className={classes.tab} />
         </Tabs>

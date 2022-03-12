@@ -1,6 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap");
+@import url("https://use.fontawesome.com/releases/v6.0.0/css/all.css");
+
+.fas {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
 
 html,
 body {
@@ -9,6 +24,70 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
+
+@media screen and (max-height: 630px) {
+  html,
+  body {
+    font-size: 80%;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.width0 {
+  width: 0% !important;
+}
+
+.width-peer0 {
+  width: 65% !important;
+}
+
+.width-peer1 {
+  width: 45% !important;
+}
+.width-peer2 {
+  width: 30% !important;
+}
+.width-peer3 {
+  width: 28% !important;
+}
+.width-peer4 {
+  width: 28% !important;
+}
+.width-peer5 {
+  width: 28% !important;
+}
+.width-peer6 {
+  width: 25% !important;
+}
+
+.width-peer7 {
+  width: 25% !important;
+}
+.width-peer8 {
+  width: 25% !important;
+}
+
+.width-peer {
+  width: 20% !important;
+}
+
+.hide-video-controls {
+}
+
+.hide-video-controls::-webkit-media-controls {
+  display: none !important;
+}
+.expandIcon {
+  /* display: none; */
+  color: white;
+  position: absolute;
+  right: 10%;
+  bottom: 10%;
+}
+
 
 .pointer {
   cursor: pointer;
@@ -147,6 +226,10 @@ a {
   flex-direction: row;
 }
 
+.camDiv {
+  display: flex;
+  flex-direction: row;
+}
 .creatorCard {
   /* Add shadows to create the "card" effect */
   box-shadow: 0 1px 1px 3px #3b82f6;
@@ -290,7 +373,7 @@ a {
   padding: 20px;
   display: flex;
   justify-content: flex-end;
-  padding: 0 0 0 50px
+  padding: 0 0 0 50px;
 }
 
 .creatorDiscordPlans {

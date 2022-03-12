@@ -7,6 +7,14 @@ import { useEffect } from "react";
 // import { createTheme } from "@material-ui/core/styles";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { faCheckSquare, faCoffee } from "@fortawesome/free-solid-svg-icons";
+
+// styles
+import "emoji-mart/css/emoji-mart.css";
+
+library.add(fas, faCheckSquare, faCoffee);
 
 const theme = createTheme({
   components: {
