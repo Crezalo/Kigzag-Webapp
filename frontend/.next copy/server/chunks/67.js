@@ -4348,7 +4348,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__) => {
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([socket_io_client__WEBPACK_IMPORTED_MODULE_0__]);
 socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? await __webpack_async_dependencies__ : __webpack_async_dependencies__)[0];
 
-const sockets = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])("http://app.kigzag.com/api/", {
+const sockets = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])("https://app.kigzag.com/api/", {
     autoConnect: true,
     forceNew: true,
     path: "/api/socket.io"

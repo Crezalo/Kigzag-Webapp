@@ -162,9 +162,9 @@ const ConnectToWallet = ()=>{
 
 
 // Backend Url
-const MAIN_API_URL = "http://app.kigzag.com/api/";
+const MAIN_API_URL = "https://app.kigzag.com/api/";
 // Video Streaming Server Url
-const VIDEO_API_URL = "http://app.kigzag.com/vod/";
+const VIDEO_API_URL = "https://app.kigzag.com/vod/";
 // Thumbnail S3 Bucket Storage
 const S3_BUCKET_THUMBNAIL_URL = (/* unused pure expression or super */ null && ("https://kigzag-video-thumbnail.s3.eu-north-1.amazonaws.com/"));
 /////////////////////////////////////////////////////////////////////////
