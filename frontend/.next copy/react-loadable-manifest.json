@@ -1,0 +1,21 @@
+{
+  "../components/LiveStreamTab.tsx -> @asurraa/react-ts-flv-player/dist/NextReactFlvPlayer": {
+    "id": 29329,
+    "files": [
+      "static/chunks/329.7b032cf9debebed9.js"
+    ]
+  },
+  "../hooks/useMetaMaskOnboarding.ts -> @metamask/onboarding": {
+    "id": 28054,
+    "files": [
+      "static/chunks/54.68ae8c645a35b29c.js"
+    ]
+  },
+  "../node_modules/@asurraa/react-ts-flv-player/dist/NextReactFlvPlayer.js -> ./ReactFlvPlayer": {
+    "id": 69979,
+    "files": [
+      "static/chunks/c8cba1bb.d7735463b4638e74.js",
+      "static/chunks/979.064f78dcd12e3246.js"
+    ]
+  }
+}

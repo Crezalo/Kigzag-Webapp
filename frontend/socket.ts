@@ -1,5 +1,9 @@
-import io from 'socket.io-client';
-const sockets = io('http://localhost:5000', { autoConnect: true, forceNew: true });
-// const sockets = io('/');
-// console.log(sockets);
+import io from "socket.io-client";
+
+const sockets = io(process.env.NEXT_STATIC_MAIN_API_URL, {
+  autoConnect: true,
+  forceNew: true,
+  path: "/api/socket.io",
+});
+
 export default sockets;

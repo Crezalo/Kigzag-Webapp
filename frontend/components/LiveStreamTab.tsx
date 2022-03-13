@@ -72,7 +72,7 @@ const LiveStream = ({ creator, onCreatorProfile }: LiveStreamProp) => {
         controlsList="nodownload"
       /> */}
       <FlvNextPlayer
-        url={`http://localhost:8000/live/1.flv`}
+        url={`http://app.kigzag.com/livestream/1.flv`}
         isMuted={false}
         isLive={true}
         showControls={true}
