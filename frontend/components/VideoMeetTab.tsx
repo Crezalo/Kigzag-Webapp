@@ -91,7 +91,6 @@ const VideoMeetTab = ({ creator, onCreatorProfile }: VideoMeetTabProp) => {
   const [meetingJoined, setMeetingJoined] = useState(false);
 
   const leaveRoomFunc = () => {
-    console.log("here is is reached!!!");
     setMeetingJoined(false);
   }
 

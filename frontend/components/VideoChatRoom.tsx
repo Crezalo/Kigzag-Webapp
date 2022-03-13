@@ -227,23 +227,28 @@ const VideoChatRoom = ({ roomId, leaveRoomFunc }: VideoChatMainProp) => {
   const goToBack = (e) => {
     e.preventDefault();
     socket.emit("BE-leave-room", { roomId, leaver: account });
+    console.log("userStream.current");
     console.log(userStream.current);
 
+    const userVideoTrack = userVideoRef.current.srcObject.getVideoTracks()[0];
+    userVideoTrack.enabled = false;
+
+    const userAudioTrack = userVideoRef.current.srcObject.getAudioTracks()[0];
+
+    if (userAudioTrack) {
+      userAudioTrack.enabled = false;
+      userStream.current.getAudioTracks()[0].enabled = false;
+    } else {
+      userStream.current.getAudioTracks()[0].enabled = false;
+    }
+
+    userStream.current.getTracks().forEach((track) => track.stop());
+    userStream.current.getTracks().forEach(function (track) {
+      console.log(track);
+      console.log(track.readyState);
+    });
+
     setUserVideoAudio((preList) => {
-      const userVideoTrack = userVideoRef.current.srcObject.getVideoTracks()[0];
-      userVideoTrack.enabled = false;
-
-      const userAudioTrack = userVideoRef.current.srcObject.getAudioTracks()[0];
-
-      if (userAudioTrack) {
-        userAudioTrack.enabled = false;
-        userStream.current.getAudioTracks()[0].enabled = false;
-      } else {
-        userStream.current.getAudioTracks()[0].enabled = false;
-      }
-
-      userStream.current.getTracks().forEach((track) => track.stop());
-
       return {
         ...preList,
         localUser: { video: false, audio: false },
@@ -373,7 +378,7 @@ const VideoChatRoom = ({ roomId, leaveRoomFunc }: VideoChatMainProp) => {
           const oldStreamTrack = userStream.current
             .getTracks()
             .find((track) => track.kind === "video");
-
+          oldStreamTrack.stop();
           userStream.current.removeTrack(oldStreamTrack);
           userStream.current.addTrack(newStreamTrack);
 
