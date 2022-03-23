@@ -7,7 +7,9 @@ import { useWeb3React } from "@web3-react/core";
 import { useCreatorNFTOwnerOf } from "../hooks/ERC721/useCreatorNFTContract";
 import {
   getCreatorAllVideoDetails,
+  getIsVideoStreamAvailable,
   getNFTsOfCreator,
+  getVideoStreamKey,
 } from "../services/api-service";
 import VideoCard from "./VideoCard";
 import BasicModal from "./BasicModal";
@@ -44,40 +46,113 @@ interface LiveStreamProp {
 const LiveStream = ({ creator, onCreatorProfile }: LiveStreamProp) => {
   const { chainId, account, library } = useWeb3React();
 
-  // const vidplay = document.getElementById("video_player") as HTMLVideoElement;
+  var [isStreamAvailable, setIsStreamAvailable] = useState(false);
+  var [isLoading, setIsLoading] = useState(true);
+  var [viewerStream, setViewerStream] = useState("");
+  var [videoUrl, setVideoUrl] = useState("");
+  var [streamKey, setStreamKey] = useState("");
 
-  // const GetVideoFeed = () => {
-  //   useEffect(() => {
-  //     const player = flv.createPlayer({
-  //       type: "flv",
-  //       url: `http://localhost:8000/live/1.flv`,
-  //     });
-  //     player.attachMediaElement(vidplay);
-  //     player.load();
-  //   }, [account, chainId]);
-  // };
+  const GetKeyDetails = () => {
+    useEffect(() => {
+      async function getData() {
+        if (!onCreatorProfile) {
+          const res = await getVideoStreamKey(
+            account,
+            onCreatorProfile ? creator.toLowerCase() : account.toLowerCase(),
+            library
+          );
+          setStreamKey(res[0].streamkey);
+          console.log("res");
+          console.log(res);
+        }
+      }
+      getData();
+    }, [account, creator]);
+  };
 
-  // GetVideoFeed();
+  GetKeyDetails();
 
-  // console.log("signedURl");
-  // console.log(signedURl);
+  const GetDetails = () => {
+    useEffect(() => {
+      async function getData() {
+        const res = await getIsVideoStreamAvailable(
+          account,
+          onCreatorProfile ? creator.toLowerCase() : account.toLowerCase(),
+          library
+        );
+        console.log(res);
+        setIsStreamAvailable(res.isStreamAvailable);
+        setViewerStream(res.streamkey);
+        if (isLoading) {
+          setIsLoading(false);
+        }
+      }
+
+      const intervalId = setInterval(() => {
+        getData();
+      }, 2000);
+      return () => clearInterval(intervalId);
+    }, []);
+  };
+
+  GetDetails();
 
   return (
-    <div className="blueTextBlackBackground">
-      {/* <video
-        id="video_player"
-        controls
-        autoPlay
-        crossOrigin="anonymous"
-        controlsList="nodownload"
-      /> */}
-      <FlvNextPlayer
-        url={`http://app.kigzag.com/livestream/1.flv`}
-        isMuted={false}
-        isLive={true}
-        showControls={true}
-        enableStashBuffer={true}
-      />
+    <div
+      className="blueTextBlackBackground"
+      style={{ justifyContent: "center", textAlign: "center" }}
+    >
+      {isStreamAvailable &&
+      viewerStream != "" &&
+      viewerStream != "undefined" &&
+      viewerStream ? (
+        <>
+          {console.log(
+            `${process.env.NEXT_STATIC_lIVE_STREAM_API_URL + viewerStream}.flv`
+          )}
+          <FlvNextPlayer
+            url={`${
+              process.env.NEXT_STATIC_lIVE_STREAM_API_URL + viewerStream
+            }.flv`}
+            isMuted={false}
+            isLive={true}
+            showControls={true}
+            enableStashBuffer={true}
+          />
+        </>
+      ) : (
+        <>
+          {onCreatorProfile ? (
+            <div style={{ margin: "100px", color: "white" }}>
+              {isLoading ? (
+                <>Loading ...</>
+              ) : (
+                <>Creator currently not streaming!</>
+              )}
+            </div>
+          ) : (
+            <div style={{ margin: "50px", color: "white" }}>
+              {isLoading ? (
+                <>Loading ...</>
+              ) : (
+                <>
+                  Use the following in OBS Studio to start streaming:
+                  <p style={{ marginTop: "20px" }}>
+                    URL{" "}
+                    <p style={{ color: "blue" }}>
+                      {process.env.NEXT_STATIC_lIVE_STREAM_RTMP_URL}
+                    </p>
+                  </p>
+                  <p>
+                    Stream Key
+                    <p style={{ color: "blue" }}>{streamKey}</p>
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

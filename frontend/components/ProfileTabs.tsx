@@ -128,10 +128,10 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                   style: { backgroundColor: "#3B82F6" },
                 }}
               >
-                <Tab label="Content" className={classes.tab} />
-                <Tab label="Streams" className={classes.tab} />
-                <Tab label="Meets" className={classes.tab} />
-                <Tab label="CHAT" className={classes.tab} />
+                <Tab label="Video" className={classes.tab} />
+                <Tab label="Live Stream" className={classes.tab} />
+                <Tab label="Video Meet" className={classes.tab} />
+                <Tab label="Community" className={classes.tab} />
                 <Tab label="NFT" className={classes.tab} />
                 <Tab label="DAO" className={classes.tab} />
               </Tabs>
@@ -150,13 +150,13 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                       style: { backgroundColor: "#3B82F6" },
                     }}
                   >
-                    <Tab label="Content" className={classes.tab} />
-                    <Tab label="Streams" className={classes.tab} />
-                    <Tab label="Meets" className={classes.tab} />
-                    <Tab label="CHAT" className={classes.tab} />
+                    <Tab label="Video" className={classes.tab} />
+                    <Tab label="Live Stream" className={classes.tab} />
+                    <Tab label="Video Meet" className={classes.tab} />
+                    <Tab label="Community" className={classes.tab} />
                     <Tab label="NFT" className={classes.tab} />
                     <Tab label="DAO" className={classes.tab} />
-                    <Tab label="Collected" className={classes.tab} />
+                    <Tab label="Balance" className={classes.tab} />
                   </Tabs>
                   <Paper>{tabs_array[value]}</Paper>
                 </>
@@ -170,7 +170,7 @@ const ProfileTabs = ({ onCreatorProfile, creator }: ProfileTabsProps) => {
                       style: { backgroundColor: "#3B82F6" },
                     }}
                   >
-                    <Tab label="Collected" className={classes.tab} />
+                    <Tab label="Balance" className={classes.tab} />
                   </Tabs>
                   <Paper>{tabs_array[value]}</Paper>
                 </>

@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { Picker } from "emoji-mart";
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import socket from "../socket";
+import socket from "../services/socket";
 import { shortenHex } from "../util";
 
 interface VideoChatProp {
@@ -41,7 +41,12 @@ const VideoChat = ({ display, roomId }: VideoChatProp) => {
       console.log("sendMessage");
 
       if (msg) {
-        socket.emit("BE-send-message", { roomId, msg, sender: currentUser });
+        try {
+          socket.emit("BE-send-message", { roomId, msg, sender: currentUser });
+        } catch (err) {
+          console.log(err);
+        }
+        console.log("Send Message Complete");
         inputRef.current.value = "";
       }
     }

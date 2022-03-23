@@ -500,6 +500,57 @@ export async function getVideoCaptions(
 }
 
 /////////////////////////////////////////////////////////////////////////
+//////////////////     Live Stream Data             /////////////////////
+/////////////////////////////////////////////////////////////////////////
+
+export async function getVideoStreamKey(
+  account: string,
+  creator: string,
+  library: any,
+) {
+  const response = await axios.get(
+    MAIN_API_URL + "livestream/streamkey/" + creator.toLowerCase(),
+    {
+      headers: await authHeader(account, library),
+    }
+  );
+  const data = await response.data;
+  return data;
+}
+
+
+export async function getVideoStreamKeyForce(
+  account: string,
+  creator: string,
+  library: any,
+) {
+  const response = await axios.get(
+    MAIN_API_URL + "livestream/streamkey_force/" + creator.toLowerCase(),
+    {
+      headers: await authHeader(account, library),
+    }
+  );
+  const data = await response.data;
+  return data;
+}
+
+export async function getIsVideoStreamAvailable(
+  account: string,
+  creator: string,
+  library: any,
+) {
+  const response = await axios.get(
+    MAIN_API_URL + "livestream/" + creator.toLowerCase(),
+    {
+      headers: await authHeader(account, library),
+    }
+  );
+  const data = await response.data;
+  return data;
+}
+
+
+/////////////////////////////////////////////////////////////////////////
 //////////////////     Discord Plans            /////////////////////////
 /////////////////////////////////////////////////////////////////////////
 

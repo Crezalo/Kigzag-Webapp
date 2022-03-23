@@ -41,6 +41,14 @@ module.exports = async function createTablesInPostgresDB(pool) {
     )
     .catch((err) => console.log("PG ERROR 5", err));
 
+  //6. User to chain mapping
+  // Used to show only revelant creators for given chainid
+  await pool
+    .query(
+      "CREATE TABLE IF NOT EXISTS Creator_LiveStream (Creator VARCHAR(255) PRIMARY KEY, StreamKey VARCHAR(255) NOT NULL);"
+    )
+    .catch((err) => console.log("PG ERROR 5.1", err));
+
   ////////////////////////////////////// Foreign key Constraints Add//////////////////////////////////////////////////////
 
   // NFT Table Creator is User
@@ -102,4 +110,16 @@ module.exports = async function createTablesInPostgresDB(pool) {
   END; \
   $$;")
     .catch(err => console.log("fk ERROR 4", err));
+
+  // Livestream Table Creator is User
+  await pool.query("DO $$ \
+  BEGIN \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_livestream_tab_creator') THEN \
+          ALTER TABLE Creator_LiveStream \
+              ADD CONSTRAINT fk_livestream_tab_creator \
+              FOREIGN KEY (Creator) REFERENCES Users(UserAddress); \
+      END IF; \
+  END; \
+  $$;")
+    .catch(err => console.log("fk ERROR 4.1", err));
 };

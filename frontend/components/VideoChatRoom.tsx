@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Peer from "simple-peer";
 import styled from "styled-components";
-import socket from "../socket";
+import socket from "../services/socket";
 import VideoChatCard from "./VideoChatCard";
 import VideoChatBottomBar from "./VideoChatBottomBar";
 import VideoChat from "./VideoChat";
@@ -45,6 +45,22 @@ const VideoChatRoom = ({ roomId, leaveRoomFunc }: VideoChatMainProp) => {
       .then((stream) => {
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
+          
+        console.log(socket);
+
+        socket.on('connect', () => {
+          console.log('1 socket connected');
+          console.log(socket.connected); 
+          console.log(socket);
+        });
+
+        socket.on('connection', () => {
+          console.log('2 socket connected');
+          console.log(socket.connected); 
+          console.log(socket);
+        });
+
+        console.log(socket);
 
         socket.emit("BE-join-room", { roomId, userName: account });
         socket.on("FE-user-join", (users) => {
@@ -140,7 +156,7 @@ const VideoChatRoom = ({ roomId, leaveRoomFunc }: VideoChatMainProp) => {
     });
 
     return () => {
-      socket.disconnect();
+      // socket.disconnect();
     };
     // eslint-disable-next-line
   }, []);
