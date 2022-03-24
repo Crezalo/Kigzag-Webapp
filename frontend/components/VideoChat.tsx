@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import { Picker } from "emoji-mart";
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import socket from "../services/socket";
+import { socket } from "../services/socket";
 import { shortenHex } from "../util";
 
 interface VideoChatProp {
@@ -62,7 +62,7 @@ const VideoChat = ({ display, roomId }: VideoChatProp) => {
 
   return (
     <ChatContainer className={display ? "" : "width0"}>
-      <TopHeader>Group Chat Room</TopHeader>
+      <TopHeader>CHAT</TopHeader>
       <ChatArea>
         <MessageList>
           {msg &&

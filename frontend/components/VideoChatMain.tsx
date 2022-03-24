@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
-import socket from "../services/socket";
+import { socket } from "../services/socket";
 
 interface VideoChatMainProp {
   history: string[];

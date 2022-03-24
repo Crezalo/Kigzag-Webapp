@@ -13,7 +13,7 @@ import VideoCard from "./VideoCard";
 import BasicModal from "./BasicModal";
 import CreateProposalModal from "./CreateProposalModal";
 import UploadVideoModal from "./UploadVideoModal";
-import socket from "../services/socket";
+import { socket } from "../services/socket";
 import VideoChatRoom from "./VideoChatRoom";
 
 const useStyles = makeStyles((theme) => ({
@@ -92,7 +92,7 @@ const VideoMeetTab = ({ creator, onCreatorProfile }: VideoMeetTabProp) => {
 
   const leaveRoomFunc = () => {
     setMeetingJoined(false);
-  }
+  };
 
   return (
     <div className="blueTextBlackBackground">

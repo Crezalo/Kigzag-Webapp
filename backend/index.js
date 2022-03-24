@@ -115,12 +115,15 @@ io.on('connection', (socket) => {
           });
         });
         socket.broadcast.to(roomId).emit('FE-user-join', users);
-        console.log(joined);
+        console.log("joined");
         // io.sockets.in(roomId).emit('FE-user-join', users);
       } catch (e) {
         io.sockets.in(roomId).emit('FE-error-user-exist', {
           err: true
         });
+
+        console.log("BE-join-room error");
+        console.log(e);
       }
     });
   });
@@ -152,7 +155,7 @@ io.on('connection', (socket) => {
     msg,
     sender
   }) => {
-    console.log(msg);
+    // console.log(msg);
     io.sockets.in(roomId).emit('FE-receive-message', {
       msg,
       sender
@@ -192,6 +195,7 @@ io.on('connection', (socket) => {
 });
 
 const config = {
+  logType: 1,
   rtmp: {
     port: 1935,
     chunk_size: 60000,

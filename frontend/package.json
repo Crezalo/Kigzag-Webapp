@@ -77,6 +77,8 @@
     "simple": "^0.2.0",
     "simple-peer": "^9.11.1",
     "socket.io-client": "^4.4.1",
+    "stream-chat": "^6.3.0",
+    "stream-chat-react": "^8.0.0",
     "styled-components": "^5.3.3",
     "swr": "^1.1.1",
     "walletlink": "^2.2.6",
