@@ -178,6 +178,8 @@ const Message = styled.div`
     border-radius: 15px;
     box-shadow: 0px 0px 3px #4ea1d3;
     font-size: 18px;
+    overflow-wrap: word-break;
+    word-break: break-word !important;
     overflow-y: visible;
   }
 `;
@@ -208,6 +210,9 @@ const UserMessage = styled.div`
     color: white;
     font-size: 18px;
     text-align: left;
+    overflow-wrap: word-break;
+    word-break: break-word !important;
+    overflow-y: visible;
   }
 `;
 
