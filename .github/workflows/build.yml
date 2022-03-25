@@ -8,8 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - run:
-        working-directory: frontend
+      - run: cd frontend
       - uses: actions/checkout@v2.4.0
       - uses: actions/setup-node@v2
         with:
