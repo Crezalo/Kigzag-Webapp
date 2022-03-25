@@ -1,6 +1,7 @@
 const Pool = require("pg").Pool;
 
 const pool = new Pool({
+  host: 'localhost',
   user: "postgres",
   password: "kigzag@123",
   database: "kigzag",
