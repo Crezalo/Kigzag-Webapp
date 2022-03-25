@@ -11,11 +11,9 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.4.0
       - uses: actions/setup-node@v2
-      - name: Change directory to frontend
-      - run: cd frontend
-      - with:
+        with:
           node-version: '14'
           cache: 'npm'
       - run: npm ci
