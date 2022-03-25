@@ -1,0 +1,21 @@
+name: Generate Build files for Next.js powered frontend
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Change directory to frontend
+        run: cd frontend
+      - with:
+          node-version: 14
+      - run: npm install -g yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
