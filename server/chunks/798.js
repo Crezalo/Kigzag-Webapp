@@ -8,12 +8,13 @@ exports.modules = {
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__) => {
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "G7": () => (/* binding */ useCreatorFactoryContract),
 /* harmony export */   "lD": () => (/* binding */ useCreatorFactoryCreatorToken),
 /* harmony export */   "mN": () => (/* binding */ useCreatorFactoryCreatorVault),
 /* harmony export */   "$d": () => (/* binding */ useCreatorFactoryCreatorDAO),
 /* harmony export */   "pp": () => (/* binding */ useCreatorFactoryCreatorSaleFee)
 /* harmony export */ });
-/* unused harmony exports useCreatorFactoryContract, useCreatorFactoryCreatorExtraFee, useCreatorFactoryAllCreators, useCreatorFactoryExchangeAdmin, useCreatorFactorFee, useCreatorFactorDiscount, useCreatorFactorNoOFTokensForDiscount, useCreatorFactorFeeTo, useCreatorFactorFeeToSetter, useCreatorFactorExchangeToken, useCreatorFactorNetworkWrappedToken, useCreatorFactorUSDC, useCreatorFactorDAI, useCreatorFactorGetCreatorAdmins, useCreatorFactorGetIsCreatorAdmin */
+/* unused harmony exports useCreatorFactoryCreatorExtraFee, useCreatorFactoryAllCreators, useCreatorFactoryExchangeAdmin, useCreatorFactorFee, useCreatorFactorDiscount, useCreatorFactorNoOFTokensForDiscount, useCreatorFactorFeeTo, useCreatorFactorFeeToSetter, useCreatorFactorExchangeToken, useCreatorFactorNetworkWrappedToken, useCreatorFactorUSDC, useCreatorFactorDAI, useCreatorFactorGetCreatorAdmins, useCreatorFactorGetIsCreatorAdmin */
 /* harmony import */ var _contracts_KigzagCreatorFactory_LT_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8795);
 /* harmony import */ var _useContract__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5307);
 /* harmony import */ var swr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(549);

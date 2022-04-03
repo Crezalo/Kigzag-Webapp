@@ -53,8 +53,8 @@ const useStylesModal = (0,_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_2__.
             borderRadius: "5%",
             justifyContent: "center",
             display: "flex",
-            flexDirection: "row",
-            '&:hover': {
+            flexDirection: "column",
+            "&:hover": {
                 boxShadow: "0 10px 18px 8px #3B82F6"
             }
         }
@@ -77,6 +77,10 @@ const ConnectToWallet = ()=>{
         stopOnboarding
     ]);
     const isConnected = typeof account === "string" && !!library;
+    const onResponse = (resp)=>{
+        console.log("resp");
+        console.log(resp);
+    };
     return(/*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx((_material_ui_core_Modal__WEBPACK_IMPORTED_MODULE_3___default()), {
         "aria-labelledby": "transition-modal-title",
         "aria-describedby": "transition-modal-description",

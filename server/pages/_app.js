@@ -183,7 +183,7 @@ const Account = ({ triedToEagerConnect  })=>{
 
 /***/ }),
 
-/***/ 113:
+/***/ 47:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 
@@ -202,8 +202,8 @@ var useENSName = __webpack_require__(2644);
 var useMetaMaskOnboarding = __webpack_require__(6518);
 // EXTERNAL MODULE: ./util.ts
 var util = __webpack_require__(5847);
-;// CONCATENATED MODULE: external "@headlessui/react"
-const react_namespaceObject = require("@headlessui/react");
+// EXTERNAL MODULE: external "@headlessui/react"
+var react_ = __webpack_require__(7505);
 // EXTERNAL MODULE: external "react"
 var external_react_ = __webpack_require__(6689);
 ;// CONCATENATED MODULE: external "@heroicons/react/solid"
@@ -262,12 +262,12 @@ const ChainName = ({ triedToEagerConnect  })=>{
             outlineWidth: "thin",
             marginTop: "1px"
         },
-        children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)(react_namespaceObject.Menu, {
+        children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)(react_.Menu, {
             as: "div",
             className: "relative inline-block text-left",
             children: [
                 /*#__PURE__*/ jsx_runtime_.jsx("div", {
-                    children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)(react_namespaceObject.Menu.Button, {
+                    children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)(react_.Menu.Button, {
                         className: "inline-flex justify-center w-full px-4 py-1 text-sm font-medium text-white bg-black rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75",
                         children: [
                             (0,util/* networkName */.KX)(chainId),
@@ -278,7 +278,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                         ]
                     })
                 }),
-                /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Transition, {
+                /*#__PURE__*/ jsx_runtime_.jsx(react_.Transition, {
                     as: external_react_.Fragment,
                     enter: "transition ease-out duration-100",
                     enterFrom: "transform opacity-0 scale-95",
@@ -286,10 +286,10 @@ const ChainName = ({ triedToEagerConnect  })=>{
                     leave: "transition ease-in duration-75",
                     leaveFrom: "transform opacity-100 scale-100",
                     leaveTo: "transform opacity-0 scale-95",
-                    children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)(react_namespaceObject.Menu.Items, {
+                    children: /*#__PURE__*/ (0,jsx_runtime_.jsxs)(react_.Menu.Items, {
                         className: "absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
                         children: [
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -304,7 +304,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                                         children: chaininfo/* CHAIN_INFO */.T[chains/* SupportedChainId.AVALANCE_MAINNET */.HL.AVALANCE_MAINNET].label
                                     })
                             }),
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -319,7 +319,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                                         children: chaininfo/* CHAIN_INFO */.T[chains/* SupportedChainId.AVALANCHE_FUJI */.HL.AVALANCHE_FUJI].label
                                     })
                             }),
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -334,7 +334,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                                         children: chaininfo/* CHAIN_INFO */.T[chains/* SupportedChainId.BSC */.HL.BSC].label
                                     })
                             }),
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -349,7 +349,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                                         children: chaininfo/* CHAIN_INFO */.T[chains/* SupportedChainId.BSC_TESTNET */.HL.BSC_TESTNET].label
                                     })
                             }),
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -364,7 +364,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                                         children: chaininfo/* CHAIN_INFO */.T[chains/* SupportedChainId.FANTOM_OPERA */.HL.FANTOM_OPERA].label
                                     })
                             }),
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -379,7 +379,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                                         children: chaininfo/* CHAIN_INFO */.T[chains/* SupportedChainId.FANTOM_TESTNET */.HL.FANTOM_TESTNET].label
                                     })
                             }),
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -394,7 +394,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                                         children: chaininfo/* CHAIN_INFO */.T[chains/* SupportedChainId.MOONRIVER */.HL.MOONRIVER].label
                                     })
                             }),
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -409,7 +409,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                                         children: chaininfo/* CHAIN_INFO */.T[chains/* SupportedChainId.MOONBASE_ALPHA */.HL.MOONBASE_ALPHA].label
                                     })
                             }),
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -424,7 +424,7 @@ const ChainName = ({ triedToEagerConnect  })=>{
                                         children: chaininfo/* CHAIN_INFO */.T[chains/* SupportedChainId.POLYGON_MAINNET */.HL.POLYGON_MAINNET].label
                                     })
                             }),
-                            /*#__PURE__*/ jsx_runtime_.jsx(react_namespaceObject.Menu.Item, {
+                            /*#__PURE__*/ jsx_runtime_.jsx(react_.Menu.Item, {
                                 children: ({ active  })=>/*#__PURE__*/ jsx_runtime_.jsx("button", {
                                         className: `${active ? "bg-blue-500 text-white" : "text-blue-500"} group flex rounded-md items-center w-full px-2 py-2 text-sm`,
                                         style: {
@@ -541,7 +541,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__) => {
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _hooks_useEagerConnect__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4216);
 /* harmony import */ var _Account__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(3004);
-/* harmony import */ var _ChainName__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(113);
+/* harmony import */ var _ChainName__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(47);
 /* harmony import */ var next_image__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(5675);
 /* harmony import */ var _public_kigzaglogo_png__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(6354);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_Account__WEBPACK_IMPORTED_MODULE_4__]);
@@ -889,6 +889,13 @@ module.exports = require("@fortawesome/fontawesome-svg-core");
 /***/ ((module) => {
 
 module.exports = require("@fortawesome/free-solid-svg-icons");
+
+/***/ }),
+
+/***/ 7505:
+/***/ ((module) => {
+
+module.exports = require("@headlessui/react");
 
 /***/ }),
 
