@@ -23,46 +23,64 @@ const logger = new Signale({
 // Functions
 // Create a link ID for a user
 async function createLink(discordID, serverID) {
-    let linkID = crypto.randomBytes(5).toString('hex');
-    const newLink = await pool.query("INSERT INTO User_Discord_Link_Pool (LinkId, User_Discord_Id, ServerId, StartTime) VALUES ($1,$2,$3,TO_TIMESTAMP($4)) RETURNING*;", [linkID, discordID, serverID, (Date.now() / 1000)]);
-    setTimeout(function () {
-        // if (isValidLink(linkID)) 
-        removeLink(linkID);
-        logger.info(`30 mins passed removing link ID: ${linkID} for user ID: ${discordID} for server ID: ${serverID}`);
-    }, process.env.DISCORD_BOT_LINK_TIMEOUT_IN_MILLISECONDS);
-    logger.info(`Created new link ID: ${linkID} for user ID: ${discordID}`);
-    return {
-        linkID,
-        newLink
-    };
+    try {
+        let linkID = crypto.randomBytes(5).toString('hex');
+        const newLink = await pool.query("INSERT INTO User_Discord_Link_Pool (LinkId, User_Discord_Id, ServerId, StartTime) VALUES ($1,$2,$3,TO_TIMESTAMP($4)) RETURNING*;", [linkID, discordID, serverID, (Date.now() / 1000)]);
+        setTimeout(function () {
+            // if (isValidLink(linkID)) 
+            removeLink(linkID);
+            logger.info(`30 mins passed removing link ID: ${linkID} for user ID: ${discordID} for server ID: ${serverID}`);
+        }, process.env.DISCORD_BOT_LINK_TIMEOUT_IN_MILLISECONDS);
+        logger.info(`Created new link ID: ${linkID} for user ID: ${discordID}`);
+        return {
+            linkID,
+            newLink
+        };
+    } catch (err) {
+        console.log("Error calling createLink() from discord_routes.js", err);
+    }
 }
 
 // Checks if link ID exists
 async function isValidLink(linkID) {
-    const ud = await pool.query("SELECT * FROM User_Discord_Link_Pool WHERE LinkId=$1;", [linkID]);
+    try {
+        const ud = await pool.query("SELECT * FROM User_Discord_Link_Pool WHERE LinkId=$1;", [linkID]);
 
-    if (ud.rows[0].linkID) {
-        if (Date.now() - Date.parse(ud.rows[0].starttime) > process.env.DISCORD_BOT_LINK_TIMEOUT_IN_MILLISECONDS) {
-            removeLink(linkID);
-            return false;
+        if (ud.rows[0].linkID) {
+            if (Date.now() - Date.parse(ud.rows[0].starttime) > process.env.DISCORD_BOT_LINK_TIMEOUT_IN_MILLISECONDS) {
+                removeLink(linkID);
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
+    } catch (err) {
+        console.log("Error calling isValidLink() from discord_routes.js", err);
     }
-    return false;
 }
 
 // Remove link
 async function removeLink(linkID) {
-    const ud = await pool.query("DELETE FROM User_Discord_Link_Pool WHERE LinkId=$1;", [linkID]);
+    try {
+        const ud = await pool.query("DELETE FROM User_Discord_Link_Pool WHERE LinkId=$1;", [linkID]);
+    } catch (err) {
+        console.log("Error calling removeLink() from discord_routes.js", err);
+    }
 }
 
 // Validate Link Pool Table
 async function validateLinkPoolTable() {
-    const ud = await pool.query("SELECT * FROM User_Discord_Link_Pool;");
-    for (var i = 0; i < ud.rows.length; i++) {
-        if (Date.now() - Date.parse(ud.rows[i].starttime) > process.env.DISCORD_BOT_LINK_TIMEOUT_IN_MILLISECONDS) {
-            await removeLink(ud.rows[i].linkid);
-            console.log("Following link id(s) expired: \n" + ud.rows[i].linkid);
+    try {
+        const ud = await pool.query("SELECT * FROM User_Discord_Link_Pool;");
+        for (var i = 0; i < ud.rows.length; i++) {
+            if (Date.now() - Date.parse(ud.rows[i].starttime) > process.env.DISCORD_BOT_LINK_TIMEOUT_IN_MILLISECONDS) {
+                await removeLink(ud.rows[i].linkid);
+                console.log("Following link id(s) expired: \n" + ud.rows[i].linkid);
+            }
+        }
+    } catch (err) {
+        if(err.message!="relation \"user_discord_link_pool\" does not exist"){
+            console.log("Error calling validateLinkPoolTable() from discord_routes.js\n\n\t\t", err.message);
         }
     }
 }
@@ -70,17 +88,21 @@ async function validateLinkPoolTable() {
 // Get Discord ID from link ID
 // Not Being used
 async function getPlanDetailsFromLinkId(linkID) {
-    const linkData = (await pool.query("SELECT * FROM User_Discord_Link_Pool WHERE LinkId=$1;", [linkID]));
-    if (linkData.rowCount > 0) {
-        linkData.rows[0]['creator'] = (await pool.query("SELECT creator FROM Creator_Sub_1M WHERE Discord_Server_Id=$1;", [linkData.rows[0].serverid])).rows[0].creator;
-        linkData.rows[0]['1month'] = (await pool.query("SELECT discord FROM Creator_Sub_1M WHERE Discord_Server_Id=$1;", [linkData.rows[0].serverid])).rows[0].discord;
-        linkData.rows[0]['3months'] = (await pool.query("SELECT discord FROM Creator_Sub_3M WHERE Discord_Server_Id=$1;", [linkData.rows[0].serverid])).rows[0].discord;
-        linkData.rows[0]['1year'] = (await pool.query("SELECT discord FROM Creator_Sub_1Y WHERE Discord_Server_Id=$1;", [linkData.rows[0].serverid])).rows[0].discord;
-        linkData.rows[0]['name'] = (await pool.query("SELECT name FROM Creator_token WHERE creator=$1;", [linkData.rows[0]['creator']])).rows[0].name;
-        linkData.rows[0]['symbol'] = (await pool.query("SELECT symbol FROM Creator_token WHERE creator=$1;", [linkData.rows[0]['creator']])).rows[0].symbol;
-        return linkData.rows[0];
-    } else {
-        return "Link Not Available";
+    try {
+        const linkData = (await pool.query("SELECT * FROM User_Discord_Link_Pool WHERE LinkId=$1;", [linkID]));
+        if (linkData.rowCount > 0) {
+            linkData.rows[0]['creator'] = (await pool.query("SELECT creator FROM Creator_Sub_1M WHERE Discord_Server_Id=$1;", [linkData.rows[0].serverid])).rows[0].creator;
+            linkData.rows[0]['1month'] = (await pool.query("SELECT discord FROM Creator_Sub_1M WHERE Discord_Server_Id=$1;", [linkData.rows[0].serverid])).rows[0].discord;
+            linkData.rows[0]['3months'] = (await pool.query("SELECT discord FROM Creator_Sub_3M WHERE Discord_Server_Id=$1;", [linkData.rows[0].serverid])).rows[0].discord;
+            linkData.rows[0]['1year'] = (await pool.query("SELECT discord FROM Creator_Sub_1Y WHERE Discord_Server_Id=$1;", [linkData.rows[0].serverid])).rows[0].discord;
+            linkData.rows[0]['name'] = (await pool.query("SELECT name FROM Creator_token WHERE creator=$1;", [linkData.rows[0]['creator']])).rows[0].name;
+            linkData.rows[0]['symbol'] = (await pool.query("SELECT symbol FROM Creator_token WHERE creator=$1;", [linkData.rows[0]['creator']])).rows[0].symbol;
+            return linkData.rows[0];
+        } else {
+            return "Link Not Available";
+        }
+    } catch (err) {
+        console.log("Error calling getPlanDetailsFromLinkId() from discord_routes.js", err);
     }
 }
 

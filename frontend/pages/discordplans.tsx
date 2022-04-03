@@ -146,16 +146,30 @@ export default function DiscordPlans() {
                 console.log(receipt);
                 return receipt;
               }, 1000);
-            }, 10000);
+            }, 3000);
           });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        handleOpen_error();
+        if (
+          err["data"]["message"] ==
+          "execution reverted: ERC20: burn amount exceeds balance"
+        ) {
+          setError_msg(`Insufficient ${planDetails.symbol} tokens`);
+        } else {
+          setError_msg(err["data"]["message"]);
+        }
+      });
   }
 
   const classesModal = useStylesModal();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [open_error, setOpen_error] = useState(false);
+  const handleOpen_error = () => setOpen_error(true);
+  const handleClose_error = () => setOpen_error(false);
+  const [error_msg, setError_msg] = useState("");
 
   const tiers = [
     {
@@ -405,6 +419,40 @@ export default function DiscordPlans() {
                       </div>
                     </Fade>
                   </Modal>
+                  <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classesModal.modal}
+                    open={open_error}
+                    onClose={handleClose_error}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                      timeout: 500,
+                    }}
+                  >
+                    <Fade in={open_error}>
+                      <div className={classesModal.paper}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <p
+                            style={{
+                              color: "red",
+                              fontWeight: "bold",
+                              fontSize: 20,
+                              textAlign: "center",
+                            }}
+                          >
+                            {error_msg}
+                          </p>
+                        </div>
+                      </div>
+                    </Fade>
+                  </Modal>
                   <Container
                     disableGutters
                     maxWidth="sm"
@@ -512,7 +560,7 @@ export default function DiscordPlans() {
               component="p"
               style={{ marginBottom: "20px" }}
             >
-              `&#8688;` If it's beyond 30 mins please rejoin the Discord server,
+              &#8688; If it's beyond 30 mins please rejoin the Discord server,
               Kigzag Bot will generate new link for you.
             </Typography>
           </Container>

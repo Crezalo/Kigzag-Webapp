@@ -13,7 +13,7 @@ import {
 import ETHBalance from "./ETHBalance";
 import TokenBalance from "./TokenBalance";
 import Router from "next/router";
-import AuthService from "../services/auth-services"
+import AuthService from "../services/auth-services";
 import authHeader from "../services/auth-header";
 
 type AccountProps = {
@@ -143,7 +143,12 @@ const Account = ({ triedToEagerConnect }: AccountProps) => {
       >
         <button
           className="outline text-blue-500 outline-offset-0 px-2 py-1 rounded"
-          style={{ fontSize: 18, textAlign: "center", marginTop: "2px",outlineWidth: "thin" }}
+          style={{
+            fontSize: 18,
+            textAlign: "center",
+            marginTop: "2px",
+            outlineWidth: "thin",
+          }}
         >
           {isConnected && <ETHBalance />}
         </button>

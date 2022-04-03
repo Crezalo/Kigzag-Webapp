@@ -1,125 +1,128 @@
+const createTablesInPostgresDB_subs = require("./db_table_creation_subs");
+const createTablesInPostgresDB_subs_discord = require("./db_table_creation_subs_discord");
+const createTablesInPostgresDB_subs_video_on_demand = require("./db_table_creation_subs_video_on_demand");
+const createTablesInPostgresDB_subs_live_streaming = require("./db_table_creation_subs_live_streaming");
+const createTablesInPostgresDB_subs_community_combo = require("./db_table_creation_subs_community_combo");
+const createTablesInPostgresDB_subs_video_call = require("./db_table_creation_subs_video_call");
+const createTablesInPostgresDB_subs_store = require("./db_table_creation_subs_store");
+
 module.exports = async function createTablesInPostgresDB(pool) {
   ////////////////////////////////////////////////Table Creation/////////////////////////////////////////////////////////
 
   //1.  User table creation
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS Users (UserId BIGSERIAL PRIMARY KEY, UserAddress VARCHAR(255) NOT NULL UNIQUE, UserName VARCHAR(50) UNIQUE, IsCreator BOOLEAN NOT NULL, TwitterHandle VARCHAR(50) UNIQUE, Discord VARCHAR(50) UNIQUE, Tiktok VARCHAR(50) UNIQUE, Instagram VARCHAR(50) UNIQUE, Youtube VARCHAR(50) UNIQUE, Website VARCHAR(50) UNIQUE);"
+      "CREATE TABLE IF NOT EXISTS Users (UserId BIGSERIAL PRIMARY KEY, EmailAddress VARCHAR(255) NOT NULL UNIQUE, UserName VARCHAR(50) UNIQUE, IsCreator BOOLEAN NOT NULL, DisplayPicture VARCHAR(100) UNIQUE, TwitterHandle VARCHAR(50) UNIQUE, Instagram VARCHAR(50) UNIQUE, Youtube VARCHAR(50) UNIQUE, Website VARCHAR(50) UNIQUE);"
     )
-    .catch((err) => console.log("PG ERROR 1", err));
+    .catch((err) => console.log("PG ERROR Users Table\n\n\t\t", err.message));
 
-  //2. Token Address table creation
+  //2.  Creator Fin Info table creation
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS Creator_token (TokenId BIGSERIAL PRIMARY KEY, TokenAddress VARCHAR(255) NOT NULL, Creator VARCHAR(255) NOT NULL, Name VARCHAR(255) NOT NULL, Symbol VARCHAR(255) NOT NULL, ChainId INTEGER NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS Fin_Info (Creator VARCHAR(255) PRIMARY KEY, AadharCard VARCHAR(100) UNIQUE NOT NULL, PanCard VARCHAR(100) UNIQUE NOT NULL, UPI_Id VARCHAR(50), Bank_Name VARCHAR(100), IFSC_Code VARCHAR(100), MICR_Code VARCHAR(100), Acc_Number VARCHAR(50));"
     )
-    .catch((err) => console.log("PG ERROR 2", err));
+    .catch((err) => console.log("PG ERROR Fin_Info Table\n\n\t\t", err.message));
 
-  //3. NFT Address table creation
-  // STATUS: UNLISTED, LISTED, SOLD
-  await pool
-    .query(
-      "CREATE TABLE IF NOT EXISTS Creator_nft (Id BIGSERIAL PRIMARY KEY, ChainId INTEGER NOT NULL, NFTAddress VARCHAR(255) NOT NULL, TokenId INTEGER NOT NULL,  TokenURI VARCHAR(255)  NOT NULL, STATUS VARCHAR(50) NOT NULL, Creator VARCHAR(255) NOT NULL);"
-    )
-    .catch((err) => console.log("PG ERROR 3", err));
-
-  //4. NFT Address table creation
-  // Choices: for general proposal => Choice 1\tChoice 2\tChoice 3 ... 
-  // for allowances proposal => No\tYes
-  // STATUS => ONGOING or CLOSED
-  await pool
-    .query(
-      "CREATE TABLE IF NOT EXISTS Creator_dao (Id BIGSERIAL PRIMARY KEY, ChainId INTEGER NOT NULL, DAOAddress VARCHAR(255) NOT NULL, Creator VARCHAR(255) NOT NULL, ProposalId INTEGER NOT NULL,  Author VARCHAR(255) NOT NULL, IsAllowancesProposal BOOLEAN  NOT NULL, Managers VARCHAR(255) NOT NULL, Allowances VARCHAR(255), IsNative BOOLEAN NOT NULL, ProposalLink VARCHAR(255) NOT NULL, ProposalTitle VARCHAR(255) NOT NULL, ProposalDescription VARCHAR(255) NOT NULL, Choices VARCHAR(255) NOT NULL, StartTime TIMESTAMP NOT NULL, DURATION INTEGER NOT NULL);"
-    )
-    .catch((err) => console.log("PG ERROR 4", err));
-
-  //5. User to chain mapping
-  // Used to show only revelant creators for given chainid
-  await pool
-    .query(
-      "CREATE TABLE IF NOT EXISTS User_chain (Id BIGSERIAL PRIMARY KEY, UserAddress VARCHAR(255) NOT NULL, ChainId INTEGER NOT NULL);"
-    )
-    .catch((err) => console.log("PG ERROR 5", err));
-
-  //6. User to chain mapping
-  // Used to show only revelant creators for given chainid
+  //3. Creator LiveStream table creation
   await pool
     .query(
       "CREATE TABLE IF NOT EXISTS Creator_LiveStream (Creator VARCHAR(255) PRIMARY KEY, StreamKey VARCHAR(255) NOT NULL);"
     )
-    .catch((err) => console.log("PG ERROR 5.1", err));
+    .catch((err) => console.log("PG ERROR Creator_LiveStream Table\n\n\t\t", err.message));
+
+  //4. Creator Shoutout table creation
+  //Platform: 0: Instagram,1: Youtube,2: Twitter,3: Facebook,4: LinkedIn
+  await pool
+    .query(
+      "CREATE TABLE IF NOT EXISTS Creator_Shoutout (Id BIGSERIAL PRIMARY KEY, Creator VARCHAR(255) NOT NULL, Platform INTEGER NOT NULL, Count_Per_Week INTEGER NOT NULL, Week_Till_Date_Exhausted INTEGER NOT NULL, Price INTEGER NOT NULL);"
+    )
+    .catch((err) => console.log("PG ERROR Creator_Shoutout Table\n\n\t\t", err.message));
+
+  //5. Creator Colab table creation
+  //Platform: 0: Instagram,1: Youtube,2: Twitter,3: Facebook,4: LinkedIn
+  await pool
+    .query(
+      "CREATE TABLE IF NOT EXISTS Creator_Colab (Id BIGSERIAL PRIMARY KEY, Creator VARCHAR(255) NOT NULL, Platform INTEGER NOT NULL, Count_Per_Week INTEGER NOT NULL, Week_Till_Date_Exhausted INTEGER NOT NULL, Price INTEGER NOT NULL);"
+    )
+    .catch((err) => console.log("PG ERROR Creator_LiveStream Table\n\n\t\t", err.message));
+
+  //6. Creator Discord table creation
+  await pool
+    .query(
+      "CREATE TABLE IF NOT EXISTS Creator_Discord (Creator VARCHAR(255) PRIMARY KEY, ServerId VARCHAR(255) UNIQUE NOT NULL, InviteLink VARCHAR(255) NOT NULL);"
+    )
+    .catch((err) => console.log("PG ERROR Creator_Discord Table\n\n\t\t", err.message));
 
   ////////////////////////////////////// Foreign key Constraints Add//////////////////////////////////////////////////////
 
-  // NFT Table Creator is User
+  // Creator Fin Info Table Creator is User
   await pool.query("DO $$ \
   BEGIN \
-      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_token_creator') THEN \
-          ALTER TABLE Creator_token \
-              ADD CONSTRAINT fk_token_creator \
-              FOREIGN KEY (Creator) REFERENCES Users(UserAddress); \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_fin_info_creator') THEN \
+          ALTER TABLE Fin_Info \
+              ADD CONSTRAINT fk_fin_info_creator \
+              FOREIGN KEY (Creator) REFERENCES Users(EmailAddress); \
       END IF; \
   END; \
   $$;")
-    .catch(err => console.log("fk ERROR 1", err));
+    .catch(err => console.error("fk ERROR Fin_Info Table\n\n\t\t", err.message));
 
-  // NFT Table Creator is User
-  await pool.query("DO $$ \
-  BEGIN \
-      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_nft_creator') THEN \
-          ALTER TABLE Creator_nft \
-              ADD CONSTRAINT fk_nft_creator \
-              FOREIGN KEY (Creator) REFERENCES Users(UserAddress); \
-      END IF; \
-  END; \
-  $$;")
-    .catch(err => console.log("fk ERROR 1", err));
-
-  // DAO Table Creator is User
-  await pool.query("DO $$ \
-  BEGIN \
-      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_dao_creator') THEN \
-          ALTER TABLE Creator_dao \
-              ADD CONSTRAINT fk_dao_creator \
-              FOREIGN KEY (Creator) REFERENCES Users(UserAddress); \
-      END IF; \
-  END; \
-  $$;")
-    .catch(err => console.log("fk ERROR 2", err));
-
-  // DAO Table Author is User
-  await pool.query("DO $$ \
-  BEGIN \
-      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_dao_author') THEN \
-          ALTER TABLE Creator_dao \
-              ADD CONSTRAINT fk_dao_author \
-              FOREIGN KEY (Author) REFERENCES Users(UserAddress); \
-      END IF; \
-  END; \
-  $$;")
-    .catch(err => console.log("fk ERROR 3", err));
-
-  // User Chain Table UserAddress
-  await pool.query("DO $$ \
-  BEGIN \
-      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_user_chain') THEN \
-          ALTER TABLE User_chain \
-              ADD CONSTRAINT fk_user_chain \
-              FOREIGN KEY (UserAddress) REFERENCES Users(UserAddress); \
-      END IF; \
-  END; \
-  $$;")
-    .catch(err => console.log("fk ERROR 4", err));
 
   // Livestream Table Creator is User
   await pool.query("DO $$ \
   BEGIN \
-      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_livestream_tab_creator') THEN \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_livestream_creator') THEN \
           ALTER TABLE Creator_LiveStream \
-              ADD CONSTRAINT fk_livestream_tab_creator \
-              FOREIGN KEY (Creator) REFERENCES Users(UserAddress); \
+              ADD CONSTRAINT fk_livestream_creator \
+              FOREIGN KEY (Creator) REFERENCES Users(EmailAddress); \
       END IF; \
   END; \
   $$;")
-    .catch(err => console.log("fk ERROR 4.1", err));
+    .catch(err => console.error("fk ERROR Creator_LiveStream Table\n\n\t\t", err.message));
+
+  // Creator_Shoutout Table Creator is User
+  await pool.query("DO $$ \
+  BEGIN \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_shoutout_creator') THEN \
+          ALTER TABLE Creator_Shoutout \
+              ADD CONSTRAINT fk_shoutout_creator \
+              FOREIGN KEY (Creator) REFERENCES Users(EmailAddress); \
+      END IF; \
+  END; \
+  $$;")
+    .catch(err => console.error("fk ERROR Creator_Shoutout Table\n\n\t\t", err.message));
+
+  // Creator_Colab Table Creator is User
+  await pool.query("DO $$ \
+  BEGIN \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_colab_creator') THEN \
+          ALTER TABLE Creator_Colab \
+              ADD CONSTRAINT fk_colab_creator \
+              FOREIGN KEY (Creator) REFERENCES Users(EmailAddress); \
+      END IF; \
+  END; \
+  $$;")
+    .catch(err => console.error("fk ERROR Creator_Colab Table\n\n\t\t", err.message));
+
+  // Creator_Discord Table Creator is User
+  await pool.query("DO $$ \
+  BEGIN \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_discord_creator') THEN \
+          ALTER TABLE Creator_Discord \
+              ADD CONSTRAINT fk_discord_creator \
+              FOREIGN KEY (Creator) REFERENCES Users(EmailAddress); \
+      END IF; \
+  END; \
+  $$;")
+    .catch(err => console.error("fk ERROR Creator_Discord Table\n\n\t\t", err.message));
+
+  // Other Table creation
+  // Users is an essential table and all other tables can be created once User table is ready
+  createTablesInPostgresDB_subs(pool);
+  createTablesInPostgresDB_subs_discord(pool);
+  createTablesInPostgresDB_subs_video_on_demand(pool);
+  createTablesInPostgresDB_subs_live_streaming(pool);
+  createTablesInPostgresDB_subs_community_combo(pool);
+  createTablesInPostgresDB_subs_video_call(pool);
+  createTablesInPostgresDB_subs_store(pool);
 };
