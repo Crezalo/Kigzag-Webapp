@@ -11,7 +11,7 @@ const {
 const {
   Signale
 } = require('signale');
-const dis_router = require('../routes/discord_routes');
+const dis_router = require('../routes/user/discord_routes');
 const {
   MessageActionRow,
   MessageEmbed,

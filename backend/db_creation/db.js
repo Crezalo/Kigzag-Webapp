@@ -1,11 +1,12 @@
 const Pool = require("pg").Pool;
+require("dotenv").config();
 
 const pool = new Pool({
-  host: 'localhost',
-  user: "postgres",
-  password: "kigzag@123",
-  database: "kigzag_2",
-  port: 5432,
+  host: process.env.PG_HOST,
+  user: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
+  database: process.env.PG_DATABASE,
+  port: process.env.PG_PORT
 });
 
 const createTablesInPostgresDB = require("./db_table_creation");

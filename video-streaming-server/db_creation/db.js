@@ -7,8 +7,4 @@ const pool = new Pool({
   port: 5432,
 });
 
-const createTablesInPostgresDB = require("./db_table_creation");
-
-createTablesInPostgresDB(pool);
-
 module.exports = pool;

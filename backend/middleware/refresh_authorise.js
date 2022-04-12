@@ -12,13 +12,13 @@ module.exports = (optional = false) => async (req, res, next) => {
     if (!token) {
         return res.status(401).send({
             isSuccessful: false,
-            errorMsg: "Authentication Error: Access Token Missing!",
+            errorMsg: "Authentication Error: Refresh Token Missing!",
             result: []
         });
     } else {
         try {
             // if the incoming request has a valid token, we extract the payload from the token and attach it to the request object.
-            const payload = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
+            const payload = jwt.verify(token, process.env.JWT_REFRESH_TOKEN_SECRET);
             const user = payload.user;
             const {
                 rows: [userProfile]
