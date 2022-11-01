@@ -1,18 +1,10 @@
 import { useRouter } from "next/router";
 import Router from "next/router";
 import Image from "next/image";
-import NFTDetails from "../components/NFTDetails";
-import NFTProperties from "../components/NFTProperties";
-import { useCreatorNFTTokenURI } from "../hooks/ERC721/useCreatorNFTContract";
 import { useEffect, useState } from "react";
 import Jdenticon from "react-jdenticon";
 import { Spinner } from "reactstrap";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { useWeb3React } from "@web3-react/core";
-import {
-  getDiscordPlanDetails,
-  getNFTForGivenTokenId,
-} from "../services/archive/api-service";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -29,25 +21,15 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
-import ConnectToWallet from "../components/ConnectToWallet";
+import ConnectToAccount from "../components/ConnectToAccount";
 import queryString from "query-string";
-import { useCreatorTokenContract } from "../hooks/LoyaltyTokenContract/useCreatorTokenContract";
-import { useCreatorFactoryCreatorToken } from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
-import { LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST } from "../constants/chains";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
+import Modal from '@mui/material/Modal';
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import waitingGif from "../public/waiting.gif";
 import greenTick from "../public/green-tick.gif";
-import {
-  formatBlockExplorerLink,
-  retry,
-  RetryableError,
-  shortenHex,
-  RetryOptions,
-} from "../util";
 import Head from "next/head";
 
 const useStylesModal = makeStyles((theme) => ({
@@ -69,8 +51,6 @@ const useStylesModal = makeStyles((theme) => ({
 
 export default function DiscordPlans() {
   const router = useRouter();
-
-  const { chainId, account, library } = useWeb3React();
 
   let { linkid } = router.query;
 
@@ -96,71 +76,25 @@ export default function DiscordPlans() {
   const [txhash, setTxhash] = useState("");
 
   const GetDetails = () => {
-    useEffect(() => {
-      async function getData() {
-        const res = await getDiscordPlanDetails(
-          account,
-          library,
-          (linkid ?? "").toString()
-        );
-        if (res == "Link Not Available") {
-          setLinkExpired(true);
-        } else {
-          setLinkExpired(false);
-          setPlanDetails(res);
-        }
-      }
-      getData();
-    }, [account, chainId]);
+    // useEffect(() => {
+    //   async function getData() {
+    //     // const res = await getDiscordPlanDetails(
+    //     //   account,
+    //     //   library,
+    //     //   (linkid ?? "").toString()
+    //     // );
+    //     // if (res == "Link Not Available") {
+    //     //   setLinkExpired(true);
+    //     // } else {
+    //     //   setLinkExpired(false);
+    //     //   setPlanDetails(res);
+    //     // }
+    //   }
+    //   getData();
+    // }, []);
   };
 
   GetDetails();
-
-  const creatorToken =
-    useCreatorFactoryCreatorToken(
-      LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST[chainId],
-      planDetails.creator ?? ""
-    ).data ?? "";
-
-  const creatorTokenContract = useCreatorTokenContract(creatorToken);
-
-  async function BurnMyTokens(amount: number) {
-    const res = await creatorTokenContract
-      .burnMyTokens(amount.toString())
-      .then((res) => {
-        setTransactionStatus("WAITING");
-        setTxhash(res.hash);
-        handleOpen();
-        const receipt = library
-          .getTransactionReceipt(txhash)
-          .then((receipt) => {
-            if (receipt === null) {
-              console.debug(`Retrying tranasaction receipt for ${txhash}`);
-              throw new RetryableError();
-            }
-            setTimeout(() => {
-              setTransactionStatus("COMPLETED");
-              setTimeout(() => {
-                handleClose();
-                console.log("receipt");
-                console.log(receipt);
-                return receipt;
-              }, 1000);
-            }, 3000);
-          });
-      })
-      .catch((err) => {
-        handleOpen_error();
-        if (
-          err["data"]["message"] ==
-          "execution reverted: ERC20: burn amount exceeds balance"
-        ) {
-          setError_msg(`Insufficient ${planDetails.symbol} tokens`);
-        } else {
-          setError_msg(err["data"]["message"]);
-        }
-      });
-  }
 
   const classesModal = useStylesModal();
   const [open, setOpen] = useState(false);
@@ -240,7 +174,7 @@ export default function DiscordPlans() {
       <div>
         {linkid && !linkExpired ? (
           <>
-            {account ? (
+            {true ? (
               <React.Fragment>
                 <GlobalStyles
                   styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
@@ -337,9 +271,7 @@ export default function DiscordPlans() {
                               variant={
                                 tier.buttonVariant as "outlined" | "contained"
                               }
-                              onClick={async () => {
-                                await BurnMyTokens(tier.price * 10 ** 18);
-                              }}
+                              onClick={async () => {}}
                             >
                               {tier.buttonText}
                             </Button>
@@ -398,22 +330,14 @@ export default function DiscordPlans() {
                                 height={200}
                               />
                             )}
-                            <Link>
+                            {/* <Link>
                               <a
-                                {...{
-                                  href: formatBlockExplorerLink("Transaction", [
-                                    chainId,
-                                    txhash,
-                                    "",
-                                  ]),
-                                  target: "_blank",
-                                  rel: "noopener noreferrer",
-                                }}
+                                {...{}}
                                 style={{ fontSize: 20, fontWeight: "bold" }}
                               >
-                                {shortenHex(txhash, 10)}
+                                {}
                               </a>
-                            </Link>
+                            </Link> */}
                           </div>
                         )}
                       </div>
@@ -502,8 +426,9 @@ export default function DiscordPlans() {
               </React.Fragment>
             ) : (
               <>
-                {typeof account !== "string" ? (
-                  <ConnectToWallet />
+                {/* {typeof account !== "string" ? ( */}
+                {true ? (
+                  <ConnectToAccount />
                 ) : (
                   <>
                     <CircularProgress

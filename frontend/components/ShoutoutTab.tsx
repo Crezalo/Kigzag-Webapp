@@ -20,11 +20,11 @@ import {
   IconButton,
   InputAdornment,
   makeStyles,
-  Modal,
   TextField,
   ThemeProvider,
   Tooltip,
 } from "@material-ui/core";
+import Modal from '@mui/material/Modal';
 import Edit from "@mui/icons-material/Edit";
 import Delete from "@mui/icons-material/Delete";
 import Router from "next/router";

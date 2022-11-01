@@ -5,11 +5,11 @@ import {
   createTheme,
   Fade,
   makeStyles,
-  Modal,
   Paper,
   TextField,
   Tooltip,
 } from "@material-ui/core";
+import Modal from '@mui/material/Modal';
 import {
   addCreatorDiscordData,
   getCreatorDiscordData,
