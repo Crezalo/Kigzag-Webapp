@@ -1,11 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@mui/material";
-import { useWeb3React } from "@web3-react/core";
 import { Picker } from "emoji-mart";
+import AuthService from "../services/auth-services";
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { socket } from "../services/socket";
-import { shortenHex } from "../util";
 
 interface VideoChatProp {
   display: boolean;
@@ -13,8 +11,7 @@ interface VideoChatProp {
 }
 
 const VideoChat = ({ display, roomId }: VideoChatProp) => {
-  const { account, library } = useWeb3React();
-  const currentUser = account;
+  const username = AuthService.getUsername();
   const [showEmoji, setShowEmoji] = useState(false);
   const [msg, setMsg] = useState([]);
   const messagesEndRef = useRef(null);
@@ -23,6 +20,7 @@ const VideoChat = ({ display, roomId }: VideoChatProp) => {
   useEffect(() => {
     socket.on("FE-receive-message", ({ msg, sender }) => {
       setMsg((msgs) => [...msgs, { sender, msg }]);
+      console.log("receive message complete");
     });
   }, []);
 
@@ -42,7 +40,7 @@ const VideoChat = ({ display, roomId }: VideoChatProp) => {
 
       if (msg) {
         try {
-          socket.emit("BE-send-message", { roomId, msg, sender: currentUser });
+          socket.emit("BE-send-message", { roomId, msg, sender: username });
         } catch (err) {
           console.log(err);
         }
@@ -67,17 +65,17 @@ const VideoChat = ({ display, roomId }: VideoChatProp) => {
         <MessageList>
           {msg &&
             msg.map(({ sender, msg }, idx) => {
-              if (sender !== currentUser) {
+              if (sender !== username) {
                 return (
                   <Message key={idx}>
-                    <strong>{shortenHex(sender, 4)}</strong>
+                    <strong>{sender}</strong>
                     <p>{msg}</p>
                   </Message>
                 );
               } else {
                 return (
                   <UserMessage key={idx}>
-                    <strong>{shortenHex(sender, 4)}</strong>
+                    <strong>{sender}</strong>
                     <p>{msg}</p>
                   </UserMessage>
                 );
@@ -176,6 +174,7 @@ const Message = styled.div`
     margin-top: 3px;
     border: 1px solid rgb(78, 161, 211, 0.3);
     border-radius: 15px;
+    background-color: white;
     box-shadow: 0px 0px 3px #4ea1d3;
     font-size: 18px;
     overflow-wrap: word-break;

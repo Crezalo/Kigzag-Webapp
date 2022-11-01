@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useWeb3React } from "@web3-react/core";
-import { getNFTForGivenTokenId } from "../services/api-service";
+import { getNFTForGivenTokenId } from "../services/archive/api-service";
 import ConnectToWallet from "../components/ConnectToWallet";
 import queryString from "query-string";
 import Head from "next/head";

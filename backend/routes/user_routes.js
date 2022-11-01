@@ -13,9 +13,9 @@ const {
 } = require('google-auth-library');
 const googleClient = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_ID);
 
-async function googleVerify(providerIdToken) {
+async function googleVerify(provideridtoken) {
   const ticket = await googleClient.verifyIdToken({
-    idToken: providerIdToken,
+    idToken: provideridtoken,
     audience: process.env.GOOGLE_LOGIN_CLIENT_ID
   });
   const payload = ticket.getPayload();
@@ -28,12 +28,12 @@ async function googleVerify(providerIdToken) {
 
 ///////////////////////////////////////////   Register   ///////////////////////////////////////////
 // add new user
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
     var {
       emailaddress,
       signuptype,
-      providerIdToken,
+      provideridtoken,
       password,
       username,
       fname,
@@ -46,38 +46,40 @@ router.post("/", async (req, res) => {
       youtube,
       website
     } = req.body;
-    const valid = validator.validate(emailaddress);
     // storing a hashedpassword for data security 
     const hashedpassword = (password != "" ? await bcrypt.hash(password, 10) : "");
     var signinid = "";
-    if (valid) {
+    if (signuptype == 0 || signuptype == 1) {
       if (password == "" && signuptype == 0) {
-        return res.status(401).json({
+        return res.json({
           isSuccessful: false,
           errorMsg: "Password Cannot be null",
           result: []
         });
       }
       if (signuptype == 1) {
-        const payload = googleVerify(providerIdToken);
+        const payload = await googleVerify(provideridtoken);
         signinid = payload['sub'];
 
         if (!payload['email_verified']) {
-          return res.status(401).json({
+          return res.json({
             isSuccessful: false,
             errorMsg: "Unverified Google Email",
             result: []
           });
         }
-        if (emailaddress != "")
+        if (emailaddress == "")
           emailaddress = payload['email'];
-        if (fname != "")
+        if (fname == "")
           fname = payload['given_name'];
-        if (lname != "")
+        if (lname == "")
           lname = payload['family_name'];
-        if (display != "")
+        if (displaypicture == "")
           displaypicture = payload['picture'];
-      } else if (signuptype == 1) {
+      }
+
+      const valid = validator.validate(emailaddress);
+      if (valid) {
         const new_User = await pool.query(
           "INSERT INTO Users (EmailAddress, SignUpType, SignInID, Password, UserName, FName, LName, Bio, IsCreator, DisplayPicture, TwitterHandle, Instagram, Youtube, Website) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING*;",
           [
@@ -115,25 +117,24 @@ router.post("/", async (req, res) => {
           errorMsg: "",
           result: new_User.rows
         });
-      }
-      else{
+      } else {
         res.json({
-            isSuccessful: false,
-            errorMsg: "Invalid SignUpType Value. 0: UnamePass, 1: Google",
-            result: []
+          isSuccessful: false,
+          errorMsg: "Email Address Invalid",
+          result: []
         });
       }
     } else {
-      res.status(500).json({
+      res.json({
         isSuccessful: false,
-        errorMsg: "Email Address Invalid",
+        errorMsg: "Invalid SignUpType Value. 0: UnamePass, 1: Google",
         result: []
       });
     }
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -142,7 +143,10 @@ router.post("/", async (req, res) => {
 ///////////////////////////////////////////   Login   ///////////////////////////////////////////
 router.post('/login/:signintype', async (req, res) => {
   try {
-    if (signintype == 0) {
+    const {
+      signintype
+    } = req.params;
+    if (signintype == "0") {
       const {
         username,
         password
@@ -152,10 +156,10 @@ router.post('/login/:signintype', async (req, res) => {
         throw new Error('Username and password are required')
       }
 
-      const user_col = await query("SELECT * FROM Users WHERE UserName = $1;", [username]);
+      const user_col = await pool.query("SELECT * FROM Users WHERE UserName = $1;", [username]);
 
       if (!user_col.rows[0]) {
-        return res.status(401).send({
+        return res.send({
           isSuccessful: false,
           errorMsg: "Username Incorrect",
           result: []
@@ -167,7 +171,7 @@ router.post('/login/:signintype', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user_col.rows[0].password);
 
         if (!isMatch) {
-          return res.status(401).send({
+          return res.send({
             isSuccessful: false,
             errorMsg: "Password Incorrect",
             result: []
@@ -197,22 +201,21 @@ router.post('/login/:signintype', async (req, res) => {
         });
 
       } else {
-        res.status(401).json({
+        res.json({
           isSuccessful: false,
           errorMsg: "UnAuthorised: SignInType and SignUpType Doesn't Match",
           result: []
         });
       }
-    } else if (signintype == 1) {
+    } else if (signintype == "1") {
       const {
-        providerIdToken
+        provideridtoken
       } = req.body;
-
-      const payload = googleVerify(providerIdToken);
+      const payload = await googleVerify(provideridtoken);
       const signinid = payload['sub'];
 
       if (!payload['email_verified']) {
-        return res.status(401).json({
+        return res.json({
           isSuccessful: false,
           errorMsg: "Unverified Google Email",
           result: []
@@ -221,44 +224,76 @@ router.post('/login/:signintype', async (req, res) => {
 
       const emailaddress = payload['email'];
 
-      const user_col = await query("SELECT * FROM Users WHERE EmailAddress = $1 AND SignInID = $2;", [emailaddress, signinid]);
+      const user_col = await pool.query("SELECT * FROM Users WHERE EmailAddress = $1 AND SignInID = $2;", [emailaddress, signinid]);
+      if (user_col.rows[0]) {
+        if (user_col.rows[0].signuptype == 1 || user_col.rows[0].signuptype == 10) {
 
-      if (user_col.rows[0].signuptype == 1 || user_col.rows[0].signuptype == 10) {
+          // generate access token for the new user
+          const accessToken = jwt.sign({
+            user: user_col.rows[0].username
+          }, process.env.JWT_ACCESS_TOKEN_SECRET, {
+            expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+          });
 
-        // generate access token for the new user
-        const accessToken = jwt.sign({
-          user: username
-        }, process.env.JWT_ACCESS_TOKEN_SECRET, {
-          expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
-        });
+          // generate refresh token for the new user
+          const refreshToken = jwt.sign({
+            user: user_col.rows[0].username
+          }, process.env.JWT_REFRESH_TOKEN_SECRET, {
+            expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+          });
 
-        // generate refresh token for the new user
-        const refreshToken = jwt.sign({
-          user: username
-        }, process.env.JWT_REFRESH_TOKEN_SECRET, {
-          expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
-        });
-
-        res.json({
-          isSuccessful: true,
-          errorMsg: "",
-          result: [{
-            'x-access-token': accessToken,
-            'x-refresh-token': refreshToken
-          }]
-        });
+          res.json({
+            isSuccessful: true,
+            errorMsg: "",
+            result: [{
+              'x-access-token': accessToken,
+              'x-refresh-token': refreshToken
+            }]
+          });
+        } else {
+          res.json({
+            isSuccessful: false,
+            errorMsg: "UnAuthorised: SignInType and SignUpType Doesn't Match",
+            result: []
+          });
+        }
       } else {
-        res.status(401).json({
+        res.json({
           isSuccessful: false,
-          errorMsg: "UnAuthorised: SignInType and SignUpType Doesn't Match",
+          errorMsg: "UnAuthorised Access: User data not available, Please Register!",
           result: []
         });
       }
     }
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
+      result: []
+    });
+  }
+});
+
+///////////////////////////////////////////   Get Refresh Token   ///////////////////////////////////////////
+router.get("/refresh", refresh_authorise, async (req, res) => {
+  try {
+    // generate access token for the new user
+    const accessToken = jwt.sign({
+      user: req.username
+    }, process.env.JWT_ACCESS_TOKEN_SECRET, {
+      expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+    });
+    res.json({
+      isSuccessful: true,
+      errorMsg: "",
+      result: [{
+        'x-access-token': accessToken
+      }]
+    });
+  } catch (err) {
+    res.json({
+      isSuccessful: false,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -283,9 +318,9 @@ router.get("/:username", authorise, async (req, res) => {
       result: ud.rows
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -304,9 +339,32 @@ router.get("/creators/:offset", authorise, async (req, res) => {
       result: ud.rows
     });
   } catch (err) {
-    res.status(500).json({
+    console.log(err);
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
+      result: []
+    });
+  }
+});
+
+// get creators profile data
+router.get("/creators_search/:query", authorise, async (req, res) => {
+  try {
+    const {
+      query
+    } = req.params;
+    const ud = await pool.query("SELECT Username, FName, LName, Bio, DisplayPicture FROM Users WHERE IsCreator = true AND (position($1 in LOWER(Username))>0 OR position($1 in LOWER(Fname))>0 OR position($1 in LOWER(Lname))>0) LIMIT 20 OFFSET 0;", [query.toLowerCase()]);
+    res.json({
+      isSuccessful: true,
+      errorMsg: "",
+      result: ud.rows
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({
+      isSuccessful: false,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -321,7 +379,7 @@ router.get("/cn/:column/:username", authorise, async (req, res) => {
 
     if (req.username != username) {
       if (column == "emailaddress" || column == "signuptype") {
-        return res.status(401).json({
+        return res.json({
           isSuccessful: false,
           errorMsg: "UnAuthorised: Access Denied",
           result: []
@@ -366,7 +424,7 @@ router.get("/cn/:column/:username", authorise, async (req, res) => {
       );
     else if (column == "displaypicture")
       Users_col = await pool.query(
-        "SELECT IsCreator FROM Users WHERE UserName = $1;",
+        "SELECT DisplayPicture FROM Users WHERE UserName = $1;",
         [username]
       );
     else if (column == "twitterhandle")
@@ -396,35 +454,9 @@ router.get("/cn/:column/:username", authorise, async (req, res) => {
       result: Users_col.rows
     });
   } catch (err) {
-    res.status(500).json({
-      isSuccessful: false,
-      errorMsg: err,
-      result: []
-    });
-  }
-});
-
-
-///////////////////////////////////////////   Get Refresh Token   ///////////////////////////////////////////
-router.get("/refresh", refresh_authorise, async (req, res) => {
-  try {
-    // generate access token for the new user
-    const accessToken = jwt.sign({
-      user: req.username
-    }, process.env.JWT_ACCESS_TOKEN_SECRET, {
-      expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
-    });
     res.json({
-      isSuccessful: true,
-      errorMsg: "",
-      result: [{
-        'x-access-token': accessToken
-      }]
-    });
-  } catch (err) {
-    res.status(500).json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -454,11 +486,6 @@ router.put("/", authorise, async (req, res) => {
       new_User = await pool.query(
         "UPDATE Users SET EmailAddress=$1 WHERE UserName=$2 RETURNING*;",
         [emailaddress, req.username]
-      );
-    if (username_up != "")
-      new_User = await pool.query(
-        "UPDATE Users SET UserName=$1 WHERE UserName=$2 RETURNING*;",
-        [username_up, req.username]
       );
     if (fname != "")
       new_User = await pool.query(
@@ -506,6 +533,30 @@ router.put("/", authorise, async (req, res) => {
         [website, req.username]
       );
 
+    // Cannot update username cause it will violate foreign key constraint for otherI tables
+    // if (username_up != "") {
+    //   new_User = await pool.query(
+    //     "UPDATE Users SET UserName=$1 WHERE UserName=$2 RETURNING*;",
+    //     [username_up, req.username]
+    //   );
+
+    //   // generate access token for the new user
+    //   const accessToken = jwt.sign({
+    //     user: username
+    //   }, process.env.JWT_ACCESS_TOKEN_SECRET, {
+    //     expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+    //   });
+    //   // generate refresh token for the new user
+    //   const refreshToken = jwt.sign({
+    //     user: username
+    //   }, process.env.JWT_REFRESH_TOKEN_SECRET, {
+    //     expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+    //   });
+
+    //   new_User.rows[0]['x-access-token'] = accessToken;
+    //   new_User.rows[0]['x-refresh-token'] = refreshToken;
+    // }
+
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -513,9 +564,9 @@ router.put("/", authorise, async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -537,7 +588,7 @@ router.put("/password", authorise, async (req, res) => {
       newpassword = await bcrypt.hash(password, 10);
 
       if (!isMatch) {
-        return res.status(401).send({
+        return res.send({
           isSuccessful: false,
           errorMsg: "Current Password Incorrect",
           result: []
@@ -567,9 +618,9 @@ router.put("/password", authorise, async (req, res) => {
     }
 
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }

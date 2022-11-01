@@ -1,20 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
 import React, { useEffect, useState } from "react";
 import { Button, Paper } from "@material-ui/core";
-import NFTCard from "./NFTCard";
-import { useWeb3React } from "@web3-react/core";
-import { useCreatorNFTOwnerOf } from "../hooks/ERC721/useCreatorNFTContract";
-import {
-  getCreatorAllVideoDetails,
-  getNFTsOfCreator,
-} from "../services/api-service";
-import VideoCard from "./VideoCard";
-import BasicModal from "./BasicModal";
-import CreateProposalModal from "./CreateProposalModal";
-import UploadVideoModal from "./UploadVideoModal";
 import { socket } from "../services/socket";
 import VideoChatRoom from "./VideoChatRoom";
+import AuthService from "../services/auth-services";
+import Router from "next/router";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -24,69 +14,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface GridItemProps {
-  vid: {
-    videoid: string;
-    title: string;
-    description: string;
-    creator: string;
-    duration: number;
-  };
-  classes: any;
-}
-const GridItem = ({ vid, classes }: GridItemProps) => {
-  return (
-    // From 0 to 600px wide (smart-phones), I take up 12 columns, or the whole device width!
-    // From 600-690px wide (tablets), I take up 6 out of 12 columns, so 2 columns fit the screen.
-    // From 960px wide and above, I take up 25% of the device (3/12), so 4 columns fit the screen.
-    <Grid item xs={12} sm={6} md={3}>
-      <VideoCard vid={vid} />
-      {/* <Paper className={classes.paper}>item</Paper> */}
-    </Grid>
-  );
-};
-
 interface VideoMeetTabProp {
   creator: string;
   onCreatorProfile: boolean;
 }
 const VideoMeetTab = ({ creator, onCreatorProfile }: VideoMeetTabProp) => {
   const classes = useStyles();
-  const { account, library } = useWeb3React();
-
-  const [videoDetails, setVideoDetails] = useState([
-    {
-      title: "",
-      description: "",
-      creator: "",
-      duration: 0,
-      videoid: "",
-    },
-  ]);
-
-  const GetVidDetails = () => {
-    useEffect(() => {
-      async function getData() {
-        const res = await getCreatorAllVideoDetails(account, library, creator);
-        setVideoDetails(res);
-      }
-      getData();
-    }, [creator]);
-  };
-
-  GetVidDetails();
+  const username = AuthService.getUsername();
 
   useEffect(() => {
     socket.on("FE-error-user-exist", ({ error }) => {
       if (!error) {
-        const roomName = creator;
-        const userName = account;
+        const roomName = onCreatorProfile ? creator : username;
+        const userName = username;
       } else {
         console.log(error);
         console.log("User name already exist");
       }
     });
-  }, [account]);
+  }, [username]);
 
   const [meetingJoined, setMeetingJoined] = useState(false);
 
@@ -97,7 +43,15 @@ const VideoMeetTab = ({ creator, onCreatorProfile }: VideoMeetTabProp) => {
   return (
     <div className="blueTextBlackBackground">
       {!meetingJoined ? (
-        <div className="modelButton" style={{ marginTop: "20vh" }}>
+        <div
+          className="modelButton"
+          style={{
+            marginTop: "20vh",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
           <Button
             style={{
               background: "#3B82F6",
@@ -106,12 +60,33 @@ const VideoMeetTab = ({ creator, onCreatorProfile }: VideoMeetTabProp) => {
             }}
             variant="contained"
             onClick={() => {
-              socket.emit("BE-check-user", { roomId: creator, account });
+              socket.emit("BE-check-user", { roomId: creator, username });
               setMeetingJoined(true);
             }}
           >
             {onCreatorProfile ? "Join Meet" : "Start Meet"}
           </Button>
+          {onCreatorProfile ? (
+            <></>
+          ) : (
+            <div className="modelButton" style={{ marginLeft: "20px" }}>
+              <Button
+                style={{
+                  background: "#3B82F6",
+                  color: "white",
+                  marginBottom: "2px",
+                }}
+                variant="contained"
+                onClick={() =>
+                  Router.push({
+                    pathname: "/updateprices",
+                  })
+                }
+              >
+                Update Prices
+              </Button>
+            </div>
+          )}
         </div>
       ) : (
         <VideoChatRoom roomId={creator} leaveRoomFunc={leaveRoomFunc} />

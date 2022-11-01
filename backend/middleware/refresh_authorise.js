@@ -3,14 +3,14 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 module.exports = (optional = false) => async (req, res, next) => {
-    console.log("middleware");
+    // console.log("middleware");
     // getting a token from authorization header
     // console.log(req.headers);
     const token = req.headers['authorization'];
     // console.log(token);
     // send error message if no token is found:
     if (!token) {
-        return res.status(401).send({
+        return res.send({
             isSuccessful: false,
             errorMsg: "Authentication Error: Refresh Token Missing!",
             result: []
@@ -25,7 +25,7 @@ module.exports = (optional = false) => async (req, res, next) => {
             } = await pool.query("SELECT * FROM Users WHERE UserName=$1", [user])
 
             if (!userProfile) {
-                res.status(401).send({
+                res.send({
                     isSuccessful: false,
                     errorMsg: "Authentication Error: User not Found",
                     result: []
@@ -35,9 +35,9 @@ module.exports = (optional = false) => async (req, res, next) => {
             next();
         } catch (err) {
             if (!optional) {
-                return res.status(401).send({
+                return res.send({
                     isSuccessful: false,
-                    errorMsg: `Authentication Error: ${err}`,
+                    errorMsg: `Authentication Error: ${err.message}`,
                     result: []
                 })
             }

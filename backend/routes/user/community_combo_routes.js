@@ -41,9 +41,9 @@ router.post("/", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -61,9 +61,9 @@ router.get("/", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -84,9 +84,9 @@ router.get("/:serverid", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -132,9 +132,9 @@ router.put("/:serverid", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }

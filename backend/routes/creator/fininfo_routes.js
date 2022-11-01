@@ -26,7 +26,7 @@ router.post("/", authorise, async (req, res) => {
         } = req.body;
 
         if (upi_id == "" && ifsc_code == "") {
-            return res.status(500).json({
+            return res.json({
                 isSuccessful: false,
                 errorMsg: "Atleast one of UPI and Bank Details needed",
                 result: []
@@ -34,7 +34,7 @@ router.post("/", authorise, async (req, res) => {
         }
 
         if (ifsc_code != "" && acc_number == "") {
-            return res.status(500).json({
+            return res.json({
                 isSuccessful: false,
                 errorMsg: "Bank Account Number can't be null",
                 result: []
@@ -43,7 +43,7 @@ router.post("/", authorise, async (req, res) => {
         }
 
         if (!Validator.pan(pancard)) {
-            return res.status(500).json({
+            return res.json({
                 isSuccessful: false,
                 errorMsg: "PAN Number Invalid",
                 result: []
@@ -51,7 +51,7 @@ router.post("/", authorise, async (req, res) => {
         }
 
         if (!(Validator.aadhaar(aadharcard) || Validator.aadhaarVID(aadharcard))) {
-            return res.status(500).json({
+            return res.json({
                 isSuccessful: false,
                 errorMsg: "Aadhar Number Invalid",
                 result: []
@@ -61,7 +61,7 @@ router.post("/", authorise, async (req, res) => {
 
         if (ifsc_code != "") {
             if (!Validator.ifsc(ifsc_code)) {
-                return res.status(500).json({
+                return res.json({
                     isSuccessful: false,
                     errorMsg: "IFSC Code Invalid",
                     result: []
@@ -75,7 +75,7 @@ router.post("/", authorise, async (req, res) => {
 
         if (upi_id != "") {
             if (!Validator.vpa(upi_id)) {
-                return res.status(500).json({
+                return res.json({
                     isSuccessful: false,
                     errorMsg: "UPI Id Invalid",
                     result: []
@@ -103,9 +103,9 @@ router.post("/", authorise, async (req, res) => {
             result: new_fin.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -123,9 +123,9 @@ router.get("/", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -179,9 +179,9 @@ router.get("/:column", authorise, async (req, res) => {
             result: Users_col.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -206,7 +206,7 @@ router.put("/", authorise, async (req, res) => {
         if (aadharcard != "") {
 
             if (!(Validator.aadhaar(aadharcard) || Validator.aadhaarVID(aadharcard))) {
-                return res.status(500).json({
+                return res.json({
                     isSuccessful: false,
                     errorMsg: "Aadhar Number Invalid",
                     result: []
@@ -229,7 +229,7 @@ router.put("/", authorise, async (req, res) => {
         if (pancard != "") {
 
             if (!Validator.pan(pancard)) {
-                return res.status(500).json({
+                return res.json({
                     isSuccessful: false,
                     errorMsg: "PAN Number Invalid",
                     result: []
@@ -252,7 +252,7 @@ router.put("/", authorise, async (req, res) => {
         if (upi_id != "") {
 
             if (!Validator.vpa(upi_id)) {
-                return res.status(500).json({
+                return res.json({
                     isSuccessful: false,
                     errorMsg: "UPI Id Invalid",
                     result: []
@@ -268,7 +268,7 @@ router.put("/", authorise, async (req, res) => {
         if (ifsc_code != null) {
 
             if (!Validator.ifsc(ifsc_code)) {
-                return res.status(500).json({
+                return res.json({
                     isSuccessful: false,
                     errorMsg: "IFSC Code Invalid",
                     result: []
@@ -300,9 +300,9 @@ router.put("/", authorise, async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }

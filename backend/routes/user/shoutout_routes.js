@@ -16,7 +16,7 @@ router.post("/", authorise, async (req, res) => {
             platform,
             usermessage,
         } = req.body;
-        if (platform == 0 || platform == 1 || platform == 2 || platform == 3 || platform == 4) {
+        if (platform == 0 || platform == 1 || platform == 2) {
             const new_user_vod = await pool.query(
                 "INSERT INTO User_Shoutout_Req (UserName, Creator, Platform, UserMessage, CreatorResponse, Status, LastUpdatedAt) VALUES ($1,$2,$3,$4,$5,$6,TO_TIMESTAMP($7)) RETURNING*;",
                 [
@@ -42,9 +42,9 @@ router.post("/", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -52,7 +52,7 @@ router.post("/", authorise, async (req, res) => {
 
 ///////////////////////////////////////////   Get All Data   ///////////////////////////////////////////
 // Get All Data for given creator 
-router.get("/", authorise, async (req, res) => {
+router.get("/allcreators", authorise, async (req, res) => {
     try {
         const ud = await pool.query("SELECT * FROM User_Shoutout_Req WHERE UserName = $1;", [req.username]);
 
@@ -62,9 +62,28 @@ router.get("/", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
+            result: []
+        });
+    }
+});
+
+///////////////////////////////////////////   Get All Data for Creator  ///////////////////////////////////////////
+// Get All Data for given creator 
+router.get("/creator", authorise, async (req, res) => {
+    try {
+        const ud = await pool.query("SELECT * FROM User_Shoutout_Req WHERE Creator = $1;", [req.username]);
+        res.json({
+            isSuccessful: true,
+            errorMsg: "",
+            result: ud.rows
+        });
+    } catch (err) {
+        res.json({
+            isSuccessful: false,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -85,28 +104,9 @@ router.get("/:creator", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
-            isSuccessful: false,
-            errorMsg: err,
-            result: []
-        });
-    }
-});
-
-///////////////////////////////////////////   Get All Data for Creator  ///////////////////////////////////////////
-// Get All Data for given creator 
-router.get("/creator", authorise, async (req, res) => {
-    try {
-        const ud = await pool.query("SELECT * FROM User_Shoutout_Req WHERE Creator = $1;", [req.username]);
         res.json({
-            isSuccessful: true,
-            errorMsg: "",
-            result: ud.rows
-        });
-    } catch (err) {
-        res.status(500).json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -124,7 +124,7 @@ router.put("/:creator/:platform", authorise, async (req, res) => {
         const {
             usermessage
         } = req.body;
-        if (platform == 0 || platform == 1 || platform == 2 || platform == 3 || platform == 4) {
+        if (platform == 0 || platform == 1 || platform == 2) {
             const new_user_vod = await pool.query(
                 "UPDATE User_Shoutout_Req SET UserMessage = $4, LastUpdatedAt = $5 WHERE UserName = $1 AND Creator = $2 AND Platform = $3 RETURNING*;",
                 [
@@ -148,9 +148,9 @@ router.put("/:creator/:platform", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -168,7 +168,7 @@ router.put("/:username/:platform", authorise, async (req, res) => {
             status,
             creatorresponse
         } = req.body;
-        if (platform == 0 || platform == 1 || platform == 2 || platform == 3 || platform == 4) {
+        if (platform == 0 || platform == 1 || platform == 2) {
             if (status == 1 || status == 2 || status == 3) {
                 const new_user_vod = await pool.query(
                     "UPDATE User_Shoutout_Req SET Status = $4, CreatorResponse = $5, LastUpdatedAt = $6 WHERE UserName = $1 AND Creator = $2 AND Platform = $3 RETURNING*;",
@@ -201,9 +201,9 @@ router.put("/:username/:platform", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }

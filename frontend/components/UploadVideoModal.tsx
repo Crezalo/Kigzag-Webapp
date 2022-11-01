@@ -1,8 +1,8 @@
 import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { VIDEO_API_URL } from "../services/api-service";
-import authHeader from "../services/auth-header";
+import { VIDEO_API_URL } from "../services/api-services/creator/video_api";
+import { authHeader } from "../services/auth-header";
 import Image from "next/image";
 import { ThemeProvider } from "@material-ui/core";
 import { maxHeight } from "@mui/system";
@@ -10,8 +10,6 @@ import uploadingGif from "../public/uploading.gif";
 import greenTick from "../public/green-tick.gif";
 
 const UploadVideoModal = () => {
-  const { chainId, account, library } = useWeb3React();
-
   const [videofile, setVideofile] = useState(null);
   const [thumbfile, setThumbfile] = useState(null);
   const [fileUploadStatus, setFileUploadStatus] = useState("NO FILE ADDED");
@@ -23,27 +21,38 @@ const UploadVideoModal = () => {
   const submitFile = async (event: any) => {
     event.preventDefault();
     try {
-      if (!videofile) {
-        throw new Error("Select a file first!");
+      if (authHeader().Authorization) {
+        if (!videofile) {
+          throw new Error("Select a file first!");
+        }
+        const formData = new FormData();
+        formData.append("video", videofile[0]);
+        formData.append("thumbnail", thumbfile[0]);
+        formData.append("title", event.target.title.value);
+        formData.append("description", event.target.description.value);
+        setFileUploadStatus("UPLOADING");
+        const response = await axios.post(VIDEO_API_URL + "upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: authHeader().Authorization,
+          },
+        });
+        if (response.data.isSuccessful) {
+          // handle success
+          setFileUploadStatus("COMPLETE");
+          console.log(response.data.result[0]);
+        } else {
+          setFileUploadStatus("Failed To Upload Retry!");
+          console.log(response.data.errorMsg);
+        }
+      } else {
+        setFileUploadStatus("Failed To Upload Retry!");
+        console.log("User Not Logged In");
       }
-      const formData = new FormData();
-      formData.append("video", videofile[0]);
-      formData.append("thumbnail", thumbfile[0]);
-      formData.append("title", event.target.title.value);
-      formData.append("description", event.target.description.value);
-      setFileUploadStatus("UPLOADING");
-      const response = await axios.post(VIDEO_API_URL + "upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: (await authHeader(account, library)).Authorization,
-        },
-      });
-      setFileUploadStatus("COMPLETE");
-      console.log(response.data);
-      // handle success
-    } catch (error) {
+    } catch (err) {
       // handle error
       setFileUploadStatus("Failed To Upload Retry!");
+      console.log(err);
     }
   };
 

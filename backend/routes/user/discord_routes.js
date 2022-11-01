@@ -141,9 +141,9 @@ router.post("/", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
 
 
@@ -190,16 +190,16 @@ router.put("/:serverid", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
 });
 
 // get all discord subscription plan for given user
-router.get("/", authorise, async (req, res) => {
+router.get("/allcreators", authorise, async (req, res) => {
     try {
         const ud = await pool.query("SELECT * FROM User_Discord_Sub WHERE UserName=$1;", [req.username]);
         res.json({
@@ -208,30 +208,30 @@ router.get("/", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
 });
 
 // get all discord subscription plan for given user
-router.get("/:creator", authorise, async (req, res) => {
+router.get("/:serverid", authorise, async (req, res) => {
     try {
         const {
-            creator
+            serverid
         } = req.params;
-        const ud = await pool.query("SELECT * FROM User_Discord_Sub WHERE UserName=$1 AND Creator=$2;", [req.username, creator]);
+        const ud = await pool.query("SELECT * FROM User_Discord_Sub WHERE UserName=$1 AND ServerId=$2;", [req.username, serverid]);
         res.json({
             isSuccessful: true,
             errorMsg: "",
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -266,9 +266,9 @@ router.get("/linkdata/:linkid", async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }

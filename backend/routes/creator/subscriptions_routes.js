@@ -33,9 +33,9 @@ router.post("/1m", authorise, async (req, res) => {
             result: new_sub.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -83,9 +83,9 @@ router.put("/1m", authorise, async (req, res) => {
             result: new_sub.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -104,9 +104,9 @@ router.get("/1m/:creator", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -143,9 +143,9 @@ router.get("/1m/:creator/:key", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -182,9 +182,9 @@ router.post("/3m", authorise, async (req, res) => {
             result: new_sub.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -232,9 +232,9 @@ router.put("/3m", authorise, async (req, res) => {
             result: new_sub.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -253,9 +253,9 @@ router.get("/3m/:creator", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -292,9 +292,9 @@ router.get("/3m/:creator/:key", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -331,9 +331,9 @@ router.post("/1y", authorise, async (req, res) => {
             result: new_sub.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -381,9 +381,9 @@ router.put("/1y", authorise, async (req, res) => {
             result: new_sub.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -402,9 +402,9 @@ router.get("/1y/:creator", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -441,9 +441,9 @@ router.get("/1y/:creator/:key", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -486,9 +486,9 @@ router.post("/series", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -534,9 +534,9 @@ router.put("/series", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -555,9 +555,9 @@ router.get("/series/:seriesid", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }

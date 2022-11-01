@@ -93,9 +93,12 @@ body {
   bottom: 10%;
 }
 
-
 .pointer {
   cursor: pointer;
+}
+
+.hovergreen:hover {
+  text-decoration: underline;
 }
 
 .form {
@@ -174,7 +177,7 @@ body {
   transition: 0.3s;
   width: 300px;
   height: 280px;
-  margin: 20px auto;
+  margin: 20px;
   background-color: #3b82f6;
   color: white;
   border-radius: 1%;
@@ -204,6 +207,12 @@ body {
   display: flex;
   flex-direction: row;
   margin: 10px 25px 20px 25px;
+}
+
+.creatorImageMinor {
+  height: 50px;
+  width: 50px;
+  padding: 5px;
 }
 
 video {
@@ -254,13 +263,12 @@ a {
   /* Add shadows to create the "card" effect */
   box-shadow: 0 1px 1px 3px #3b82f6;
   transition: 0.3s;
-  width: 250px;
-  height: 280px;
-  margin: 20px auto;
+  margin: 5px;
   background-color: #3b82f6;
   color: white;
   border-radius: 5%;
   font-size: 20px;
+  max-width: 15vw;
 }
 
 /* On mouse-over, add a deeper shadow */
@@ -329,6 +337,34 @@ a {
   padding: 4px 50px 6px 50px;
 }
 
+.shoutout_colab_info_per_platform_per_field {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.shoutout_colab_info_per_platform {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  font-size: 18px;
+}
+
+.shoutout_colab_info {
+  padding: 15px;
+  box-shadow: 0 1px 1px 3px #3b82f6;
+  transition: 0.3s;
+  width: 70%;
+  margin: 20px auto;
+  border-radius: 2%;
+}
+
+/* On mouse-over, add a deeper shadow */
+.shoutout_colab_info:hover {
+  box-shadow: 0 10px 18px 8px #173464;
+  border-radius: 4%;
+}
+
 /* Add some padding inside the card container */
 .nftDetails {
   padding: 2px 16px;
@@ -342,6 +378,13 @@ a {
 .creatorCardImage {
   margin: auto;
   display: table;
+  object-fit: cover;
+}
+
+.creatorDP {
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .rightAlignCard {
@@ -351,15 +394,15 @@ a {
 }
 
 .creatorImageDiv {
-  width: 20%;
+  width: 30%;
   float: left;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   justify-content: flex-end;
 }
 
 .becomeCreatorButton {
-  margin: 70px 0px 0px 50px;
+  margin: 50px 0px 0px 50px;
 }
 
 /* border: 2px solid red; */
@@ -367,7 +410,7 @@ a {
 .description {
   width: 50%;
   float: left;
-  padding: 20px 20px 10px 20px;
+  padding: 10px;
   /* border: 2px solid red; */
   display: flex;
   font-size: larger;
@@ -436,29 +479,121 @@ a {
   justify-content: space-around;
 }
 
-.tokenCard {
+.subCard {
   /* Add shadows to create the "card" effect */
   box-shadow: 0 1px 1px 3px #3b82f6;
   transition: 0.3s;
   width: 250px;
-  height: 110px;
-  padding: 15px;
-  margin: 20px auto;
-  background-color: #3b82f6;
-  border-radius: 20%;
+  height: 130px;
+  padding: 5px;
+  margin: 20px;
+  /* background-color: #3b82f6; */
+  border-radius: 5%;
+  color: white;
+  overflow: visible;
+  justify-content: center;
+  text-align: center;
+}
+
+.purchaseCard {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 1px 1px 3px #3b82f6;
+  transition: 0.3s;
+  /* width: 250px; */
+  /* height: 200px; */
+  padding: 10px;
+  margin: 20px;
+  /* padding: 1px; */
+  /* background-color: #3b82f6; */
+  border-radius: 5%;
+  color: white;
+  overflow: visible;
+  justify-content: center;
+  text-align: center;
+}
+
+.subCard1m {
+  background-color: #3a00a7;
+  border-radius: 5%;
   color: white;
 }
 
+.subCard3m {
+  background-color: #5f00ad;
+  border-radius: 5%;
+  color: white;
+}
+
+.subCard1y {
+  background-color: #99004d;
+  border-radius: 5%;
+  color: white;
+}
+
+.Pending {
+  background-color: #ffd900c9;
+  border-radius: 5%;
+  color: white;
+  min-width: 50%;
+}
+
+.AcceptedAndWaiting {
+  background-color: #00992e;
+  border-radius: 5%;
+  color: white;
+  min-width: 50%;
+}
+
+.Completed {
+  background-color: #3a00a7;
+  border-radius: 5%;
+  color: white;
+  min-width: 50%;
+}
+
+.Rejected {
+  background-color: #99004d;
+  border-radius: 5%;
+  color: white;
+  min-width: 50%;
+}
+
 /* On mouse-over, add a deeper shadow */
-.tokenCard:hover {
+.subCard:hover {
   box-shadow: 0 10px 18px 8px #173464;
+}
+/* On mouse-over, add a deeper shadow */
+.purchaseCard:hover {
+  box-shadow: 0 10px 18px 8px #173464;
+}
+
+.viewMore:hover {
+  color: #3b82f6;
 }
 .tokenImage {
   width: 30%;
   float: left;
   display: flex;
   justify-content: space-around;
-  padding-top: 10px;
+  padding: 10px;
+}
+
+.reqImage {
+  width: 100%;
+  float: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 5px;
+}
+
+.reqImage_0 {
+  width: 100%;
+  float: left;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 5px;
 }
 
 .nativeBalance {
@@ -576,4 +711,10 @@ a {
 
 .pageMinHeight {
   min-height: 90vh;
+}
+
+.buttonStyle {
+  font-size: 16px;
+  text-align: center;
+  width: auto;
 }

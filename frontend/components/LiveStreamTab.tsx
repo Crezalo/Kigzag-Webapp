@@ -1,14 +1,31 @@
 import React, { useEffect, useState } from "react";
 import VideoChat from "./VideoChat";
-import { useWeb3React } from "@web3-react/core";
 import { socket } from "../services/socket";
-import {
-  getIsVideoStreamAvailable,
-  getVideoStreamKey,
-} from "../services/api-service";
 import styled from "styled-components";
 import dynamic from "next/dynamic";
+import AuthService from "../services/auth-services";
+import { Button, Paper } from "@material-ui/core";
+import {
+  TextField,
+  InputAdornment,
+  IconButton,
+  Tooltip,
+  ThemeProvider,
+  createTheme,
+} from "@material-ui/core";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import ContentCopy from "@mui/icons-material/ContentCopy";
+import Warning from "@mui/icons-material/Warning";
+import LockReset from "@mui/icons-material/LockReset";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  addCreatorLiveStreamData,
+  getCreatorLiveStreamData,
+  updateCreatorLiveStreamData,
+} from "../services/api-services/creator/livestream_api";
+import CircularProgress from "@mui/material/CircularProgress";
+import Router from "next/router";
 
 const FlvNextPlayer = dynamic(
   () => import("@asurraa/react-ts-flv-player/dist/NextReactFlvPlayer"),
@@ -21,52 +38,60 @@ interface LiveStreamProp {
   creator: string;
   onCreatorProfile: boolean;
 }
-const LiveStream = ({ creator, onCreatorProfile }: LiveStreamProp) => {
-  const { chainId, account, library } = useWeb3React();
+const toolTipTheme = createTheme({
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        fontSize: "15px",
+      },
+    },
+  },
+});
 
+const LiveStream = ({ creator, onCreatorProfile }: LiveStreamProp) => {
+  const username = AuthService.getUsername();
   var [isStreamAvailable, setIsStreamAvailable] = useState(false);
   var [isLoading, setIsLoading] = useState(true);
-  var [viewerStream, setViewerStream] = useState("");
-  var [videoUrl, setVideoUrl] = useState("");
   var [streamKey, setStreamKey] = useState("");
+  var [viewKey, setViewKey] = useState("");
   const [displayChat, setDisplayChat] = useState(false);
-
-  // console.log("socket");
-  // console.log(socket);
-
-  const GetKeyDetails = () => {
-    useEffect(() => {
-      async function getData() {
-        if (!onCreatorProfile) {
-          const res = await getVideoStreamKey(
-            account,
-            onCreatorProfile ? creator.toLowerCase() : account.toLowerCase(),
-            library
-          );
-          setStreamKey(res[0].streamkey);
-        }
-      }
-      getData();
-    }, [account, creator]);
-  };
-
-  GetKeyDetails();
+  const [showStreamKey, setShowStreamKey] = useState(false);
+  const handleClickShowPassword = () => setShowStreamKey(!showStreamKey);
+  const handleMouseDownPassword = () => setShowStreamKey(!showStreamKey);
 
   const GetDetails = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getIsVideoStreamAvailable(
-          account,
-          onCreatorProfile ? creator.toLowerCase() : account.toLowerCase(),
-          library
-        );
-        setIsStreamAvailable(res.isStreamAvailable);
-        setViewerStream(res.streamkey);
+        if (!onCreatorProfile) {
+          const result = await addCreatorLiveStreamData();
+          setStreamKey(result[0].streamkey);
+        }
+        const result = await getCreatorLiveStreamData(creator);
+        setViewKey(result[0].viewkey);
+        setIsStreamAvailable(result[0].isStreamAvailable);
         if (isLoading) {
           setIsLoading(false);
         }
-        socket.emit("BE-check-user", { roomId: creator, account });
-        socket.emit("BE-join-room", { roomId: res.streamkey , userName: account });
+      }
+      // getData();
+
+      const intervalId = setInterval(() => {
+        getData();
+      }, 2000);
+      return () => clearInterval(intervalId);
+    }, []);
+  };
+
+  GetDetails();
+
+  const GetSocket = () => {
+    useEffect(() => {
+      async function getData() {
+        socket.emit("BE-check-user", { roomId: viewKey, username });
+        socket.emit("BE-join-room", {
+          roomId: viewKey,
+          userName: username,
+        });
         socket.on("FE-user-join", (users) => {
           console.log("FE-user-join");
           console.log(users);
@@ -84,31 +109,28 @@ const LiveStream = ({ creator, onCreatorProfile }: LiveStreamProp) => {
           socket.on("FE-user-leave", ({ userId, userName }) => {});
         });
       }
-
-      const intervalId = setInterval(() => {
-        getData();
-      }, 2000);
-      return () => clearInterval(intervalId);
+      getData();
     }, []);
   };
 
-  GetDetails();
+  GetSocket();
+
+  const RotateStreamKey = async () => {
+    const result = await updateCreatorLiveStreamData();
+    setStreamKey(result[0].streamkey);
+  };
 
   // Open Chat
   const clickChat = (e) => {
     e.stopPropagation();
     setDisplayChat(!displayChat);
   };
-
   return (
     <div
       className="blueTextBlackBackground"
       style={{ justifyContent: "center", textAlign: "center" }}
     >
-      {isStreamAvailable &&
-      viewerStream != "" &&
-      viewerStream != "undefined" &&
-      viewerStream ? (
+      {isStreamAvailable && viewKey != "" ? (
         <>
           <RoomContainer>
             <VideoAndBarContainer>
@@ -117,7 +139,7 @@ const LiveStream = ({ creator, onCreatorProfile }: LiveStreamProp) => {
                 <VideoBox className={`width-ls`}>
                   <FlvNextPlayer
                     url={`${
-                      process.env.NEXT_STATIC_lIVE_STREAM_API_URL + viewerStream
+                      process.env.NEXT_STATIC_lIVE_STREAM_API_URL + viewKey
                     }.flv`}
                     isMuted={false}
                     isLive={true}
@@ -136,7 +158,7 @@ const LiveStream = ({ creator, onCreatorProfile }: LiveStreamProp) => {
                 </Center>
               </Bar>
             </VideoAndBarContainer>
-            <VideoChat display={displayChat} roomId={viewerStream} />
+            <VideoChat display={displayChat} roomId={viewKey} />
           </RoomContainer>
         </>
       ) : (
@@ -144,29 +166,168 @@ const LiveStream = ({ creator, onCreatorProfile }: LiveStreamProp) => {
           {onCreatorProfile ? (
             <div style={{ margin: "100px", color: "white" }}>
               {isLoading ? (
-                <>Loading ...</>
+                <div>
+                  <p style={{ marginBottom: "20px" }}>
+                    Checking if the stream is on !!!
+                  </p>
+                  <CircularProgress
+                    style={{ display: "flex", margin: "auto" }}
+                  />
+                </div>
               ) : (
                 <>Creator currently not streaming!</>
               )}
             </div>
           ) : (
-            <div style={{ margin: "50px", color: "white" }}>
+            <div
+              className="blueTextBlackBackground"
+              style={{
+                margin: "20px",
+                justifyContent: "center",
+                textAlign: "center",
+                display: "flex",
+                flexDirection: "column",
+                color: "white",
+              }}
+            >
               {isLoading ? (
-                <>Loading ...</>
+                <div>
+                  <p style={{ marginBottom: "20px" }}>
+                    Checking if the stream is on !!!
+                  </p>
+                  <CircularProgress
+                    style={{ display: "flex", margin: "auto" }}
+                  />
+                </div>
               ) : (
-                <>
-                  Use the following in OBS Studio to start streaming:
-                  <p style={{ marginTop: "20px" }}>
-                    URL{" "}
-                    <p style={{ color: "blue" }}>
+                <div
+                  id="discordInfo"
+                  style={{
+                    // margin: "50px",
+                    justifyContent: "center",
+                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    color: "white",
+                  }}
+                >
+                  <div className="modelButton" style={{ marginBottom: "20px" }}>
+                    <Button
+                      style={{
+                        background: "#3B82F6",
+                        color: "white",
+                        marginBottom: "2px",
+                      }}
+                      variant="contained"
+                      onClick={() =>
+                        Router.push({
+                          pathname: "/updateprices",
+                        })
+                      }
+                    >
+                      Update Prices
+                    </Button>
+                  </div>
+                  <ThemeProvider theme={toolTipTheme}>
+                    Use the following in OBS Studio to start streaming:
+                    <p
+                      style={{
+                        fontSize: "20px",
+                        margin: "15px",
+                        color: "#3b82f6",
+                      }}
+                    >
+                      URL
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "20px",
+                        color: "white",
+                      }}
+                    >
                       {process.env.NEXT_STATIC_lIVE_STREAM_RTMP_URL}
                     </p>
-                  </p>
-                  <p>
-                    Stream Key
-                    <p style={{ color: "blue" }}>{streamKey}</p>
-                  </p>
-                </>
+                    <p
+                      style={{
+                        fontSize: "20px",
+                        margin: "25px 15px 25px 15px",
+                        color: "#3b82f6",
+                      }}
+                    >
+                      Stream Key{" "}
+                      <Tooltip
+                        title="Do NOT share your stream key with anyone"
+                        placement="right-start"
+                        style={{ marginLeft: "10px" }}
+                      >
+                        <Warning />
+                      </Tooltip>
+                    </p>
+                    <div style={{ justifyContent: "center" }}>
+                      <TextField
+                        value={streamKey}
+                        type={showStreamKey ? "text" : "password"} // <-- This is where the magic happens
+                        // onChange={someChangeHandler}
+                        InputProps={{
+                          // <-- This is where the toggle button is added.
+                          endAdornment: (
+                            <InputAdornment position="start">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => {
+                                  RotateStreamKey();
+                                }}
+                                style={{ color: "white" }}
+                              >
+                                <Tooltip
+                                  title="Rotate Stream Key, in case it is compromised"
+                                  placement="bottom-start"
+                                >
+                                  <LockReset />
+                                </Tooltip>
+                              </IconButton>
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(streamKey);
+                                }}
+                                style={{ color: "white" }}
+                              >
+                                <Tooltip title="Copy" placement="bottom-start">
+                                  <ContentCopy />
+                                </Tooltip>
+                              </IconButton>
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                style={{ color: "white" }}
+                              >
+                                {showStreamKey ? (
+                                  <Tooltip
+                                    title="Hide"
+                                    placement="bottom-start"
+                                  >
+                                    <Visibility />
+                                  </Tooltip>
+                                ) : (
+                                  <Tooltip
+                                    title="Show"
+                                    placement="bottom-start"
+                                  >
+                                    <VisibilityOff />
+                                  </Tooltip>
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                          style: { color: "white" },
+                        }}
+                        disabled
+                      />
+                    </div>
+                  </ThemeProvider>
+                </div>
               )}
             </div>
           )}

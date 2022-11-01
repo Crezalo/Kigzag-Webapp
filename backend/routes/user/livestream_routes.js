@@ -39,9 +39,9 @@ router.post("/", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -49,8 +49,9 @@ router.post("/", authorise, async (req, res) => {
 
 ///////////////////////////////////////////   Get All Data   ///////////////////////////////////////////
 // Get All Data for given creator 
-router.get("/", authorise, async (req, res) => {
+router.get("/allcreators", authorise, async (req, res) => {
     try {
+        console.log("Livestream get all");
         const ud = await pool.query("SELECT * FROM User_Live_Streaming_Sub WHERE UserName = $1;", [req.username]);
 
         res.json({
@@ -59,9 +60,9 @@ router.get("/", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -82,9 +83,9 @@ router.get("/:creator", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -130,9 +131,9 @@ router.put("/:creator", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }

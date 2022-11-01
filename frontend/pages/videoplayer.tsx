@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
 import Jdenticon from "react-jdenticon";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { useWeb3React } from "@web3-react/core";
 import {
   getVideoDetails,
   getVideoSignedUrl,
-  VIDEO_API_URL,
-} from "../services/api-service";
-import { shortenHex } from "../util";
-import { ZERO_ADDRESS } from "../constants/misc";
-import useENSName from "../hooks/useENSName";
+} from "../services/api-services/creator/video_api";
 import Router, { useRouter } from "next/router";
-import ConnectToWallet from "../components/ConnectToWallet";
 import queryString from "query-string";
 import Head from "next/head";
+import AuthService from "../services/auth-services";
+import { getSpecificUserData } from "../services/api-services/user_api";
+import Image from "next/image";
 
-export default function NFT() {
+export default function VideoPlayer() {
   const router = useRouter();
   let { videoid } = router.query;
 
@@ -24,22 +20,47 @@ export default function NFT() {
     videoid = queryString.parseUrl(url).query.videoid;
   }
 
-  const { chainId, account, library } = useWeb3React();
-
   var [signedURl, setSignedURl] = useState("");
+  const [isConnected, setIsConnected] = useState(false);
+  const [username, setUsername] = useState("");
+  const [displayPicture, setDisplayPicture] = useState("");
+
+  const checkConnected = () => {
+    useEffect(() => {
+      async function getData() {
+        if (typeof window !== "undefined") {
+          console.log("AuthService.refresh()");
+          console.log(await AuthService.refresh());
+          setIsConnected(
+            AuthService.validateCurrentUserRefreshToken() &&
+              AuthService.validateCurrentUserAccessToken()
+          );
+        }
+      }
+      getData();
+    }, []);
+  };
+
+  checkConnected();
+
+  const updateUsername = () => {
+    useEffect(() => {
+      setUsername(AuthService.getUsername());
+    }, [isConnected]);
+  };
+
+  updateUsername();
 
   const GetVideoUrl = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getVideoSignedUrl(
-          account,
-          library,
-          (videoid ?? "").toString()
-        );
-        setSignedURl(res["signedurl"]);
+        if (videoid) {
+          const result = await getVideoSignedUrl(videoid.toString());
+          setSignedURl(result[0]["signedurl"]);
+        }
       }
       getData();
-    }, [account, chainId, videoid]);
+    }, [username]);
   };
 
   GetVideoUrl();
@@ -53,25 +74,38 @@ export default function NFT() {
   const GetDetails = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getVideoDetails(
-          account,
-          library,
-          (videoid ?? "").toString()
-        );
-        setVideoDetails(res);
+        if (videoid) {
+          const result = await getVideoDetails(videoid.toString());
+          setVideoDetails(result[0]);
+        }
       }
       getData();
-    }, [account, chainId]);
+    }, [username]);
   };
 
   GetDetails();
 
-  const title = videoDetails[0]?.title;
-  const description = videoDetails[0]?.description;
-  const creator = videoDetails[0]?.creator;
+  const GetDisplatPicture = () => {
+    useEffect(() => {
+      async function getData() {
+        if (videoDetails.creator != "") {
+          const result = await getSpecificUserData(
+            videoDetails.creator,
+            "displaypicture"
+          );
+          setDisplayPicture(result[0]?.displaypicture);
+        }
+      }
+      getData();
+    }, [videoDetails.creator]);
+  };
 
-  console.log("signedURl");
-  console.log(signedURl);
+  GetDisplatPicture();
+
+  // console.log("videoDetails");
+  // console.log(videoDetails);
+  // console.log("signedURl");
+  // console.log(signedURl);
 
   return (
     <div>
@@ -80,13 +114,7 @@ export default function NFT() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="videoDiv">
-        {signedURl != "" &&
-        signedURl &&
-        title &&
-        description &&
-        creator &&
-        account &&
-        videoid ? (
+        {isConnected && signedURl ? (
           <>
             <video
               controls
@@ -103,38 +131,37 @@ export default function NFT() {
               default
             /> */}
             </video>
-            <h1 className="videoDiv h1">{title}</h1>
+            <h1 className="videoDiv h1">{videoDetails.title}</h1>
             <section
               onClick={() => {
                 Router.push({
                   pathname: "/creatorprofile",
                   query: {
-                    address: creator,
+                    address: videoDetails.creator,
                   },
                 });
               }}
               className="creatorIdent pointer"
             >
-              <Jdenticon size={50} value={account.toLowerCase()} />
-              <h2 className="VideoDiv h2">
-                {/* {useENSName(creator ? creator : ZERO_ADDRESS) || */}
-                {shortenHex(creator ? creator : "Loading...", 4)}
-              </h2>
+              {displayPicture != "" ? (
+                <div className="creatorImageMinor">
+                  <Image
+                    src={displayPicture}
+                    alt=""
+                    width={50}
+                    height={50}
+                    className="creatorDP"
+                  />
+                </div>
+              ) : (
+                <Jdenticon size={100} value={videoDetails.creator} />
+              )}
+              <h2 className="VideoDiv h2">{videoDetails.creator}</h2>
             </section>
-            <h1 className="VideoDiv p">{description}</h1>
+            <h1 className="VideoDiv p">{videoDetails.description}</h1>
           </>
         ) : (
-          <>
-            {typeof account !== "string" ? (
-              <ConnectToWallet />
-            ) : (
-              <>
-                <CircularProgress
-                  style={{ display: "flex", margin: "auto", height: "80vh" }}
-                />
-              </>
-            )}
-          </>
+          <>{/* <ConnectToWallet /> */}</>
         )}
       </div>
     </div>

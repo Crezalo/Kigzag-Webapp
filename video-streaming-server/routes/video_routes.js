@@ -65,28 +65,33 @@ router.post('/upload', authorise, (req, res) => {
       const videobuffer = fs.readFileSync(videopath);
       const narray = videopath.split("/");
       const name = narray[narray.length - 1];
-      const videoFileName = authAddress + "/" + name;
+      const videoFileName = req.username + "/" + name;
+      console.log("start upload video file");
       const videoData = await uploadFile(videobuffer, process.env.S3_BUCKET_VIDEO, videoFileName);
+      console.log("complete upload video file");
 
       // thumbnail file
       const thumbpath = files.thumbnail[0].path;
       const thumbbuffer = fs.readFileSync(thumbpath);
-      const thumbFileName = authAddress + "/" + name.split(".")[0] + ".png";
+      const thumbFileName = req.username + "/" + name.split(".")[0] + ".png";
+      console.log("start upload thumb file");
       const thumbData = await uploadFile(thumbbuffer, process.env.S3_BUCKET_THUMBNAIL, thumbFileName);
+      console.log("complete upload thumb file");
 
       // video duration
+      console.log("start get duration");
       const duration = await getVideoDurationInSeconds(videopath);
+      console.log("complete get duration");
 
       console.log("DURATION");
       console.log(duration);
 
       const videoid = name.split(".")[0];
       const new_video_details = await pool.query(
-        "INSERT INTO Creator_video (VideoId, Creator, SeriesId, Title, Description, Duration, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,$6,TO_TIMESTAMP($7),TO_TIMESTAMP($8)) RETURNING*;",
+        "INSERT INTO Creator_video (VideoId, Creator, Title, Description, Duration, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,TO_TIMESTAMP($6),TO_TIMESTAMP($7)) RETURNING*;",
         [
           videoid,
           req.username,
-          fields['seriesid'][0],
           fields['title'][0],
           fields['description'][0],
           Math.round(duration),
@@ -96,8 +101,8 @@ router.post('/upload', authorise, (req, res) => {
       );
       console.log(videoData);
       console.log(thumbData);
-      if (fields['seriesid'][0] != "0") {
-        const update_series = await pool.query("UPDATE Creator_Series SET VideoIds = array_append(VideoIds, $1) WHERE SeriesId = $2 RETURNING*;", [fields['seriesid'][0], videoid]);
+      if (fields['seriesid']) {
+        const update_series = await pool.query("UPDATE Creator_Series SET VideoIds = array_append(VideoIds, $1) WHERE SeriesId = $2 RETURNING*;", [fields['seriesid'], videoid]);
         return res.send({
           isSuccessful: true,
           errorMsg: "",
@@ -113,9 +118,9 @@ router.post('/upload', authorise, (req, res) => {
 
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -148,9 +153,9 @@ router.put("/:videoid", authorise, async (req, res) => {
       result: video_update.rows
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -164,16 +169,16 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
     const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
     // console.log(ud.rows[0]);
-    const duration = ud.rows[0].duration;
+    // const duration = ud.rows[0].duration;
 
     // AWS Cloudfront CDN and other optimizations
     var aws_cf_config = {
       keypairId: process.env.CLOUDFRONT_KEYPAIR_ID,
       privateKeyPath: process.env.CLOUDFRONT_PRIVATE_KEY_PATH,
-      expireTime: (new Date().getTime() + (duration * 1000)),
+      expireTime: (new Date().getTime() + (3600 * 1000)),
     }
     var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator}/${videoid}.mp4`, aws_cf_config);
-    console.log('Signed URL: ' + signedUrl);
+    // console.log('Signed URL: ' + signedUrl);
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -182,9 +187,9 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
       }]
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -203,9 +208,9 @@ router.get("/details/:videoid", authorise, async (req, res) => {
       result: ud.rows
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -224,9 +229,9 @@ router.get("/details/creator/:creator", authorise, async (req, res) => {
       result: ud.rows
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -239,7 +244,7 @@ router.get("/thumbnail/:videoid", authorise, async (req, res) => {
   //     videoid,
   //   } = req.params;
 
-  //   const address = req.authAddress;
+  //   const address = req.req.username;
   //   const body = req.authBody;
   //   const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
   //   const creator = ud.rows[0].creator;
@@ -251,7 +256,7 @@ router.get("/thumbnail/:videoid", authorise, async (req, res) => {
   // } catch (err) {
   //   res.json({
   //   isSuccessful: false,
-  //   errorMsg: err,
+  //   errorMsg: err.message,
   //   result: []
   // });
   // }
@@ -269,7 +274,7 @@ router.get("/thumbnail/:videoid", authorise, async (req, res) => {
     var aws_cf_config = {
       keypairId: process.env.CLOUDFRONT_KEYPAIR_ID,
       privateKeyPath: process.env.CLOUDFRONT_PRIVATE_KEY_PATH,
-      expireTime: (new Date().getTime() + (duration * 1000)),
+      expireTime: (new Date().getTime() + (3600 * 1000)),
     }
     var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator}/${videoid}.png`, aws_cf_config);
     // console.log('Signed URL: ' + signedUrl);
@@ -281,9 +286,9 @@ router.get("/thumbnail/:videoid", authorise, async (req, res) => {
       }]
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -305,7 +310,7 @@ router.get("/captions/:videoid", authorise, async (req, res) => {
   } catch (err) {
     res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }

@@ -57,13 +57,13 @@ router.post('/upload', authorise, (req, res) => {
       const videobuffer = fs.readFileSync(videopath);
       const narray = videopath.split("/");
       const name = narray[narray.length - 1];
-      const videoFileName = authAddress + "/" + name;
+      const videoFileName = req.username + "/" + name;
       const videoData = await uploadFile(videobuffer, process.env.S3_BUCKET_VIDEO, videoFileName);
 
       // thumbnail file
       const thumbpath = files.thumbnail[0].path;
       const thumbbuffer = fs.readFileSync(thumbpath);
-      const thumbFileName = authAddress + "/" + name.split(".")[0] + ".png";
+      const thumbFileName = req.username + "/" + name.split(".")[0] + ".png";
       const thumbData = await uploadFile(thumbbuffer, process.env.S3_BUCKET_THUMBNAIL, thumbFileName);
 
       const seriesid = name.split(".")[0];
@@ -85,9 +85,9 @@ router.post('/upload', authorise, (req, res) => {
       });
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -120,9 +120,9 @@ router.put("/:seriesid", authorise, async (req, res) => {
       result: series_update.rows
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -154,9 +154,9 @@ router.get('/video/:seriesid/', authorise, async (req, res) => {
       }]
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -175,9 +175,9 @@ router.get("/details/:seriesid", authorise, async (req, res) => {
       result: ud.rows
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -196,9 +196,9 @@ router.get("/details/creator/:creator", authorise, async (req, res) => {
       result: ud.rows
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -229,9 +229,9 @@ router.get("/thumbnail/:seriesid", authorise, async (req, res) => {
       }]
     });
   } catch (err) {
-    res.status(500).json({
+    res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }
@@ -253,7 +253,7 @@ router.get("/captions/:seriesid", async (req, res) => {
   } catch (err) {
     res.json({
       isSuccessful: false,
-      errorMsg: err,
+      errorMsg: err.message,
       result: []
     });
   }

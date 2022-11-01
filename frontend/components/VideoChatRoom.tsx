@@ -5,17 +5,16 @@ import { socket } from "../services/socket";
 import VideoChatCard from "./VideoChatCard";
 import VideoChatBottomBar from "./VideoChatBottomBar";
 import VideoChat from "./VideoChat";
-import { useWeb3React } from "@web3-react/core";
-import { shortenHex } from "../util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AuthService from "../services/auth-services";
 
-interface VideoChatMainProp {
+interface VideoChatRoomProp {
   roomId: string;
   leaveRoomFunc: any;
 }
 
-const VideoChatRoom = ({ roomId, leaveRoomFunc }: VideoChatMainProp) => {
-  const { account, library } = useWeb3React();
+const VideoChatRoom = ({ roomId, leaveRoomFunc }: VideoChatRoomProp) => {
+  const username = AuthService.getUsername();
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
     localUser: { video: true, audio: true },
@@ -46,14 +45,14 @@ const VideoChatRoom = ({ roomId, leaveRoomFunc }: VideoChatMainProp) => {
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
 
-        socket.emit("BE-join-room", { roomId, userName: account });
+        socket.emit("BE-join-room", { roomId, userName: username });
         socket.on("FE-user-join", (users) => {
           // all users
           const peers = [];
           users.forEach(({ userId, info }) => {
             let { userName, video, audio } = info;
 
-            if (userName !== account) {
+            if (userName !== username) {
               const peer = createPeer(userId, socket.id, stream);
 
               peer.userName = userName;
@@ -226,7 +225,7 @@ const VideoChatRoom = ({ roomId, leaveRoomFunc }: VideoChatMainProp) => {
   // BackButton
   const goToBack = (e) => {
     e.preventDefault();
-    socket.emit("BE-leave-room", { roomId, leaver: account });
+    socket.emit("BE-leave-room", { roomId, leaver: username });
     console.log("userStream.current");
     console.log(userStream.current);
 
@@ -403,7 +402,7 @@ const VideoChatRoom = ({ roomId, leaveRoomFunc }: VideoChatMainProp) => {
             className={`width-peer${peers.length > 8 ? "" : peers.length}`}
           >
             {userVideoAudio["localUser"].video ? null : (
-              <UserName>{shortenHex(account, 4)}</UserName>
+              <UserName>{username}</UserName>
             )}
             {/* <FaIcon className="fas fa-expand" /> */}
             <FontAwesomeIcon className="fas expandIcon pointer" icon="expand" />

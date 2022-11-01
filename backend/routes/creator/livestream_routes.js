@@ -41,9 +41,9 @@ router.post("/", authorise, async (req, res) => {
             result: skey.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -89,9 +89,9 @@ router.put("/", authorise, async (req, res) => {
             result: skey.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -113,7 +113,7 @@ router.get("/:creator", authorise, async (req, res) => {
 
         if (streams['live']) {
             for (var x in streams['live']) {
-                if (streams['live'][x]['publisher'] && vkey.rows[0].streamkey == streams['live'][x]['publisher']['stream']) {
+                if (streams['live'][x]['publisher'] && vkey.rows[0].viewkey == streams['live'][x]['publisher']['stream']) {
                     return res.json({
                         isSuccessful: true,
                         errorMsg: "",
@@ -135,9 +135,9 @@ router.get("/:creator", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -164,8 +164,10 @@ async function loadStreamKeyViewKeyToCache(livestream_sk_vk) {
     try {
         const skeyvkey = await pool.query("SELECT StreamKey, ViewKey FROM Creator_LiveStream;");
         if (skeyvkey.rows[0]) {
-            for (var x in skeyvkey.rows)
-                livestream_sk_vk.set(x.streamkey, x.viewkey);
+            skeyvkey.rows.forEach(function (item, index) {
+                console.log(item, index);
+                livestream_sk_vk.set(item.streamkey, item.viewkey);
+            });
         } else {
             for (var i = 0; i < 50; i++)
                 livestream_sk_vk.set("bcb5b41b8" + i, "tester");

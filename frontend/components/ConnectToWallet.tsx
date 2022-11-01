@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import { useWeb3React } from "@web3-react/core";
-import useMetaMaskOnboarding from "../hooks/useMetaMaskOnboarding";
-import { injected } from "../connectors";
-import { UserRejectedRequestError } from "@web3-react/injected-connector";
-import ReactGoogleLogin from "react-google-login";
+import {
+  GoogleLogin,
+  GoogleLogout,
+  useGoogleLogin,
+  useGoogleLogout,
+} from "react-google-login";
+import { GoogleLoginButton } from "react-social-login-buttons";
+import AuthService from "../services/auth-services";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -31,44 +34,119 @@ const useStylesModal = makeStyles((theme) => ({
       boxShadow: "0 10px 18px 8px #3B82F6",
     },
   },
+  text: {
+    color: "white",
+    fontSize: "18px",
+    textAlign: "center",
+  },
+  error: {
+    color: "red",
+    fontSize: "18px",
+    textAlign: "center",
+    marginBottom: "10px",
+  },
+  link: {
+    color: "#3B82F6",
+    fontSize: "18px",
+    textAlign: "center",
+    cursor: "pointer",
+  },
+  textCont: {
+    diplay: "flex",
+    flexDirection: "row",
+    marginTop: "10px",
+  },
+  input: {
+    width: "100%",
+    height: "35px",
+    outline: "none",
+    border: "none",
+    borderRadius: "5px",
+    marginBottom: "15px",
+    textAlign: "center",
+  },
+  button: {
+    width: "100%",
+    height: "35px",
+    outline: "none",
+    border: "none",
+    borderRadius: "5px",
+    marginBottom: "15px",
+    textAlign: "center",
+    color: "#3B82F6",
+    fontSize: "18px",
+    fontWeight: "bold",
+    backgroundColor: "white",
+    "&:hover": {
+      backgroundColor: "#3B82F6",
+      color: "white",
+    },
+  },
 }));
 
 const ConnectToWallet = () => {
   const classesModal = useStylesModal();
 
-  const {
-    active,
-    error,
-    activate,
-    chainId,
-    account,
-    library,
-    setError,
-    deactivate,
-  } = useWeb3React();
+  const [haveAccount, setHaveAccount] = useState(false);
+  const [username, setUsername] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [showRegGoogle, setShowRegGoogle] = useState(false);
+  const inputRef = useRef(null);
+  const [isConnected, setIsConnected] = useState(false);
 
-  const {
-    isMetaMaskInstalled,
-    isWeb3Available,
-    startOnboarding,
-    stopOnboarding,
-  } = useMetaMaskOnboarding();
+  const checkConnected = () => {
+    useEffect(() => {
+      async function getData() {
+        if (typeof window !== "undefined") {
+          console.log("AuthService.refresh()");
+          console.log(await AuthService.refresh());
+          setIsConnected(
+            AuthService.validateCurrentUserRefreshToken() &&
+              AuthService.validateCurrentUserAccessToken()
+          );
+        }
+      }
+      getData();
+    }, []);
+  };
 
-  // manage connecting state for injected connector
-  const [connecting, setConnecting] = useState(false);
+  checkConnected();
 
-  useEffect(() => {
-    if (active || error) {
-      setConnecting(false);
-      stopOnboarding();
+  const login = async (resp: any) => {
+    const result = await AuthService.login("", "", resp.tokenId, 1);
+    setIsConnected(result);
+    if (result) window.location.reload();
+  };
+
+  const register = async (resp: any) => {
+    const result = await AuthService.register(
+      "",
+      1,
+      resp.tokenId,
+      "",
+      username,
+      "",
+      "",
+      "",
+      false,
+      "",
+      "",
+      "",
+      "",
+      ""
+    );
+    if (typeof result === "string") {
+      if (result.includes("users_emailaddress_key")) {
+        setErrorMsg("This google account is already a user");
+      } else if (result.includes("users_username_key")) {
+        setErrorMsg("This username is already a user");
+      } else {
+        setErrorMsg(result);
+      }
+    } else if (result) {
+      setIsConnected(result);
+      window.location.reload();
     }
-  }, [active, error, stopOnboarding]);
-
-  const isConnected = typeof account === "string" && !!library;
-
-  const onResponse = (resp) => {
-    console.log("resp");
-    console.log(resp);
   };
 
   return (
@@ -76,62 +154,91 @@ const ConnectToWallet = () => {
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
       className={classesModal.modal}
-      open={true}
+      open={!isConnected}
       closeAfterTransition
       BackdropComponent={Backdrop}
       BackdropProps={{
         timeout: 500,
       }}
     >
-      <Fade in={true}>
+      <Fade in={!isConnected}>
         <div className={classesModal.paper}>
-          {isWeb3Available ? (
-            <button
-              disabled={connecting}
-              onClick={() => {
-                setConnecting(true);
-
-                activate(injected, undefined, true).catch((error) => {
-                  // ignore the error if it's a user rejected request
-                  if (error instanceof UserRejectedRequestError) {
-                    setConnecting(false);
-                  } else {
-                    setError(error);
-                  }
-                });
-              }}
-            >
-              {isMetaMaskInstalled ? (
-                <button
-                  className="w-full bg-blue-500 text-white px-2 py-2 rounded"
-                  style={{ fontSize: 18, textAlign: "center" }}
+          <p className={classesModal.error}>{errorMsg}</p>
+          {haveAccount ? (
+            <>
+              <div style={{ textAlign: "center" }}>
+                <GoogleLogin
+                  clientId={process.env.NEXT_STATIC_GOOGLE_LOGIN_CLIENT_ID}
+                  buttonText="Login with Google"
+                  onSuccess={login}
+                  // onFailure={}
+                  cookiePolicy={"single_host_origin"}
+                />
+              </div>
+              <div className={classesModal.textCont}>
+                <p className={classesModal.text}>Create a new accountt?</p>
+                <p
+                  className={classesModal.link}
+                  onClick={() => {
+                    setHaveAccount(false);
+                    setShowRegGoogle(false);
+                  }}
                 >
-                  Connect to MetaMask
-                </button>
-              ) : (
-                <button
-                  className="w-full bg-blue-500 text-white px-2 py-2 rounded"
-                  style={{ fontSize: 18, textAlign: "center" }}
-                >
-                  Connect to Wallet
-                </button>
-              )}
-            </button>
+                  Register
+                </p>
+              </div>
+            </>
           ) : (
-            <button
-              className="w-full bg-blue-500 text-white px-2 py-2 rounded"
-              style={{ fontSize: 18, textAlign: "center" }}
-              onClick={startOnboarding}
-            >
-              Install Metamask
-            </button>
+            <>
+              {showRegGoogle ? (
+                <div style={{ textAlign: "center" }}>
+                  <GoogleLogin
+                    clientId={process.env.NEXT_STATIC_GOOGLE_LOGIN_CLIENT_ID}
+                    buttonText="Signup with Google"
+                    onSuccess={register}
+                    // onFailure={}
+                    cookiePolicy={"single_host_origin"}
+                  />
+                </div>
+              ) : (
+                <>
+                  <input
+                    className={classesModal.input}
+                    type="text"
+                    ref={inputRef}
+                    placeholder={"Enter Username"}
+                  />
+                  <button
+                    className={classesModal.button}
+                    onClick={() => {
+                      if (inputRef.current.value != "") {
+                        console.log(inputRef.current.value);
+                        setUsername(inputRef.current.value);
+                        setShowRegGoogle(true);
+                        setErrorMsg("");
+                      } else {
+                        setErrorMsg("Please enter username");
+                      }
+                    }}
+                  >
+                    Register
+                  </button>
+                </>
+              )}
+
+              <div className={classesModal.textCont}>
+                <p className={classesModal.text}>Already have an account?</p>
+                <p
+                  className={classesModal.link}
+                  onClick={() => {
+                    setHaveAccount(true);
+                  }}
+                >
+                  Login
+                </p>
+              </div>
+            </>
           )}
-          {/* <ReactGoogleLogin
-            clientId="713302413250-algumu64p8er3g2in55i40ghq4mj6n2h.apps.googleusercontent.com" // We created this earlier, remember?
-            buttonText="Login with Google"
-            onSuccess={onResponse}
-            onFailure={onResponse}
-          /> */}
         </div>
       </Fade>
     </Modal>

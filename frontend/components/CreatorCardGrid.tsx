@@ -12,7 +12,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface GridItemProps {
-  creator: string;
+  creator: {
+    username: string;
+    fname: string;
+    lname: string;
+    displaypicture: string;
+    bio: string;
+  };
   classes: any;
 }
 const GridItem = ({ creator, classes }: GridItemProps) => {
@@ -24,15 +30,25 @@ const GridItem = ({ creator, classes }: GridItemProps) => {
 };
 
 interface CreatorCardGridProp {
-  creators: string[];
+  creatorsList: {
+    username: string;
+    fname: string;
+    lname: string;
+    displaypicture: string;
+    bio: string;
+  }[];
 }
-const CreatorCardGrid = ({ creators }: CreatorCardGridProp) => {
+const CreatorCardGrid = ({ creatorsList }: CreatorCardGridProp) => {
   const classes = useStyles();
   return (
     <div className="blueTextBlackBackground">
       <Grid container spacing={1}>
-        {creators.map((creator) => (
-          <GridItem creator={creator} classes={classes} key={creator}/>
+        {creatorsList?.map((creator) => (
+          <GridItem
+            creator={creator}
+            classes={classes}
+            key={creator.username}
+          />
         ))}
       </Grid>
     </div>

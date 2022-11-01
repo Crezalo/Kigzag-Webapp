@@ -1,4 +1,4 @@
-module.exports = function(socket, io, socketList){
+module.exports = function (socket, io, socketList) {
 
   console.log(`New User connected: ${socket.id}`);
 
@@ -39,6 +39,7 @@ module.exports = function(socket, io, socketList){
       video: true,
       audio: true
     };
+    console.log("reaching");
 
     // Set User List
     io.in(roomId).fetchSockets((err, clients) => {
@@ -92,7 +93,9 @@ module.exports = function(socket, io, socketList){
     msg,
     sender
   }) => {
-    // console.log(msg);
+    console.log(msg);
+    console.log("roomId");
+    console.log(roomId);
     io.sockets.in(roomId).emit('FE-receive-message', {
       msg,
       sender

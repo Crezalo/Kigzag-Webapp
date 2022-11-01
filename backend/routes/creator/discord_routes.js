@@ -29,9 +29,9 @@ router.post("/", authorise, async (req, res) => {
             result: new_discord.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -52,9 +52,9 @@ router.get("/:creator", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -76,16 +76,15 @@ router.put("/", authorise, async (req, res) => {
                 invitelink
             ]
         );
-
         res.json({
             isSuccessful: true,
             errorMsg: "",
             result: new_discord.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }

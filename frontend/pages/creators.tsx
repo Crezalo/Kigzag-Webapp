@@ -1,46 +1,122 @@
 import React, { useEffect, useState } from "react";
 import CreatorCardGrid from "../components/CreatorCardGrid";
-import authHeader from "../services/auth-header";
-import { getCreators } from "../services/api-service";
-import axios from "axios";
-import { CircularProgress } from "@material-ui/core";
-import { useWeb3React } from "@web3-react/core";
-import ConnectToWallet from "../components/ConnectToWallet";
+import AuthService from "../services/auth-services";
 import Head from "next/head";
+import {
+  getSearchResultForCreators,
+  getTopCreators,
+} from "../services/api-services/user_api";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 export default function Creators() {
-  const { account, chainId, library } = useWeb3React();
+  const [isConnected, setIsConnected] = useState(false);
+  const [username, setUsername] = useState("");
+  const [offset, setOffset] = useState(0);
+
+  const checkConnected = () => {
+    useEffect(() => {
+      async function getData() {
+        if (typeof window !== "undefined") {
+          console.log("AuthService.refresh()");
+          console.log(await AuthService.refresh());
+          setIsConnected(
+            AuthService.validateCurrentUserRefreshToken() &&
+              AuthService.validateCurrentUserAccessToken()
+          );
+        }
+      }
+      getData();
+    }, []);
+  };
+
+  checkConnected();
+
+  const updateUsername = () => {
+    useEffect(() => {
+      setUsername(AuthService.getUsername());
+    }, [isConnected]);
+  };
+
+  updateUsername();
 
   const [creatorsList, setCreatorsList] = useState([
     {
-      useraddress: "",
+      username: "",
+      fname: "",
+      lname: "",
+      displaypicture: "",
+      bio: "",
     },
   ]);
 
   const GetCreatorList = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getCreators(account, chainId, library);
-        setCreatorsList(res);
+        const result = await getTopCreators(offset);
+        console.log(result);
+        setCreatorsList(result);
       }
       getData();
-    }, [account, chainId]);
+    }, [username]);
   };
 
   GetCreatorList();
 
-  const creators = [];
-  console.log(creatorsList);
-  console.log(creatorsList.length);
-  if (creatorsList) {
-    for (var i = 0; i < creatorsList.length; i++) {
-      if (creatorsList[i] && creatorsList[i].useraddress != "") {
-        creators.push(creatorsList[i].useraddress);
-      }
+  const GetSearchResultCreatorList = (query: string) => {
+    async function getData() {
+      let result;
+      if (query != "") result = await getSearchResultForCreators(query);
+      else result = await getTopCreators(offset);
+      console.log(result);
+      setCreatorsList(result);
     }
-  }
+    getData();
+  };
 
-  console.log(account);
+  const [items, setItems] = useState([
+    {
+      username: "",
+      fname: "",
+      lname: "",
+      displaypicture: "",
+      bio: "",
+    },
+  ]);
+
+  const handleOnSearch = (string, results) => {
+    // onSearch will have as the first callback parameter
+    // the string searched and for the second the results.
+
+    GetSearchResultCreatorList(string);
+    console.log(string, results);
+  };
+
+  const handleOnHover = (result) => {
+    // the item hovered
+    console.log(result);
+  };
+
+  const handleOnSelect = (item) => {
+    // the item selected
+    console.log(item);
+  };
+
+  const handleOnFocus = () => {
+    console.log("Focused");
+  };
+
+  const formatResult = (item) => {
+    return (
+      <>
+        {/* <span style={{ display: "block", textAlign: "left" }}>
+          id: {item.id}
+        </span>
+        <span style={{ display: "block", textAlign: "left" }}>
+          name: {item.name}
+        </span> */}
+      </>
+    );
+  };
 
   return (
     <div>
@@ -49,7 +125,7 @@ export default function Creators() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
-        {creatorsList != [] && account ? (
+        {username != "" && isConnected ? (
           <div
             className="blueTextBlackBackground"
             style={{
@@ -57,22 +133,23 @@ export default function Creators() {
               fontSize: 25,
             }}
           >
+            <div style={{ width: 400, zIndex: -1 }}>
+              <ReactSearchAutocomplete
+                items={items}
+                onSearch={handleOnSearch}
+                onHover={handleOnHover}
+                onSelect={handleOnSelect}
+                onFocus={handleOnFocus}
+                autoFocus
+                formatResult={formatResult}
+              />
+            </div>
             <div style={{ marginTop: 25, marginLeft: 0 }}>
-              <CreatorCardGrid creators={creators} />
+              <CreatorCardGrid creatorsList={creatorsList} />
             </div>
           </div>
         ) : (
-          <>
-            {typeof account !== "string" ? (
-              <ConnectToWallet />
-            ) : (
-              <>
-                <CircularProgress
-                  style={{ display: "flex", margin: "auto", height: "80vh" }}
-                />
-              </>
-            )}
-          </>
+          <>{/* <ConnectToWallet /> */}</>
         )}
       </div>
     </div>

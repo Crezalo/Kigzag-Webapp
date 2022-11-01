@@ -12,7 +12,7 @@ import { useWeb3React } from "@web3-react/core";
 import {
   getDiscordPlanDetails,
   getNFTForGivenTokenId,
-} from "../services/api-service";
+} from "../services/archive/api-service";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";

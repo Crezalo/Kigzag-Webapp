@@ -1,44 +1,51 @@
-import { useWeb3React } from "@web3-react/core";
-import Jdenticon from "react-jdenticon";
+import AuthService from "../services/auth-services";
 import Image from "next/image";
 import Router from "next/router";
-import {
-  useCreatorFactoryCreatorSaleFee,
-  useCreatorFactoryCreatorToken,
-} from "../hooks/LoyaltyTokenContract/useCreatorFactoryContract";
-import { useTokenName, useTokenSymbol } from "../hooks/ERC20/useTokenContract";
-import { LOYALTY_TOKEN_CREATOR_FACTORY_ADDRESS_LIST } from "../constants/chains";
-import { currencyName, parseBalance } from "../util";
 import { useEffect, useState } from "react";
-import { getVideoThumbnail } from "../services/api-service";
+import { getVideoThumbnail } from "../services/api-services/creator/video_api";
+import { getVideoThumbnail as getSeriesVideoThumbnail } from "../services/api-services/creator/series_api";
 
 interface VideoCardProp {
-  vid: {
+  videoDetails: {
     videoid: string;
     title: string;
     description: string;
     creator: string;
     duration: number;
   };
+  category: "Videos" | "Series";
 }
-const VideoCard = ({ vid }: VideoCardProp) => {
-  const { account, chainId, library } = useWeb3React();
+const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
+  const username = AuthService.getUsername();
 
   const [videoThumb, setVideoThumb] = useState("");
 
   const GetVidThumbnail = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getVideoThumbnail(account, library, vid.videoid);
-        console.log(res["signedurl"]);
-        setVideoThumb(res["signedurl"]);
+        const result = await getVideoThumbnail(videoDetails.videoid);
+        console.log(result[0].signedurl);
+        console.log(result[0]["signedurl"]);
+        setVideoThumb(result[0]["signedurl"]);
         console.log(videoThumb);
       }
       getData();
-    }, [account]);
+    }, [username]);
   };
 
-  GetVidThumbnail();
+  const GetSeriedVidThumbnail = () => {
+    useEffect(() => {
+      async function getData() {
+        const result = await getSeriesVideoThumbnail(videoDetails.videoid);
+        console.log(result[0]["signedurl"]);
+        setVideoThumb(result[0]["signedurl"]);
+        console.log(videoThumb);
+      }
+      getData();
+    }, [username]);
+  };
+  if (category == "Videos") GetVidThumbnail();
+  else GetSeriedVidThumbnail();
 
   function seconds2time(sec) {
     var hours = Math.floor(sec / 3600);
@@ -68,14 +75,14 @@ const VideoCard = ({ vid }: VideoCardProp) => {
       onClick={() =>
         Router.push({
           pathname: "/videoplayer",
-          query: { videoid: vid.videoid },
+          query: { videoid: videoDetails.videoid },
         })
       }
     >
-      {vid.videoid != "" && vid.videoid ? (
+      {videoDetails.videoid != "" && videoDetails.videoid ? (
         <>
           <div className="videoCardImage">
-            {videoThumb.includes("https://") ? (
+            {videoThumb?.includes("https://") ? (
               <Image
                 src={videoThumb}
                 alt="Loading ..."
@@ -86,13 +93,6 @@ const VideoCard = ({ vid }: VideoCardProp) => {
             ) : (
               <></>
             )}
-            {/* <Image
-              src={videoThumb}
-              alt="Loading ..."
-              width={300}
-              height={225}
-              className="videoCardImage"
-            /> */}
             <h3
               className="bottom-right"
               style={{
@@ -101,11 +101,11 @@ const VideoCard = ({ vid }: VideoCardProp) => {
                 padding: "1px",
               }}
             >
-              {seconds2time(vid.duration)}
+              {seconds2time(videoDetails.duration)}
             </h3>
           </div>
           <div style={{ padding: "0px 5px 8px 15px" }}>
-            <h1 style={{ fontSize: "16px" }}>{vid.title}</h1>
+            <h1 style={{ fontSize: "16px" }}>{videoDetails.title}</h1>
           </div>
         </>
       ) : (

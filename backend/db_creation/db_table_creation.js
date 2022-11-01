@@ -30,7 +30,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   // SeriesId: 0 for general videos and specific value when video is a part of series
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS Creator_video (VideoId VARCHAR(255) PRIMARY KEY, Creator VARCHAR(255) NOT NULL, SeriesId VARCHAR(255) UNIQUE, Title VARCHAR(255) NOT NULL, Description Text NOT NULL, Duration INTEGER NOT NULL, CreatedAt TIMESTAMP NOT NULL, UpdatedAt TIMESTAMP NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS Creator_video (VideoId VARCHAR(255) PRIMARY KEY, Creator VARCHAR(255) NOT NULL, SeriesId VARCHAR(255), Title VARCHAR(255) NOT NULL, Description Text NOT NULL, Duration INTEGER NOT NULL, CreatedAt TIMESTAMP NOT NULL, UpdatedAt TIMESTAMP NOT NULL);"
     )
     .catch((err) => console.log("PG ERROR Creator_video Table\n\n\t\t", err.message));
 
@@ -50,7 +50,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
     .catch((err) => console.log("PG ERROR Creator_LiveStream Table\n\n\t\t", err.message));
 
   //4. Creator Shoutout table creation
-  //Platform: 0: Instagram,1: Youtube,2: Twitter,3: Facebook,4: LinkedIn
+  //Platform: 0: Instagram,1: Youtube,2: Twitter,
   // Price in the main table itself since it doesn't need 1m, 3m, 1y pricing
   await pool
     .query(
@@ -59,7 +59,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
     .catch((err) => console.log("PG ERROR Creator_Shoutout Table\n\n\t\t", err.message));
 
   //5. Creator Colab table creation
-  //Platform: 0: Instagram,1: Youtube,2: Twitter,3: Facebook,4: LinkedIn
+  //Platform: 0: Instagram,1: Youtube,2: Twitter,
   // Price in the main table itself since it doesn't need 1m, 3m, 1y pricing
   await pool
     .query(

@@ -15,7 +15,7 @@ router.post("/", authorise, async (req, res) => {
             count_per_week,
             price
         } = req.body;
-        if (platform == 0 || platform == 1 || platform == 2 || platform == 3 || platform == 4) {
+        if (platform == 0 || platform == 1 || platform == 2) {
             const new_shoutout = await pool.query(
                 "INSERT INTO Creator_Shoutout (Creator, Platform, Count_Per_Week, Week_Till_Date_Exhausted, Price) VALUES ($1,$2,$3,$4,$5) RETURNING*;",
                 [
@@ -40,9 +40,9 @@ router.post("/", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -63,9 +63,9 @@ router.get("/:creator", authorise, async (req, res) => {
             result: ud.rows
         });
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }
@@ -82,7 +82,7 @@ router.put("/:platform", authorise, async (req, res) => {
             count_per_week,
             price
         } = req.body;
-        if (platform == 0 || platform == 1 || platform == 2 || platform == 3 || platform == 4) {
+        if (platform == 0 || platform == 1 || platform == 2) {
             const new_shoutout = await pool.query(
                 "UPDATE Creator_Shoutout SET Count_Per_Week = $3, Price = $4 WHERE Creator = $1 AND Platform = $2 RETURNING*;",
                 [
@@ -106,9 +106,9 @@ router.put("/:platform", authorise, async (req, res) => {
             });
         }
     } catch (err) {
-        res.status(500).json({
+        res.json({
             isSuccessful: false,
-            errorMsg: err,
+            errorMsg: err.message,
             result: []
         });
     }

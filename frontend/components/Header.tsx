@@ -1,41 +1,65 @@
-import { Web3ReactProvider } from "@web3-react/core";
 import Link from "next/link";
-import React from "react";
-import getLibrary from "../getLibrary";
-import useEagerConnect from "../hooks/useEagerConnect";
-import Account from "./Account";
-import ChainName from "./ChainName";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import kigzaglogo from "../public/kigzaglogo.png";
+import AuthService from "../services/auth-services";
+import ConnectToWallet from "./ConnectToWallet";
+import SettingMenu from "./SettingMenu";
 
 const Header = () => {
-  const triedToEagerConnect = useEagerConnect();
+  const [isConnected, setIsConnected] = useState(false);
+  const checkConnected = () => {
+    useEffect(() => {
+      async function getData() {
+        if (typeof window !== "undefined") {
+          console.log("AuthService.refresh()");
+          console.log(await AuthService.refresh());
+          setIsConnected(
+            AuthService.validateCurrentUserRefreshToken() &&
+              AuthService.validateCurrentUserAccessToken()
+          );
+        }
+      }
+      getData();
+    }, []);
+  };
+
+  checkConnected();
+
   return (
-    <nav
-      style={{
-        padding: "1px",
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <Link href="/">
-        <a style={{ marginTop: "2px", marginLeft: "5px" }}>
-          <Image
-            src={kigzaglogo}
-            alt="Picture of the author"
-            width={90}
-            height={30}
-          />
-        </a>
-      </Link>
-      <Link href="/creators">
-        <a className="mr-6 py-1" style={{ fontSize: 18, color: "#3B82F6" }}>
-          Creators
-        </a>
-      </Link>
-      <ChainName triedToEagerConnect={triedToEagerConnect} />
-      <Account triedToEagerConnect={triedToEagerConnect} />
-    </nav>
+    <>
+      {isConnected ? (
+        <nav
+          style={{
+            padding: "1px",
+            display: "flex",
+            justifyContent: "space-around",
+          }}
+        >
+          <Link href="/">
+            <a style={{ marginTop: "2px" }}>
+              <Image
+                src={kigzaglogo}
+                alt="Kigzag Logo"
+                width={90}
+                height={35}
+              />
+            </a>
+          </Link>
+          <Link href="/creators">
+            <a
+              className="mr-6 py-1"
+              style={{ fontSize: 18, color: "#3b82f6", marginTop: "5px" }}
+            >
+              Creators
+            </a>
+          </Link>
+          <SettingMenu />
+        </nav>
+      ) : (
+        <ConnectToWallet />
+      )}
+    </>
   );
 };
 export default Header;
