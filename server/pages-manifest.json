@@ -1,13 +1,17 @@
 {
   "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/collab": "pages/collab.html",
   "/creatorprofile": "pages/creatorprofile.html",
   "/creators": "pages/creators.html",
   "/discordplans": "pages/discordplans.html",
+  "/editprofile": "pages/editprofile.html",
   "/home": "pages/home.html",
   "/": "pages/index.html",
-  "/nft": "pages/nft.html",
+  "/revenue": "pages/revenue.html",
+  "/shoutout": "pages/shoutout.html",
+  "/updateprices": "pages/updateprices.html",
   "/videoplayer": "pages/videoplayer.html",
-  "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/404": "pages/404.html"
 }

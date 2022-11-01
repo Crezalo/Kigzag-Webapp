@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST={"../components/LiveStreamTab.tsx -> @asurraa/react-ts-flv-player/dist/NextReactFlvPlayer":{id:9329,files:["static/chunks/329.c77695ef148586d3.js"]},"../node_modules/@asurraa/react-ts-flv-player/dist/NextReactFlvPlayer.js -> ./ReactFlvPlayer":{id:9979,files:["static/chunks/c8cba1bb.e01991449e44d83f.js","static/chunks/979.bfc1e2d573c5be05.js"]}};
