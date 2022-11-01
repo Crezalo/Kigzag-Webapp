@@ -13,9 +13,9 @@ import {
   createTheme,
   Fade,
   makeStyles,
-  Modal,
   TextField,
 } from "@material-ui/core";
+import Modal from '@mui/material/Modal';
 import { getSpecificUserData } from "../services/api-services/user_api";
 
 const useStylesModal = makeStyles((theme) => ({

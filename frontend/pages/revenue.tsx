@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import CreatorCardGrid from "../components/CreatorCardGrid";
-import { getCreators } from "../services/archive/api-service";
 import axios from "axios";
 import { CircularProgress } from "@material-ui/core";
-import { useWeb3React } from "@web3-react/core";
-import ConnectToWallet from "../components/ConnectToWallet";
+import ConnectToAccount from "../components/ConnectToAccount";
 import Head from "next/head";
 
 export default function Revenue() {
-  const { account, chainId, library } = useWeb3React();
-
   const [creatorsList, setCreatorsList] = useState([
     {
       user: "",
@@ -17,13 +13,13 @@ export default function Revenue() {
   ]);
 
   const GetCreatorList = () => {
-    useEffect(() => {
-      async function getData() {
-        const res = await getCreators(account, chainId, library);
-        setCreatorsList(res);
-      }
-      getData();
-    }, [account, chainId]);
+    // useEffect(() => {
+    //   async function getData() {
+    //     const res = await getCreators(account, chainId, library);
+    //     setCreatorsList(res);
+    //   }
+    //   getData();
+    // }, [account, chainId]);
   };
 
   GetCreatorList();
@@ -39,8 +35,6 @@ export default function Revenue() {
     }
   }
 
-  console.log(account);
-
   return (
     <div>
       <Head>
@@ -48,7 +42,7 @@ export default function Revenue() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
-        {creatorsList != [] && account ? (
+        {true ? (
           <div
             className="blueTextBlackBackground"
             style={{
@@ -57,13 +51,14 @@ export default function Revenue() {
             }}
           >
             <div style={{ marginTop: 25, marginLeft: 0 }}>
-              <CreatorCardGrid creators={creators} />
+              {/* <CreatorCardGrid creators={creators} /> */}
             </div>
           </div>
         ) : (
           <>
-            {typeof account !== "string" ? (
-              <ConnectToWallet />
+            {/* {typeof account !== "string" ? ( */}
+            {true ? (
+              <ConnectToAccount />
             ) : (
               <>
                 <CircularProgress

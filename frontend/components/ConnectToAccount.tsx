@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
+import Modal from '@mui/material/Modal';
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import {
@@ -84,7 +84,7 @@ const useStylesModal = makeStyles((theme) => ({
   },
 }));
 
-const ConnectToWallet = () => {
+const ConnectToAccount = () => {
   const classesModal = useStylesModal();
 
   const [haveAccount, setHaveAccount] = useState(false);
@@ -244,4 +244,4 @@ const ConnectToWallet = () => {
     </Modal>
   );
 };
-export default ConnectToWallet;
+export default ConnectToAccount;

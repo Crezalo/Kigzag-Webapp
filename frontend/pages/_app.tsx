@@ -1,7 +1,5 @@
-import { Web3ReactProvider } from "@web3-react/core";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import getLibrary from "../getLibrary";
 import "../styles/globals.css";
 import { useEffect } from "react";
 // import { createTheme } from "@material-ui/core/styles";
@@ -57,7 +55,7 @@ export default function MyApp({ Component, pageProps }) {
     document.body.style.backgroundColor = "black";
   }, []);
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
+    <div>
       <Header />
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -66,6 +64,6 @@ export default function MyApp({ Component, pageProps }) {
         </div>
       </ThemeProvider>
       <Footer />
-    </Web3ReactProvider>
+    </div>
   );
 }

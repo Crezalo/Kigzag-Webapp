@@ -161,7 +161,7 @@ export default function VideoPlayer() {
             <h1 className="VideoDiv p">{videoDetails.description}</h1>
           </>
         ) : (
-          <>{/* <ConnectToWallet /> */}</>
+          <>{/* <ConnectToAccount /> */}</>
         )}
       </div>
     </div>

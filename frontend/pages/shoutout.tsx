@@ -7,7 +7,7 @@ import {
   Tab,
   Tabs,
 } from "@material-ui/core";
-import ConnectToWallet from "../components/ConnectToWallet";
+import ConnectToAccount from "../components/ConnectToAccount";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import AuthService from "../services/auth-services";

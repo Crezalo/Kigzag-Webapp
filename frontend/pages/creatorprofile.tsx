@@ -225,7 +225,7 @@ export default function CreatorProfile() {
             />
           </div>
         ) : (
-          // <ConnectToWallet />
+          // <ConnectToAccount />
           <></>
         )}
       </div>
