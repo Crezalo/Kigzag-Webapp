@@ -23,7 +23,6 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
 import ConnectToAccount from "../components/ConnectToAccount";
 import queryString from "query-string";
-import { BigNumberish } from "@ethersproject/bignumber";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from '@mui/material/Modal';
 import Backdrop from "@material-ui/core/Backdrop";
