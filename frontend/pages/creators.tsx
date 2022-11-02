@@ -149,7 +149,7 @@ export default function Creators() {
             </div>
           </div>
         ) : (
-          <>{/* <ConnectToWallet /> */}</>
+          <>{/* <ConnectToAccount /> */}</>
         )}
       </div>
     </div>

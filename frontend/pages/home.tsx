@@ -271,7 +271,7 @@ export default function Home() {
             />
           </div>
         ) : (
-          // <ConnectToWallet />
+          // <ConnectToAccount />
           <></>
         )}
       </div>

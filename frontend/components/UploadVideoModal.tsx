@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { VIDEO_API_URL } from "../services/api-services/creator/video_api";
@@ -143,6 +142,7 @@ const UploadVideoModal = () => {
                 src={window.URL.createObjectURL(thumbfile[0])}
                 width="350"
                 height="220"
+                alt=""
               />
             </div>
           ) : (

@@ -466,7 +466,7 @@ a {
   /* border: 2px solid red; */
 }
 .paperContainer {
-  background-image: url("../assets/background4.jpg");
+  background-image: url("../public/coming_soon.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import {
   Backdrop,
-  Box,
   Button,
   CircularProgress,
   createTheme,
   FormControl,
   InputLabel,
   makeStyles,
-  Modal,
   TextField,
   Tooltip,
 } from "@material-ui/core";
-import ConnectToWallet from "../components/ConnectToWallet";
+import { Modal, Box, Fade } from "@mui/material";
+import ConnectToWallet from "../components/ConnectToAccount";
 import Head from "next/head";
 import AuthService from "../services/auth-services";
 import {
@@ -20,7 +19,7 @@ import {
   getUserData,
   updateUserData,
 } from "../services/api-services/user_api";
-import { Fade, Label } from "reactstrap";
+import { Label } from "reactstrap";
 import Jdenticon from "react-jdenticon";
 import Image from "next/image";
 import Edit from "@mui/icons-material/Edit";

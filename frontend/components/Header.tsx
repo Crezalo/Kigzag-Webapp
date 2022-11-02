@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import kigzaglogo from "../public/kigzaglogo.png";
 import AuthService from "../services/auth-services";
-import ConnectToWallet from "./ConnectToWallet";
+import ConnectToAccount from "./ConnectToAccount";
 import SettingMenu from "./SettingMenu";
 
 const Header = () => {
@@ -57,7 +57,7 @@ const Header = () => {
           <SettingMenu />
         </nav>
       ) : (
-        <ConnectToWallet />
+        <ConnectToAccount />
       )}
     </>
   );

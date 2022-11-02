@@ -7,7 +7,7 @@ import {
   makeStyles,
   TextField,
 } from "@material-ui/core";
-import ConnectToWallet from "../components/ConnectToWallet";
+import ConnectToAccount from "../components/ConnectToAccount";
 import Head from "next/head";
 import AuthService from "../services/auth-services";
 import { getUserData, updateUserData } from "../services/api-services/user_api";
