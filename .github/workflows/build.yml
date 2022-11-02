@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: '14'
       - run: npm install -g yarn
-      - run: yarn install --frozen-lockfile
+      - run: yarn install
       - run: yarn build
       - uses: peaceiris/actions-gh-pages@v3
         with:
