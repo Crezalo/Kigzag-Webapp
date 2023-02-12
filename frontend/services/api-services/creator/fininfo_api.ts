@@ -10,10 +10,9 @@ export const MAIN_API_URL = process.env.NEXT_STATIC_MAIN_API_URL;
 
 export async function addCreatorFinInfoData(
   aadharcard: string,
-  aadharcardlink: string,
   pancard: string,
-  pancardlink: string,
   upi_id: string,
+  bank_name: string,
   ifsc_code: string,
   acc_number: string
 ) {
@@ -21,10 +20,9 @@ export async function addCreatorFinInfoData(
     if (authHeader().Authorization) {
       const data = {
         aadharcard: aadharcard,
-        aadharcardlink: aadharcardlink,
         pancard: pancard,
-        pancardlink: pancardlink,
         upi_id: upi_id,
+        bank_name: bank_name,
         ifsc_code: ifsc_code,
         acc_number: acc_number,
       };
@@ -86,10 +84,9 @@ export async function getCreatorSpecificFinInfoData(column: string) {
 
 export async function updateCreatorFinInfoData(
   aadharcard: string,
-  aadharcardlink: string,
   pancard: string,
-  pancardlink: string,
   upi_id: string,
+  bank_name: string,
   ifsc_code: string,
   acc_number: string
 ) {
@@ -97,10 +94,9 @@ export async function updateCreatorFinInfoData(
     if (authHeader().Authorization) {
       const data = {
         aadharcard: aadharcard,
-        aadharcardlink: aadharcardlink,
         pancard: pancard,
-        pancardlink: pancardlink,
         upi_id: upi_id,
+        bank_name: bank_name,
         ifsc_code: ifsc_code,
         acc_number: acc_number,
       };

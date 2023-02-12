@@ -17,10 +17,9 @@ router.post("/", authorise, async (req, res) => {
     try {
         var {
             aadharcard,
-            aadharcardlink,
             pancard,
-            pancardlink,
             upi_id,
+            bank_name,
             ifsc_code,
             acc_number
         } = req.body;
@@ -84,14 +83,13 @@ router.post("/", authorise, async (req, res) => {
         }
 
         const new_fin = await pool.query(
-            "INSERT INTO Fin_Info (Creator, AadharCard, AadharCardLink, PanCard, PanCardLink, UPI_Id, IFSC_Code, Acc_Number) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING*;",
+            "INSERT INTO Fin_Info (Creator, AadharCard, PanCard, UPI_Id, bank_name, IFSC_Code, Acc_Number) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING*;",
             [
                 req.username,
                 aadharcard,
-                aadharcardlink,
                 pancard,
-                pancardlink,
                 upi_id,
+                bank_name,
                 ifsc_code,
                 acc_number
             ]
@@ -142,24 +140,19 @@ router.get("/:column", authorise, async (req, res) => {
                 "SELECT AadharCard FROM Fin_Info WHERE Creator = $1;",
                 [req.username]
             );
-        else if (column == "aadharcardlink")
-            Users_col = await pool.query(
-                "SELECT AadharCardLink FROM Fin_Info WHERE Creator = $1;",
-                [req.username]
-            );
         else if (column == "pancard")
             Users_col = await pool.query(
                 "SELECT PanCard FROM Fin_Info WHERE Creator = $1;",
                 [req.username]
             );
-        else if (column == "pancardlink")
-            Users_col = await pool.query(
-                "SELECT PanCardLink FROM Fin_Info WHERE Creator = $1;",
-                [req.username]
-            );
         else if (column == "upi_id")
             Users_col = await pool.query(
                 "SELECT UPI_Id FROM Users Fin_Info Creator = $1;",
+                [req.username]
+            );
+        else if (column == "bank_name")
+            Users_col = await pool.query(
+                "SELECT bank_name FROM Users Fin_Info Creator = $1;",
                 [req.username]
             );
         else if (column == "ifsc_code")
@@ -193,9 +186,8 @@ router.put("/", authorise, async (req, res) => {
     try {
         var {
             aadharcard,
-            aadharcardlink,
             pancard,
-            pancardlink,
+            bank_name,
             upi_id,
             ifsc_code,
             acc_number
@@ -218,11 +210,6 @@ router.put("/", authorise, async (req, res) => {
                 [aadharcard, req.username]
             );
         }
-        if (aadharcardlink != "")
-            new_User = await pool.query(
-                "UPDATE Fin_Info SET AadharCardLink=$1 WHERE Creator=$2 RETURNING*;",
-                [aadharcardlink, req.username]
-            );
 
 
 
@@ -242,12 +229,6 @@ router.put("/", authorise, async (req, res) => {
             );
         }
 
-        if (pancardlink != "")
-            new_User = await pool.query(
-                "UPDATE Fin_Info SET PanCardLink=$1 WHERE Creator=$2 RETURNING*;",
-                [pancardlink, req.username]
-            );
-
 
         if (upi_id != "") {
 
@@ -262,6 +243,15 @@ router.put("/", authorise, async (req, res) => {
             new_User = await pool.query(
                 "UPDATE Fin_Info SET UPI_Id=$1 WHERE Creator=$2 RETURNING*;",
                 [upi_id, req.username]
+            );
+        }
+
+
+        if (bank_name != "") {
+
+            new_User = await pool.query(
+                "UPDATE Fin_Info SET bank_name=$1 WHERE Creator=$2 RETURNING*;",
+                [bank_name, req.username]
             );
         }
 

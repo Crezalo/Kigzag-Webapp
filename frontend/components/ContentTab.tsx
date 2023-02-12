@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab/Tab";
 import Tabs from "@material-ui/core/Tabs/Tabs";
 import React, { useEffect, useState } from "react";
-import ContentCardGrid from "./ContentCardGrid";
+import VideosSeriesGating from "./VideosSeriesGating";
 
 const useStyles = makeStyles({
   tab: {
@@ -26,13 +26,13 @@ const ContentTab = ({ creator, onCreatorProfile }: ContentTabProps) => {
   };
 
   let tabs_array = [
-    <ContentCardGrid
+    <VideosSeriesGating
       creator={creator}
       onCreatorProfile={onCreatorProfile}
       category="Videos"
       key={1}
     />,
-    <ContentCardGrid
+    <VideosSeriesGating
       creator={creator}
       onCreatorProfile={onCreatorProfile}
       category="Series"

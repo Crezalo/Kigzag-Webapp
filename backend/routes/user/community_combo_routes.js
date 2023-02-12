@@ -105,11 +105,11 @@ router.put("/:serverid", authorise, async (req, res) => {
         if (type == 0 || type == 1 || type == 2) {
             const duration = type == 0 ? 2628888 : (type == 1 ? 7888838 : 31556926);
 
-            const uvod = await pool.query("SELECT Expiry_Date FROM User_Community_Combo_Sub  WHERE UserName = $1 AND ServerId = $2 RETURNING*;",
+            const uvod = (await pool.query("SELECT Expiry_Date FROM User_Community_Combo_Sub  WHERE UserName = $1 AND ServerId = $2 RETURNING*;",
                 [
                     req.username,
                     serverid
-                ]).rows[0].expiry_date;
+                ])).rows[0].expiry_date;
             const new_user_vod = await pool.query(
                 "UPDATE User_Community_Combo_Sub  SET Expiry_Date = TO_TIMESTAMP($3) , Type = $4 WHERE UserName = $1 AND ServerId = $2 RETURNING*;",
                 [

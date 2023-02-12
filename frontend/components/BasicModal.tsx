@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from '@mui/material/Modal';
+import Modal from "@mui/material/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 
@@ -15,15 +15,14 @@ const useStylesModal = makeStyles((theme) => ({
     // backgroundColor: theme.palette.background.paper,
     // border: "2px solid #000",
     borderRadius: "5px",
-    boxShadow: theme.shadows[5],
+    // boxShadow: theme.shadows[5],
     color: "white",
-    backgroundColor: "#3b82f6",
-    padding: theme.spacing(2, 4, 3),
+    // padding: theme.spacing(2, 4, 3),
   },
 }));
 
 interface BasicModalProps {
-  modalButtonText: string;
+  modalButtonText: any;
   modalBody: any;
 }
 const BasicModal = ({ modalButtonText, modalBody }: BasicModalProps) => {
@@ -36,7 +35,7 @@ const BasicModal = ({ modalButtonText, modalBody }: BasicModalProps) => {
     <>
       <div className="modelButton">
         <Button
-          style={{ background: "#3B82F6", color: "white", marginBottom: "2px"}}
+          style={{ background: "#3B82F6", color: "white", marginBottom: "2px" }}
           variant="contained"
           onClick={handleOpen}
         >

@@ -41,7 +41,7 @@ const GridItem = ({ subscription, classes }: GridItemProps) => {
 interface SubsCardGridProp {
   category:
     | "Videos"
-    | "Series"
+    | "Courses"
     | "Stream"
     | "Meet"
     | "Discord"
@@ -64,7 +64,7 @@ const SubsCardGrid = ({ category }: SubsCardGridProp) => {
       async function getData() {
         let result = [];
         if (category == "Videos") result = await getUserVODData();
-        else if (category == "Series") result = await getUserVideoSeriesData();
+        else if (category == "Courses") result = await getUserVideoSeriesData();
         else if (category == "Stream") result = await getUserLivestreamData();
         else if (category == "Meet") result = await getUserVideoCallData();
         else if (category == "Discord") result = await getUserDiscordData();

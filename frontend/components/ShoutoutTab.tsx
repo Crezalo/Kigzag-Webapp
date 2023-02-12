@@ -24,7 +24,7 @@ import {
   ThemeProvider,
   Tooltip,
 } from "@material-ui/core";
-import Modal from '@mui/material/Modal';
+import Modal from "@mui/material/Modal";
 import Edit from "@mui/icons-material/Edit";
 import Delete from "@mui/icons-material/Delete";
 import Router from "next/router";
@@ -797,7 +797,9 @@ const ShoutoutTab = ({ creator, onCreatorProfile }: ShoutoutTabProp) => {
         </Modal>
 
         {count == 0 && onCreatorProfile ? (
-          <div style={{marginTop:"15vh"}}>{creator} doesn't support shoutouts.</div>
+          <div style={{ marginTop: "15vh" }}>
+            {creator} doesn't support shoutouts.
+          </div>
         ) : (
           <>
             {shoutoutData?.map((shoutout) => {

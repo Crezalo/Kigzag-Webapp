@@ -232,5 +232,5 @@ window.env = {
   "REACT_APP_INFURA_KEY": "4bf032f2d38a4ed6bb975b80d6340847",
   "MAIN_API_URL": "http://localhost:5000/",
   "VIDEO_API_URL": "http://localhost:4000/",
-  "S3_BUCKET_THUMBNAIL_URL": "https://kigzag-video-thumbnail.s3.eu-north-1.amazonaws.com/"
+  "S3_BUCKET_VIDEO_THUMBNAIL_URL": "https://kigzag-video-thumbnail.s3.eu-north-1.amazonaws.com/"
 };

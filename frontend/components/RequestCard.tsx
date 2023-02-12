@@ -17,6 +17,7 @@ import {
   TextField,
 } from "@material-ui/core";
 import { getSpecificUserData } from "../services/api-services/user_api";
+import CreatorDP from "./CreatorDP";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -134,18 +135,7 @@ const RequestCard = ({ request }: RequestCardProp) => {
         <>
           <section className="purchaseCard" style={{ width: "100%" }}>
             <div className="reqImage">
-              {displayPicture != "" ? (
-                <Image
-                  src={displayPicture}
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="creatorDP"
-                />
-              ) : (
-                <Jdenticon size={50} value={request.creator} />
-              )}
-              {/* <Jazzicon diameter={60} seed={Math.round(Math.random() * 10000000)} /> */}
+              <CreatorDP creator={request.creator} height={50} width={50} />
               <h2
                 className="hovergreen viewMore pointer"
                 style={{

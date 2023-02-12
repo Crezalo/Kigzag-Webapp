@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRef } from "react";
 import Jdenticon from "react-jdenticon";
 import {
   getVideoDetails,
@@ -10,6 +11,8 @@ import Head from "next/head";
 import AuthService from "../services/auth-services";
 import { getSpecificUserData } from "../services/api-services/user_api";
 import Image from "next/image";
+import VideosSeriesGating from "../components/VideosSeriesGating";
+import CreatorDP from "../components/CreatorDP";
 
 export default function VideoPlayer() {
   const router = useRouter();
@@ -24,6 +27,7 @@ export default function VideoPlayer() {
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
   const [displayPicture, setDisplayPicture] = useState("");
+  const videoRef = useRef(null);
 
   const checkConnected = () => {
     useEffect(() => {
@@ -57,10 +61,13 @@ export default function VideoPlayer() {
         if (videoid) {
           const result = await getVideoSignedUrl(videoid.toString());
           setSignedURl(result[0]["signedurl"]);
+          videoRef.current?.pause();
+          videoRef.current?.load();
+          videoRef.current?.play();
         }
       }
       getData();
-    }, [username]);
+    }, [videoid]);
   };
 
   GetVideoUrl();
@@ -69,7 +76,38 @@ export default function VideoPlayer() {
     title: "",
     description: "",
     creator: "",
+    seriesid: "",
+    createdat: "",
   });
+
+  function timeDifference(current, previous) {
+    var msPerMinute = 60 * 1000;
+    var msPerHour = msPerMinute * 60;
+    var msPerDay = msPerHour * 24;
+    var msPerMonth = msPerDay * 30;
+    var msPerYear = msPerDay * 365;
+
+    var elapsed = current - previous;
+
+    if (elapsed < msPerMinute) {
+      return Math.round(elapsed / 1000) + " seconds ago";
+    } else if (elapsed < msPerHour) {
+      return Math.round(elapsed / msPerMinute) + " minutes ago";
+    } else if (elapsed < msPerDay) {
+      return Math.round(elapsed / msPerHour) + " hours ago";
+    } else if (elapsed < msPerMonth) {
+      return Math.round(elapsed / msPerDay) + " days ago";
+    } else if (elapsed < msPerYear) {
+      return Math.round(elapsed / msPerMonth) + " months ago";
+    } else {
+      return Math.round(elapsed / msPerYear) + " years ago";
+    }
+  }
+
+  const timeDiff = timeDifference(
+    Date.now(),
+    Date.parse(videoDetails.createdat)
+  );
 
   const GetDetails = () => {
     useEffect(() => {
@@ -80,7 +118,7 @@ export default function VideoPlayer() {
         }
       }
       getData();
-    }, [username]);
+    }, [videoid]);
   };
 
   GetDetails();
@@ -102,15 +140,15 @@ export default function VideoPlayer() {
 
   GetDisplatPicture();
 
-  // console.log("videoDetails");
-  // console.log(videoDetails);
-  // console.log("signedURl");
-  // console.log(signedURl);
+  console.log("videoDetails");
+  console.log(videoDetails);
+  console.log("signedURl");
+  console.log(signedURl);
 
   return (
     <div>
       <Head>
-        <title>Profile</title>
+        <title>{videoDetails.title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="videoDiv">
@@ -121,6 +159,7 @@ export default function VideoPlayer() {
               autoPlay
               crossOrigin="anonymous"
               controlsList="nodownload"
+              ref={videoRef}
             >
               <source src={signedURl} type="video/mp4" />
               {/* <track
@@ -143,22 +182,55 @@ export default function VideoPlayer() {
               }}
               className="creatorIdent pointer"
             >
-              {displayPicture != "" ? (
-                <div className="creatorImageMinor">
-                  <Image
-                    src={displayPicture}
-                    alt=""
-                    width={50}
-                    height={50}
-                    className="creatorDP"
-                  />
-                </div>
-              ) : (
-                <Jdenticon size={100} value={videoDetails.creator} />
-              )}
+              <div className="creatorImageMinor">
+                <CreatorDP
+                  creator={videoDetails.creator}
+                  height={50}
+                  width={50}
+                />
+              </div>
               <h2 className="VideoDiv h2">{videoDetails.creator}</h2>
             </section>
+            <h1
+              className="VideoDiv h1"
+              style={{
+                fontSize: "13px",
+                color: "grey",
+              }}
+            >
+              {timeDiff.startsWith("1 ")
+                ? timeDiff.replace("s", "").replace("econd", "second")
+                : timeDiff}
+            </h1>
             <h1 className="VideoDiv p">{videoDetails.description}</h1>
+            <div style={{ marginTop: "5vh" }}>
+              {videoDetails?.seriesid === "vod_" + videoDetails?.creator ? (
+                <>
+                  <h1 className="videoDiv h1" style={{ color: "#3B82F6" }}>
+                    Other Videos
+                  </h1>
+                  <VideosSeriesGating
+                    creator={videoDetails.creator}
+                    onCreatorProfile={true}
+                    category="Videos"
+                    ignoreVideoId={videoid.toString()}
+                  />
+                </>
+              ) : (
+                <>
+                  <h1 className="videoDiv h1" style={{ color: "#3B82F6" }}>
+                    Other lectures from course
+                  </h1>
+                  <VideosSeriesGating
+                    creator={videoDetails.creator}
+                    onCreatorProfile={true}
+                    category="SeriesVideoGrid"
+                    seriesid={videoDetails.seriesid}
+                    ignoreVideoId={videoid.toString()}
+                  />
+                </>
+              )}
+            </div>
           </>
         ) : (
           <>{/* <ConnectToAccount /> */}</>

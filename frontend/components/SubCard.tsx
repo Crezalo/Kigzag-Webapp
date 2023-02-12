@@ -4,6 +4,7 @@ import Router from "next/router";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { getSpecificUserData } from "../services/api-services/user_api";
+import CreatorDP from "./CreatorDP";
 
 interface SubCardProp {
   subscription: {
@@ -52,18 +53,7 @@ const SubCard = ({ subscription }: SubCardProp) => {
         <>
           <section className="purchaseCard">
             <div className="reqImage">
-              {displayPicture != "" ? (
-                <Image
-                  src={displayPicture}
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="creatorDP"
-                />
-              ) : (
-                <Jdenticon size={50} value={subscription.creator} />
-              )}
-              {/* <Jazzicon diameter={60} seed={Math.round(Math.random() * 10000000)} /> */}
+              <CreatorDP creator={subscription.creator} height={50} width={50} />
               <h2
                 className="hovergreen viewMore pointer"
                 style={{

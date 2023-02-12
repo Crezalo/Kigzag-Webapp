@@ -1,25 +1,17 @@
 import { CSSProperties } from "react";
 import Jdenticon from "react-jdenticon";
 import AuthService from "../services/auth-services";
-import ProfileTabs from "../components/ProfileTabs";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getUserData } from "../services/api-services/user_api";
 import Router, { useRouter } from "next/router";
-import twitter from "../public/twitter.png";
-import instagram from "../public/instagram.png";
-import youtube from "../public/youtube.png";
-import website from "../public/website.png";
 import Head from "next/head";
 import * as React from "react";
-import Link from "@mui/material/Link";
-import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
-import waitingGif from "../public/waiting.gif";
-import greenTick from "../public/green-tick.gif";
 import queryString from "query-string";
+import ProfileSliderTabs from "../components/ProfileSliderTabs";
+import BannerImages from "../components/BannerImages";
+import SocialHandles from "../components/SocialHandles";
+import CreatorDP from "../components/CreatorDP";
 
 export default function CreatorProfile() {
   const router = useRouter();
@@ -64,6 +56,7 @@ export default function CreatorProfile() {
     fname: "",
     lname: "",
     bio: "",
+    iscreator: true,
     displaypicture: "",
     twitterhandle: "",
     instagram: "",
@@ -94,26 +87,20 @@ export default function CreatorProfile() {
       <div>
         {isConnected && username && creator.fname ? (
           <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
+            <BannerImages creator={creator} />
             <div style={{ display: "flex" }}>
               <div className="creatorImageDiv">
-                {creator.displaypicture != "" ? (
-                  <Image
-                    src={creator.displaypicture}
-                    alt=""
-                    width={150}
-                    height={150}
-                    className="creatorDP"
-                  />
-                ) : (
-                  <Jdenticon size={100} value={address} />
-                )}
-                {/* <Jdenticon size={100} value={address} /> */}
+                <CreatorDP
+                  creator={creator.username}
+                  height={125}
+                  width={125}
+                />
               </div>
               <div className="description">
                 <div
                   style={{
                     minWidth: "25vw",
-                    width: "30vw",
+                    // width: "30vw",
                     justifyContent: "center",
                   }}
                 >
@@ -122,7 +109,7 @@ export default function CreatorProfile() {
                       fontSize: "18px",
                       fontWeight: "bold",
                       color: "white",
-                      margin: "5px 0 5px 0",
+                      // margin: "5px 0 5px 0",
                     }}
                   >
                     {creator.username}
@@ -131,7 +118,7 @@ export default function CreatorProfile() {
                     style={{
                       fontSize: "16px",
                       color: "white",
-                      margin: "5px 0 5px 0",
+                      // margin: "5px 0 5px 0",
                     }}
                   >
                     {creator.fname + " " + creator.lname}
@@ -143,89 +130,17 @@ export default function CreatorProfile() {
                   ) : (
                     <></>
                   )}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      marginTop: "15px",
-                    }}
-                  >
-                    <div style={{ marginRight: "10px" }}>
-                      {creator && creator.twitterhandle ? (
-                        <a
-                          href={"https://twitter.com/" + creator.twitterhandle}
-                          style={{ marginTop: "5px", marginLeft: "5px" }}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <Image src={twitter} alt="" width={25} height={20} />
-                        </a>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                    <div style={{ marginRight: "10px" }}>
-                      {creator && creator.instagram ? (
-                        <a
-                          href={"https://instagram.com/" + creator.instagram}
-                          style={{ marginTop: "5px", marginLeft: "5px" }}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <Image
-                            src={instagram}
-                            alt=""
-                            width={25}
-                            height={25}
-                          />
-                        </a>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                    <div style={{ marginRight: "10px" }}>
-                      {creator && creator.youtube ? (
-                        <a
-                          href={creator.youtube
-                            .toString()
-                            .toLowerCase()
-                            .replace(" ", "")}
-                          style={{ marginTop: "5px", marginLeft: "5px" }}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <Image src={youtube} alt="" width={25} height={20} />
-                        </a>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                    <div style={{ marginRight: "10px" }}>
-                      {creator && creator.website ? (
-                        <a
-                          href={creator.website}
-                          style={{ marginTop: "5px", marginLeft: "5px" }}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <Image src={website} alt="" width={25} height={20} />
-                        </a>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  </div>
+                  <SocialHandles creator={creator} />
                 </div>
               </div>
             </div>
-            <ProfileTabs
+            <ProfileSliderTabs
               onCreatorProfile={true}
               creator={creator.username}
               isCreator={true}
             />
           </div>
         ) : (
-          // <ConnectToAccount />
           <></>
         )}
       </div>

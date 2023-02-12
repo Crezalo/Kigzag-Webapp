@@ -23,7 +23,7 @@ const SubscriptionTab = () => {
 
   let tabs_array = [
     <SubsCardGrid category="Videos" key={1} />,
-    <SubsCardGrid category="Series" key={2} />,
+    <SubsCardGrid category="Courses" key={2} />,
     <SubsCardGrid category="Stream" key={3} />,
     <SubsCardGrid category="Meet" key={4} />,
     <SubsCardGrid category="Discord" key={5} />,

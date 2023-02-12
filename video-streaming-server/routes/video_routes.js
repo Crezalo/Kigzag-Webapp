@@ -8,18 +8,10 @@ const thumbsupply = require('thumbsupply');
 const awsConfig = require('aws-config');
 const AWS = require('aws-sdk');
 const aws_cf = require('aws-cloudfront-sign');
-// const aws_cf = require("../aws_cf");
 require('dotenv').config();
 const {
   getVideoDurationInSeconds
 } = require('get-video-duration');
-// var ImageKit = require("imagekit");
-
-// var imagekit = new ImageKit({
-//   publicKey: process.env.IMAGEKIT_PUBLIC_API_KEY,
-//   privateKey: process.env.IMAGEKIT_PRIVATE_API_KEY,
-//   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
-// });
 
 var s3 = new AWS.S3(awsConfig({
   accessKeyId: process.env.ACCESSKEYID,
@@ -42,9 +34,9 @@ const uploadFile = (buffer, bucket, name) => {
 };
 
 // get file from S3 bucket
-const getFile = (name) => {
+const getFile = (bucket, name) => {
   const params = {
-    Bucket: process.env.S3_BUCKET_VIDEO,
+    Bucket: bucket,
     Key: name
   };
   return s3.getObject(params).promise();
@@ -75,7 +67,7 @@ router.post('/upload', authorise, (req, res) => {
       const thumbbuffer = fs.readFileSync(thumbpath);
       const thumbFileName = req.username + "/" + name.split(".")[0] + ".png";
       console.log("start upload thumb file");
-      const thumbData = await uploadFile(thumbbuffer, process.env.S3_BUCKET_THUMBNAIL, thumbFileName);
+      const thumbData = await uploadFile(thumbbuffer, process.env.S3_BUCKET_VIDEO_THUMBNAIL, thumbFileName);
       console.log("complete upload thumb file");
 
       // video duration
@@ -87,11 +79,27 @@ router.post('/upload', authorise, (req, res) => {
       console.log(duration);
 
       const videoid = name.split(".")[0];
+      const ud = await pool.query("SELECT * FROM Creator_series WHERE Creator=$1;", [req.username]);
+
+      // VOD is also a series with seriesid = vod_{username}, hence initialising it in creator series table
+      if (ud.rows.length == 0) {
+        const new_series_details = await pool.query(
+          "INSERT INTO Creator_series (SeriesId, Creator, Title, Description) VALUES ($1,$2,$3,$4) RETURNING*;",
+          [
+            "vod_" + req.username,
+            req.username,
+            "DummyTitle",
+            "DummyDescription"
+          ]
+        );
+      }
+
       const new_video_details = await pool.query(
-        "INSERT INTO Creator_video (VideoId, Creator, Title, Description, Duration, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,TO_TIMESTAMP($6),TO_TIMESTAMP($7)) RETURNING*;",
+        "INSERT INTO Creator_video (VideoId, Creator, SeriesId, Title, Description, Duration, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,$6,TO_TIMESTAMP($7),TO_TIMESTAMP($8)) RETURNING*;",
         [
           videoid,
           req.username,
+          fields['seriesid'] ? fields['seriesid'][0] : "vod_" + req.username,
           fields['title'][0],
           fields['description'][0],
           Math.round(duration),
@@ -101,21 +109,11 @@ router.post('/upload', authorise, (req, res) => {
       );
       console.log(videoData);
       console.log(thumbData);
-      if (fields['seriesid']) {
-        const update_series = await pool.query("UPDATE Creator_Series SET VideoIds = array_append(VideoIds, $1) WHERE SeriesId = $2 RETURNING*;", [fields['seriesid'], videoid]);
-        return res.send({
-          isSuccessful: true,
-          errorMsg: "",
-          result: [videoData, thumbData, new_video_details.rows[0], update_series.rows[0]]
-        });
-      } else {
-        return res.send({
-          isSuccessful: true,
-          errorMsg: "",
-          result: [videoData, thumbData, new_video_details.rows[0]]
-        });
-      }
-
+      return res.send({
+        isSuccessful: true,
+        errorMsg: "",
+        result: [videoData, thumbData, new_video_details.rows[0]]
+      });
     });
   } catch (err) {
     res.json({
@@ -216,13 +214,56 @@ router.get("/details/:videoid", authorise, async (req, res) => {
   }
 });
 
-// get all video details of a creator
+// get all video details of a creator except series videos
 router.get("/details/creator/:creator", authorise, async (req, res) => {
   try {
     const {
       creator
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE Creator=$1;", [creator]);
+    const ud = await pool.query("SELECT * FROM Creator_Video WHERE Creator=$1 AND SeriesId=$2;", [creator, "vod_" + creator]);
+    res.json({
+      isSuccessful: true,
+      errorMsg: "",
+      result: ud.rows
+    });
+  } catch (err) {
+    res.json({
+      isSuccessful: false,
+      errorMsg: err.message,
+      result: []
+    });
+  }
+});
+
+// get all video details of a series (and a series predefines a creator)
+router.get("/details/series/:seriesid", authorise, async (req, res) => {
+  try {
+    const {
+      seriesid
+    } = req.params;
+    const ud = await pool.query("SELECT * FROM Creator_Video WHERE SeriesId=$1;", [seriesid]);
+    res.json({
+      isSuccessful: true,
+      errorMsg: "",
+      result: ud.rows
+    });
+  } catch (err) {
+    res.json({
+      isSuccessful: false,
+      errorMsg: err.message,
+      result: []
+    });
+  }
+});
+
+// get all series demo video for a creator
+router.get("/details/seriesdemovid/:creator", authorise, async (req, res) => {
+  try {
+    const {
+      creator
+    } = req.params;
+    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=SeriesId AND Creator=$1;", [creator]);
+    // console.log(ud.rows);
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -251,7 +292,7 @@ router.get("/thumbnail/:videoid", authorise, async (req, res) => {
 
   //   // simply use AWS S3 bucket with public read access
   //   res.status(200).json({
-  //     signedurl: process.env.S3_BUCKET_THUMBNAIL_URL + creator + "/" + videoid + ".png"
+  //     signedurl: process.env.S3_BUCKET_VIDEO_THUMBNAIL_URL + creator + "/" + videoid + ".png"
   //   });
   // } catch (err) {
   //   res.json({

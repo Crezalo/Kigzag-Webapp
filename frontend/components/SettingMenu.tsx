@@ -9,14 +9,13 @@ import AuthService from "../services/auth-services";
 import Router from "next/router";
 
 const SettingMenu = () => {
-
   return (
     <div
       className="outline text-blue-500 outline-offset-0 py-1 font-bold rounded"
       style={{
         fontSize: 18,
         textAlign: "center",
-        zIndex: 1,
+        zIndex: 10,
         outlineWidth: "thin",
         marginTop: "2px",
       }}
@@ -75,7 +74,7 @@ const SettingMenu = () => {
                 </button>
               )}
             </Menu.Item>
-            <Menu.Item>
+            {/* <Menu.Item>
               {({ active }) => (
                 <button
                   className={`${
@@ -94,6 +93,28 @@ const SettingMenu = () => {
                     style={{ marginRight: "5px" }}
                   />
                   <div>Prices</div>
+                </button>
+              )}
+            </Menu.Item> */}
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  className={`${
+                    active ? "bg-blue-500 text-white" : "text-blue-500"
+                  } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                  style={{ fontSize: 16 }}
+                  onClick={() => {
+                    Router.push({
+                      pathname: "/mypurchases",
+                    });
+                  }}
+                >
+                  <Sell
+                    className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                    aria-hidden="true"
+                    style={{ marginRight: "5px" }}
+                  />
+                  <div>My Purchases</div>
                 </button>
               )}
             </Menu.Item>

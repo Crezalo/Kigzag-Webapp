@@ -85,8 +85,56 @@ export async function getCreatorAllVideoDetails(creator: string) {
           headers: authHeader(),
         }
       );
+      console.log(VIDEO_API_URL + "details/creator/" + creator);
 
       if (response.data.isSuccessful) {
+        return response.data.result;
+      } else {
+        return response.data.errorMsg;
+      }
+    } else {
+      return "Not Logged In";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getSeriesAllVideoDetails(series: string) {
+  try {
+    if (authHeader().Authorization) {
+      const response = await axios.get(
+        VIDEO_API_URL + "details/series/" + series,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      if (response.data.isSuccessful) {
+        return response.data.result;
+      } else {
+        return response.data.errorMsg;
+      }
+    } else {
+      return "Not Logged In";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getCreatorAllSeriesDemoVideoDetails(creator: string) {
+  try {
+    if (authHeader().Authorization) {
+      const response = await axios.get(
+        VIDEO_API_URL + "details/seriesdemovid/" + creator,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      if (response.data.isSuccessful) {
+        console.log(response.data.result)
         return response.data.result;
       } else {
         return response.data.errorMsg;

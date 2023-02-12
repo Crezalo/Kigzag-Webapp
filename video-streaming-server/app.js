@@ -5,7 +5,7 @@ const thumbsupply = require('thumbsupply');
 const cors = require('cors');
 require("express-async-errors");
 const video_router = require("./routes/video_routes");
-const series_router = require("./routes/video_routes");
+const series_router = require("./routes/series_routes");
 
 const app = express();
 

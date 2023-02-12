@@ -1,6 +1,7 @@
 import Jdenticon from "react-jdenticon";
 import Router from "next/router";
 import Image from "next/image";
+import CreatorDP from "./CreatorDP";
 
 interface CreatorCardProp {
   creator: {
@@ -26,17 +27,7 @@ const CreatorCard = ({ creator }: CreatorCardProp) => {
             }
           >
             <div className="creatorCardImage">
-              {creator.displaypicture == "" ? (
-                <Jdenticon size={125} value={creator.username} />
-              ) : (
-                <Image
-                  src={creator.displaypicture}
-                  alt=""
-                  width={125}
-                  height={125}
-                  className="creatorDP"
-                />
-              )}
+              <CreatorDP creator={creator.username} height={125} width={125} />
             </div>
             <div style={{ textAlign: "center" }}>
               <h2 style={{ marginBottom: "5px", fontWeight: "bold" }}>

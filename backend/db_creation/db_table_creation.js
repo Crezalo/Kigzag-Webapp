@@ -5,6 +5,8 @@ const createTablesInPostgresDB_subs_live_streaming = require("./db_table_creatio
 const createTablesInPostgresDB_subs_community_combo = require("./db_table_creation_subs_community_combo");
 const createTablesInPostgresDB_subs_video_call = require("./db_table_creation_subs_video_call");
 const createTablesInPostgresDB_subs_store = require("./db_table_creation_subs_store");
+const createTablesInPostgresDB_merchandise = require("./db_table_creation_merchandise");
+const createTablesInPostgresDB_cart_sales = require("./db_table_creation_cart_sales");
 
 module.exports = async function createTablesInPostgresDB(pool) {
   ////////////////////////////////////////////////Table Creation/////////////////////////////////////////////////////////
@@ -22,7 +24,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   //2.  Creator Fin Info table creation
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS Fin_Info (Creator VARCHAR(255) PRIMARY KEY, AadharCard VARCHAR(100) UNIQUE NOT NULL, AadharCardLink VARCHAR(100) UNIQUE NOT NULL, PanCard VARCHAR(100) UNIQUE NOT NULL, PanCardLink VARCHAR(100) UNIQUE NOT NULL, UPI_Id VARCHAR(50), IFSC_Code VARCHAR(100), Acc_Number VARCHAR(50));"
+      "CREATE TABLE IF NOT EXISTS Fin_Info (Creator VARCHAR(255) PRIMARY KEY, AadharCard VARCHAR(100) UNIQUE NOT NULL, PanCard VARCHAR(100) UNIQUE NOT NULL, UPI_Id VARCHAR(50), Bank_Name VARCHAR(255), IFSC_Code VARCHAR(100), Acc_Number VARCHAR(50));"
     )
     .catch((err) => console.log("PG ERROR Fin_Info Table\n\n\t\t", err.message));
 
@@ -30,7 +32,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   // SeriesId: 0 for general videos and specific value when video is a part of series
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS Creator_video (VideoId VARCHAR(255) PRIMARY KEY, Creator VARCHAR(255) NOT NULL, SeriesId VARCHAR(255), Title VARCHAR(255) NOT NULL, Description Text NOT NULL, Duration INTEGER NOT NULL, CreatedAt TIMESTAMP NOT NULL, UpdatedAt TIMESTAMP NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS Creator_video (VideoId VARCHAR(255) PRIMARY KEY, Creator VARCHAR(255) NOT NULL, SeriesId VARCHAR(255) NOT NULL, Title VARCHAR(255) NOT NULL, Description Text NOT NULL, Duration INTEGER NOT NULL, CreatedAt TIMESTAMP NOT NULL, UpdatedAt TIMESTAMP NOT NULL);"
     )
     .catch((err) => console.log("PG ERROR Creator_video Table\n\n\t\t", err.message));
 
@@ -38,7 +40,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   // SeriesId: 0 for general videos and specific value when video is a part of series
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS Creator_series (SeriesId VARCHAR(255) PRIMARY KEY, Creator VARCHAR(255) NOT NULL, VideoIds TEXT[] UNIQUE NOT NULL, Title VARCHAR(255) NOT NULL, Description Text NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS Creator_series (SeriesId VARCHAR(255) PRIMARY KEY, Creator VARCHAR(255) NOT NULL);"
     )
     .catch((err) => console.log("PG ERROR Creator_series Table\n\n\t\t", err.message));
 
@@ -189,5 +191,6 @@ module.exports = async function createTablesInPostgresDB(pool) {
   createTablesInPostgresDB_subs_community_combo(pool);
   createTablesInPostgresDB_subs_video_call(pool);
   createTablesInPostgresDB_subs_store(pool);
-
+  createTablesInPostgresDB_merchandise(pool);
+  createTablesInPostgresDB_cart_sales(pool);
 };

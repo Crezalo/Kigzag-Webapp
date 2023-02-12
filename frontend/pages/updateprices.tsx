@@ -11,7 +11,6 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { Modal, Box, Fade } from "@mui/material";
-import ConnectToWallet from "../components/ConnectToAccount";
 import Head from "next/head";
 import AuthService from "../services/auth-services";
 import {
@@ -654,7 +653,7 @@ export default function EditProfile() {
                     </div>
                   </div>
                 </div>
-                <div
+                {/* <div
                   className="shoutout_colab_info"
                   style={{ marginTop: "50px" }}
                 >
@@ -856,7 +855,7 @@ export default function EditProfile() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             ) : (
               <div
