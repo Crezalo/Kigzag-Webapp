@@ -18,6 +18,7 @@ import {
 } from "@material-ui/core";
 import { getSpecificUserData } from "../services/api-services/user_api";
 import CreatorDP from "./CreatorDP";
+import month from "../consts/months";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -92,21 +93,6 @@ const RequestCard = ({ request }: RequestCardProp) => {
 
   const usermessage = request.usermessage.split("###--###");
   const creatorresponse = request.creatorresponse.split("###--###");
-
-  const month = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
 
   const timeDiff = Date.now() - Date.parse(request.lastupdatedat);
   const platformLogo = [instagram, youtube, twitter];

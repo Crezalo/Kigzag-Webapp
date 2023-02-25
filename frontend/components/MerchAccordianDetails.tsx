@@ -29,6 +29,7 @@ import {
   Fade,
   IconButton,
   InputAdornment,
+  Rating,
   TextField,
   ThemeProvider,
   Tooltip,
@@ -39,6 +40,11 @@ import Delete from "@mui/icons-material/Delete";
 import { borderRadius } from "@mui/system";
 import { makeStyles } from "@material-ui/core";
 import AddToCart from "./AddToCart";
+import CreatorDP from "./CreatorDP";
+import {
+  getProductAllReviewsData,
+  getProductRatingsData,
+} from "../services/api-services/user/merch_api";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -100,12 +106,12 @@ interface MerchAccordianDetailsProp {
     shippingcharges: number;
     freeshippingabove: number;
   };
-  thumbnail: string;
+  rating: number;
 }
 
 const MerchAccordianDetails = ({
   merchDetails,
-  thumbnail,
+  rating,
 }: MerchAccordianDetailsProp) => {
   const classesModal = useStylesModal();
   const [user, setUser] = useState({
@@ -119,6 +125,7 @@ const MerchAccordianDetails = ({
     website: "",
   });
   var [qty, setQty] = useState(1);
+  var [ratings, setRatings] = useState(0);
 
   const GetUser = () => {
     useEffect(() => {
@@ -143,6 +150,19 @@ const MerchAccordianDetails = ({
 
   const minQty = 1;
   const maxQty = 9;
+
+  const GetRatings = () => {
+    useEffect(() => {
+      async function getData() {
+        if (merchDetails.creator != "") {
+          const result = await getProductRatingsData(merchDetails.productid);
+          if (typeof result === "number") setRatings(result);
+        }
+      }
+      getData();
+    }, [merchDetails.creator]);
+  };
+  GetRatings();
 
   return (
     <>
@@ -171,9 +191,22 @@ const MerchAccordianDetails = ({
                   }}
                   className="creatorIdent pointer"
                 >
+                  <div className="creatorCardImage">
+                    <CreatorDP
+                      creator={merchDetails.creator}
+                      height={125}
+                      width={125}
+                    />
+                  </div>
                   <Typography
                     className="usernameLink"
-                    style={{ fontSize: "15px", color: "#3B82F6" }}
+                    style={{
+                      fontSize: "15px",
+                      color: "#3B82F6",
+                      display: "flex",
+                      flexDirection: "row",
+                      paddingTop: "10%",
+                    }}
                   >
                     {merchDetails.creator}
                   </Typography>
@@ -181,16 +214,27 @@ const MerchAccordianDetails = ({
                 <section onClick={() => {}} className="creatorIdent pointer">
                   <Typography
                     className="usernameLink"
-                    style={{ fontSize: "15px", color: "#3B82F6" }}
+                    style={{
+                      fontSize: "15px",
+                      color: "#3B82F6",
+                      paddingTop: "10%",
+                    }}
                   >
                     {
                       <Link href="#review-section">
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                          <StarIcon />
-                          <StarIcon />
-                          <StarIcon />
-                          <StarIcon />
-                          <StarIcon />
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            paddingTop: "2%",
+                          }}
+                        >
+                          <Rating
+                            name="hover-feedback"
+                            value={rating}
+                            precision={1}
+                            readOnly
+                          />
                         </div>
                       </Link>
                     }

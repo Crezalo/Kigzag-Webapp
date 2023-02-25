@@ -12,7 +12,31 @@ import ProfileSliderTabs from "../components/ProfileSliderTabs";
 import BannerImages from "../components/BannerImages";
 import SocialHandles from "../components/SocialHandles";
 import CreatorDP from "../components/CreatorDP";
+import BasicModal from "../components/BasicModal";
+import UpdateFeatureStatus from "../components/UpdateFeatureStatus";
+import StreetviewIcon from "@mui/icons-material/Streetview";
+import ShareIcon from "@mui/icons-material/Share";
+import ShareSocialModal from "../components/ShareSocialModal";
+import { Button, Tooltip } from "@mui/material";
 
+const style = {
+  root: {
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    borderRadius: 3,
+    border: 0,
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    color: "white",
+  },
+  copyContainer: {
+    border: "1px solid blue",
+    background: "rgb(0,0,0,0.7)",
+  },
+  title: {
+    textAlign: "center",
+    color: "white",
+    fontStyle: "italic",
+  },
+};
 const buttonStyle: CSSProperties = {
   fontSize: "15px",
   fontWeight: "bold",
@@ -151,10 +175,81 @@ export default function Home() {
                       Monetize
                     </button>
                   ) : (
-                    <SocialHandles creator={user} />
+                    <>
+                      <SocialHandles creator={user} />
+                      <div style={{ float: "left" }}>
+                        <BasicModal
+                          modalButtonText={
+                            <Button
+                              style={{
+                                // background: "#3B82F6",
+                                color: "white",
+                                marginBottom: "2px",
+                                borderRadius: "40%",
+                                fontSize: "15px",
+                                fontWeight: "bold",
+                              }}
+                              variant="contained"
+                              className="btn btn-1"
+                            >
+                              Features
+                            </Button>
+                          }
+                          modalBody={<UpdateFeatureStatus />}
+                          formatting={true}
+                        />
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
+              {user.iscreator ? (
+                <>
+                  <div style={{ marginRight: "15px" }}>
+                    <Tooltip title="Public View">
+                      <StreetviewIcon
+                        className="pointer"
+                        style={{ fontSize: "30px", color: "lightgrey" }}
+                        onClick={() => {
+                          Router.push({
+                            pathname: "/creatorprofile",
+                            query: { address: user.username },
+                          });
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+                  <BasicModal
+                    modalButtonText={
+                      <Tooltip title="Share Kigzag">
+                        <ShareIcon
+                          className="pointer"
+                          style={{ fontSize: "30px", color: "lightgrey" }}
+                        />
+                      </Tooltip>
+                    }
+                    modalBody={
+                      <ShareSocialModal
+                        title={"Share " + user.fname + "'s Kigzag"}
+                        url={"kigzag.com/" + user.username}
+                        socialTypes={[
+                          "whatsapp",
+                          "telegram",
+                          "twitter",
+                          "linkedin",
+                          "facebook",
+                          "reddit",
+                        ]}
+                        onSocialButtonClicked={(data) => console.log(data)}
+                        style={style}
+                      />
+                    }
+                    formatting={true}
+                  />
+                </>
+              ) : (
+                <></>
+              )}
             </div>
             {user.iscreator ? (
               <ProfileSliderTabs

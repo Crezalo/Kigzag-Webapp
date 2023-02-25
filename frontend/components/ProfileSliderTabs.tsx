@@ -33,6 +33,7 @@ import ColabTab from "./ColabTab";
 import MerchandiseTab from "./MerchandiseTab";
 import TipsTab from "./TipsTab";
 import VideosSeriesGating from "./VideosSeriesGating";
+import { getCreatorFeatureStatusData } from "../services/api-services/creator/features_api";
 
 const drawerWidth = 240;
 
@@ -109,10 +110,15 @@ const ProfileSliderTabs = ({
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
 
-  const [value, setValue] = useState(0);
-
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  const [value, setValue] = useState(0);
+  const [status, setStatus] = useState({
+    video_on_demand: null,
+    courses: null,
+    merchandise: null,
+    tipjar: null,
+  });
 
   const checkConnected = () => {
     useEffect(() => {
@@ -139,6 +145,34 @@ const ProfileSliderTabs = ({
   };
 
   updateUsername();
+
+  const GetStatus = () => {
+    useEffect(() => {
+      async function getData() {
+        if (username != "") {
+          const res1 = await getCreatorFeatureStatusData(creator);
+          if (typeof res1 !== "string") {
+            setStatus(res1[0]);
+            if(onCreatorProfile){
+              setValue(
+                res1[0]?.video_on_demand
+                  ? 0
+                  : res1[0]?.courses
+                  ? 1
+                  : res1[0]?.merchandise
+                  ? 2
+                  : 3
+              );
+
+            }
+          }
+        }
+      }
+      getData();
+    }, [username]);
+  };
+
+  GetStatus();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -192,6 +226,34 @@ const ProfileSliderTabs = ({
     }
   }
 
+  const checkStatus = (text: string) => {
+    if (text === "Videos") {
+      return status?.video_on_demand;
+    } else if (text === "Courses") {
+      return status?.courses;
+    } else if (text === "Merch") {
+      return status?.merchandise;
+    } else if (text === "Tip Jar") {
+      return status?.tipjar;
+    } else {
+      return false;
+    }
+  };
+
+  const checkStatusValue = (value: number) => {
+    if (value === 0) {
+      return status?.video_on_demand;
+    } else if (value === 1) {
+      return status?.courses;
+    } else if (value === 2) {
+      return status?.merchandise;
+    } else if (value === 3) {
+      return status?.tipjar;
+    } else {
+      return false;
+    }
+  };
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -236,64 +298,79 @@ const ProfileSliderTabs = ({
               <List>
                 {["Videos", "Courses", "Merch", "Tip Jar"].map(
                   (text, index) => (
-                    <ListItem
-                      key={text}
-                      disablePadding
-                      sx={{
-                        display: "block",
-                        color: index == value ? "blue" : "primary",
-                      }}
-                      onClick={() => handleChange(event, index)}
-                    >
-                      <ListItemButton
-                        sx={{
-                          minHeight: 48,
-                          justifyContent: open ? "initial" : "center",
-                          px: 2.5,
-                        }}
-                      >
-                        <ListItemIcon
+                    <>
+                      {!onCreatorProfile || checkStatus(text) ? (
+                        <ListItem
+                          key={text}
+                          disablePadding
                           sx={{
-                            minWidth: 0,
-                            mr: open ? 3 : "auto",
-                            justifyContent: "center",
-                            padding: "5px",
-                            color: index == value ? "#3b82f6" : "primary",
+                            display: "block",
+                            color: index == value ? "blue" : "primary",
                           }}
+                          onClick={() => handleChange(event, index)}
                         >
-                          {index === 0 ? (
-                            <OndemandVideoIcon fontSize="large" />
-                          ) : (
-                            <></>
-                          )}
-                          {index === 1 ? (
-                            <CastForEducationIcon fontSize="large" />
-                          ) : (
-                            <></>
-                          )}
-                          {index === 2 ? (
-                            <StorefrontOutlinedIcon fontSize="large" />
-                          ) : (
-                            <></>
-                          )}
-                          {index === 3 ? (
-                            <SavingsOutlinedIcon fontSize="large" />
-                          ) : (
-                            <></>
-                          )}
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={text}
-                          sx={{ opacity: open ? 1 : 0 }}
-                        />
-                      </ListItemButton>
-                    </ListItem>
+                          <ListItemButton
+                            sx={{
+                              minHeight: 48,
+                              justifyContent: open ? "initial" : "center",
+                              px: 2.5,
+                            }}
+                          >
+                            <ListItemIcon
+                              sx={{
+                                minWidth: 0,
+                                mr: open ? 3 : "auto",
+                                justifyContent: "center",
+                                padding: "5px",
+                                color: index == value ? "#3b82f6" : "primary",
+                              }}
+                            >
+                              {index === 0 ? (
+                                <OndemandVideoIcon fontSize="large" />
+                              ) : (
+                                <></>
+                              )}
+                              {index === 1 ? (
+                                <CastForEducationIcon fontSize="large" />
+                              ) : (
+                                <></>
+                              )}
+                              {index === 2 ? (
+                                <StorefrontOutlinedIcon fontSize="large" />
+                              ) : (
+                                <></>
+                              )}
+                              {index === 3 ? (
+                                <SavingsOutlinedIcon fontSize="large" />
+                              ) : (
+                                <></>
+                              )}
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={text}
+                              sx={{ opacity: open ? 1 : 0 }}
+                            />
+                          </ListItemButton>
+                        </ListItem>
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   )
                 )}
               </List>
             </Drawer>
           </Box>
-          <Paper>{tabs_array[value]}</Paper>
+          {!onCreatorProfile || checkStatusValue(value) ? (
+            <Paper>{tabs_array[value]}</Paper>
+          ) : (
+            <div
+              className="blueTextBlackBackground"
+              style={{ textAlign: "center", marginTop: "10vh" }}
+            >
+              {creator} has no feature active.
+            </div>
+          )}
         </>
       ) : (
         <></>

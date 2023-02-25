@@ -4,7 +4,6 @@ import { authHeader } from "../services/auth-header";
 import Image from "next/image";
 import uploadingGif from "../public/uploading.gif";
 import greenTick from "../public/green-tick.gif";
-import countries from "../consts/countries";
 import {
   addCreatorMerchData,
   MAIN_API_URL,

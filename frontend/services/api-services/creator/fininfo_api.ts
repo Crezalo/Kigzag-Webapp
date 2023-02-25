@@ -9,9 +9,8 @@ export const MAIN_API_URL = process.env.NEXT_STATIC_MAIN_API_URL;
 ////////////////////////////////////////////////////////////////////////////
 
 export async function addCreatorFinInfoData(
-  aadharcard: string,
-  pancard: string,
-  upi_id: string,
+  aadharnumber: string,
+  pannumber: string,
   bank_name: string,
   ifsc_code: string,
   acc_number: string
@@ -19,9 +18,8 @@ export async function addCreatorFinInfoData(
   try {
     if (authHeader().Authorization) {
       const data = {
-        aadharcard: aadharcard,
-        pancard: pancard,
-        upi_id: upi_id,
+        aadharnumber: aadharnumber,
+        pannumber: pannumber,
         bank_name: bank_name,
         ifsc_code: ifsc_code,
         acc_number: acc_number,
@@ -45,10 +43,10 @@ export async function addCreatorFinInfoData(
 export async function getCreatorFinInfoData() {
   try {
     if (authHeader().Authorization) {
-      const response = await axios.get(MAIN_API_URL + "fininfo", {
+      const response = await axios.get(MAIN_API_URL + "fininfo/alldetails", {
         headers: authHeader(),
       });
-
+      console.log(MAIN_API_URL + "fininfo");
       if (response.data.isSuccessful) {
         return response.data.result;
       } else {
@@ -83,9 +81,6 @@ export async function getCreatorSpecificFinInfoData(column: string) {
 }
 
 export async function updateCreatorFinInfoData(
-  aadharcard: string,
-  pancard: string,
-  upi_id: string,
   bank_name: string,
   ifsc_code: string,
   acc_number: string
@@ -93,9 +88,6 @@ export async function updateCreatorFinInfoData(
   try {
     if (authHeader().Authorization) {
       const data = {
-        aadharcard: aadharcard,
-        pancard: pancard,
-        upi_id: upi_id,
         bank_name: bank_name,
         ifsc_code: ifsc_code,
         acc_number: acc_number,

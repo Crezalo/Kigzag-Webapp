@@ -43,9 +43,12 @@ export async function addUserMerchOrderData(
 export async function getUserAllOrdersData() {
   try {
     if (authHeader().Authorization) {
-      const response = await axios.get(MAIN_API_URL + "user_merchandise", {
-        headers: authHeader(),
-      });
+      const response = await axios.get(
+        MAIN_API_URL + "user_merchandise/allmyorders",
+        {
+          headers: authHeader(),
+        }
+      );
 
       if (response.data.isSuccessful) {
         return response.data.result;
@@ -65,6 +68,31 @@ export async function getProductIdAllOrdersData(productid: string) {
     if (authHeader().Authorization) {
       const response = await axios.get(
         MAIN_API_URL + "user_merchandise/productid/" + productid,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      if (response.data.isSuccessful) {
+        return response.data.result;
+      } else {
+        return response.data.errorMsg;
+      }
+    } else {
+      return "Not Logged In";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getSpecificCreatorAllUserMerchStatsData(
+  productid: string
+) {
+  try {
+    if (authHeader().Authorization) {
+      const response = await axios.get(
+        MAIN_API_URL + "user_merchandise/alluserdata/forcreator/" + productid,
         {
           headers: authHeader(),
         }
@@ -109,7 +137,11 @@ export async function updateMerchOrderData(
       };
 
       const response = await axios.put(
-        MAIN_API_URL + "user_merchandise/" + orderid + "/" + productid,
+        MAIN_API_URL +
+          "user_merchandise/orderupdate/" +
+          orderid +
+          "/" +
+          productid,
         data,
         {
           headers: authHeader(),
@@ -231,6 +263,7 @@ export async function updateMobileNoData(addressid: string, mobileno: number) {
 
 export async function addUserMerchReviewData(
   productid: string,
+  orderid: string,
   ratings: number,
   commenttitle: string,
   commentdescription: string
@@ -239,6 +272,7 @@ export async function addUserMerchReviewData(
     if (authHeader().Authorization) {
       const data = {
         productid: productid,
+        orderid: orderid,
         ratings: ratings,
         commenttitle: commenttitle,
         commentdescription: commentdescription,
@@ -286,6 +320,52 @@ export async function getProductAllReviewsData(productid: string) {
   }
 }
 
+export async function getProductRatingsData(productid: string) {
+  try {
+    if (authHeader().Authorization) {
+      const response = await axios.get(
+        MAIN_API_URL + "user_merchandise/reviews/ratings/" + productid,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      if (response.data.isSuccessful) {
+        return response.data.result;
+      } else {
+        return response.data.errorMsg;
+      }
+    } else {
+      return "Not Logged In";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function checkProductValidReviewerData(productid: string) {
+  try {
+    if (authHeader().Authorization) {
+      const response = await axios.get(
+        MAIN_API_URL + "user_merchandise/reviews/check/" + productid,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      if (response.data.isSuccessful) {
+        return response.data.result;
+      } else {
+        return response.data.errorMsg;
+      }
+    } else {
+      return "Not Logged In";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export async function updateMerchReviewData(
   reviewid: string,
   commenttitle: string,
@@ -297,7 +377,7 @@ export async function updateMerchReviewData(
       const data = {
         commenttitle: commenttitle,
         commentdescription: commentdescription,
-        ratings: ratings
+        ratings: ratings,
       };
 
       const response = await axios.put(

@@ -25,7 +25,6 @@ export default function Course() {
   var [signedURl, setSignedURl] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
-  const [displayPicture, setDisplayPicture] = useState("");
 
   const checkConnected = () => {
     useEffect(() => {
@@ -86,23 +85,6 @@ export default function Course() {
   };
 
   GetDetails();
-
-  const GetDisplatPicture = () => {
-    useEffect(() => {
-      async function getData() {
-        if (videoDetails.creator != "") {
-          const result = await getSpecificUserData(
-            videoDetails.creator,
-            "displaypicture"
-          );
-          setDisplayPicture(result[0]?.displaypicture);
-        }
-      }
-      getData();
-    }, [videoDetails.creator]);
-  };
-
-  GetDisplatPicture();
 
   // console.log("videoDetails");
   // console.log(videoDetails);
@@ -174,9 +156,11 @@ export default function Course() {
               </div>
               <VideosSeriesGating
                 creator={videoDetails.creator}
-                onCreatorProfile={true}
+                onCreatorProfile={false}
                 category="SeriesVideoGrid"
                 seriesid={courseid.toString()}
+                onVideoPlayer={false}
+                onCoursePage={true}
               />
             </div>
           </div>

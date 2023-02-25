@@ -61,6 +61,8 @@ interface VideosSeriesGatingProp {
   onCreatorProfile: boolean;
   category: "Videos" | "Series" | "SeriesVideoGrid";
   ignoreVideoId?: string;
+  onVideoPlayer?: boolean;
+  onCoursePage?: boolean;
 }
 
 interface userVodDataI {
@@ -92,6 +94,8 @@ const VideosSeriesGating = ({
   onCreatorProfile,
   category,
   ignoreVideoId,
+  onVideoPlayer,
+  onCoursePage,
 }: VideosSeriesGatingProp) => {
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
@@ -102,9 +106,7 @@ const VideosSeriesGating = ({
     threemonths: 0,
     oneyear: 0,
   });
-  const [userValidatePurchase, setUserValidatePurchase] = useState(
-    !onCreatorProfile || category === "Series"
-  );
+  const [userValidatePurchase, setUserValidatePurchase] = useState(false);
 
   const GetPrices = () => {
     useEffect(() => {
@@ -184,6 +186,7 @@ const VideosSeriesGating = ({
       ],
       buttonText: "Buy Now",
       buttonVariant: "outlined",
+      onCoursePage,
     },
   ];
 
@@ -216,7 +219,13 @@ const VideosSeriesGating = ({
   const GetAllItems = () => {
     useEffect(() => {
       async function getData() {
-        if (category === "Videos") {
+        var isValidated =
+          (!onCreatorProfile && !onVideoPlayer && !onCoursePage) ||
+          category === "Series";
+        setUserValidatePurchase(isValidated);
+        if (creator === username) {
+          setUserValidatePurchase(true);
+        } else if (category === "Videos") {
           const result = await getSpecificCreatorUserVODData(creator);
           if (result[0]) {
             setUserVODData(result[0]);
@@ -225,18 +234,18 @@ const VideosSeriesGating = ({
               setUserValidatePurchase(true);
             }
           }
-        }
-
-        if (category === "SeriesVideoGrid") {
+        } else if (category === "SeriesVideoGrid") {
           const result = await getSpecificCreatorSeriesIdUserVideoSeriesData(
             creator,
             seriesid
           );
+
           if (result && result[0]) {
             setUserSeriesData(result[0]);
             if (Date.parse(result[0].expiry_date) > Date.now()) {
               setUserValidatePurchase(true);
             }
+          } else {
           }
         }
       }
@@ -256,9 +265,15 @@ const VideosSeriesGating = ({
           category={category}
           seriesid={seriesid}
           ignoreVideoId={ignoreVideoId}
+          onVideoPlayer={onVideoPlayer}
         />
       ) : (
         <div className="blueTextBlackBackground">
+          <Typography style={{ fontSize: "20px", textAlign: "center" }}>
+            {category === "Videos"
+              ? "Access Premium Videos from " + creator
+              : "Access Course " + creator}
+          </Typography>
           <Box
             component="form"
             sx={{

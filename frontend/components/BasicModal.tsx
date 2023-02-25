@@ -24,8 +24,15 @@ const useStylesModal = makeStyles((theme) => ({
 interface BasicModalProps {
   modalButtonText: any;
   modalBody: any;
+  onClickFunction?: any;
+  formatting?: any;
 }
-const BasicModal = ({ modalButtonText, modalBody }: BasicModalProps) => {
+const BasicModal = ({
+  modalButtonText,
+  modalBody,
+  onClickFunction,
+  formatting,
+}: BasicModalProps) => {
   const classesModal = useStylesModal();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -34,13 +41,31 @@ const BasicModal = ({ modalButtonText, modalBody }: BasicModalProps) => {
   return (
     <>
       <div className="modelButton">
-        <Button
-          style={{ background: "#3B82F6", color: "white", marginBottom: "2px" }}
-          variant="contained"
-          onClick={handleOpen}
-        >
-          {modalButtonText}
-        </Button>
+        {!formatting ? (
+          <Button
+            style={{
+              background: "#3B82F6",
+              color: "white",
+              marginBottom: "2px",
+            }}
+            variant="contained"
+            onClick={() => {
+              handleOpen();
+              if (onClickFunction) onClickFunction();
+            }}
+          >
+            {modalButtonText}
+          </Button>
+        ) : (
+          <div
+            onClick={() => {
+              handleOpen();
+              if (onClickFunction) onClickFunction();
+            }}
+          >
+            {modalButtonText}
+          </div>
+        )}
       </div>
       <Modal
         aria-labelledby="transition-modal-title"

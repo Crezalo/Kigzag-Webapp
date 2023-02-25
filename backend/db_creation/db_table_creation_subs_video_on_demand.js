@@ -5,7 +5,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   //type = 0: 1month, 1: 3month, 2: 1year
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS User_Video_On_Demand_Sub (Id BIGSERIAL PRIMARY KEY, UserName VARCHAR(255) NOT NULL, Creator VARCHAR(255) NOT NULL, Expiry_Date TIMESTAMP NOT NULL, Type INTEGER NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS User_Video_On_Demand_Sub (Id BIGSERIAL PRIMARY KEY, UserName VARCHAR(255) NOT NULL, Creator VARCHAR(255) NOT NULL, Expiry_Date TIMESTAMP NOT NULL, Type INTEGER NOT NULL, BuyingPrice INTEGER NOT NULL, CreatedAt TIMESTAMP NOT NULL);"
     )
     .catch((err) => console.log("PG ERROR User_Video_On_Demand_Sub Table\n\n\t\t", err.message));
 
@@ -13,7 +13,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   //type = 0: 1month, 1: 3month, 2: 1year
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS User_Series_Sub (Id BIGSERIAL PRIMARY KEY, UserName VARCHAR(255) NOT NULL, Creator VARCHAR(255) NOT NULL, SeriesId VARCHAR(255) NOT NULL, Expiry_Date TIMESTAMP NOT NULL, Type INTEGER NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS User_Series_Sub (Id BIGSERIAL PRIMARY KEY, UserName VARCHAR(255) NOT NULL, Creator VARCHAR(255) NOT NULL, SeriesId VARCHAR(255) NOT NULL, Expiry_Date TIMESTAMP NOT NULL, Type INTEGER NOT NULL, BuyingPrice INTEGER NOT NULL, CreatedAt TIMESTAMP NOT NULL);"
     )
     .catch((err) => console.log("PG ERROR User_Series_Sub Table\n\n\t\t", err.message));
 

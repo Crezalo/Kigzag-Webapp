@@ -20,7 +20,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
 
   //7. User bought merchandise info table
   //Delivery Status=> 0: packaging, 1: shippedFromCreatorEnd, 2: receivedByCustomer
-  //Return Status=> 0:returnInitiated, 1: returnedFromUser, 2: recievedFromCreatorEnd
+  //Return Status=> 0: notrigger, 1: returnInitiated, 2: returnedFromUser, 3: recievedFromCreatorEnd
   await pool
     .query(
       "CREATE TABLE IF NOT EXISTS User_Merchandise (OrderId VARCHAR(255) PRIMARY KEY, ProductId VARCHAR(255) NOT NULL, UserName VARCHAR(255) NOT NULL, AddressId VARCHAR(255) NOT NULL, Quantity NUMERIC DEFAULT 1 NOT NULL, BuyingPrice REAL NOT NULL, DeliveryStatusLink VARCHAR(255), DeliveryStatus NUMERIC DEFAULT 0 NOT NULL, IsReturnInitiated BOOLEAN DEFAULT FALSE, ReturnStatus NUMERIC DEFAULT 0 NOT NULL, BoughtAt TIMESTAMP NOT NULL, DeliveredAt TIMESTAMP, ReturnedInitiatedAt TIMESTAMP, ReturnedReceivedAt TIMESTAMP, IsRefundComplete BOOLEAN DEFAULT FALSE);"

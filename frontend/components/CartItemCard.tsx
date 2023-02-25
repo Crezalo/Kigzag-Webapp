@@ -18,6 +18,7 @@ import {
   getMerchThumbnail,
   getProductIdMerchData,
 } from "../services/api-services/creator/merch_api";
+import CreatorDP from "./CreatorDP";
 
 interface cartItem {
   cartid: string;
@@ -69,8 +70,8 @@ const CartItemCard = ({ cartItem }: CartItemCardProps) => {
               ? "3 month"
               : "1 year"
           );
-          const result = await getUserData(cartItem.creator);
-          if (result[0]) setDisplayPic(result[0].displaypicture);
+          // const result = await getUserData(cartItem.creator);
+          // if (result[0]) setDisplayPic(result[0].displaypicture);
         } else if (cartItem.feature == 1) {
           let result = await getCreatorSubscriptionData_Series(
             cartItem.seriesid
@@ -139,14 +140,20 @@ const CartItemCard = ({ cartItem }: CartItemCardProps) => {
         }}
       >
         <div className="cartItemCardImageElement">
-          {displayPic?.includes("https://") ? (
-            <img
-              src={displayPic}
-              alt="Loading ..."
-              className="cartItemCardImageElement"
-            />
+          {cartItem.feature == 0 ? (
+            <CreatorDP creator={cartItem.creator} height={150} width={150} />
           ) : (
-            <></>
+            <>
+              {displayPic?.includes("https://") ? (
+                <img
+                  src={displayPic}
+                  alt="Loading ..."
+                  className="cartItemCardImageElement"
+                />
+              ) : (
+                <></>
+              )}
+            </>
           )}
         </div>
         <div

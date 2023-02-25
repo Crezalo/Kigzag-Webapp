@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import tipjar from "../public/tipjar.png";
+import tipjar1 from "../public/tipjar1.png";
+import tipjar2 from "../public/tipjar2.png";
+import tipjar3 from "../public/tipjar3.png";
+import AuthService from "../services/auth-services";
 import Image from "next/image";
 import { Box, InputLabel, TextField } from "@mui/material";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
@@ -14,6 +18,10 @@ import {
   ThemeProvider,
   Tooltip,
 } from "@material-ui/core";
+import {
+  getCreatorTipJarMsgData,
+  updateTipJarMsgData,
+} from "../services/api-services/creator/tipjar_api";
 
 const useStylesModal = makeStyles((theme) => ({
   paper: {
@@ -55,11 +63,59 @@ interface TipsTabProp {
 }
 const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
   const classesModal = useStylesModal();
-  const [tipJarMsg, setTipJarMsg] = useState(
-    "Hello there!!! Thanks a lot for this tip!!!"
-  );
+  const [username, setUsername] = useState("");
+  const [isConnected, setIsConnected] = useState(false);
+  const [tipJarMsg, setTipJarMsg] = useState("");
+  const [tipJarUserMsg, setTipJarUserMsg] = useState("");
   const [tipPrice, setTipPrice] = useState(100);
   const min = 0;
+
+  const checkConnected = () => {
+    useEffect(() => {
+      async function getData() {
+        if (typeof window !== "undefined") {
+          console.log("AuthService.refresh()");
+          console.log(await AuthService.refresh());
+          setIsConnected(
+            AuthService.validateCurrentUserRefreshToken() &&
+              AuthService.validateCurrentUserAccessToken()
+          );
+        }
+      }
+      getData();
+    }, []);
+  };
+
+  checkConnected();
+
+  const updateUsername = () => {
+    useEffect(() => {
+      setUsername(AuthService.getUsername());
+    }, [isConnected]);
+  };
+
+  updateUsername();
+
+  const GetMessage = () => {
+    useEffect(() => {
+      async function getData() {
+        if (username != "") {
+          const res1 = await getCreatorTipJarMsgData(creator);
+          console.log(res1);
+          if (typeof res1 !== "string" && res1[0]) {
+            setTipJarMsg(res1[0].message);
+          }
+        }
+      }
+      getData();
+    }, [username]);
+  };
+
+  GetMessage();
+
+  const updateMessage = async () => {
+    let result = await updateTipJarMsgData(tipJarMsg);
+  };
 
   return (
     <div
@@ -71,7 +127,21 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
         flexDirection: "row",
       }}
     >
-      <Image src={tipjar} alt="tipjar" width={250} height={250} />
+      <div className="blueTextBlackBackground">
+        {onCreatorProfile ? (
+          <span style={{ color: "#3B82F6", marginBottom: "20px" }}>
+            {tipJarMsg}
+          </span>
+        ) : (
+          <></>
+        )}
+        <Image
+          src={onCreatorProfile ? tipjar1 : tipjar2}
+          alt="tipjar"
+          width={onCreatorProfile ? 350 : 250}
+          height={onCreatorProfile ? 350 : 250}
+        />
+      </div>
       <div
         className="blueTextBlackBackground"
         style={{
@@ -99,12 +169,9 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
                   justifyContent: "center",
                 }}
               >
-                <span style={{ color: "#3B82F6", marginBottom: "20px" }}>
-                  {tipJarMsg}
-                </span>
                 <TextField
                   className={classesModal.textfieldPrice}
-                  label="Price (in ₹)"
+                  label="Tip (in ₹)"
                   type="number"
                   InputLabelProps={{
                     shrink: true,
@@ -122,6 +189,25 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
                     } else {
                       setTipPrice(value);
                     }
+                  }}
+                />
+                <br />
+                <TextField
+                  className={classesModal.textfieldMsg}
+                  label="Message"
+                  placeholder={
+                    "Type your special message for " + creator + " here..."
+                  }
+                  type="text"
+                  multiline
+                  rows={3}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="outlined"
+                  value={tipJarUserMsg}
+                  onChange={(e) => {
+                    setTipJarUserMsg(e.target.value);
                   }}
                 />
                 <Button
@@ -154,7 +240,7 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
                   placeholder="Type your special message for your fans and followers here..."
                   type="text"
                   multiline
-                  rows={5}
+                  rows={3}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -171,9 +257,9 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
                     marginTop: "20px",
                   }}
                   variant="contained"
-                  onClick={() => {}}
+                  onClick={updateMessage}
                 >
-                  Submit
+                  Update
                 </Button>
               </div>
             )}

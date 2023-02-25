@@ -16,6 +16,10 @@ import {
 import MerchCardGrid from "../components/MerchCardGrid";
 import MerchAccordianDetails from "../components/MerchAccordianDetails";
 import MerchReviewGrid from "../components/MerchReviewGrid";
+import {
+  getProductAllReviewsData,
+  getProductRatingsData,
+} from "../services/api-services/user/merch_api";
 
 interface SettingsT {
   autoPlay: boolean;
@@ -56,6 +60,37 @@ export default function Merch() {
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
   const [settings, setSettings] = useState<SettingsT>(DefaultSettingsT);
+  const [rating, setRating] = useState(-1);
+
+  const [merchDetails, setMerchDetails] = useState({
+    title: "",
+    description: "",
+    creator: "",
+    productid: "",
+    inventory: 0,
+    return_refund_policy: "",
+    country_of_origin: "",
+    price: 0,
+    variants: 0,
+    variantname: "",
+    discountpercentage: 0,
+    warrantyperiod: 0,
+    shippingcharges: 0,
+    freeshippingabove: 0,
+  });
+
+  const [merchReviews, setMerchReviews] = useState([
+    {
+      reviewid: "",
+      productid: "",
+      username: "",
+      ratings: -1,
+      commenttitle: "",
+      commentdescription: "",
+      createdat: "",
+      updatedat: "",
+    },
+  ]);
 
   const checkConnected = () => {
     useEffect(() => {
@@ -83,22 +118,15 @@ export default function Merch() {
 
   updateUsername();
 
-  const [merchDetails, setMerchDetails] = useState({
-    title: "",
-    description: "",
-    creator: "",
-    productid: "",
-    inventory: 0,
-    return_refund_policy: "",
-    country_of_origin: "",
-    price: 0,
-    variants: 0,
-    variantname: "",
-    discountpercentage: 0,
-    warrantyperiod: 0,
-    shippingcharges: 0,
-    freeshippingabove: 0,
-  });
+  function compare(a: any, b: any) {
+    if (a.createdat > b.createdat) {
+      return -1;
+    }
+    if (a.createdat < b.createdat) {
+      return 1;
+    }
+    return 0;
+  }
 
   const GetDetails = () => {
     useEffect(() => {
@@ -125,6 +153,35 @@ export default function Merch() {
       getData();
     }, [productid]);
   };
+
+  const GetReviews = () => {
+    useEffect(() => {
+      async function getData() {
+        const res = await getProductAllReviewsData(productid.toString());
+        console.log(res);
+        if (res && typeof res !== "string") {
+          setMerchReviews(res.sort(compare));
+        }
+      }
+      getData();
+    }, [productid]);
+  };
+
+  GetReviews();
+
+  const GetRating = () => {
+    useEffect(() => {
+      async function getData() {
+        if (productid) {
+          const result = await getProductRatingsData(productid.toString());
+          if (typeof result !== "string") setRating(result);
+        }
+      }
+      getData();
+    }, [productid]);
+  };
+
+  GetRating();
 
   function updateSignedUrl() {
     if (signedURls?.length > 0) {
@@ -155,7 +212,7 @@ export default function Merch() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="videoDiv">
-        {isConnected && productid ? (
+        {isConnected && productid && merchReviews[0]?.ratings != -1 ? (
           <>
             <div>
               <div className="merchPageImage">
@@ -188,7 +245,7 @@ export default function Merch() {
               {merchDetails?.productid && updateSignedUrl() ? (
                 <MerchAccordianDetails
                   merchDetails={merchDetails}
-                  thumbnail={signedURls[0]}
+                  rating={rating}
                 />
               ) : (
                 <></>
@@ -197,16 +254,13 @@ export default function Merch() {
             <div>
               <MerchCardGrid
                 creator={merchDetails.creator}
-                onCreatorProfile={merchDetails.creator != username}
+                onCreatorProfile={false}
                 ignoreProductId={productid.toString()}
+                onMerchPage={true}
               />
             </div>
             <div>
-              <MerchReviewGrid
-                creator={merchDetails.creator}
-                onCreatorProfile={merchDetails.creator != username}
-                ignoreProductId={productid.toString()}
-              />
+              <MerchReviewGrid merchReviews={merchReviews} />
             </div>
           </>
         ) : (

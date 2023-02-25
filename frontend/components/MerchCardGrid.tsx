@@ -47,7 +47,7 @@ const GridItem = ({ mid, classes }: GridItemProps) => {
     // From 600-690px wide (tablets), I take up 6 out of 12 columns, so 2 columns fit the screen.
     // From 960px wide and above, I take up 25% of the device (3/12), so 4 columns fit the screen.
     <Grid item xs={12} sm={6} md={3}>
-      <MerchCard merchDetails={mid}/>
+      <MerchCard merchDetails={mid} />
       {/* <Paper className={classes.paper}>item</Paper> */}
     </Grid>
   );
@@ -57,11 +57,13 @@ interface MerchCardGridProp {
   creator: string;
   onCreatorProfile: boolean;
   ignoreProductId?: string;
+  onMerchPage?: boolean;
 }
 const MerchCardGrid = ({
   creator,
   onCreatorProfile,
   ignoreProductId,
+  onMerchPage,
 }: MerchCardGridProp) => {
   const classes = useStyles();
 
@@ -83,10 +85,10 @@ const MerchCardGrid = ({
   ]);
 
   function compare(a: any, b: any) {
-    if (a.createdat < b.createdat) {
+    if (a.createdat > b.createdat) {
       return -1;
     }
-    if (a.createdat > b.createdat) {
+    if (a.createdat < b.createdat) {
       return 1;
     }
     return 0;
@@ -106,7 +108,7 @@ const MerchCardGrid = ({
 
   return (
     <div className="blueTextBlackBackground">
-      {!onCreatorProfile ? (
+      {!(onCreatorProfile || onMerchPage) ? (
         <div
           style={{
             margin: "10px",
@@ -125,10 +127,17 @@ const MerchCardGrid = ({
       ) : (
         <></>
       )}
+      {/* {onMerchPage ? (
+        <h1 className="videoDiv h1" style={{ color: "#3B82F6" }}>
+          Other Products
+        </h1>
+      ) : (
+        <></>
+      )} */}
       <Grid container spacing={1}>
-        {merchDetails?.map((mid) => (
+        {merchDetails?.map((mid, index) => (
           <>
-            {mid.productid && mid.productid != ignoreProductId ? (
+            {mid.productid && (!onMerchPage || index < 4) ? (
               <GridItem mid={mid} classes={classes} key={mid.productid} />
             ) : (
               <></>

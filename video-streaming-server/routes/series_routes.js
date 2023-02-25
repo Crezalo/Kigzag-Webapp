@@ -84,7 +84,7 @@ router.post('/upload', authorise, (req, res) => {
         ]
       );
       const new_video_details = await pool.query(
-        "INSERT INTO Creator_video (VideoId, Creator, SeriesId, Title, Description, Duration, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,$6,TO_TIMESTAMP($7),TO_TIMESTAMP($8)) RETURNING*;",
+        "INSERT INTO Creator_video_docs (VideoId, Creator, SeriesId, Title, Description, Duration, Type, Chronology, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,TO_TIMESTAMP($9),TO_TIMESTAMP($10)) RETURNING*;",
         [
           seriesid,
           req.username,
@@ -92,6 +92,8 @@ router.post('/upload', authorise, (req, res) => {
           fields['title'][0],
           fields['description'][0],
           Math.round(duration),
+          0,
+          0,
           Date.now() / 1000,
           Date.now() / 1000,
         ]

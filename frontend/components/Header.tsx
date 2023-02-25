@@ -13,6 +13,7 @@ import AddToCart from "./AddToCart";
 import { getCartItems } from "../services/api-services/user/cart_api";
 import { useRouter } from "next/router";
 import { Button } from "@mui/material";
+import { getUserData } from "../services/api-services/user_api";
 
 interface cartItem {
   cartid: string;
@@ -31,6 +32,7 @@ const Header = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
   const [cartItems, setCartItems] = useState([]);
+  const [isCreator, setIsCreator] = useState(false);
   const checkConnected = () => {
     useEffect(() => {
       async function getData() {
@@ -56,6 +58,22 @@ const Header = () => {
   };
 
   updateUsername();
+
+  const GetUser = () => {
+    useEffect(() => {
+      async function getData() {
+        if (username != "") {
+          const result = await getUserData(username);
+          if (typeof result !== "string") {
+            setIsCreator(result[0].iscreator);
+          }
+        }
+      }
+      getData();
+    }, [username]);
+  };
+
+  GetUser();
 
   const GetAllItems = () => {
     useEffect(() => {
@@ -157,7 +175,7 @@ const Header = () => {
           ) : (
             <></>
           )}
-          <SettingMenu />
+          <SettingMenu isCreator={isCreator} />
         </nav>
       ) : (
         <ConnectToAccount />

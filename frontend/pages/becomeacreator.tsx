@@ -22,6 +22,7 @@ import { getCreatorInfoImages } from "../services/api-services/content_api";
 import Carousel from "react-material-ui-carousel";
 import UploadProfilePicsLogoModal from "../components/UploadProfilePicsModal";
 import CreatorDP from "../components/CreatorDP";
+import KYCModal from "../components/KYCModal";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -147,6 +148,10 @@ export default function BecomeACreator() {
   const [youtube, setYoutube] = useState("");
   const [website, setWebsite] = useState("");
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const checkConnected = () => {
     useEffect(() => {
       async function getData() {
@@ -195,10 +200,10 @@ export default function BecomeACreator() {
           const result = await getUserData(username);
           setUser(result[0]);
           const res = await getCreatorInfoImages("profilepic", username);
-          if (res[0]) setProfilePic(res[0]["signedurl"]);
+          if (typeof res !== "string") setProfilePic(res[0]["signedurl"]);
 
           const res1 = await getCreatorInfoImages("oimages", username);
-          if (res1[0]) {
+          if (typeof res1 !== "string") {
             setSignedURls(res1[0]["signedurls"]);
             setImageLen(res1[0]["signedurls"].length);
           }
@@ -256,7 +261,7 @@ export default function BecomeACreator() {
   return (
     <div>
       <Head>
-        <title>Kigzag: Edit Profile</title>
+        <title>Kigzag: Become A Creator</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
@@ -407,21 +412,11 @@ export default function BecomeACreator() {
                       justifyContent: "center",
                     }}
                   >
-                    <button
-                      className="w-full bg-blue-500 text-white px-2 py-2 rounded buyButton"
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: "bold",
-                        textAlign: "center",
-                        width: "auto",
-                        marginTop: "20px",
-                      }}
-                      onClick={() => {
-                        UpdateUserData();
-                      }}
-                    >
-                      Become A Creator
-                    </button>
+                    <BasicModal
+                      modalButtonText="Become A Creator"
+                      modalBody={<KYCModal />}
+                      onClickFunction={UpdateUserData}
+                    />
                   </div>
                 </div>
                 <div className={classesModal.paper}>

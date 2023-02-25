@@ -57,17 +57,21 @@ const CreatorDP = ({ creator, height, width }: CreatorDPProp) => {
 
   return (
     <>
-      <Image
-        src={profilePic}
-        alt=""
-        width={width}
-        height={height}
-        className="creatorDP"
-        onError={({ currentTarget }) => {
-          currentTarget.onerror = null; // prevents looping
-          currentTarget.src = DummyProfile.src;
-        }}
-      />
+      {profilePic ? (
+        <Image
+          src={profilePic}
+          alt=""
+          width={width}
+          height={height}
+          className="creatorDP"
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src = DummyProfile.src;
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };

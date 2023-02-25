@@ -16,9 +16,9 @@ const cors = require("cors");
 // general table for oth creator and user
 const user_router = require("./routes/user_routes");
 const content_router = require("./routes/content_routes");
-const sales_router = require("./routes/sales_routes");
 
 // creator dominated table routes
+const features_router = require("./routes/creator/features_routes");
 const colab_router = require("./routes/creator/colab_routes");
 const dis_router = require("./routes/creator/discord_routes");
 const fininfo_router = require("./routes/creator/fininfo_routes");
@@ -26,6 +26,7 @@ const live_router = require("./routes/creator/livestream_routes");
 const shoutout_router = require("./routes/creator/shoutout_routes");
 const subs_router = require("./routes/creator/subscriptions_routes");
 const merch_router = require("./routes/creator/merchandise_routes");
+const tipjar_router = require("./routes/creator/tipjar_routes");
 
 // user dominated table routes
 const user_dis_router = require("./routes/user/discord_routes");
@@ -37,6 +38,8 @@ const user_community_combo_router = require("./routes/user/community_combo_route
 const user_shoutout_router = require("./routes/user/shoutout_routes");
 const user_colab_router = require("./routes/user/colab_routes");
 const user_merch_router = require("./routes/user/merchandise_routes");
+const user_tipjar_router = require("./routes/user/tipjar_routes");
+
 const cart_router = require("./routes/user/cart_routes");
 
 const discord_bot = require('./discord_token_gating_bot/bot');
@@ -72,9 +75,9 @@ app.use(express.urlencoded({
 // general
 app.use("/", user_router); // core frontend routes for user
 app.use("/content", content_router); // core frontend routes for user
-app.use("/sales", sales_router); // core frontend routes for user
 
 // creator info + sub data
+app.use("/features", features_router);
 app.use("/colab", colab_router);
 app.use("/discord", dis_router);
 app.use("/fininfo", fininfo_router);
@@ -82,6 +85,7 @@ app.use("/livestream", live_router.router);
 app.use("/shoutout", shoutout_router);
 app.use("/subscription", subs_router);
 app.use("/creator_merchandise", merch_router);
+app.use("/tipjar", tipjar_router);
 
 // user sub data
 app.use("/user_colab", user_colab_router);
@@ -93,6 +97,7 @@ app.use("/user_video_call", user_video_call_router);
 app.use("/user_video_series", user_video_series_router);
 app.use("/user_vod", user_vod_router);
 app.use("/user_merchandise", user_merch_router);
+app.use("/user_tipjar",user_tipjar_router);
 app.use("/user_cart", cart_router);
 
 // run discord bot
@@ -112,7 +117,7 @@ server.listen(5000, (err) => {
   console.log("Server is listening on port 5000");
 });
 
-// // Lists all routes for port 5000
+// Lists all routes for port 5000
 // expressListRoutes(app, {
 //   prefix: '/'
 // });

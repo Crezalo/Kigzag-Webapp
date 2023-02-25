@@ -84,18 +84,16 @@ router.post('/upload', authorise, (req, res) => {
       // VOD is also a series with seriesid = vod_{username}, hence initialising it in creator series table
       if (ud.rows.length == 0) {
         const new_series_details = await pool.query(
-          "INSERT INTO Creator_series (SeriesId, Creator, Title, Description) VALUES ($1,$2,$3,$4) RETURNING*;",
+          "INSERT INTO Creator_series (SeriesId, Creator) VALUES ($1,$2) RETURNING*;",
           [
             "vod_" + req.username,
             req.username,
-            "DummyTitle",
-            "DummyDescription"
           ]
         );
       }
 
       const new_video_details = await pool.query(
-        "INSERT INTO Creator_video (VideoId, Creator, SeriesId, Title, Description, Duration, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,$6,TO_TIMESTAMP($7),TO_TIMESTAMP($8)) RETURNING*;",
+        "INSERT INTO Creator_video_docs (VideoId, Creator, SeriesId, Title, Description, Duration, Type, Chronology, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,TO_TIMESTAMP($9),TO_TIMESTAMP($10)) RETURNING*;",
         [
           videoid,
           req.username,
@@ -103,6 +101,8 @@ router.post('/upload', authorise, (req, res) => {
           fields['title'][0],
           fields['description'][0],
           Math.round(duration),
+          0,
+          0,
           Date.now() / 1000,
           Date.now() / 1000,
         ]
@@ -137,12 +137,12 @@ router.put("/:videoid", authorise, async (req, res) => {
     var video_update;
     if (title != "")
       video_update = await pool.query(
-        "UPDATE Creator_video SET Title=$1, UpdatedAt=TO_TIMESTAMP($2) WHERE VideoId=$3 AND Creator=$4 RETURNING*;",
+        "UPDATE Creator_video_docs SET Title=$1, UpdatedAt=TO_TIMESTAMP($2) WHERE VideoId=$3 AND Creator=$4 RETURNING*;",
         [title, Date.now() / 1000, videoid, req.username]
       );
     if (description != "")
       video_update = await pool.query(
-        "UPDATE Creator_video SET Description=$1, UpdatedAt=TO_TIMESTAMP($2) WHERE VideoId=$3 AND Creator=$4 RETURNING*;",
+        "UPDATE Creator_video_docs SET Description=$1, UpdatedAt=TO_TIMESTAMP($2) WHERE VideoId=$3 AND Creator=$4 RETURNING*;",
         [description, Date.now() / 1000, videoid, req.username]
       );
     res.json({
@@ -164,7 +164,7 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
     const {
       videoid,
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
     // console.log(ud.rows[0]);
     // const duration = ud.rows[0].duration;
@@ -199,7 +199,7 @@ router.get("/details/:videoid", authorise, async (req, res) => {
     const {
       videoid
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -220,7 +220,7 @@ router.get("/details/creator/:creator", authorise, async (req, res) => {
     const {
       creator
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE Creator=$1 AND SeriesId=$2;", [creator, "vod_" + creator]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE Creator=$1 AND SeriesId=$2;", [creator, "vod_" + creator]);
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -241,7 +241,7 @@ router.get("/details/series/:seriesid", authorise, async (req, res) => {
     const {
       seriesid
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE SeriesId=$1;", [seriesid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE SeriesId=$1;", [seriesid]);
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -262,7 +262,7 @@ router.get("/details/seriesdemovid/:creator", authorise, async (req, res) => {
     const {
       creator
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=SeriesId AND Creator=$1;", [creator]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=SeriesId AND Creator=$1;", [creator]);
     // console.log(ud.rows);
     res.json({
       isSuccessful: true,
@@ -287,7 +287,7 @@ router.get("/thumbnail/:videoid", authorise, async (req, res) => {
 
   //   const address = req.req.username;
   //   const body = req.authBody;
-  //   const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+  //   const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
   //   const creator = ud.rows[0].creator;
 
   //   // simply use AWS S3 bucket with public read access
@@ -306,7 +306,7 @@ router.get("/thumbnail/:videoid", authorise, async (req, res) => {
     const {
       videoid,
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
     // console.log(ud.rows[0]);
     const duration = ud.rows[0].duration;
@@ -341,7 +341,7 @@ router.get("/captions/:videoid", authorise, async (req, res) => {
     const {
       videoid
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
     try {
       res.sendFile(process.cwd() + `/assets/${creator}/${videoid}.vtt`)

@@ -43,9 +43,12 @@ export async function addUserVideoSeriesData(
 export async function getUserVideoSeriesData() {
   try {
     if (authHeader().Authorization) {
-      const response = await axios.get(MAIN_API_URL + "user_video_series/allcreators", {
-        headers: authHeader(),
-      });
+      const response = await axios.get(
+        MAIN_API_URL + "user_video_series/allcreators",
+        {
+          headers: authHeader(),
+        }
+      );
 
       if (response.data.isSuccessful) {
         return response.data.result;
@@ -65,6 +68,31 @@ export async function getSpecificCreatorUserVideoSeriesData(creator: string) {
     if (authHeader().Authorization) {
       const response = await axios.get(
         MAIN_API_URL + "user_video_series/" + creator,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      if (response.data.isSuccessful) {
+        return response.data.result;
+      } else {
+        return response.data.errorMsg;
+      }
+    } else {
+      return "Not Logged In";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getSpecificCreatorAllUserVideoSeriesStatsData(
+  seriesid: string
+) {
+  try {
+    if (authHeader().Authorization) {
+      const response = await axios.get(
+        MAIN_API_URL + "user_video_series/alluserdata/forcreator/" + seriesid,
         {
           headers: authHeader(),
         }
@@ -128,6 +156,31 @@ export async function updateUserVideoSeriesData(
         }
       );
 
+      if (response.data.isSuccessful) {
+        return response.data.result;
+      } else {
+        return response.data.errorMsg;
+      }
+    } else {
+      return "Not Logged In";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function checkUserValidSub(videoid: string) {
+  try {
+    if (authHeader().Authorization) {
+      const response = await axios.get(
+        MAIN_API_URL + "user_video_series/checkstatus/generic/" + videoid,
+        {
+          headers: authHeader(),
+        }
+      );
+      console.log(
+        MAIN_API_URL + "user_video_series/checkstatus/generic/" + videoid
+      );
       if (response.data.isSuccessful) {
         return response.data.result;
       } else {

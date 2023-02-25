@@ -13,17 +13,20 @@ router.post("/", authorise, async (req, res) => {
     try {
         var {
             creator,
-            type
+            type,
+            buyingprice
         } = req.body;
         if (type == 0 || type == 1 || type == 2) {
             const duration = type == 0 ? 2628888 : type == 1 ? 7888838 : 31556926
             const new_user_vod = await pool.query(
-                "INSERT INTO User_Video_On_Demand_Sub (UserName, Creator, Expiry_Date, Type) VALUES ($1,$2,TO_TIMESTAMP($3),$4) RETURNING*;",
+                "INSERT INTO User_Video_On_Demand_Sub (UserName, Creator, Expiry_Date, Type, BuyingPrice, CreatedAt) VALUES ($1,$2,TO_TIMESTAMP($3),$4,$5,TO_TIMESTAMP($6)) RETURNING*;",
                 [
                     req.username,
                     creator,
                     (Date.now() / 1000 + duration), //// present + 1 month / 3 month / 1 year in seconds
-                    type
+                    type,
+                    buyingprice,
+                    Date.now()
                 ]
             );
             res.json({
@@ -79,6 +82,39 @@ router.get("/:creator", authorise, async (req, res) => {
             isSuccessful: true,
             errorMsg: "",
             result: ud.rows
+        });
+    } catch (err) {
+        res.json({
+            isSuccessful: false,
+            errorMsg: err.message,
+            result: []
+        });
+    }
+});
+
+///////////////////////////////////////////   Get All Data   ///////////////////////////////////////////
+// Get All User Data for given creator 
+router.get("/alluserdata/forcreator", authorise, async (req, res) => {
+    try {
+        const ud = await pool.query("SELECT * FROM User_Video_On_Demand_Sub WHERE Creator = $1;", [req.username]);
+        var ent_data = ud.rows;
+        var data = []
+        for (let i = 0; i < ent_data.length; i++) {
+            var temp = data.findIndex(x => x.date == ent_data[i].createdat.toString().split(" ").slice(1, 4).join(" "));
+            if (!(temp > -1)) {
+                data.push({
+                    date: ent_data[i].createdat.toString().split(" ").slice(1, 4).join(" "),
+                    total: parseInt(ent_data[i].buyingprice)
+                });
+            } else {
+                data[temp].total += parseInt(ent_data[i].buyingprice);
+            }
+        }
+
+        res.json({
+            isSuccessful: true,
+            errorMsg: "",
+            result: data
         });
     } catch (err) {
         res.json({

@@ -6,6 +6,7 @@ import VideoCard from "./VideoCard";
 import BasicModal from "./BasicModal";
 import UploadVideoModal from "./UploadVideoModal";
 import UpdateVideoPrices from "./UpdateVideoPrices";
+import AuthService from "../services/auth-services";
 import {
   getCreatorAllSeriesDemoVideoDetails,
   getCreatorAllVideoDetails,
@@ -59,6 +60,7 @@ interface ContentCardGridProp {
   onCreatorProfile: boolean;
   category: "Videos" | "Series" | "SeriesVideoGrid";
   ignoreVideoId?: string;
+  onVideoPlayer?: boolean;
 }
 const ContentCardGrid = ({
   creator,
@@ -66,9 +68,38 @@ const ContentCardGrid = ({
   onCreatorProfile,
   category,
   ignoreVideoId,
+  onVideoPlayer,
 }: ContentCardGridProp) => {
   const classes = useStyles();
 
+  const [username, setUsername] = useState("");
+  const [isConnected, setIsConnected] = useState(false);
+
+  const checkConnected = () => {
+    useEffect(() => {
+      async function getData() {
+        if (typeof window !== "undefined") {
+          console.log("AuthService.refresh()");
+          console.log(await AuthService.refresh());
+          setIsConnected(
+            AuthService.validateCurrentUserRefreshToken() &&
+              AuthService.validateCurrentUserAccessToken()
+          );
+        }
+      }
+      getData();
+    }, []);
+  };
+
+  checkConnected();
+
+  const updateUsername = () => {
+    useEffect(() => {
+      setUsername(AuthService.getUsername());
+    }, [isConnected]);
+  };
+
+  updateUsername();
   const [videoDetails, setVideoDetails] = useState([
     {
       title: "",
@@ -82,10 +113,10 @@ const ContentCardGrid = ({
   ]);
 
   function compare(a: any, b: any) {
-    if (a.createdat < b.createdat) {
+    if (a.createdat > b.createdat) {
       return -1;
     }
-    if (a.createdat > b.createdat) {
+    if (a.createdat < b.createdat) {
       return 1;
     }
     return 0;
@@ -100,12 +131,14 @@ const ContentCardGrid = ({
             setVideoDetails(res.sort(compare));
         }
 
+        // given creator all series
         if (category === "Series") {
           const res = await getCreatorAllSeriesDemoVideoDetails(creator);
           if (res && typeof res !== "string")
             setVideoDetails(res.sort(compare));
         }
 
+        // given series all video
         if (category === "SeriesVideoGrid") {
           const res = await getSeriesAllVideoDetails(seriesid);
           if (res && typeof res !== "string")
@@ -120,7 +153,7 @@ const ContentCardGrid = ({
 
   return (
     <div className="blueTextBlackBackground">
-      {!onCreatorProfile ? (
+      {!onCreatorProfile && !onVideoPlayer && creator === username ? (
         <div
           style={{
             margin: "10px",
@@ -129,7 +162,7 @@ const ContentCardGrid = ({
             justifyContent: "center",
           }}
         >
-          <div style={{ marginRight: "20px" }}>
+          <div>
             <BasicModal
               modalButtonText={
                 category === "Series" ? "Launch New Course" : "New Video"
@@ -160,11 +193,6 @@ const ContentCardGrid = ({
             )}
           </div>
         </div>
-      ) : (
-        <></>
-      )}
-      {category === "Series" ? (
-        <h1 style={{ textAlign: "center" }}>Courses</h1>
       ) : (
         <></>
       )}

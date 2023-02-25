@@ -13,6 +13,11 @@ import { getSpecificUserData } from "../services/api-services/user_api";
 import Image from "next/image";
 import VideosSeriesGating from "../components/VideosSeriesGating";
 import CreatorDP from "../components/CreatorDP";
+import { getSpecificCreatorUserVODData } from "../services/api-services/user/vod_api";
+import {
+  checkUserValidSub,
+  getSpecificCreatorSeriesIdUserVideoSeriesData,
+} from "../services/api-services/user/video_series_api";
 
 export default function VideoPlayer() {
   const router = useRouter();
@@ -27,6 +32,7 @@ export default function VideoPlayer() {
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
   const [displayPicture, setDisplayPicture] = useState("");
+  const [isValidated, setIsValidated] = useState(false);
   const videoRef = useRef(null);
 
   const checkConnected = () => {
@@ -54,23 +60,6 @@ export default function VideoPlayer() {
   };
 
   updateUsername();
-
-  const GetVideoUrl = () => {
-    useEffect(() => {
-      async function getData() {
-        if (videoid) {
-          const result = await getVideoSignedUrl(videoid.toString());
-          setSignedURl(result[0]["signedurl"]);
-          videoRef.current?.pause();
-          videoRef.current?.load();
-          videoRef.current?.play();
-        }
-      }
-      getData();
-    }, [videoid]);
-  };
-
-  GetVideoUrl();
 
   const [videoDetails, setVideoDetails] = useState({
     title: "",
@@ -109,6 +98,25 @@ export default function VideoPlayer() {
     Date.parse(videoDetails.createdat)
   );
 
+  const CheckIsValidated = () => {
+    useEffect(() => {
+      async function getData() {
+        if (videoid) {
+          const result = await checkUserValidSub(videoid.toString());
+          console.log("result");
+          console.log(result);
+          if (typeof result !== "string" && result) {
+            setIsValidated(result);
+          }
+        }
+      }
+      getData();
+    }, [username, videoid]);
+    return true;
+  };
+
+  CheckIsValidated();
+
   const GetDetails = () => {
     useEffect(() => {
       async function getData() {
@@ -122,6 +130,23 @@ export default function VideoPlayer() {
   };
 
   GetDetails();
+
+  const GetVideoUrl = () => {
+    useEffect(() => {
+      async function getData() {
+        if (videoid) {
+          const result = await getVideoSignedUrl(videoid.toString());
+          setSignedURl(result[0]["signedurl"]);
+          videoRef.current?.pause();
+          videoRef.current?.load();
+          videoRef.current?.play();
+        }
+      }
+      getData();
+    }, [videoid]);
+  };
+
+  GetVideoUrl();
 
   const GetDisplatPicture = () => {
     useEffect(() => {
@@ -140,10 +165,12 @@ export default function VideoPlayer() {
 
   GetDisplatPicture();
 
-  console.log("videoDetails");
-  console.log(videoDetails);
-  console.log("signedURl");
-  console.log(signedURl);
+  // console.log("videoDetails");
+  // console.log(videoDetails);
+  // console.log("signedURl");
+  // console.log(signedURl);
+  // console.log("isValidated");
+  // console.log(isValidated);
 
   return (
     <div>
@@ -154,66 +181,77 @@ export default function VideoPlayer() {
       <div className="videoDiv">
         {isConnected && signedURl ? (
           <>
-            <video
-              controls
-              autoPlay
-              crossOrigin="anonymous"
-              controlsList="nodownload"
-              ref={videoRef}
-            >
-              <source src={signedURl} type="video/mp4" />
-              {/* <track
+            {isValidated ? (
+              <>
+                <video
+                  controls
+                  autoPlay
+                  crossOrigin="anonymous"
+                  controlsList="nodownload"
+                  ref={videoRef}
+                >
+                  <source src={signedURl} type="video/mp4" />
+                  {/* <track
               label="English"
               kind="captions"
               srcLang="en"
               src={VIDEO_API_URL + "captions/" + videoid}
               default
             /> */}
-            </video>
-            <h1 className="videoDiv h1">{videoDetails.title}</h1>
-            <section
-              onClick={() => {
-                Router.push({
-                  pathname: "/creatorprofile",
-                  query: {
-                    address: videoDetails.creator,
-                  },
-                });
-              }}
-              className="creatorIdent pointer"
-            >
-              <div className="creatorImageMinor">
-                <CreatorDP
-                  creator={videoDetails.creator}
-                  height={50}
-                  width={50}
-                />
-              </div>
-              <h2 className="VideoDiv h2">{videoDetails.creator}</h2>
-            </section>
-            <h1
-              className="VideoDiv h1"
-              style={{
-                fontSize: "13px",
-                color: "grey",
-              }}
-            >
-              {timeDiff.startsWith("1 ")
-                ? timeDiff.replace("s", "").replace("econd", "second")
-                : timeDiff}
-            </h1>
-            <h1 className="VideoDiv p">{videoDetails.description}</h1>
+                </video>
+                <h1 className="videoDiv h1">{videoDetails.title}</h1>
+                <section
+                  onClick={() => {
+                    Router.push({
+                      pathname: "/creatorprofile",
+                      query: {
+                        address: videoDetails.creator,
+                      },
+                    });
+                  }}
+                  className="creatorIdent pointer"
+                >
+                  <div className="creatorImageMinor">
+                    <CreatorDP
+                      creator={videoDetails.creator}
+                      height={50}
+                      width={50}
+                    />
+                  </div>
+                  <h2 className="VideoDiv h2">{videoDetails.creator}</h2>
+                </section>
+                <h1
+                  className="VideoDiv h1"
+                  style={{
+                    fontSize: "13px",
+                    color: "grey",
+                  }}
+                >
+                  {timeDiff.startsWith("1 ")
+                    ? timeDiff.replace("s", "").replace("econd", "second")
+                    : timeDiff}
+                </h1>
+                <h1 className="VideoDiv p">{videoDetails.description}</h1>
+              </>
+            ) : (
+              <></>
+            )}
             <div style={{ marginTop: "5vh" }}>
               {videoDetails?.seriesid === "vod_" + videoDetails?.creator ? (
                 <>
-                  <h1 className="videoDiv h1" style={{ color: "#3B82F6" }}>
-                    Other Videos
-                  </h1>
+                  {isValidated ? (
+                    <h1 className="videoDiv h1" style={{ color: "#3B82F6" }}>
+                      Other Videos
+                    </h1>
+                  ) : (
+                    <></>
+                  )}
                   <VideosSeriesGating
                     creator={videoDetails.creator}
-                    onCreatorProfile={true}
+                    onCreatorProfile={false}
                     category="Videos"
                     ignoreVideoId={videoid.toString()}
+                    onVideoPlayer={true}
                   />
                 </>
               ) : (
@@ -223,10 +261,11 @@ export default function VideoPlayer() {
                   </h1>
                   <VideosSeriesGating
                     creator={videoDetails.creator}
-                    onCreatorProfile={true}
+                    onCreatorProfile={false}
                     category="SeriesVideoGrid"
                     seriesid={videoDetails.seriesid}
                     ignoreVideoId={videoid.toString()}
+                    onVideoPlayer={true}
                   />
                 </>
               )}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import coming_soon from "../public/coming_soon.png";
 import Image from "next/image";
 import { Grid, makeStyles } from "@material-ui/core";
-import SubCard from "./SubCard";
+import SubCard from "./OrderCard";
 import OneTimePurchaseTab from "./OneTimePurchaseTab";
 import {
   getSpecificCreatorUserColabData,

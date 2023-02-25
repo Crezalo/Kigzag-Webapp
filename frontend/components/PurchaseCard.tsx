@@ -7,6 +7,7 @@ import linkedin from "../public/linkedin.png";
 import facebook from "../public/facebook.png";
 import youtube from "../public/youtube.png";
 import Image from "next/image";
+import month from "../consts/months";
 import { useEffect, useState } from "react";
 import {
   Backdrop,
@@ -91,21 +92,6 @@ const PurchaseCard = ({ request }: PurchaseCardProp) => {
 
   const usermessage = request.usermessage.split("###--###");
   const creatorresponse = request.creatorresponse.split("###--###");
-
-  const month = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
 
   const timeDiff = Date.now() - Date.parse(request.lastupdatedat);
   const platformLogo = [instagram, youtube, twitter];

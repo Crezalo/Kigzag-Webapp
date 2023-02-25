@@ -12,6 +12,29 @@ import ProfileSliderTabs from "../components/ProfileSliderTabs";
 import BannerImages from "../components/BannerImages";
 import SocialHandles from "../components/SocialHandles";
 import CreatorDP from "../components/CreatorDP";
+import ShareIcon from "@mui/icons-material/Share";
+import { Tooltip } from "@mui/material";
+import ShareSocialModal from "../components/ShareSocialModal";
+import BasicModal from "../components/BasicModal";
+
+const style = {
+  root: {
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    borderRadius: 3,
+    border: 0,
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    color: "white",
+  },
+  copyContainer: {
+    border: "1px solid blue",
+    background: "rgb(0,0,0,0.7)",
+  },
+  title: {
+    textAlign: "center",
+    color: "white",
+    fontStyle: "italic",
+  },
+};
 
 export default function CreatorProfile() {
   const router = useRouter();
@@ -81,7 +104,9 @@ export default function CreatorProfile() {
   return (
     <div>
       <Head>
-        <title>Profile</title>
+        <title>
+          {creator ? creator.fname + " " + creator.lname : "Profile"}
+        </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
@@ -133,6 +158,33 @@ export default function CreatorProfile() {
                   <SocialHandles creator={creator} />
                 </div>
               </div>
+              <BasicModal
+                modalButtonText={
+                  <Tooltip title="Share Kigzag">
+                    <ShareIcon
+                      className="pointer"
+                      style={{ fontSize: "30px", color: "lightgrey" }}
+                    />
+                  </Tooltip>
+                }
+                modalBody={
+                  <ShareSocialModal
+                    title={"Share " + creator.fname + "'s Kigzag"}
+                    url={"kigzag.com/" + creator.username}
+                    socialTypes={[
+                      "whatsapp",
+                      "telegram",
+                      "twitter",
+                      "linkedin",
+                      "facebook",
+                      "reddit",
+                    ]}
+                    onSocialButtonClicked={(data) => console.log(data)}
+                    style={style}
+                  />
+                }
+                formatting={true}
+              />
             </div>
             <ProfileSliderTabs
               onCreatorProfile={true}
