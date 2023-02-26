@@ -13,6 +13,7 @@ import {
   getSeriesAllVideoDetails,
 } from "../services/api-services/creator/video_api";
 import UpdateSeriesPrices from "./UpdateSeriesPrices";
+import UploadDocumentModal from "./UploadDocumentModal";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,6 +39,7 @@ interface GridItemProps {
     duration: number;
     createdat: string;
     seriesid: string;
+    chronology: number;
   };
   classes: any;
   category: "Videos" | "Series" | "SeriesVideoGrid";
@@ -109,40 +111,28 @@ const ContentCardGrid = ({
       videoid: "",
       createdat: "",
       seriesid: "",
+      chronology: -1,
     },
   ]);
-
-  function compare(a: any, b: any) {
-    if (a.createdat > b.createdat) {
-      return -1;
-    }
-    if (a.createdat < b.createdat) {
-      return 1;
-    }
-    return 0;
-  }
 
   const GetVidDetails = () => {
     useEffect(() => {
       async function getData() {
         if (category === "Videos") {
           const res = await getCreatorAllVideoDetails(creator);
-          if (res && typeof res !== "string")
-            setVideoDetails(res.sort(compare));
+          if (res && typeof res !== "string") setVideoDetails(res);
         }
 
         // given creator all series
         if (category === "Series") {
           const res = await getCreatorAllSeriesDemoVideoDetails(creator);
-          if (res && typeof res !== "string")
-            setVideoDetails(res.sort(compare));
+          if (res && typeof res !== "string") setVideoDetails(res);
         }
 
         // given series all video
         if (category === "SeriesVideoGrid") {
           const res = await getSeriesAllVideoDetails(seriesid);
-          if (res && typeof res !== "string")
-            setVideoDetails(res.sort(compare));
+          if (res && typeof res !== "string") setVideoDetails(res);
         }
       }
       getData();
@@ -176,6 +166,16 @@ const ContentCardGrid = ({
               }
             />
           </div>
+          {category === "SeriesVideoGrid" ? (
+            <div style={{ marginLeft: "20px" }}>
+              <BasicModal
+                modalButtonText={"Add Document"}
+                modalBody={<UploadDocumentModal seriesid={seriesid} />}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
           <div style={{ marginLeft: "20px" }}>
             {category === "Videos" || category === "SeriesVideoGrid" ? (
               <BasicModal

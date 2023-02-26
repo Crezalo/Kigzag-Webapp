@@ -18,6 +18,7 @@ import {
   checkUserValidSub,
   getSpecificCreatorSeriesIdUserVideoSeriesData,
 } from "../services/api-services/user/video_series_api";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 export default function VideoPlayer() {
   const router = useRouter();
@@ -31,7 +32,6 @@ export default function VideoPlayer() {
   var [signedURl, setSignedURl] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
-  const [displayPicture, setDisplayPicture] = useState("");
   const [isValidated, setIsValidated] = useState(false);
   const videoRef = useRef(null);
 
@@ -66,7 +66,9 @@ export default function VideoPlayer() {
     description: "",
     creator: "",
     seriesid: "",
+    type: -1,
     createdat: "",
+    chronology: -1,
   });
 
   function timeDifference(current, previous) {
@@ -95,7 +97,7 @@ export default function VideoPlayer() {
 
   const timeDiff = timeDifference(
     Date.now(),
-    Date.parse(videoDetails.createdat)
+    Date.parse(videoDetails?.createdat)
   );
 
   const CheckIsValidated = () => {
@@ -148,34 +150,20 @@ export default function VideoPlayer() {
 
   GetVideoUrl();
 
-  const GetDisplatPicture = () => {
-    useEffect(() => {
-      async function getData() {
-        if (videoDetails.creator != "") {
-          const result = await getSpecificUserData(
-            videoDetails.creator,
-            "displaypicture"
-          );
-          setDisplayPicture(result[0]?.displaypicture);
-        }
-      }
-      getData();
-    }, [videoDetails.creator]);
-  };
-
-  GetDisplatPicture();
-
-  // console.log("videoDetails");
-  // console.log(videoDetails);
-  // console.log("signedURl");
-  // console.log(signedURl);
+  console.log("videoDetails");
+  console.log(videoDetails);
+  console.log("signedURl");
+  console.log(signedURl);
   // console.log("isValidated");
   // console.log(isValidated);
 
   return (
     <div>
       <Head>
-        <title>{videoDetails.title}</title>
+        <title>
+          {videoDetails?.chronology > 0 ? videoDetails?.chronology + ". " : ""}
+          {videoDetails?.title}
+        </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="videoDiv">
@@ -183,29 +171,55 @@ export default function VideoPlayer() {
           <>
             {isValidated ? (
               <>
-                <video
-                  controls
-                  autoPlay
-                  crossOrigin="anonymous"
-                  controlsList="nodownload"
-                  ref={videoRef}
-                >
-                  <source src={signedURl} type="video/mp4" />
-                  {/* <track
-              label="English"
-              kind="captions"
-              srcLang="en"
-              src={VIDEO_API_URL + "captions/" + videoid}
-              default
-            /> */}
-                </video>
-                <h1 className="videoDiv h1">{videoDetails.title}</h1>
+                {videoDetails?.type == 0 ? (
+                  <video
+                    controls
+                    autoPlay
+                    crossOrigin="anonymous"
+                    controlsList="nodownload"
+                    ref={videoRef}
+                  >
+                    <source src={signedURl} type="video/mp4" />
+                    {/* <track
+                    label="English"
+                    kind="captions"
+                    srcLang="en"
+                    src={VIDEO_API_URL + "captions/" + videoid}
+                    default
+                  /> */}
+                  </video>
+                ) : (
+                  <DocViewer
+                    documents={[
+                      {
+                        uri: signedURl.replace(".mp4", ".pdf"),
+                      },
+                    ]}
+                    theme={{
+                      primary: "#5296d8",
+                      secondary: "#ffffff",
+                      tertiary: "#5296d899",
+                      textPrimary: "#ffffff",
+                      textSecondary: "#5296d8",
+                      textTertiary: "#00000099",
+                      disableThemeScrollbar: false,
+                    }}
+                    pluginRenderers={DocViewerRenderers}
+                    style={{ height: "90vh" }}
+                  />
+                )}
+                <h1 className="videoDiv h1">
+                  {videoDetails?.chronology > 0
+                    ? videoDetails?.chronology + ". "
+                    : ""}
+                  {videoDetails?.title}
+                </h1>
                 <section
                   onClick={() => {
                     Router.push({
                       pathname: "/creatorprofile",
                       query: {
-                        address: videoDetails.creator,
+                        address: videoDetails?.creator,
                       },
                     });
                   }}
@@ -213,12 +227,12 @@ export default function VideoPlayer() {
                 >
                   <div className="creatorImageMinor">
                     <CreatorDP
-                      creator={videoDetails.creator}
+                      creator={videoDetails?.creator}
                       height={50}
                       width={50}
                     />
                   </div>
-                  <h2 className="VideoDiv h2">{videoDetails.creator}</h2>
+                  <h2 className="VideoDiv h2">{videoDetails?.creator}</h2>
                 </section>
                 <h1
                   className="VideoDiv h1"
@@ -231,7 +245,7 @@ export default function VideoPlayer() {
                     ? timeDiff.replace("s", "").replace("econd", "second")
                     : timeDiff}
                 </h1>
-                <h1 className="VideoDiv p">{videoDetails.description}</h1>
+                <h1 className="VideoDiv p">{videoDetails?.description}</h1>
               </>
             ) : (
               <></>
@@ -247,7 +261,7 @@ export default function VideoPlayer() {
                     <></>
                   )}
                   <VideosSeriesGating
-                    creator={videoDetails.creator}
+                    creator={videoDetails?.creator}
                     onCreatorProfile={false}
                     category="Videos"
                     ignoreVideoId={videoid.toString()}
@@ -260,10 +274,10 @@ export default function VideoPlayer() {
                     Other lectures from course
                   </h1>
                   <VideosSeriesGating
-                    creator={videoDetails.creator}
+                    creator={videoDetails?.creator}
                     onCreatorProfile={false}
                     category="SeriesVideoGrid"
-                    seriesid={videoDetails.seriesid}
+                    seriesid={videoDetails?.seriesid}
                     ignoreVideoId={videoid.toString()}
                     onVideoPlayer={true}
                   />

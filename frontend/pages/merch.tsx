@@ -160,7 +160,7 @@ export default function Merch() {
         const res = await getProductAllReviewsData(productid.toString());
         console.log(res);
         if (res && typeof res !== "string") {
-          setMerchReviews(res.sort(compare));
+          setMerchReviews(res);
         }
       }
       getData();
@@ -259,7 +259,7 @@ export default function Merch() {
                 onMerchPage={true}
               />
             </div>
-            <div>
+            <div id="review-section">
               <MerchReviewGrid merchReviews={merchReviews} />
             </div>
           </>

@@ -42,7 +42,7 @@ const getFile = (bucket, name) => {
   return s3.getObject(params).promise();
 };
 
-//  upload new merch images video
+//  upload new merch images
 // pass prefix to add before file name
 router.post('/merch_images/upload', authorise, (req, res) => {
   try {

@@ -84,21 +84,11 @@ const MerchCardGrid = ({
     },
   ]);
 
-  function compare(a: any, b: any) {
-    if (a.createdat > b.createdat) {
-      return -1;
-    }
-    if (a.createdat < b.createdat) {
-      return 1;
-    }
-    return 0;
-  }
-
   const GetVidDetails = () => {
     useEffect(() => {
       async function getData() {
         const res = await getCreatorAllMerchData(creator);
-        if (res && typeof res !== "string") setMerchDetails(res.sort(compare));
+        if (res && typeof res !== "string") setMerchDetails(res);
       }
       getData();
     }, [creator]);

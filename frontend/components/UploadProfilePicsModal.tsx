@@ -117,6 +117,7 @@ const UploadProfilePicsLogoModal = () => {
             }}
             required
             className="form inputFile"
+            accept="image/*"
           />
           {thumbfile ? (
             <div
@@ -148,6 +149,7 @@ const UploadProfilePicsLogoModal = () => {
             }}
             required
             className="form inputFile"
+            accept="image/*"
             multiple
           />
           {imagesLen > 0 ? (

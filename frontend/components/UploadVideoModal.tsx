@@ -27,6 +27,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
           throw new Error("Select a file first!");
         }
         const formData = new FormData();
+        formData.append("filetype", "0");
         formData.append("video", videofile[0]);
         formData.append("thumbnail", thumbfile[0]);
         formData.append("title", event.target.title.value);
@@ -129,7 +130,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
             }}
             required
             className="form inputFile"
-            multiple
+            accept="video/mp4"
           />
           {videofile ? (
             <video
@@ -166,6 +167,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
               // reloadThumb(); // not needed
             }}
             required
+            accept="image/*"
             className="form inputFile"
           />
           {thumbfile ? (

@@ -14,6 +14,7 @@ interface VideoCardProp {
     duration: number;
     createdat: string;
     seriesid: string;
+    chronology: number;
   };
   category: "Videos" | "Series" | "SeriesVideoGrid";
 }
@@ -151,7 +152,12 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
         style={{ padding: "0px 5px 8px 15px" }}
       >
         <div style={{ height: "70px" }}>
-          <h1 style={{ fontSize: "16px" }}>{videoDetails.title}</h1>
+          <h1 style={{ fontSize: "16px" }}>
+            {videoDetails?.chronology > 0
+              ? videoDetails?.chronology + ". "
+              : ""}
+            {videoDetails.title}
+          </h1>
           <h1
             style={{
               fontSize: "13px",

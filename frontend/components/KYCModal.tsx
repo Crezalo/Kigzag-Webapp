@@ -143,6 +143,7 @@ const KYCModal = () => {
             onChange={(event) => {
               setPanFile(event.target.files);
             }}
+            accept="image/*"
             required
             className="form inputFile"
           />

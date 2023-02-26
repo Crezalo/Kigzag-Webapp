@@ -416,7 +416,7 @@ router.get("/reviews/:productid", authorise, async (req, res) => {
         const {
             productid
         } = req.params;
-        const ud = await pool.query("SELECT * FROM User_Merchandise_Reviews WHERE ProductId = $1;", [
+        const ud = await pool.query("SELECT * FROM User_Merchandise_Reviews WHERE ProductId = $1 ORDER BY CreatedAt DESC;", [
             productid
         ]);
 
@@ -444,11 +444,11 @@ router.get("/reviews/ratings/:productid", authorise, async (req, res) => {
             productid
         ]);
         var ratings
-        ud.rows.length > 0 ? ratings = ud.rows.reduce((total, next) => total + next.ratings, 0) / ud.rows.length : ratings = 0;
+        ud.rows.length > 0 ? ratings = (ud.rows.reduce((total, next) => total + parseInt(next.ratings), 0) / ud.rows.length) : ratings = 0;
         res.json({
             isSuccessful: true,
             errorMsg: "",
-            result: Math.ceil(ratings)
+            result: ratings
         });
     } catch (err) {
         res.json({

@@ -52,8 +52,10 @@ router.post('/upload', authorise, (req, res) => {
       console.log("files");
       console.log(files);
 
+      const filetype = parseInt(fields['filetype'][0]);
+
       // video file
-      const videopath = files.video[0].path;
+      const videopath = filetype != 0 ? files.docfile[0].path : files.video[0].path;
       const videobuffer = fs.readFileSync(videopath);
       const narray = videopath.split("/");
       const name = narray[narray.length - 1];
@@ -72,7 +74,7 @@ router.post('/upload', authorise, (req, res) => {
 
       // video duration
       console.log("start get duration");
-      const duration = await getVideoDurationInSeconds(videopath);
+      const duration = filetype != 0 ? 300 : await getVideoDurationInSeconds(videopath);
       console.log("complete get duration");
 
       console.log("DURATION");
@@ -81,6 +83,8 @@ router.post('/upload', authorise, (req, res) => {
       const videoid = name.split(".")[0];
       const ud = await pool.query("SELECT * FROM Creator_series WHERE Creator=$1;", [req.username]);
 
+      // when new series is created with title video using series_route, it will populate creator_series table
+      // and further videos for series will go via this route so no need to initialize here for series
       // VOD is also a series with seriesid = vod_{username}, hence initialising it in creator series table
       if (ud.rows.length == 0) {
         const new_series_details = await pool.query(
@@ -91,7 +95,9 @@ router.post('/upload', authorise, (req, res) => {
           ]
         );
       }
-
+      var vd;
+      if (fields['seriesid']) vd = await pool.query("SELECT Chronology FROM Creator_video_docs WHERE seriesid=$1;", [fields['seriesid'][0]]);
+      var Chronology = fields['seriesid'] ? Math.max(...vd.rows.map(o => o.chronology)) + 1 : 0;
       const new_video_details = await pool.query(
         "INSERT INTO Creator_video_docs (VideoId, Creator, SeriesId, Title, Description, Duration, Type, Chronology, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,TO_TIMESTAMP($9),TO_TIMESTAMP($10)) RETURNING*;",
         [
@@ -101,8 +107,8 @@ router.post('/upload', authorise, (req, res) => {
           fields['title'][0],
           fields['description'][0],
           Math.round(duration),
-          0,
-          0,
+          filetype,
+          Chronology,
           Date.now() / 1000,
           Date.now() / 1000,
         ]
@@ -166,6 +172,18 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
     } = req.params;
     const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
+    const filetype = parseInt(ud.rows[0].type);
+    const FileExt = [
+      "mp4",
+      "pdf",
+      "doc",
+      "docx",
+      "ppt",
+      "pptx",
+      "xls",
+      "xlsx",
+      "csv",
+    ];
     // console.log(ud.rows[0]);
     // const duration = ud.rows[0].duration;
 
@@ -175,7 +193,7 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
       privateKeyPath: process.env.CLOUDFRONT_PRIVATE_KEY_PATH,
       expireTime: (new Date().getTime() + (3600 * 1000)),
     }
-    var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator}/${videoid}.mp4`, aws_cf_config);
+    var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator}/${videoid}.` + FileExt[filetype], aws_cf_config);
     // console.log('Signed URL: ' + signedUrl);
     res.json({
       isSuccessful: true,
@@ -220,7 +238,7 @@ router.get("/details/creator/:creator", authorise, async (req, res) => {
     const {
       creator
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE Creator=$1 AND SeriesId=$2;", [creator, "vod_" + creator]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE Creator=$1 AND SeriesId=$2 ORDER BY CreatedAt DESC;", [creator, "vod_" + creator]);
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -241,7 +259,7 @@ router.get("/details/series/:seriesid", authorise, async (req, res) => {
     const {
       seriesid
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE SeriesId=$1;", [seriesid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE SeriesId=$1 ORDER BY Chronology ASC;", [seriesid]);
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -262,7 +280,7 @@ router.get("/details/seriesdemovid/:creator", authorise, async (req, res) => {
     const {
       creator
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=SeriesId AND Creator=$1;", [creator]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=SeriesId AND Creator=$1 ORDER BY CreatedAt DESC;", [creator]);
     // console.log(ud.rows);
     res.json({
       isSuccessful: true,

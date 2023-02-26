@@ -125,7 +125,6 @@ const MerchAccordianDetails = ({
     website: "",
   });
   var [qty, setQty] = useState(1);
-  var [ratings, setRatings] = useState(0);
 
   const GetUser = () => {
     useEffect(() => {
@@ -150,19 +149,6 @@ const MerchAccordianDetails = ({
 
   const minQty = 1;
   const maxQty = 9;
-
-  const GetRatings = () => {
-    useEffect(() => {
-      async function getData() {
-        if (merchDetails.creator != "") {
-          const result = await getProductRatingsData(merchDetails.productid);
-          if (typeof result === "number") setRatings(result);
-        }
-      }
-      getData();
-    }, [merchDetails.creator]);
-  };
-  GetRatings();
 
   return (
     <>
@@ -194,8 +180,8 @@ const MerchAccordianDetails = ({
                   <div className="creatorCardImage">
                     <CreatorDP
                       creator={merchDetails.creator}
-                      height={125}
-                      width={125}
+                      height={50}
+                      width={50}
                     />
                   </div>
                   <Typography
@@ -205,7 +191,7 @@ const MerchAccordianDetails = ({
                       color: "#3B82F6",
                       display: "flex",
                       flexDirection: "row",
-                      paddingTop: "10%",
+                      padding: "10px 0 0 10px",
                     }}
                   >
                     {merchDetails.creator}
@@ -232,7 +218,7 @@ const MerchAccordianDetails = ({
                           <Rating
                             name="hover-feedback"
                             value={rating}
-                            precision={1}
+                            precision={0.5}
                             readOnly
                           />
                         </div>

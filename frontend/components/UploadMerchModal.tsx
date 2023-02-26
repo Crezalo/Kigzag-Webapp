@@ -132,6 +132,7 @@ const UploadMerchModal = () => {
             onChange={(event) => {
               setThumbfile(event.target.files);
             }}
+            accept="image/*"
             required
             className="form inputFile"
           />
@@ -164,6 +165,7 @@ const UploadMerchModal = () => {
               setImagesLen(event.target.files.length);
               // showSlides(slideIndex);
             }}
+            accept="image/*"
             required
             className="form inputFile"
             multiple

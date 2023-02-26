@@ -135,7 +135,7 @@ router.get("/:creator", authorise, async (req, res) => {
         const {
             creator
         } = req.params;
-        const ud = await pool.query("SELECT * FROM Creator_Merchandise WHERE Creator = $1;", [creator]);
+        const ud = await pool.query("SELECT * FROM Creator_Merchandise WHERE Creator = $1 ORDER BY CreatedAt DESC;", [creator]);
 
         res.json({
             isSuccessful: true,
