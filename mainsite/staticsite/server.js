@@ -7,11 +7,11 @@ const app = express();
 app.use(express.static("out"));
 
 // tell express to listen for incoming connections on the specified PORT
-app.listen(3000, (err) => {
+app.listen(3001, (err) => {
   if (!err) {
     // log the LOCALHOST and LOCALIP addresses where the app is running
     console.log(
-      "Application is running at http://localhost:3000/");
+      "Application is running at http://localhost:3001/");
   } else {
     console.err(`\nUnable to start server: ${err}`);
   }
