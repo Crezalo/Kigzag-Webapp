@@ -107,7 +107,7 @@ dist
 .tern-port
 
 # Assets / Videos
-assets
+assetsv
 
 # aws config
 config.json
