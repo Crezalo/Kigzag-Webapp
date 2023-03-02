@@ -1,0 +1,165 @@
+{
+  "company": {
+    "name": "Kigzag",
+    "logo": "/assets/images/logo.png"
+  },
+  "navigation": [{
+      "name": "Product",
+      "href": "product"
+    },
+    {
+      "name": "Features",
+      "href": "features"
+    },
+
+    {
+      "name": "Pricing",
+      "href": "pricing"
+    },
+    {
+      "name": "Contact Us",
+      "href": "about"
+    }
+  ],
+  "mainHero": {
+    "title": "One Stop Shop For",
+    "subtitle": "Creator Monetization",
+    "description": "Empower Creators to Monetize their Passion, One Sale at a Time",
+    "manifesto": "",
+    "img": "/assets/images/t2.jpg",
+    "primaryAction": {
+      "text": "Become A Creator",
+      "href": "https://app.kigzag.com/"
+    },
+    "secondaryAction": {
+      "text": "Email us",
+      "href": "mailto:issaafakattan@gmail.com?subject=I like react landing page!"
+    }
+  },
+  "waitlisturl": "/api/waitlist",
+  "product": {
+    "title": "At 0% Revenue share we offer",
+    "items": [{
+        "title": "Monetize your Services with One Page Website",
+        "description": "In less than 10 minutes you can setup your One Page Website to:",
+        "points": ["Sell Premium Video Membership", "Sell Courses", "Sell Merchandise", "Receive Tips"],
+        "img": "/assets/images/product1.jpg"
+      },
+      {
+        "title": "We take care of digital infra!",
+        "description": "Create, Share, and Profit with Ease while we take care of everything digital:",
+        "points": ["Video Streaming", "Ecommerce", "UPI, Rupay and other Payment Integrations", "Shipping Provider Integration", "Sales Analytics"],
+        "img": "/assets/images/infrastructure.png"
+      }
+    ]
+  },
+  "features": {
+    "title": "",
+    "subtitle": "Features To Monetize your Fanbase",
+    "description": "We plan to add more features goin forward.",
+    "items": [{
+        "name": "Videos",
+        "description": "Sell subscription based access to premium video content.",
+        "icon": "/assets/images/react.png"
+      },
+      {
+        "name": "Courses",
+        "description": "Sell subscription based access to courses, lectures or tutorials.",
+        "icon": "/assets/images/tailwindcss.svg"
+      },
+      {
+        "name": "Merchandise",
+        "description": "Sell your merchandise and we handle the shipping.",
+        "icon": "/assets/images/nextjs.svg"
+      },
+      {
+        "name": "Tip",
+        "description": "Receive tip from your fan with a message.",
+        "icon": "/assets/images/ts.png"
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Pricing",
+    "extra": "14 Day Free Trial of Basic Plan, No Credit/Debit Card Needed",
+    "items": [{
+        "name": "Free",
+        "price": "₹0",
+        "priceDetails": "/ month",
+        "features": [
+          "Unlimited Tips",
+          "x",
+          "x",
+          "x",
+          "x",
+          "x",
+          "x",
+          "x",
+          "x"
+        ]
+      },
+      {
+        "name": "Basic",
+        "price": "₹500",
+        "priceDetails": "/ month",
+        "features": [
+          "Premium Videos",
+          "Sell 20 different Courses",
+          "Sell 20 different Merchandise",
+          "Shipping Provider Integration",
+          "Unlimited Tips with User Messages",
+          "Free 100 GB of storage",
+          "Free 1000 hours of Video Views",
+          "Phone and Email support",
+          "x"
+        ]
+      },
+      {
+        "name": "Pro",
+        "price": "₹12000",
+        "priceDetails": "/ month",
+        "features": [
+          "Premium Videos",
+          "Sell Unlimited Courses",
+          "Sell Unlimited Merchandise",
+          "Popular Ship Provider Integrations",
+          "Unlimited Tips with User Messages",
+          "Unlimited storage",
+          "Unlimited watch hours",
+          "Phone and Email support",
+          "Dedicated POC",
+          "Customizations"
+        ]
+      }
+    ]
+  },
+  "about": {
+    "sections": [{
+        "name": "Something",
+        "href": "#",
+        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
+      },
+      {
+        "name": "Something",
+        "href": "#",
+        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
+      },
+      {
+        "name": "Something",
+        "href": "#",
+        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
+      },
+      {
+        "name": "Something",
+        "href": "#",
+        "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
+      }
+    ],
+    "socialMedia": {
+      "github": "",
+      "twitter": "",
+      "linkedin": "",
+      "email": "mailto:kigzagpvtltd@gmail.com?subject=I like react landing page!"
+    }
+  }
+}
