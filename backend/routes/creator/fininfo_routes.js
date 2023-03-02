@@ -16,16 +16,14 @@ require("dotenv").config();
 router.post("/", authorise, async (req, res) => {
     try {
         var {
-            aadharcard,
-            aadharcardlink,
-            pancard,
-            pancardlink,
-            upi_id,
+            aadharnumber,
+            pannumber,
+            bank_name,
             ifsc_code,
             acc_number
         } = req.body;
 
-        if (upi_id == "" && ifsc_code == "") {
+        if (ifsc_code == "") {
             return res.json({
                 isSuccessful: false,
                 errorMsg: "Atleast one of UPI and Bank Details needed",
@@ -42,7 +40,7 @@ router.post("/", authorise, async (req, res) => {
 
         }
 
-        if (!Validator.pan(pancard)) {
+        if (!Validator.pan(pannumber)) {
             return res.json({
                 isSuccessful: false,
                 errorMsg: "PAN Number Invalid",
@@ -50,7 +48,7 @@ router.post("/", authorise, async (req, res) => {
             });
         }
 
-        if (!(Validator.aadhaar(aadharcard) || Validator.aadhaarVID(aadharcard))) {
+        if (!(Validator.aadhaar(aadharnumber) || Validator.aadhaarVID(aadharnumber))) {
             return res.json({
                 isSuccessful: false,
                 errorMsg: "Aadhar Number Invalid",
@@ -73,25 +71,13 @@ router.post("/", authorise, async (req, res) => {
             });
         }
 
-        if (upi_id != "") {
-            if (!Validator.vpa(upi_id)) {
-                return res.json({
-                    isSuccessful: false,
-                    errorMsg: "UPI Id Invalid",
-                    result: []
-                });
-            }
-        }
-
         const new_fin = await pool.query(
-            "INSERT INTO Fin_Info (Creator, AadharCard, AadharCardLink, PanCard, PanCardLink, UPI_Id, IFSC_Code, Acc_Number) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING*;",
+            "INSERT INTO Fin_Info (Creator, aadharnumber, pannumber, bank_name, IFSC_Code, Acc_Number) VALUES ($1,$2,$3,$4,$5,$6) RETURNING*;",
             [
                 req.username,
-                aadharcard,
-                aadharcardlink,
-                pancard,
-                pancardlink,
-                upi_id,
+                aadharnumber,
+                pannumber,
+                bank_name,
                 ifsc_code,
                 acc_number
             ]
@@ -113,10 +99,9 @@ router.post("/", authorise, async (req, res) => {
 
 ///////////////////////////////////////////   Get Data   ///////////////////////////////////////////
 // Get Fin info Data for given creator (which is a username)
-router.get("/", authorise, async (req, res) => {
+router.get("/alldetails", authorise, async (req, res) => {
     try {
-        const ud = await pool.query("SELECT * FROM Users WHERE Creator = $1;", [req.username]);
-
+        const ud = await pool.query("SELECT * FROM Fin_Info WHERE Creator = $1;", [req.username]);
         res.json({
             isSuccessful: true,
             errorMsg: "",
@@ -137,29 +122,19 @@ router.get("/:column", authorise, async (req, res) => {
         const column = req.params["column"];
         var Users_col;
 
-        if (column == "aadharcard")
+        if (column == "aadharnumber")
             Users_col = await pool.query(
-                "SELECT AadharCard FROM Fin_Info WHERE Creator = $1;",
+                "SELECT aadharnumber FROM Fin_Info WHERE Creator = $1;",
                 [req.username]
             );
-        else if (column == "aadharcardlink")
+        else if (column == "pannumber")
             Users_col = await pool.query(
-                "SELECT AadharCardLink FROM Fin_Info WHERE Creator = $1;",
+                "SELECT pannumber FROM Fin_Info WHERE Creator = $1;",
                 [req.username]
             );
-        else if (column == "pancard")
+        else if (column == "bank_name")
             Users_col = await pool.query(
-                "SELECT PanCard FROM Fin_Info WHERE Creator = $1;",
-                [req.username]
-            );
-        else if (column == "pancardlink")
-            Users_col = await pool.query(
-                "SELECT PanCardLink FROM Fin_Info WHERE Creator = $1;",
-                [req.username]
-            );
-        else if (column == "upi_id")
-            Users_col = await pool.query(
-                "SELECT UPI_Id FROM Users Fin_Info Creator = $1;",
+                "SELECT bank_name FROM Users Fin_Info Creator = $1;",
                 [req.username]
             );
         else if (column == "ifsc_code")
@@ -192,76 +167,18 @@ router.get("/:column", authorise, async (req, res) => {
 router.put("/", authorise, async (req, res) => {
     try {
         var {
-            aadharcard,
-            aadharcardlink,
-            pancard,
-            pancardlink,
-            upi_id,
+            bank_name,
             ifsc_code,
             acc_number
         } = req.body;
 
         var new_User;
 
-        if (aadharcard != "") {
-
-            if (!(Validator.aadhaar(aadharcard) || Validator.aadhaarVID(aadharcard))) {
-                return res.json({
-                    isSuccessful: false,
-                    errorMsg: "Aadhar Number Invalid",
-                    result: []
-                });
-            }
+        if (bank_name != "") {
 
             new_User = await pool.query(
-                "UPDATE Fin_Info SET AadharCard=$1 WHERE Creator=$2 RETURNING*;",
-                [aadharcard, req.username]
-            );
-        }
-        if (aadharcardlink != "")
-            new_User = await pool.query(
-                "UPDATE Fin_Info SET AadharCardLink=$1 WHERE Creator=$2 RETURNING*;",
-                [aadharcardlink, req.username]
-            );
-
-
-
-        if (pancard != "") {
-
-            if (!Validator.pan(pancard)) {
-                return res.json({
-                    isSuccessful: false,
-                    errorMsg: "PAN Number Invalid",
-                    result: []
-                });
-            }
-
-            new_User = await pool.query(
-                "UPDATE Fin_Info SET PanCard=$1 WHERE Creator=$2 RETURNING*;",
-                [pancard, req.username]
-            );
-        }
-
-        if (pancardlink != "")
-            new_User = await pool.query(
-                "UPDATE Fin_Info SET PanCardLink=$1 WHERE Creator=$2 RETURNING*;",
-                [pancardlink, req.username]
-            );
-
-
-        if (upi_id != "") {
-
-            if (!Validator.vpa(upi_id)) {
-                return res.json({
-                    isSuccessful: false,
-                    errorMsg: "UPI Id Invalid",
-                    result: []
-                });
-            }
-
-            new_User = await pool.query(
-                "UPDATE Fin_Info SET UPI_Id=$1 WHERE Creator=$2 RETURNING*;",
-                [upi_id, req.username]
+                "UPDATE Fin_Info SET bank_name=$1 WHERE Creator=$2 RETURNING*;",
+                [bank_name, req.username]
             );
         }
 

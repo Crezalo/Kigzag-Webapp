@@ -512,7 +512,7 @@ const ColabTab = ({ creator, onCreatorProfile }: ColabTabProp) => {
                 autoComplete="off"
               >
                 <InputLabel sx={{ color: "#3B82F6" }}>
-                  Describe Your Shoutout Request
+                  Describe Your Collab Request
                 </InputLabel>
                 <TextField
                   className={classesModal.textfield}

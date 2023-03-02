@@ -5,18 +5,22 @@ import Person from "@mui/icons-material/Person";
 import Sell from "@mui/icons-material/Sell";
 import CurrencyRupee from "@mui/icons-material/CurrencyRupee";
 import Logout from "@mui/icons-material/Logout";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import AuthService from "../services/auth-services";
 import Router from "next/router";
 
-const SettingMenu = () => {
+interface SettingsMenuProps {
+  isCreator: boolean;
+}
 
+const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
   return (
     <div
       className="outline text-blue-500 outline-offset-0 py-1 font-bold rounded"
       style={{
         fontSize: 18,
         textAlign: "center",
-        zIndex: 1,
+        zIndex: 10,
         outlineWidth: "thin",
         marginTop: "2px",
       }}
@@ -75,7 +79,7 @@ const SettingMenu = () => {
                 </button>
               )}
             </Menu.Item>
-            <Menu.Item>
+            {/* <Menu.Item>
               {({ active }) => (
                 <button
                   className={`${
@@ -96,7 +100,33 @@ const SettingMenu = () => {
                   <div>Prices</div>
                 </button>
               )}
-            </Menu.Item>
+            </Menu.Item> */}
+            {isCreator ? (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? "bg-blue-500 text-white" : "text-blue-500"
+                    } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                    style={{ fontSize: 16 }}
+                    onClick={() => {
+                      Router.push({
+                        pathname: "/bankinfo",
+                      });
+                    }}
+                  >
+                    <AccountBalanceIcon
+                      className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                      aria-hidden="true"
+                      style={{ marginRight: "5px" }}
+                    />
+                    <div>Banking</div>
+                  </button>
+                )}
+              </Menu.Item>
+            ) : (
+              <></>
+            )}
             <Menu.Item>
               {({ active }) => (
                 <button
@@ -106,19 +136,45 @@ const SettingMenu = () => {
                   style={{ fontSize: 16 }}
                   onClick={() => {
                     Router.push({
-                      pathname: "/revenue",
+                      pathname: "/orders",
                     });
                   }}
                 >
-                  <CurrencyRupee
+                  <Sell
                     className="w-5 h-5 ml-2 -mr-1 text-gray-300"
                     aria-hidden="true"
                     style={{ marginRight: "5px" }}
                   />
-                  <div>Revenue</div>
+                  <div>Orders</div>
                 </button>
               )}
             </Menu.Item>
+            {isCreator ? (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? "bg-blue-500 text-white" : "text-blue-500"
+                    } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                    style={{ fontSize: 16 }}
+                    onClick={() => {
+                      Router.push({
+                        pathname: "/revenue",
+                      });
+                    }}
+                  >
+                    <CurrencyRupee
+                      className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                      aria-hidden="true"
+                      style={{ marginRight: "5px" }}
+                    />
+                    <div>Revenue</div>
+                  </button>
+                )}
+              </Menu.Item>
+            ) : (
+              <></>
+            )}
             <Menu.Item>
               {({ active }) => (
                 <button

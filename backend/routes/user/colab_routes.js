@@ -96,7 +96,6 @@ router.get("/:creator", authorise, async (req, res) => {
             creator
         } = req.params;
 
-        console.log("here");
         const ud = await pool.query("SELECT * FROM User_Colab_Req WHERE UserName = $1 AND Creator = $2;", [req.username, creator]);
 
         res.json({

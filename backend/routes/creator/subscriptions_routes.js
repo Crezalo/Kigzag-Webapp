@@ -462,7 +462,7 @@ router.post("/series", authorise, async (req, res) => {
             threemonths,
             oneyear
         } = req.body;
-        const creator = await pool.query("SELECT * FROM Creator_series WHERE SeriesId = $1;", [seriesid]).rows[0].creator;
+        const creator = (await pool.query("SELECT * FROM Creator_series WHERE SeriesId = $1;", [seriesid])).rows[0].creator;
         if (creator == req.username) {
             const new_sub = await pool.query(
                 "INSERT INTO Creator_Series_Sub (SeriesId, OneMonth, ThreeMonths, OneYear) VALUES ($1,$2,$3,$4) RETURNING*;",
@@ -503,7 +503,7 @@ router.put("/series", authorise, async (req, res) => {
             threemonths,
             oneyear
         } = req.body;
-        const creator = await pool.query("SELECT * FROM Creator_series WHERE SeriesId = $1;", [seriesid]).rows[0].creator;
+        const creator = (await pool.query("SELECT * FROM Creator_series WHERE SeriesId = $1;", [seriesid])).rows[0].creator;
         if (creator == req.username) {
             var new_sub;
             if (onemonth != 0)

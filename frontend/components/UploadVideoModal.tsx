@@ -1,14 +1,16 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { VIDEO_API_URL } from "../services/api-services/creator/video_api";
 import { authHeader } from "../services/auth-header";
 import Image from "next/image";
-import { ThemeProvider } from "@material-ui/core";
-import { maxHeight } from "@mui/system";
 import uploadingGif from "../public/uploading.gif";
 import greenTick from "../public/green-tick.gif";
 
-const UploadVideoModal = () => {
+interface UploadVideoModalProp {
+  category: "Videos" | "Series" | "SeriesVideoGrid";
+  seriesid?: string;
+}
+const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
   const [videofile, setVideofile] = useState(null);
   const [thumbfile, setThumbfile] = useState(null);
   const [fileUploadStatus, setFileUploadStatus] = useState("NO FILE ADDED");
@@ -25,17 +27,43 @@ const UploadVideoModal = () => {
           throw new Error("Select a file first!");
         }
         const formData = new FormData();
+        formData.append("filetype", "0");
         formData.append("video", videofile[0]);
         formData.append("thumbnail", thumbfile[0]);
         formData.append("title", event.target.title.value);
         formData.append("description", event.target.description.value);
+        if (category === "Series") {
+          console.log("event.target.onemonth.value");
+          console.log(event.target.onemonth.value);
+          formData.append(
+            "onemonth",
+            event.target.onemonth.value ? event.target.onemonth.value : "100"
+          );
+          formData.append(
+            "threemonth",
+            event.target.threemonth.value
+              ? event.target.threemonth.value
+              : "300"
+          );
+          formData.append(
+            "oneyear",
+            event.target.oneyear.value ? event.target.oneyear.value : "1200"
+          );
+        }
+        if (category === "SeriesVideoGrid") {
+          formData.append("seriesid", seriesid);
+        }
         setFileUploadStatus("UPLOADING");
-        const response = await axios.post(VIDEO_API_URL + "upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: authHeader().Authorization,
-          },
-        });
+        const response = await axios.post(
+          VIDEO_API_URL + (category === "Series" ? "series/upload" : "upload"),
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: authHeader().Authorization,
+            },
+          }
+        );
         if (response.data.isSuccessful) {
           // handle success
           setFileUploadStatus("COMPLETE");
@@ -74,7 +102,16 @@ const UploadVideoModal = () => {
   }
 
   return (
-    <div style={{ overflowY: "auto", overflowX: "hidden", maxHeight: "80vh" }}>
+    <div
+      style={{
+        overflowY: "auto",
+        overflowX: "hidden",
+        maxHeight: "80vh",
+        backgroundColor: "#3b82f6",
+        padding: "5px",
+        borderRadius: "1%",
+      }}
+    >
       {fileUploadStatus === "Failed To Upload Retry!" ? (
         <p style={{ color: "red" }}>{fileUploadStatus}</p>
       ) : (
@@ -82,7 +119,9 @@ const UploadVideoModal = () => {
       )}
       {fileUploadStatus !== "COMPLETE" && fileUploadStatus !== "UPLOADING" ? (
         <form onSubmit={submitFile} className="form">
-          <label className="form label">Upload Video</label>
+          <label className="form label">
+            {category === "Series" ? "Upload Intro Video" : "Upload Video"}
+          </label>
           <input
             type="file"
             onChange={(event) => {
@@ -91,6 +130,7 @@ const UploadVideoModal = () => {
             }}
             required
             className="form inputFile"
+            accept="video/mp4"
           />
           {videofile ? (
             <video
@@ -118,7 +158,7 @@ const UploadVideoModal = () => {
             <></>
           )}
           <label className="form label" style={{ fontWeight: "100" }}>
-            Upload Thumbnail
+            {category === "Videos" ? "Upload Thumbnail" : "Upload Poster"}
           </label>
           <input
             type="file"
@@ -127,6 +167,7 @@ const UploadVideoModal = () => {
               // reloadThumb(); // not needed
             }}
             required
+            accept="image/*"
             className="form inputFile"
           />
           {thumbfile ? (
@@ -180,6 +221,71 @@ const UploadVideoModal = () => {
             required
             placeholder="Description Here ..."
           />
+          {category === "Series" ? (
+            <div
+              style={{
+                justifyContent: "center",
+                flexDirection: "column",
+                display: "flex",
+              }}
+            >
+              <label>
+                *You can change these prices in future.
+                <br />
+                <br />
+              </label>
+              <label>1 month plan (in ₹)</label>
+              <input
+                className="mb-4 border-b-2 form inputSingleLineText"
+                type="number"
+                id="onemonth"
+                name="onemonth"
+                min="0"
+                defaultValue="100"
+                style={{
+                  color: "black",
+                  resize: "both",
+                  width: "10vw",
+                  overflow: "none",
+                }}
+                required
+              />
+              <label>3 months plan (in ₹)</label>
+              <input
+                className="mb-4 border-b-2 form inputSingleLineText"
+                type="number"
+                id="threemonth"
+                name="threemonth"
+                min="0"
+                defaultValue="300"
+                style={{
+                  color: "black",
+                  resize: "both",
+                  width: "10vw",
+                  overflow: "none",
+                }}
+                required
+              />
+              <label>1 year plan (in ₹)</label>
+              <input
+                className="mb-4 border-b-2 form inputSingleLineText"
+                type="number"
+                id="oneyear"
+                name="oneyear"
+                min="0"
+                defaultValue="1200"
+                style={{
+                  color: "black",
+                  resize: "both",
+                  width: "10vw",
+                  overflow: "none",
+                }}
+                required
+              />
+            </div>
+          ) : (
+            <></>
+          )}
           <button
             type="submit"
             className="outline outline-offset-0 px-2 py-2 rounded buyButton"

@@ -8,18 +8,10 @@ const thumbsupply = require('thumbsupply');
 const awsConfig = require('aws-config');
 const AWS = require('aws-sdk');
 const aws_cf = require('aws-cloudfront-sign');
-// const aws_cf = require("../aws_cf");
 require('dotenv').config();
 const {
   getVideoDurationInSeconds
 } = require('get-video-duration');
-// var ImageKit = require("imagekit");
-
-// var imagekit = new ImageKit({
-//   publicKey: process.env.IMAGEKIT_PUBLIC_API_KEY,
-//   privateKey: process.env.IMAGEKIT_PRIVATE_API_KEY,
-//   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
-// });
 
 var s3 = new AWS.S3(awsConfig({
   accessKeyId: process.env.ACCESSKEYID,
@@ -42,9 +34,9 @@ const uploadFile = (buffer, bucket, name) => {
 };
 
 // get file from S3 bucket
-const getFile = (name) => {
+const getFile = (bucket, name) => {
   const params = {
-    Bucket: process.env.S3_BUCKET_VIDEO,
+    Bucket: bucket,
     Key: name
   };
   return s3.getObject(params).promise();
@@ -60,8 +52,10 @@ router.post('/upload', authorise, (req, res) => {
       console.log("files");
       console.log(files);
 
+      const filetype = parseInt(fields['filetype'][0]);
+
       // video file
-      const videopath = files.video[0].path;
+      const videopath = filetype != 0 ? files.docfile[0].path : files.video[0].path;
       const videobuffer = fs.readFileSync(videopath);
       const narray = videopath.split("/");
       const name = narray[narray.length - 1];
@@ -75,47 +69,57 @@ router.post('/upload', authorise, (req, res) => {
       const thumbbuffer = fs.readFileSync(thumbpath);
       const thumbFileName = req.username + "/" + name.split(".")[0] + ".png";
       console.log("start upload thumb file");
-      const thumbData = await uploadFile(thumbbuffer, process.env.S3_BUCKET_THUMBNAIL, thumbFileName);
+      const thumbData = await uploadFile(thumbbuffer, process.env.S3_BUCKET_VIDEO_THUMBNAIL, thumbFileName);
       console.log("complete upload thumb file");
 
       // video duration
       console.log("start get duration");
-      const duration = await getVideoDurationInSeconds(videopath);
+      const duration = filetype != 0 ? 300 : await getVideoDurationInSeconds(videopath);
       console.log("complete get duration");
 
       console.log("DURATION");
       console.log(duration);
 
       const videoid = name.split(".")[0];
+      const ud = await pool.query("SELECT * FROM Creator_series WHERE Creator=$1;", [req.username]);
+
+      // when new series is created with title video using series_route, it will populate creator_series table
+      // and further videos for series will go via this route so no need to initialize here for series
+      // VOD is also a series with seriesid = vod_{username}, hence initialising it in creator series table
+      if (ud.rows.length == 0) {
+        const new_series_details = await pool.query(
+          "INSERT INTO Creator_series (SeriesId, Creator) VALUES ($1,$2) RETURNING*;",
+          [
+            "vod_" + req.username,
+            req.username,
+          ]
+        );
+      }
+      var vd;
+      if (fields['seriesid']) vd = await pool.query("SELECT Chronology FROM Creator_video_docs WHERE seriesid=$1;", [fields['seriesid'][0]]);
+      var Chronology = fields['seriesid'] ? Math.max(...vd.rows.map(o => o.chronology)) + 1 : 0;
       const new_video_details = await pool.query(
-        "INSERT INTO Creator_video (VideoId, Creator, Title, Description, Duration, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,TO_TIMESTAMP($6),TO_TIMESTAMP($7)) RETURNING*;",
+        "INSERT INTO Creator_video_docs (VideoId, Creator, SeriesId, Title, Description, Duration, Type, Chronology, CreatedAt, UpdatedAt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,TO_TIMESTAMP($9),TO_TIMESTAMP($10)) RETURNING*;",
         [
           videoid,
           req.username,
+          fields['seriesid'] ? fields['seriesid'][0] : "vod_" + req.username,
           fields['title'][0],
           fields['description'][0],
           Math.round(duration),
+          filetype,
+          Chronology,
           Date.now() / 1000,
           Date.now() / 1000,
         ]
       );
       console.log(videoData);
       console.log(thumbData);
-      if (fields['seriesid']) {
-        const update_series = await pool.query("UPDATE Creator_Series SET VideoIds = array_append(VideoIds, $1) WHERE SeriesId = $2 RETURNING*;", [fields['seriesid'], videoid]);
-        return res.send({
-          isSuccessful: true,
-          errorMsg: "",
-          result: [videoData, thumbData, new_video_details.rows[0], update_series.rows[0]]
-        });
-      } else {
-        return res.send({
-          isSuccessful: true,
-          errorMsg: "",
-          result: [videoData, thumbData, new_video_details.rows[0]]
-        });
-      }
-
+      return res.send({
+        isSuccessful: true,
+        errorMsg: "",
+        result: [videoData, thumbData, new_video_details.rows[0]]
+      });
     });
   } catch (err) {
     res.json({
@@ -139,12 +143,12 @@ router.put("/:videoid", authorise, async (req, res) => {
     var video_update;
     if (title != "")
       video_update = await pool.query(
-        "UPDATE Creator_video SET Title=$1, UpdatedAt=TO_TIMESTAMP($2) WHERE VideoId=$3 AND Creator=$4 RETURNING*;",
+        "UPDATE Creator_video_docs SET Title=$1, UpdatedAt=TO_TIMESTAMP($2) WHERE VideoId=$3 AND Creator=$4 RETURNING*;",
         [title, Date.now() / 1000, videoid, req.username]
       );
     if (description != "")
       video_update = await pool.query(
-        "UPDATE Creator_video SET Description=$1, UpdatedAt=TO_TIMESTAMP($2) WHERE VideoId=$3 AND Creator=$4 RETURNING*;",
+        "UPDATE Creator_video_docs SET Description=$1, UpdatedAt=TO_TIMESTAMP($2) WHERE VideoId=$3 AND Creator=$4 RETURNING*;",
         [description, Date.now() / 1000, videoid, req.username]
       );
     res.json({
@@ -166,8 +170,20 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
     const {
       videoid,
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
+    const filetype = parseInt(ud.rows[0].type);
+    const FileExt = [
+      "mp4",
+      "pdf",
+      "doc",
+      "docx",
+      "ppt",
+      "pptx",
+      "xls",
+      "xlsx",
+      "csv",
+    ];
     // console.log(ud.rows[0]);
     // const duration = ud.rows[0].duration;
 
@@ -177,7 +193,7 @@ router.get('/video/:videoid/', authorise, async (req, res) => {
       privateKeyPath: process.env.CLOUDFRONT_PRIVATE_KEY_PATH,
       expireTime: (new Date().getTime() + (3600 * 1000)),
     }
-    var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator}/${videoid}.mp4`, aws_cf_config);
+    var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_DOMAIN_NAME + `${creator}/${videoid}.` + FileExt[filetype], aws_cf_config);
     // console.log('Signed URL: ' + signedUrl);
     res.json({
       isSuccessful: true,
@@ -201,7 +217,7 @@ router.get("/details/:videoid", authorise, async (req, res) => {
     const {
       videoid
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -216,13 +232,56 @@ router.get("/details/:videoid", authorise, async (req, res) => {
   }
 });
 
-// get all video details of a creator
+// get all video details of a creator except series videos
 router.get("/details/creator/:creator", authorise, async (req, res) => {
   try {
     const {
       creator
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE Creator=$1;", [creator]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE Creator=$1 AND SeriesId=$2 ORDER BY CreatedAt DESC;", [creator, "vod_" + creator]);
+    res.json({
+      isSuccessful: true,
+      errorMsg: "",
+      result: ud.rows
+    });
+  } catch (err) {
+    res.json({
+      isSuccessful: false,
+      errorMsg: err.message,
+      result: []
+    });
+  }
+});
+
+// get all video details of a series (and a series predefines a creator)
+router.get("/details/series/:seriesid", authorise, async (req, res) => {
+  try {
+    const {
+      seriesid
+    } = req.params;
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE SeriesId=$1 ORDER BY Chronology ASC;", [seriesid]);
+    res.json({
+      isSuccessful: true,
+      errorMsg: "",
+      result: ud.rows
+    });
+  } catch (err) {
+    res.json({
+      isSuccessful: false,
+      errorMsg: err.message,
+      result: []
+    });
+  }
+});
+
+// get all series demo video for a creator
+router.get("/details/seriesdemovid/:creator", authorise, async (req, res) => {
+  try {
+    const {
+      creator
+    } = req.params;
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=SeriesId AND Creator=$1 ORDER BY CreatedAt DESC;", [creator]);
+    // console.log(ud.rows);
     res.json({
       isSuccessful: true,
       errorMsg: "",
@@ -246,12 +305,12 @@ router.get("/thumbnail/:videoid", authorise, async (req, res) => {
 
   //   const address = req.req.username;
   //   const body = req.authBody;
-  //   const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+  //   const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
   //   const creator = ud.rows[0].creator;
 
   //   // simply use AWS S3 bucket with public read access
   //   res.status(200).json({
-  //     signedurl: process.env.S3_BUCKET_THUMBNAIL_URL + creator + "/" + videoid + ".png"
+  //     signedurl: process.env.S3_BUCKET_VIDEO_THUMBNAIL_URL + creator + "/" + videoid + ".png"
   //   });
   // } catch (err) {
   //   res.json({
@@ -265,7 +324,7 @@ router.get("/thumbnail/:videoid", authorise, async (req, res) => {
     const {
       videoid,
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
     // console.log(ud.rows[0]);
     const duration = ud.rows[0].duration;
@@ -300,7 +359,7 @@ router.get("/captions/:videoid", authorise, async (req, res) => {
     const {
       videoid
     } = req.params;
-    const ud = await pool.query("SELECT * FROM Creator_Video WHERE VideoId=$1;", [videoid]);
+    const ud = await pool.query("SELECT * FROM Creator_video_docs WHERE VideoId=$1;", [videoid]);
     const creator = ud.rows[0].creator;
     try {
       res.sendFile(process.cwd() + `/assets/${creator}/${videoid}.vtt`)

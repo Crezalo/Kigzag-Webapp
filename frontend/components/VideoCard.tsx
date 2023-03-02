@@ -3,7 +3,7 @@ import Image from "next/image";
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import { getVideoThumbnail } from "../services/api-services/creator/video_api";
-import { getVideoThumbnail as getSeriesVideoThumbnail } from "../services/api-services/creator/series_api";
+import { getCreatorSubscriptionData_Series } from "../services/api-services/creator/subscriptions_api";
 
 interface VideoCardProp {
   videoDetails: {
@@ -12,40 +12,76 @@ interface VideoCardProp {
     description: string;
     creator: string;
     duration: number;
+    createdat: string;
+    seriesid: string;
+    chronology: number;
   };
-  category: "Videos" | "Series";
+  category: "Videos" | "Series" | "SeriesVideoGrid";
 }
 const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
   const username = AuthService.getUsername();
 
   const [videoThumb, setVideoThumb] = useState("");
+  const [minPrice, setMinPrice] = useState(0);
 
   const GetVidThumbnail = () => {
     useEffect(() => {
       async function getData() {
         const result = await getVideoThumbnail(videoDetails.videoid);
-        console.log(result[0].signedurl);
-        console.log(result[0]["signedurl"]);
         setVideoThumb(result[0]["signedurl"]);
-        console.log(videoThumb);
       }
       getData();
     }, [username]);
   };
 
-  const GetSeriedVidThumbnail = () => {
+  GetVidThumbnail();
+
+  const GetSeries1MPrice = () => {
     useEffect(() => {
       async function getData() {
-        const result = await getSeriesVideoThumbnail(videoDetails.videoid);
-        console.log(result[0]["signedurl"]);
-        setVideoThumb(result[0]["signedurl"]);
-        console.log(videoThumb);
+        const result = await getCreatorSubscriptionData_Series(
+          videoDetails.videoid
+        );
+
+        console.log(result);
+        setMinPrice(result[0]["onemonth"]);
       }
       getData();
-    }, [username]);
+    }, [videoDetails.videoid]);
   };
-  if (category == "Videos") GetVidThumbnail();
-  else GetSeriedVidThumbnail();
+
+  if (category === "Series") {
+    GetSeries1MPrice();
+  }
+
+  function timeDifference(current, previous) {
+    var msPerMinute = 60 * 1000;
+    var msPerHour = msPerMinute * 60;
+    var msPerDay = msPerHour * 24;
+    var msPerMonth = msPerDay * 30;
+    var msPerYear = msPerDay * 365;
+
+    var elapsed = current - previous;
+
+    if (elapsed < msPerMinute) {
+      return Math.round(elapsed / 1000) + " seconds ago";
+    } else if (elapsed < msPerHour) {
+      return Math.round(elapsed / msPerMinute) + " minutes ago";
+    } else if (elapsed < msPerDay) {
+      return Math.round(elapsed / msPerHour) + " hours ago";
+    } else if (elapsed < msPerMonth) {
+      return Math.round(elapsed / msPerDay) + " days ago";
+    } else if (elapsed < msPerYear) {
+      return Math.round(elapsed / msPerMonth) + " months ago";
+    } else {
+      return Math.round(elapsed / msPerYear) + " years ago";
+    }
+  }
+
+  const timeDiff = timeDifference(
+    Date.now(),
+    Date.parse(videoDetails.createdat)
+  );
 
   function seconds2time(sec) {
     var hours = Math.floor(sec / 3600);
@@ -70,48 +106,83 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
   }
 
   return (
-    <section
-      className="videoCard pointer"
-      onClick={() =>
+    <div
+      className="videoCardTitle pointer"
+      onClick={() => {
         Router.push({
-          pathname: "/videoplayer",
-          query: { videoid: videoDetails.videoid },
-        })
-      }
+          pathname: category === "Series" ? "/course" : "/videoplayer",
+          query:
+            category === "Series"
+              ? { courseid: videoDetails.videoid }
+              : { videoid: videoDetails.videoid },
+        });
+      }}
     >
-      {videoDetails.videoid != "" && videoDetails.videoid ? (
-        <>
-          <div className="videoCardImage">
-            {videoThumb?.includes("https://") ? (
-              <Image
-                src={videoThumb}
-                alt="Loading ..."
-                width={300}
-                height={225}
-                className="videoCardImage"
-              />
-            ) : (
-              <></>
-            )}
-            <h3
-              className="bottom-right"
-              style={{
-                fontSize: "13px",
-                backgroundColor: "black",
-                padding: "1px",
-              }}
+      <section className="videoCard videoCardImageElement pointer">
+        {videoDetails.videoid != "" && videoDetails.videoid ? (
+          <>
+            <div className="videoCardImage">
+              {videoThumb?.includes("https://") ? (
+                <img
+                  src={videoThumb}
+                  alt="Loading ..."
+                  className="videoCardImageElement"
+                />
+              ) : (
+                <></>
+              )}
+              <h3
+                className="bottom-right"
+                style={{
+                  fontSize: "13px",
+                  backgroundColor: "black",
+                  padding: "1px",
+                }}
+              >
+                {seconds2time(videoDetails.duration)}
+              </h3>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
+      </section>
+      <div
+        // className={category === "Series" ? "videoCardTitlePricesInfo" : ""}
+        style={{ padding: "0px 5px 8px 15px" }}
+      >
+        <div style={{ height: "70px" }}>
+          <h1 style={{ fontSize: "16px" }}>
+            {videoDetails?.chronology > 0
+              ? videoDetails?.chronology + ". "
+              : ""}
+            {videoDetails.title}
+          </h1>
+          <h1
+            style={{
+              fontSize: "13px",
+              color: "grey",
+              // paddingLeft: "10px",
+            }}
+          >
+            {timeDiff.startsWith("1 ")
+              ? timeDiff.replace("s", "").replace("econd", "second")
+              : timeDiff}
+          </h1>
+        </div>
+        {category === "Series" ? (
+          <div>
+            <h1
+              style={{ fontSize: "18px", fontWeight: "bold", color: "#3b82f6" }}
             >
-              {seconds2time(videoDetails.duration)}
-            </h3>
+              ₹ {minPrice} only
+            </h1>
           </div>
-          <div style={{ padding: "0px 5px 8px 15px" }}>
-            <h1 style={{ fontSize: "16px" }}>{videoDetails.title}</h1>
-          </div>
-        </>
-      ) : (
-        <></>
-      )}
-    </section>
+        ) : (
+          <></>
+        )}
+      </div>
+    </div>
   );
 };
 export default VideoCard;

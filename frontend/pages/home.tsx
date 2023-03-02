@@ -1,25 +1,42 @@
 import { CSSProperties } from "react";
 import Jdenticon from "react-jdenticon";
 import AuthService from "../services/auth-services";
-import ProfileTabs from "../components/ProfileTabs";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getUserData } from "../services/api-services/user_api";
 import Router, { useRouter } from "next/router";
-import twitter from "../public/twitter.png";
-import instagram from "../public/instagram.png";
-import youtube from "../public/youtube.png";
-import website from "../public/website.png";
 import Head from "next/head";
 import * as React from "react";
-import Link from "@mui/material/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
-import waitingGif from "../public/waiting.gif";
-import greenTick from "../public/green-tick.gif";
+import ProfileSliderTabs from "../components/ProfileSliderTabs";
+import BannerImages from "../components/BannerImages";
+import SocialHandles from "../components/SocialHandles";
+import CreatorDP from "../components/CreatorDP";
+import BasicModal from "../components/BasicModal";
+import UpdateFeatureStatus from "../components/UpdateFeatureStatus";
+import StreetviewIcon from "@mui/icons-material/Streetview";
+import ShareIcon from "@mui/icons-material/Share";
+import ShareSocialModal from "../components/ShareSocialModal";
+import { Button, Tooltip } from "@mui/material";
 
+const style = {
+  root: {
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    borderRadius: 3,
+    border: 0,
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    color: "white",
+  },
+  copyContainer: {
+    border: "1px solid blue",
+    background: "rgb(0,0,0,0.7)",
+  },
+  title: {
+    textAlign: "center",
+    color: "white",
+    fontStyle: "italic",
+  },
+};
 const buttonStyle: CSSProperties = {
   fontSize: "15px",
   fontWeight: "bold",
@@ -106,11 +123,6 @@ export default function Home() {
 
   GetUser();
 
-  const classesModal = useStylesModal();
-  const [open_becomeCreator, setOpen_becomeCreator] = useState(false);
-  const handleOpen_becomeCreator = () => setOpen_becomeCreator(true);
-  const handleClose_becomeCreator = () => setOpen_becomeCreator(false);
-
   return (
     <div>
       <Head>
@@ -120,28 +132,16 @@ export default function Home() {
       <div>
         {isConnected && username && user.fname ? (
           <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
+            <BannerImages creator={user} />
             <div style={{ display: "flex" }}>
               <div className="creatorImageDiv">
-                {user.displaypicture != "" ? (
-                  <div>
-                    <Image
-                      src={user.displaypicture}
-                      alt=""
-                      width={125}
-                      height={125}
-                      className="creatorDP"
-                    />
-                  </div>
-                ) : (
-                  <Jdenticon size={100} value={username} />
-                )}
-                {/* <Jdenticon size={100} value={username} /> */}
+                <CreatorDP creator={user?.username} height={125} width={125} />
               </div>
               <div className="description">
                 <div
                   style={{
                     minWidth: "25vw",
-                    width: "30vw",
+                    // width: "30vw",
                     justifyContent: "center",
                   }}
                 >
@@ -149,7 +149,7 @@ export default function Home() {
                     style={{
                       fontSize: "16.5px",
                       color: "white",
-                      margin: "5px 0 5px 0",
+                      // margin: "5px 0 5px 0",
                       fontWeight: "bold",
                     }}
                   >
@@ -166,109 +166,100 @@ export default function Home() {
                     <button
                       className="w-full bg-blue-500 text-white px-2 py-2 rounded buyButton"
                       style={buttonStyle}
-                      onClick={async () => {
-                        handleOpen_becomeCreator();
+                      onClick={() => {
+                        Router.push({
+                          pathname: "/becomeacreator",
+                        });
                       }}
                     >
-                      Become A Creator
+                      Monetize
                     </button>
                   ) : (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        marginTop: "15px",
-                      }}
-                    >
-                      <div style={{ marginRight: "10px" }}>
-                        {user && user.twitterhandle ? (
-                          <a
-                            href={"https://twitter.com/" + user.twitterhandle}
-                            style={{ marginTop: "5px", marginLeft: "5px" }}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <Image
-                              src={twitter}
-                              alt=""
-                              width={25}
-                              height={20}
-                            />
-                          </a>
-                        ) : (
-                          <></>
-                        )}
+                    <>
+                      <SocialHandles creator={user} />
+                      <div style={{ float: "left" }}>
+                        <BasicModal
+                          modalButtonText={
+                            <Button
+                              style={{
+                                // background: "#3B82F6",
+                                color: "white",
+                                marginBottom: "2px",
+                                borderRadius: "40%",
+                                fontSize: "15px",
+                                fontWeight: "bold",
+                              }}
+                              variant="contained"
+                              className="btn btn-1"
+                            >
+                              Features
+                            </Button>
+                          }
+                          modalBody={<UpdateFeatureStatus />}
+                          formatting={true}
+                        />
                       </div>
-                      <div style={{ marginRight: "10px" }}>
-                        {user && user.instagram ? (
-                          <a
-                            href={"https://instagram.com/" + user.instagram}
-                            style={{ marginTop: "5px", marginLeft: "5px" }}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <Image
-                              src={instagram}
-                              alt=""
-                              width={25}
-                              height={25}
-                            />
-                          </a>
-                        ) : (
-                          <></>
-                        )}
-                      </div>
-                      <div style={{ marginRight: "10px" }}>
-                        {user && user.youtube ? (
-                          <a
-                            href={user.youtube
-                              .toString()
-                              .toLowerCase()
-                              .replace(" ", "")}
-                            style={{ marginTop: "5px", marginLeft: "5px" }}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <Image
-                              src={youtube}
-                              alt=""
-                              width={25}
-                              height={20}
-                            />
-                          </a>
-                        ) : (
-                          <></>
-                        )}
-                      </div>
-                      <div style={{ marginRight: "10px" }}>
-                        {user && user.website ? (
-                          <a
-                            href={user.website}
-                            style={{ marginTop: "5px", marginLeft: "5px" }}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <Image
-                              src={website}
-                              alt=""
-                              width={25}
-                              height={20}
-                            />
-                          </a>
-                        ) : (
-                          <></>
-                        )}
-                      </div>
-                    </div>
+                    </>
                   )}
                 </div>
               </div>
+              {user.iscreator ? (
+                <>
+                  <div style={{ marginRight: "15px" }}>
+                    <Tooltip title="Public View">
+                      <StreetviewIcon
+                        className="pointer"
+                        style={{ fontSize: "30px", color: "lightgrey" }}
+                        onClick={() => {
+                          Router.push({
+                            pathname: "/creatorprofile",
+                            query: { address: user.username },
+                          });
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+                  <BasicModal
+                    modalButtonText={
+                      <Tooltip title="Share Kigzag">
+                        <ShareIcon
+                          className="pointer"
+                          style={{ fontSize: "30px", color: "lightgrey" }}
+                        />
+                      </Tooltip>
+                    }
+                    modalBody={
+                      <ShareSocialModal
+                        title={"Share " + user.fname + "'s Kigzag"}
+                        url={"kigzag.com/" + user.username}
+                        socialTypes={[
+                          "whatsapp",
+                          "telegram",
+                          "twitter",
+                          "linkedin",
+                          "facebook",
+                          "reddit",
+                        ]}
+                        onSocialButtonClicked={(data) => console.log(data)}
+                        style={style}
+                      />
+                    }
+                    formatting={true}
+                  />
+                </>
+              ) : (
+                <></>
+              )}
             </div>
-            <ProfileTabs
-              onCreatorProfile={false}
-              creator=""
-              isCreator={user.iscreator}
-            />
+            {user.iscreator ? (
+              <ProfileSliderTabs
+                onCreatorProfile={false}
+                creator=""
+                isCreator={user.iscreator}
+              />
+            ) : (
+              <></>
+            )}
           </div>
         ) : (
           // <ConnectToAccount />

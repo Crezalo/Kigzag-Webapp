@@ -8,12 +8,20 @@ import {
   TextField,
 } from "@material-ui/core";
 import ConnectToAccount from "../components/ConnectToAccount";
+import DummyProfile from "../public/DummyProfile.jpg";
+import DummyBanner from "../public/DummyBanner.jpg";
 import Head from "next/head";
 import AuthService from "../services/auth-services";
 import { getUserData, updateUserData } from "../services/api-services/user_api";
 import { Label } from "reactstrap";
 import Jdenticon from "react-jdenticon";
 import Image from "next/image";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import BasicModal from "../components/BasicModal";
+import { getCreatorInfoImages } from "../services/api-services/content_api";
+import Carousel from "react-material-ui-carousel";
+import UploadProfilePicsLogoModal from "../components/UploadProfilePicsModal";
+import CreatorDP from "../components/CreatorDP";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -94,11 +102,50 @@ const toolTipTheme = createTheme({
     },
   },
 });
+interface SettingsT {
+  autoPlay: boolean;
+  animation: "fade" | "slide";
+  indicators: boolean;
+  duration: number;
+  navButtonsAlwaysVisible: boolean;
+  navButtonsAlwaysInvisible: boolean;
+  fullHeightHover: boolean;
+  cycleNavigation: boolean;
+  swipe: boolean;
+  [key: string]: any;
+}
+
+const DefaultSettingsT: SettingsT = {
+  autoPlay: true,
+  animation: "fade",
+  indicators: false,
+  duration: 500,
+  navButtonsAlwaysVisible: true,
+  navButtonsAlwaysInvisible: false,
+  cycleNavigation: true,
+  fullHeightHover: true,
+  swipe: false,
+};
 
 export default function EditProfile() {
   const classesModal = useStylesModal();
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  const [profilePic, setProfilePic] = useState("");
+  const [logo, setLogo] = useState("");
+  var [signedURls, setSignedURls] = useState([]);
+  var [imageLen, setImageLen] = useState(-1);
+  const [settings, setSettings] = useState<SettingsT>(DefaultSettingsT);
+
+  const [emailaddress, setEmailaddress] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [bio, setBio] = useState("");
+  const [displaypicture, setDisplaypicture] = useState("");
+  const [twitterhandle, setTwitterhandle] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [youtube, setYoutube] = useState("");
+  const [website, setWebsite] = useState("");
 
   const checkConnected = () => {
     useEffect(() => {
@@ -147,6 +194,16 @@ export default function EditProfile() {
         if (username != "") {
           const result = await getUserData(username);
           setUser(result[0]);
+          const res = await getCreatorInfoImages("profilepic", username);
+          if (res[0]) setProfilePic(res[0]["signedurl"]);
+
+          const res1 = await getCreatorInfoImages("oimages", username);
+          if (res1[0] && typeof res1 !== "string") {
+            setSignedURls(res1[0]["signedurls"]);
+            setImageLen(res1[0]["signedurls"].length);
+          }
+          // const res2 = await getCreatorInfoImages("logo", username);
+          // if (res2[0]) setLogo(res2[0]["signedurl"]);
         }
       }
       getData();
@@ -155,15 +212,29 @@ export default function EditProfile() {
 
   GetUser();
 
-  const [emailaddress, setEmailaddress] = useState("");
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-  const [bio, setBio] = useState("");
-  const [displaypicture, setDisplaypicture] = useState("");
-  const [twitterhandle, setTwitterhandle] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [youtube, setYoutube] = useState("");
-  const [website, setWebsite] = useState("");
+  function updateSignedUrl() {
+    if (signedURls?.length > 0) {
+      for (let i = 0; i < signedURls.length; i++) {
+        var http = new XMLHttpRequest();
+        http.open("HEAD", signedURls[i]);
+        http.onreadystatechange = function () {
+          if (this.readyState == this.DONE) {
+            if (this.status == 403) if (imageLen == -1) setImageLen(i);
+          }
+        };
+        http.send();
+      }
+      if (imageLen != -1) signedURls.length = imageLen;
+      return true;
+    }
+    return false;
+  }
+
+  updateSignedUrl();
+
+  const creatObjectUrl = (file) => {
+    return window.URL.createObjectURL(file);
+  };
 
   const UpdateUserData = async () => {
     const result = await updateUserData(
@@ -194,110 +265,100 @@ export default function EditProfile() {
             className="blueTextBlackBackground"
             style={{ fontSize: "18px", display: "flex", flexDirection: "row" }}
           >
-            <div className={classesModal.paper}>
-              <Label style={{ margin: "10px 0 0 10px" }}>Bio</Label>
-              <TextField
-                className={classesModal.textfield}
-                placeholder="Bio Here ..."
-                type="text"
-                multiline
-                rows={3}
-                inputProps={{ style: { color: "white" } }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant="outlined"
-                defaultValue={user.bio}
-                onChange={(e) => {
-                  setBio(e.target.value);
-                }}
-              />
-              <Label style={{ margin: "10px 0 0 10px" }}>Twitter</Label>
-              <TextField
-                className={classesModal.textfield}
-                placeholder="@YourTwitterHandle"
-                type="text"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant="outlined"
-                inputProps={{ style: { color: "white" } }}
-                defaultValue={user.twitterhandle}
-                onChange={(e) => {
-                  setTwitterhandle(e.target.value);
-                }}
-              />
-              <Label style={{ margin: "10px 0 0 10px" }}>Instagram</Label>
-              <TextField
-                className={classesModal.textfield}
-                placeholder="@YourInstagramUsername"
-                type="text"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant="outlined"
-                inputProps={{ style: { color: "white" } }}
-                defaultValue={user.instagram}
-                onChange={(e) => {
-                  setInstagram(e.target.value);
-                }}
-              />
-              <Label style={{ margin: "10px 0 0 10px" }}>Youtube Channel</Label>
-              <TextField
-                className={classesModal.textfield}
-                placeholder="https://www.youtube.com/c/channelid"
-                type="text"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant="outlined"
-                inputProps={{ style: { color: "white" } }}
-                defaultValue={user.youtube}
-                onChange={(e) => {
-                  setYoutube(e.target.value);
-                }}
-              />
-              <Label style={{ margin: "10px 0 0 10px" }}>Website</Label>
-              <TextField
-                className={classesModal.textfield}
-                placeholder="https://www.mywebsite.com/"
-                type="text"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                variant="outlined"
-                inputProps={{ style: { color: "white" } }}
-                defaultValue={user.youtube}
-                onChange={(e) => {
-                  setWebsite(e.target.value);
-                }}
-              />
-            </div>
             <div
               style={{
                 width: "50%",
                 display: "flex",
                 flexDirection: "column",
-                paddingLeft: "50px",
-                paddingRight: "50px",
-                paddingTop: "100px",
+                padding: "50px",
               }}
             >
               <div
-                className="creatorImageDiv"
-                style={{ justifyContent: "center", width: "100%" }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
               >
-                {user.displaypicture != "" ? (
-                  <Image
-                    src={user.displaypicture}
-                    alt=""
-                    width={250}
-                    height={250}
-                    className="creatorDP"
-                  />
-                ) : (
-                  <Jdenticon size={100} value={username} />
-                )}
+                {/* {user.iscreator ? ( */}
+                <div style={{}}>
+                  {updateSignedUrl() ? (
+                    <Carousel
+                      className="editPageCarousel"
+                      {...settings}
+                      navButtonsProps={{
+                        // Change the colors and radius of the actual buttons. THIS STYLES BOTH BUTTONS
+                        style: {
+                          backgroundColor: "cornflowerblue",
+                          borderRadius: 5,
+                        },
+                      }}
+                    >
+                      {Array.from(signedURls).map((item, i) => (
+                        <img
+                          src={item}
+                          alt="Loading ..."
+                          width="100%"
+                          height="100%"
+                          onError={({ currentTarget }) => {
+                            setImageLen(i);
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src = DummyBanner.src;
+                          }}
+                        />
+                      ))}
+                    </Carousel>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+                {/* ) : (
+                  <></>
+                )} */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div
+                    className="creatorImageDiv"
+                    style={{
+                      justifyContent: "center",
+                      width: "30%",
+                      display: "table",
+                      position: "relative",
+                    }}
+                  >
+                    <CreatorDP
+                      creator={user?.username}
+                      height={250}
+                      width={250}
+                    />
+                    <div className="bottom-right">
+                      <BasicModal
+                        modalButtonText={<CameraAltIcon />}
+                        modalBody={<UploadProfilePicsLogoModal />}
+                      />
+                    </div>
+                  </div>
+                  {/* <div
+                    className="creatorImageDiv"
+                    style={{
+                      justifyContent: "center",
+                      width: "30%",
+                      display: "table",
+                      position: "relative",
+                    }}
+                  >
+                    {logo != "" ? (
+                      <Image src={logo} alt="" width={250} height={250} />
+                    ) : (
+                      <></>
+                    )}
+                  </div> */}
+                </div>
               </div>
               <div
                 style={{
@@ -379,6 +440,85 @@ export default function EditProfile() {
                   SAVE
                 </Button>
               </div>
+            </div>
+            <div className={classesModal.paper}>
+              <Label style={{ margin: "10px 0 0 10px" }}>Bio</Label>
+              <TextField
+                className={classesModal.textfield}
+                placeholder="Bio Here ..."
+                type="text"
+                multiline
+                rows={3}
+                inputProps={{ style: { color: "white" } }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                defaultValue={user.bio}
+                onChange={(e) => {
+                  setBio(e.target.value);
+                }}
+              />
+              <Label style={{ margin: "10px 0 0 10px" }}>Twitter</Label>
+              <TextField
+                className={classesModal.textfield}
+                placeholder="@YourTwitterHandle"
+                type="text"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                inputProps={{ style: { color: "white" } }}
+                defaultValue={user.twitterhandle}
+                onChange={(e) => {
+                  setTwitterhandle(e.target.value);
+                }}
+              />
+              <Label style={{ margin: "10px 0 0 10px" }}>Instagram</Label>
+              <TextField
+                className={classesModal.textfield}
+                placeholder="@YourInstagramUsername"
+                type="text"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                inputProps={{ style: { color: "white" } }}
+                defaultValue={user.instagram}
+                onChange={(e) => {
+                  setInstagram(e.target.value);
+                }}
+              />
+              <Label style={{ margin: "10px 0 0 10px" }}>Youtube Channel</Label>
+              <TextField
+                className={classesModal.textfield}
+                placeholder="https://www.youtube.com/c/channelid"
+                type="text"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                inputProps={{ style: { color: "white" } }}
+                defaultValue={user.youtube}
+                onChange={(e) => {
+                  setYoutube(e.target.value);
+                }}
+              />
+              <Label style={{ margin: "10px 0 0 10px" }}>Website</Label>
+              <TextField
+                className={classesModal.textfield}
+                placeholder="https://www.mywebsite.com/"
+                type="text"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
+                inputProps={{ style: { color: "white" } }}
+                defaultValue={user.youtube}
+                onChange={(e) => {
+                  setWebsite(e.target.value);
+                }}
+              />
             </div>
           </div>
         ) : (

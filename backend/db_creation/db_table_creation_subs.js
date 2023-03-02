@@ -22,7 +22,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
     )
     .catch((err) => console.log("PG ERROR Creator_Sub_1Y Table\n\n\t\t", err.message));
 
-  //8. Creator Subscriptions Fee for Video Series
+  //9. Creator Subscriptions Fee for Video Series
   await pool
     .query(
       "CREATE TABLE IF NOT EXISTS Creator_Series_Sub (SeriesId VARCHAR(255) PRIMARY KEY, OneMonth REAL NOT NULL, ThreeMonths REAL NOT NULL, OneYear REAL NOT NULL);"

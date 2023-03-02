@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import coming_soon from "../public/coming_soon.png";
 import Image from "next/image";
+import MerchCardGrid from "./MerchCardGrid";
 
 interface MerchandiseTabProp {
   creator: string;
@@ -12,7 +13,7 @@ const MerchandiseTab = ({ creator, onCreatorProfile }: MerchandiseTabProp) => {
       className="blueTextBlackBackground"
       style={{ justifyContent: "center", textAlign: "center" }}
     >
-      <Image src={coming_soon} alt="" width={500} height={500} />
+      <MerchCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />
     </div>
   );
 };

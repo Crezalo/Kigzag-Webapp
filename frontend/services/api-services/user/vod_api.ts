@@ -8,12 +8,17 @@ export const MAIN_API_URL = process.env.NEXT_STATIC_MAIN_API_URL;
 /////////////////////          VOD Table            ////////////
 ////////////////////////////////////////////////////////////////////////
 
-export async function addUserVODData(creator: string, type: number) {
+export async function addUserVODData(
+  creator: string,
+  type: number,
+  buyingprice: string
+) {
   try {
     if (authHeader().Authorization) {
       const data = {
         creator: creator,
         type: type,
+        buyingprice: buyingprice,
       };
       const response = await axios.post(MAIN_API_URL + "user_vod", data, {
         headers: authHeader(),
@@ -37,7 +42,6 @@ export async function getUserVODData() {
       const response = await axios.get(MAIN_API_URL + "user_vod/allcreators", {
         headers: authHeader(),
       });
-      console.log(response);
 
       if (response.data.isSuccessful) {
         return response.data.result;
@@ -58,6 +62,29 @@ export async function getSpecificCreatorUserVODData(creator: string) {
       const response = await axios.get(MAIN_API_URL + "user_vod/" + creator, {
         headers: authHeader(),
       });
+
+      if (response.data.isSuccessful) {
+        return response.data.result;
+      } else {
+        return response.data.errorMsg;
+      }
+    } else {
+      return "Not Logged In";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getSpecificCreatorAllUserVODStatsData() {
+  try {
+    if (authHeader().Authorization) {
+      const response = await axios.get(
+        MAIN_API_URL + "user_vod/alluserdata/forcreator",
+        {
+          headers: authHeader(),
+        }
+      );
 
       if (response.data.isSuccessful) {
         return response.data.result;

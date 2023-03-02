@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "debug": "DEBUG=express:* node app.js"
   },
   "author": "Ronnie Gandhi",
   "license": "MIT",
@@ -35,8 +36,6 @@
     "nodemon": "^2.0.9",
     "pg": "^8.6.0",
     "thumbsupply": "^0.4.0",
-    "validate.io-timestamp": "^1.0.2",
-    "wallet-address-validator": "^0.2.4",
-    "web3-token": "^0.2.7"
+    "validate.io-timestamp": "^1.0.2"
   }
 }

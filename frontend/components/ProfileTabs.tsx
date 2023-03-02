@@ -3,11 +3,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab/Tab";
 import Tabs from "@material-ui/core/Tabs/Tabs";
 import { useState, useEffect } from "react";
-import SubscriptionTab from "./SubscriptionTab";
-import ContentTab from "./ContentTab";
-import CommunityTab from "./CommunityTab";
-import StoreTab from "./StoreTab";
 import AuthService from "../services/auth-services";
+import VideoMeetTab from "./VideoMeetTab";
+import ShoutoutTab from "./ShoutoutTab";
+import ColabTab from "./ColabTab";
+import MerchandiseTab from "./MerchandiseTab";
+import TipsTab from "./TipsTab";
+import VideosSeriesGating from "./VideosSeriesGating";
 
 const useStyles = makeStyles({
   tab: {
@@ -69,33 +71,64 @@ const ProfileTabs = ({
   if (onCreatorProfile) {
     // on creator profile
     tabs_array = [
-      <ContentTab
+      <VideosSeriesGating
         creator={creator}
         onCreatorProfile={onCreatorProfile}
+        category="Videos"
         key={1}
       />,
-      <CommunityTab
+      <VideosSeriesGating
         creator={creator}
         onCreatorProfile={onCreatorProfile}
+        category="Series"
         key={2}
       />,
-      <StoreTab
+      <VideoMeetTab
         creator={creator}
         onCreatorProfile={onCreatorProfile}
         key={3}
       />,
+      <ShoutoutTab
+        creator={creator}
+        onCreatorProfile={onCreatorProfile}
+        key={4}
+      />,
+      <ColabTab
+        creator={creator}
+        onCreatorProfile={onCreatorProfile}
+        key={5}
+      />,
+      <MerchandiseTab
+        creator={creator}
+        onCreatorProfile={onCreatorProfile}
+        key={6}
+      />,
+      <TipsTab creator={creator} onCreatorProfile={onCreatorProfile} key={7} />,
     ];
   } else {
     // on dashboard
     if (isCreator) {
       tabs_array = [
-        <ContentTab creator={username} onCreatorProfile={false} key={1} />,
-        <CommunityTab creator={username} onCreatorProfile={false} key={2} />,
-        <StoreTab creator={username} onCreatorProfile={false} key={3} />,
-        <SubscriptionTab key={4} />,
+        <VideosSeriesGating
+          creator={username}
+          onCreatorProfile={false}
+          category="Videos"
+          key={1}
+        />,
+        <VideosSeriesGating
+          creator={username}
+          onCreatorProfile={false}
+          category="Series"
+          key={2}
+        />,
+        <VideoMeetTab creator={username} onCreatorProfile={false} key={3} />,
+        <ShoutoutTab creator={username} onCreatorProfile={false} key={4} />,
+        <ColabTab creator={username} onCreatorProfile={false} key={5} />,
+        <MerchandiseTab creator={username} onCreatorProfile={false} key={6} />,
+        <TipsTab creator={username} onCreatorProfile={false} key={7} />,
       ];
     } else {
-      tabs_array = [<SubscriptionTab key={1} />];
+      tabs_array = [];
     }
   }
 
@@ -113,9 +146,13 @@ const ProfileTabs = ({
                   style: { backgroundColor: "#3B82F6" },
                 }}
               >
-                <Tab label="Content" className={classes.tab} />
-                <Tab label="Community" className={classes.tab} />
-                <Tab label="Store" className={classes.tab} />
+                <Tab label="Videos" className={classes.tab} />
+                <Tab label="Series" className={classes.tab} />
+                <Tab label="Meet" className={classes.tab} />
+                <Tab label="Shoutout" className={classes.tab} />
+                <Tab label="Collab" className={classes.tab} />
+                <Tab label="Merch" className={classes.tab} />
+                <Tab label="Tip 💕 Me" className={classes.tab} />
               </Tabs>
               <Paper>{tabs_array[value]}</Paper>
             </>
@@ -132,27 +169,18 @@ const ProfileTabs = ({
                       style: { backgroundColor: "#3B82F6" },
                     }}
                   >
-                    <Tab label="Content" className={classes.tab} />
-                    <Tab label="Community" className={classes.tab} />
-                    <Tab label="Store" className={classes.tab} />
-                    <Tab label="Purchases" className={classes.tab} />
+                    <Tab label="Videos" className={classes.tab} />
+                    <Tab label="Series" className={classes.tab} />
+                    <Tab label="Meets" className={classes.tab} />
+                    <Tab label="Shoutout" className={classes.tab} />
+                    <Tab label="Collab" className={classes.tab} />
+                    <Tab label="Merch" className={classes.tab} />
+                    <Tab label="Tip Jar" className={classes.tab} />
                   </Tabs>
                   <Paper>{tabs_array[value]}</Paper>
                 </>
               ) : (
-                <>
-                  <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    centered
-                    TabIndicatorProps={{
-                      style: { backgroundColor: "#3B82F6" },
-                    }}
-                  >
-                    <Tab label="Purchases" className={classes.tab} />
-                  </Tabs>
-                  <Paper>{tabs_array[value]}</Paper>
-                </>
+                <></>
               )}
             </>
           )}

@@ -7,6 +7,7 @@ import linkedin from "../public/linkedin.png";
 import facebook from "../public/facebook.png";
 import youtube from "../public/youtube.png";
 import Image from "next/image";
+import month from "../consts/months";
 import { useEffect, useState } from "react";
 import {
   Backdrop,
@@ -15,8 +16,9 @@ import {
   makeStyles,
   TextField,
 } from "@material-ui/core";
-import Modal from '@mui/material/Modal';
+import Modal from "@mui/material/Modal";
 import { getSpecificUserData } from "../services/api-services/user_api";
+import CreatorDP from "./CreatorDP";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -91,21 +93,6 @@ const PurchaseCard = ({ request }: PurchaseCardProp) => {
   const usermessage = request.usermessage.split("###--###");
   const creatorresponse = request.creatorresponse.split("###--###");
 
-  const month = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
   const timeDiff = Date.now() - Date.parse(request.lastupdatedat);
   const platformLogo = [instagram, youtube, twitter];
   const [displayPicture, setDisplayPicture] = useState("");
@@ -133,18 +120,7 @@ const PurchaseCard = ({ request }: PurchaseCardProp) => {
         <>
           <section className="purchaseCard">
             <div className="reqImage">
-              {displayPicture != "" ? (
-                <Image
-                  src={displayPicture}
-                  alt=""
-                  width={50}
-                  height={50}
-                  className="creatorDP"
-                />
-              ) : (
-                <Jdenticon size={50} value={request.creator} />
-              )}
-              {/* <Jazzicon diameter={60} seed={Math.round(Math.random() * 10000000)} /> */}
+              <CreatorDP creator={request.creator} height={50} width={50} />
               <h2
                 className="hovergreen viewMore pointer"
                 style={{
