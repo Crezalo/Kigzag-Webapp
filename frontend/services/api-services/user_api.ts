@@ -78,23 +78,23 @@ export async function userLogin(
       data = {
         provideridtoken: provideridtoken,
       };
+    }
 
-      const response = await axios.post(
-        MAIN_API_URL + "login/" + signintype.toString(),
-        data
+    const response = await axios.post(
+      MAIN_API_URL + "login/" + signintype.toString(),
+      data
+    );
+
+    if (response.data.isSuccessful) {
+      AuthService.setCurrentUserAccessToken(
+        response.data.result[0]["x-access-token"]
       );
-
-      if (response.data.isSuccessful) {
-        AuthService.setCurrentUserAccessToken(
-          response.data.result[0]["x-access-token"]
-        );
-        AuthService.setCurrentUserRefreshToken(
-          response.data.result[0]["x-refresh-token"]
-        );
-        return true;
-      } else {
-        return response.data.errorMsg;
-      }
+      AuthService.setCurrentUserRefreshToken(
+        response.data.result[0]["x-refresh-token"]
+      );
+      return true;
+    } else {
+      return response.data.errorMsg;
     }
   } catch (err) {
     console.log(err);

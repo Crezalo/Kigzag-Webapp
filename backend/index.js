@@ -65,7 +65,7 @@ let socketList = {};
 app.engine('html', require('ejs').renderFile);
 app.use(express.static(path.join(__dirname, './discord_token_gating_bot/styling_js')));
 app.use(cors({
-  origin: 'http://13.49.105.126',
+  origin: '*',
 }));
 app.use(express.json());
 app.use(express.urlencoded({

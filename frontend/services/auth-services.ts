@@ -60,8 +60,6 @@ class AuthService {
     ) {
       return true;
     } else {
-      if (provideridtoken == "") return false;
-      console.log(provideridtoken);
       const response = await userLogin(
         provideridtoken,
         username,

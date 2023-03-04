@@ -151,12 +151,22 @@ router.post('/login/:signintype', async (req, res) => {
         username,
         password
       } = req.body;
-
       if (!username || !password) {
         throw new Error('Username and password are required')
       }
 
-      const user_col = await pool.query("SELECT * FROM Users WHERE UserName = $1;", [username]);
+      //  In case user sends email instead of username
+      const valid = validator.validate(username);
+      var userNameUp; // update username if email is send instead of username
+
+      var user_col;
+      if (!valid) {
+        user_col = await pool.query("SELECT * FROM Users WHERE UserName = $1;", [username]);
+        userNameUp = username;
+      } else {
+        user_col = await pool.query("SELECT * FROM Users WHERE emailaddress = $1;", [username]);
+        userNameUp = user_col.rows[0].username;
+      }
 
       if (!user_col.rows[0]) {
         return res.send({
@@ -180,13 +190,13 @@ router.post('/login/:signintype', async (req, res) => {
 
         // generate access token for the new user
         const accessToken = jwt.sign({
-          user: username
+          user: userNameUp
         }, process.env.JWT_ACCESS_TOKEN_SECRET, {
           expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
         });
         // generate refresh token for the new user
         const refreshToken = jwt.sign({
-          user: username
+          user: userNameUp
         }, process.env.JWT_REFRESH_TOKEN_SECRET, {
           expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
         });

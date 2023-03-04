@@ -51,6 +51,7 @@
     "react-jdenticon": "^0.0.9",
     "react-material-ui-carousel": "^3.4.2",
     "react-nice-avatar": "^1.2.4",
+    "react-password-strength-bar": "^0.4.1",
     "react-responsive-carousel": "^3.2.23",
     "react-search-autocomplete": "^6.1.1",
     "react-search-box": "^2.2.1",
