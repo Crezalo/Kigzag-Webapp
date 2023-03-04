@@ -64,7 +64,9 @@ let socketList = {};
 // Define render engine and assets path
 app.engine('html', require('ejs').renderFile);
 app.use(express.static(path.join(__dirname, './discord_token_gating_bot/styling_js')));
-app.use(cors());
+app.use(cors({
+  origin: 'http://13.49.105.126',
+}));
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true
@@ -97,7 +99,7 @@ app.use("/user_video_call", user_video_call_router);
 app.use("/user_video_series", user_video_series_router);
 app.use("/user_vod", user_vod_router);
 app.use("/user_merchandise", user_merch_router);
-app.use("/user_tipjar",user_tipjar_router);
+app.use("/user_tipjar", user_tipjar_router);
 app.use("/user_cart", cart_router);
 
 // run discord bot
