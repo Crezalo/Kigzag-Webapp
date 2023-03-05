@@ -170,7 +170,11 @@ export default function CreatorProfile() {
                 modalBody={
                   <ShareSocialModal
                     title={"Share " + creator.fname + "'s Kigzag"}
-                    url={"kigzag.com/" + creator.username}
+                    url={
+                      process.env.NEXT_STATIC_WEBSITE_URL +
+                      "@" +
+                      creator.username
+                    }
                     socialTypes={[
                       "whatsapp",
                       "telegram",

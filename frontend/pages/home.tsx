@@ -233,7 +233,11 @@ export default function Home() {
                     modalBody={
                       <ShareSocialModal
                         title={"Share " + user.fname + "'s Kigzag"}
-                        url={"kigzag.com/" + user.username}
+                        url={
+                          process.env.NEXT_STATIC_WEBSITE_URL +
+                          "@" +
+                          user.username
+                        }
                         socialTypes={[
                           "whatsapp",
                           "telegram",
