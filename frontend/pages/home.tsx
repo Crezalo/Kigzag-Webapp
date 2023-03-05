@@ -130,7 +130,7 @@ export default function Home() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
-        {isConnected && username && user.fname ? (
+        {isConnected && username && user?.username != "" ? (
           <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
             <BannerImages creator={user} />
             <div style={{ display: "flex" }}>
@@ -153,7 +153,9 @@ export default function Home() {
                       fontWeight: "bold",
                     }}
                   >
-                    {user.fname + " " + user.lname}
+                    {user?.fname != ""
+                      ? user.fname + " " + user.lname
+                      : user.username}
                   </div>
                   {user.bio != "" ? (
                     <div style={{ fontSize: "16px", color: "white" }}>

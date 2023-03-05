@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import kigzaglogo from "../public/kigzaglogo.png";
+import kigzaglogo from "../public/crezalo-logo-box-full.png";
 import React from "react";
 
 const Footer = () => {
@@ -21,11 +21,13 @@ const Footer = () => {
           kigzag.com
         </a>
       </h1> */}
-      <Link legacyBehavior href="/">
+      <Link legacyBehavior href="/about">
         <a style={{ marginTop: "2px" }}>
           <div>
-            <span>Powered By</span>
-            <Image src={kigzaglogo} alt="Kigzag Logo" width={90} height={35} />
+            <span style={{ color: "white", paddingLeft: "10px" }}>
+              Powered By
+            </span>
+            <Image src={kigzaglogo} alt="Crezalo Logo" width={90} height={35} />
           </div>
         </a>
       </Link>

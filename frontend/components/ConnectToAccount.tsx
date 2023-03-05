@@ -218,6 +218,20 @@ const ConnectToAccount = () => {
                     if (e.target.value != "") setPassword(e.target.value);
                   }}
                 />
+                <div style={{ textAlign: "center", paddingBottom: "10px" }}>
+                  <input
+                    type="checkbox"
+                    checked={showPassword}
+                    onChange={handleClickShowPassword}
+                  />
+                  <label
+                    className={classesModal.text + " pointer"}
+                    style={{ paddingLeft: "5px" }}
+                    onClick={handleClickShowPassword}
+                  >
+                    Show Password
+                  </label>
+                </div>
                 <button className={classesModal.button} onClick={login}>
                   Login
                 </button>

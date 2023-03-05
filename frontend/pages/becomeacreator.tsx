@@ -265,7 +265,7 @@ export default function BecomeACreator() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
-        {isConnected && username && user.fname ? (
+        {isConnected && username && user?.username != "" ? (
           <div
             className="blueTextBlackBackground"
             style={{ fontSize: "18px", display: "flex", flexDirection: "row" }}
