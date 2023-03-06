@@ -128,7 +128,7 @@ const UploadDocumentModal = ({ seriesid }: UploadDocumentModalProp) => {
                 className="form inputFile"
                 accept={filetypeList[fileType - 1]}
               />
-              {docfile ? (
+              {/* {docfile ? (
                 <DocViewer
                   documents={[
                     {
@@ -149,7 +149,7 @@ const UploadDocumentModal = ({ seriesid }: UploadDocumentModalProp) => {
                 />
               ) : (
                 <></>
-              )}
+              )} */}
               <label className="form label" style={{ fontWeight: "100" }}>
                 Upload Thumbnail
               </label>
