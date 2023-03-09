@@ -342,7 +342,7 @@ export default function EditProfile() {
   return (
     <div>
       <Head>
-        <title>Kigzag: Update Prices</title>
+        <title>Crezalo: Update Prices</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>

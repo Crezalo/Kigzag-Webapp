@@ -45,6 +45,7 @@ import {
   getProductAllReviewsData,
   getProductRatingsData,
 } from "../services/api-services/user/merch_api";
+import MerchVariantCarousel from "./MerchVariantCarousel";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -106,12 +107,31 @@ interface MerchAccordianDetailsProp {
     shippingcharges: number;
     freeshippingabove: number;
   };
+  mainMerchDetails: {
+    title: string;
+    description: string;
+    creator: string;
+    productid: string;
+    inventory: number;
+    return_refund_policy: string;
+    country_of_origin: string;
+    price: number;
+    variants: number;
+    variantname: string;
+    discountpercentage: number;
+    warrantyperiod: number;
+    shippingcharges: number;
+    freeshippingabove: number;
+  };
   rating: number;
+  iscreator: boolean;
 }
 
 const MerchAccordianDetails = ({
   merchDetails,
+  mainMerchDetails,
   rating,
+  iscreator,
 }: MerchAccordianDetailsProp) => {
   const classesModal = useStylesModal();
   const [user, setUser] = useState({
@@ -268,6 +288,11 @@ const MerchAccordianDetails = ({
                   {merchDetails.discountpercentage}% off
                 </Typography>
               </div>
+              <MerchVariantCarousel
+                iscreator={iscreator}
+                merchDetails={merchDetails}
+                mainMerchDetails={mainMerchDetails}
+              />
               <br />
               <Typography>{merchDetails.description}</Typography>
               <div

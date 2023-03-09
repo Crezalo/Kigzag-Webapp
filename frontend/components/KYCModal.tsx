@@ -102,11 +102,13 @@ const KYCModal = () => {
           setFileUploadStatus("COMPLETE");
           console.log(response.data.result);
         } else {
-          setFileUploadStatus("Failed To Upload Retry!");
+          setFileUploadStatus(
+            "Failed To Upload Retry! " + response.data.errorMsg
+          );
           console.log(response.data.errorMsg);
         }
       } else {
-        setFileUploadStatus("Failed To Upload Retry!");
+        setFileUploadStatus("Failed To Upload Retry! User Not Logged In");
         console.log("User Not Logged In");
       }
     } catch (err) {

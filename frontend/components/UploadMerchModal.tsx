@@ -7,6 +7,7 @@ import greenTick from "../public/green-tick.gif";
 import countries from "../consts/countries";
 import {
   addCreatorMerchData,
+  addCreatorMerchVariantData,
   MAIN_API_URL,
 } from "../services/api-services/creator/merch_api";
 import Carousel from "react-material-ui-carousel";
@@ -36,15 +37,38 @@ const DefaultSettingsT: SettingsT = {
   swipe: false,
 };
 
-interface UploadMerchModalProp {}
+interface UploadMerchModalProp {
+  // used for uploading variants to existing products
+  variantUpload?: boolean;
+  merchDetails?: {
+    title: string;
+    description: string;
+    creator: string;
+    productid: string;
+    inventory: number;
+    return_refund_policy: string;
+    country_of_origin: string;
+    price: number;
+    variants: number;
+    variantname: string;
+    discountpercentage: number;
+    warrantyperiod: number;
+    shippingcharges: number;
+    freeshippingabove: number;
+  };
+}
 
-const UploadMerchModal = () => {
+const UploadMerchModal = ({
+  variantUpload,
+  merchDetails,
+}: UploadMerchModalProp) => {
   // const [videofile, setVideofile] = useState(null);
   const [thumbfile, setThumbfile] = useState(null);
   const [images, setImages] = useState<FileList>(null);
   const [imagesLen, setImagesLen] = useState(0);
   const [fileUploadStatus, setFileUploadStatus] = useState("NO FILE ADDED");
   const [settings, setSettings] = useState<SettingsT>(DefaultSettingsT);
+  const [uploadImages, setUploadImages] = useState(!variantUpload);
 
   const creatObjectUrl = (file) => {
     return window.URL.createObjectURL(file);
@@ -54,45 +78,79 @@ const UploadMerchModal = () => {
     event.preventDefault();
     try {
       if (authHeader().Authorization) {
-        const productid = Math.random().toString(36).slice(2);
-        const formData = new FormData();
-        formData.append("productid", productid);
-        formData.append("thumbnail", thumbfile[0]);
-        for (let i = 0; i < images.length; i++) {
-          formData.append("images", images[i]);
+        let productid = Math.random().toString(36).slice(2);
+        if (variantUpload) {
+          productid =
+            merchDetails?.productid.split("_")[0] +
+            "_" +
+            (parseInt(merchDetails?.variants.toString()) + 1) +
+            "_" +
+            (uploadImages ? "1" : "0");
         }
         setFileUploadStatus("UPLOADING");
-        const response = await axios.post(
-          MAIN_API_URL + "content/merch_images/upload",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: authHeader().Authorization,
-            },
+        var response;
+        if (uploadImages) {
+          const formData = new FormData();
+          formData.append("productid", productid);
+          formData.append("thumbnail", thumbfile[0]);
+          for (let i = 0; i < images.length; i++) {
+            formData.append("images", images[i]);
           }
-        );
-        let result = await addCreatorMerchData(
-          productid,
-          event.target.title.value,
-          event.target.description.value,
-          event.target.inventory.value,
-          event.target.return_refund_policy.value,
-          event.target.country_of_origin.value,
-          event.target.price.value,
-          event.target.discount.value,
-          event.target.warrantyperiod.value,
-          event.target.shippingcharges.value,
-          event.target.freeshippingabove.value
-        );
+          response = await axios.post(
+            MAIN_API_URL + "content/merch_images/upload",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: authHeader().Authorization,
+              },
+            }
+          );
+        }
+        let result;
+        if (variantUpload) {
+          result = await addCreatorMerchVariantData(
+            productid,
+            event.target.title.value,
+            event.target.description.value,
+            event.target.inventory.value,
+            event.target.return_refund_policy.value,
+            event.target.country_of_origin.value,
+            event.target.price.value,
+            event.target.discount.value,
+            event.target.warrantyperiod.value,
+            event.target.shippingcharges.value,
+            event.target.variantname.value,
+            event.target.freeshippingabove.value
+          );
+        } else {
+          result = await addCreatorMerchData(
+            productid,
+            event.target.title.value,
+            event.target.description.value,
+            event.target.inventory.value,
+            event.target.return_refund_policy.value,
+            event.target.country_of_origin.value,
+            event.target.price.value,
+            event.target.discount.value,
+            event.target.warrantyperiod.value,
+            event.target.shippingcharges.value,
+            event.target.freeshippingabove.value
+          );
+        }
         console.log(result);
-        if (response.data.isSuccessful && result[0]) {
+        if (
+          (response?.data?.isSuccessful || !uploadImages) &&
+          typeof result !== "string"
+        ) {
           // handle success
           setFileUploadStatus("COMPLETE");
-          console.log(response.data.result);
+          console.log(response?.data?.result);
+          console.log(result);
         } else {
           setFileUploadStatus("Failed To Upload Retry!");
-          console.log(response.data.errorMsg);
+          console.log(response?.data?.errorMsg);
+          console.log(result);
         }
       } else {
         setFileUploadStatus("Failed To Upload Retry!");
@@ -124,73 +182,131 @@ const UploadMerchModal = () => {
       )}
       {fileUploadStatus !== "COMPLETE" && fileUploadStatus !== "UPLOADING" ? (
         <form onSubmit={submitFile} className="form">
-          <label className="form label" style={{ fontWeight: "100" }}>
-            Upload Product Image
-          </label>
-          <input
-            type="file"
-            onChange={(event) => {
-              setThumbfile(event.target.files);
-            }}
-            accept="image/*"
-            required
-            className="form inputFile"
-          />
-          {thumbfile ? (
-            <div
-              style={{
-                margin: "10px",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <Image
-                id="thumb_image"
-                src={creatObjectUrl(thumbfile[0])}
-                width="350"
-                height="220"
-                alt=""
-              />
-            </div>
+          {variantUpload ? (
+            <>
+              <label className="form label" style={{ fontWeight: "100" }}>
+                Add New Variant
+              </label>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  marginLeft: "10px",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={uploadImages}
+                  style={{ marginBottom: "10px" }}
+                  onChange={(e) => setUploadImages((show) => !show)}
+                />
+                <label
+                  className="form label pointer"
+                  style={{ fontWeight: "100" }}
+                  onClick={(e) => {
+                    setUploadImages((show) => !show);
+                  }}
+                >
+                  Want different images?
+                </label>
+              </div>
+            </>
           ) : (
             <></>
           )}
-          <label className="form label" style={{ fontWeight: "100" }}>
-            Upload Supporting Images
-          </label>
-          <input
-            type="file"
-            onChange={(event) => {
-              setImages(event.target.files);
-              setImagesLen(event.target.files.length);
-              // showSlides(slideIndex);
-            }}
-            accept="image/*"
-            required
-            className="form inputFile"
-            multiple
-          />
-          {imagesLen > 0 ? (
-            <Carousel
-              {...settings}
-              navButtonsProps={{
-                // Change the colors and radius of the actual buttons. THIS STYLES BOTH BUTTONS
-                style: {
-                  backgroundColor: "cornflowerblue",
-                  borderRadius: 5,
-                },
+          {uploadImages ? (
+            <>
+              <label className="form label" style={{ fontWeight: "100" }}>
+                Upload Product Image
+              </label>
+              <input
+                type="file"
+                onChange={(event) => {
+                  setThumbfile(event.target.files);
+                }}
+                accept="image/*"
+                required
+                className="form inputFile"
+              />
+              {thumbfile ? (
+                <div
+                  style={{
+                    margin: "10px",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <Image
+                    id="thumb_image"
+                    src={creatObjectUrl(thumbfile[0])}
+                    width="350"
+                    height="220"
+                    alt=""
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+              <label className="form label" style={{ fontWeight: "100" }}>
+                Upload Supporting Images
+              </label>
+              <input
+                type="file"
+                onChange={(event) => {
+                  setImages(event.target.files);
+                  setImagesLen(event.target.files.length);
+                  // showSlides(slideIndex);
+                }}
+                accept="image/*"
+                required
+                className="form inputFile"
+                multiple
+              />
+              {imagesLen > 0 ? (
+                <Carousel
+                  {...settings}
+                  navButtonsProps={{
+                    // Change the colors and radius of the actual buttons. THIS STYLES BOTH BUTTONS
+                    style: {
+                      backgroundColor: "cornflowerblue",
+                      borderRadius: 5,
+                    },
+                  }}
+                >
+                  {Array.from(images).map((item, i) => (
+                    <img
+                      src={creatObjectUrl(item)}
+                      alt="Loading ..."
+                      width="100%"
+                      height="100%"
+                      onError={() => setImagesLen(i)}
+                    />
+                  ))}
+                </Carousel>
+              ) : (
+                <></>
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+          {variantUpload ? (
+            <textarea
+              className="mb-4 border-b-2 form inputSingleLineText"
+              id="variantname"
+              name="variantname"
+              maxLength={50}
+              autoComplete="variantname"
+              style={{
+                color: "black",
+                overflow: "auto",
+                resize: "both",
+                width: "30vw",
+                height: "8vh",
               }}
-            >
-              {Array.from(images).map((item, i) => (
-                <img
-                  src={creatObjectUrl(item)}
-                  alt="Loading ..."
-                  width="100%"
-                  height="100%"
-                  onError={() => setImagesLen(i)}
-                />
-              ))}
-            </Carousel>
+              required
+              placeholder="Variant Name Here ..."
+            />
           ) : (
             <></>
           )}
@@ -198,6 +314,7 @@ const UploadMerchModal = () => {
             className="mb-4 border-b-2 form inputSingleLineText"
             id="title"
             name="title"
+            defaultValue={merchDetails?.title ? merchDetails?.title : ""}
             maxLength={100}
             autoComplete="title"
             style={{
@@ -215,6 +332,9 @@ const UploadMerchModal = () => {
             id="description"
             name="description"
             maxLength={5000}
+            defaultValue={
+              merchDetails?.description ? merchDetails?.description : ""
+            }
             autoComplete="description"
             style={{
               color: "black",
@@ -245,7 +365,7 @@ const UploadMerchModal = () => {
               id="price"
               name="price"
               min="0"
-              defaultValue="100"
+              defaultValue={merchDetails?.price ? merchDetails?.price : 100}
               style={{
                 color: "black",
                 resize: "both",
@@ -261,7 +381,11 @@ const UploadMerchModal = () => {
               id="shippingcharges"
               name="shippingcharges"
               min="0"
-              defaultValue="0"
+              defaultValue={
+                merchDetails?.shippingcharges
+                  ? merchDetails?.shippingcharges
+                  : "0"
+              }
               style={{
                 color: "black",
                 resize: "both",
@@ -277,7 +401,11 @@ const UploadMerchModal = () => {
               id="freeshippingabove"
               name="freeshippingabove"
               min="0"
-              defaultValue="399"
+              defaultValue={
+                merchDetails?.freeshippingabove
+                  ? merchDetails?.freeshippingabove
+                  : "399"
+              }
               style={{
                 color: "black",
                 resize: "both",
@@ -293,7 +421,9 @@ const UploadMerchModal = () => {
               id="inventory"
               name="inventory"
               min="0"
-              defaultValue="100"
+              defaultValue={
+                merchDetails?.inventory ? merchDetails?.inventory : "100"
+              }
               style={{
                 color: "black",
                 resize: "both",
@@ -310,7 +440,11 @@ const UploadMerchModal = () => {
               name="discount"
               min="0"
               max="100"
-              defaultValue="10"
+              defaultValue={
+                merchDetails?.discountpercentage
+                  ? merchDetails?.discountpercentage
+                  : "10"
+              }
               style={{
                 color: "black",
                 resize: "both",
@@ -330,6 +464,11 @@ const UploadMerchModal = () => {
                 width: "20vw",
                 overflow: "none",
               }}
+              defaultValue={
+                merchDetails?.country_of_origin
+                  ? merchDetails?.country_of_origin
+                  : countries[0]
+              }
               required
             >
               {countries.map((country) => (
@@ -347,6 +486,11 @@ const UploadMerchModal = () => {
                 width: "12vw",
                 overflow: "none",
               }}
+              defaultValue={
+                merchDetails?.return_refund_policy
+                  ? merchDetails?.return_refund_policy
+                  : "7dayReturn"
+              }
               required
             >
               <option value="7dayReturn">7 day Return</option>
@@ -360,7 +504,11 @@ const UploadMerchModal = () => {
               name="warrantyperiod"
               min="0"
               max="24"
-              defaultValue="6"
+              defaultValue={
+                merchDetails?.warrantyperiod
+                  ? merchDetails?.warrantyperiod
+                  : "6"
+              }
               style={{
                 color: "black",
                 resize: "both",

@@ -79,6 +79,23 @@ export default function Merch() {
     freeshippingabove: 0,
   });
 
+  const [mainMerchDetails, setMainMerchDetails] = useState({
+    title: "",
+    description: "",
+    creator: "",
+    productid: "",
+    inventory: 0,
+    return_refund_policy: "",
+    country_of_origin: "",
+    price: 0,
+    variants: 0,
+    variantname: "",
+    discountpercentage: 0,
+    warrantyperiod: 0,
+    shippingcharges: 0,
+    freeshippingabove: 0,
+  });
+
   const [merchReviews, setMerchReviews] = useState([
     {
       reviewid: "",
@@ -128,6 +145,20 @@ export default function Merch() {
     return 0;
   }
 
+  const GetMainDetails = () => {
+    useEffect(() => {
+      async function getData() {
+        if (productid) {
+          const result = await getProductIdMerchData(productid.toString().split("_")[0]);
+          setMainMerchDetails(result[0]);
+        }
+      }
+      getData();
+    }, [productid]);
+  };
+
+  GetMainDetails();
+
   const GetDetails = () => {
     useEffect(() => {
       async function getData() {
@@ -146,7 +177,12 @@ export default function Merch() {
     useEffect(() => {
       async function getData() {
         if (productid) {
-          const result = await getMerchAllImages(productid.toString());
+          const result = await getMerchAllImages(
+            productid.toString().split("_")[2] &&
+              productid.toString().split("_")[2] == "1"
+              ? productid.toString()
+              : productid.toString().split("_")[0]
+          );
           setSignedURls(result[0]["signedurl"]);
         }
       }
@@ -157,7 +193,9 @@ export default function Merch() {
   const GetReviews = () => {
     useEffect(() => {
       async function getData() {
-        const res = await getProductAllReviewsData(productid.toString());
+        const res = await getProductAllReviewsData(
+          productid.toString().split("_")[0]
+        );
         console.log(res);
         if (res && typeof res !== "string") {
           setMerchReviews(res);
@@ -173,7 +211,9 @@ export default function Merch() {
     useEffect(() => {
       async function getData() {
         if (productid) {
-          const result = await getProductRatingsData(productid.toString());
+          const result = await getProductRatingsData(
+            productid.toString().split("_")[0]
+          );
           if (typeof result !== "string") setRating(result);
         }
       }
@@ -245,20 +285,22 @@ export default function Merch() {
               {merchDetails?.productid && updateSignedUrl() ? (
                 <MerchAccordianDetails
                   merchDetails={merchDetails}
+                  mainMerchDetails={mainMerchDetails}
                   rating={rating}
+                  iscreator={merchDetails?.creator == username}
                 />
               ) : (
                 <></>
               )}
             </div>
-            <div>
+            {/* <div>
               <MerchCardGrid
                 creator={merchDetails.creator}
                 onCreatorProfile={false}
                 ignoreProductId={productid.toString()}
                 onMerchPage={true}
               />
-            </div>
+            </div> */}
             <div id="review-section">
               <MerchReviewGrid merchReviews={merchReviews} />
             </div>

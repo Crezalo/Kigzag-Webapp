@@ -93,6 +93,13 @@ module.exports = async function createTablesInPostgresDB(pool) {
     )
     .catch((err) => console.log("PG ERROR Creator_TipJar_Msg Table\n\n\t\t", err.message));
 
+  //9. Feedback Table creation
+  await pool
+    .query(
+      "CREATE TABLE IF NOT EXISTS Feedback (Id BIGSERIAL PRIMARY KEY, Feedback VARCHAR(255) NOT NULL, CreatedAt TIMESTAMP NOT NULL);"
+    )
+    .catch((err) => console.log("PG ERROR Feedback Table\n\n\t\t", err.message));
+
   ////////////////////////////////////// Foreign key Constraints Add//////////////////////////////////////////////////////
 
   // Creator Fin Info Table Creator is User

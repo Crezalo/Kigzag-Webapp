@@ -99,7 +99,7 @@ export default function CollabPage() {
   return (
     <div>
       <Head>
-        <title>Kigzag: Shoutout Requests</title>
+        <title>Crezalo: Shoutout Requests</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="blueTextBlackBackground">

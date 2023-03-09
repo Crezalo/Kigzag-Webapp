@@ -15,12 +15,6 @@ const Footer = () => {
         fontSize: "12px",
       }}
     >
-      {/* <h1>
-        © 2022{" "}
-        <a href="https://kigzag.com" target="_blank" rel="noreferrer">
-          kigzag.com
-        </a>
-      </h1> */}
       <Link legacyBehavior href="/about">
         <a style={{ marginTop: "2px" }}>
           <div>

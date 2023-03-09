@@ -198,6 +198,29 @@ export async function getProductIdMerchData(productid: string) {
   }
 }
 
+export async function getProductIdVariantsData(productid: string) {
+  try {
+    if (authHeader().Authorization) {
+      const response = await axios.get(
+        MAIN_API_URL + "creator_merchandise/variants/" + productid,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      if (response.data.isSuccessful) {
+        return response.data.result;
+      } else {
+        return response.data.errorMsg;
+      }
+    } else {
+      return "Not Logged In";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export async function updateCreatorColabData(
   productid: string,
   title: string,

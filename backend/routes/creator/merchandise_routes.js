@@ -78,10 +78,8 @@ router.post("/variant", authorise, async (req, res) => {
             freeshippingabove
         } = req.body;
 
-        var {
-            mainPid,
-            variantNum
-        } = productid.split('_');
+        var mainPid = productid.split('_')[0];
+        var variantNum = productid.split('_')[1];
 
         up_merch = await pool.query(
             "UPDATE Creator_Merchandise SET Variants = $3 WHERE ProductId = $1 AND Creator = $2 RETURNING*;",
@@ -140,7 +138,7 @@ router.get("/:creator", authorise, async (req, res) => {
         res.json({
             isSuccessful: true,
             errorMsg: "",
-            result: ud.rows
+            result: ud.rows.filter(r => !r.productid.includes("_"))
         });
     } catch (err) {
         res.json({
@@ -158,6 +156,27 @@ router.get("/product/:productid", authorise, async (req, res) => {
             productid
         } = req.params;
         const ud = await pool.query("SELECT * FROM Creator_Merchandise WHERE ProductId = $1;", [productid]);
+        res.json({
+            isSuccessful: true,
+            errorMsg: "",
+            result: ud.rows
+        });
+    } catch (err) {
+        res.json({
+            isSuccessful: false,
+            errorMsg: err.message,
+            result: []
+        });
+    }
+});
+
+///////////////////////////////////////////   Get All Variants for ProductId   /////////////////////////////////////////// 
+router.get("/variants/:productid", authorise, async (req, res) => {
+    try {
+        const {
+            productid
+        } = req.params;
+        const ud = await pool.query("SELECT * FROM Creator_Merchandise WHERE ProductId LIKE $1;", [productid + "_%"]);
         res.json({
             isSuccessful: true,
             errorMsg: "",

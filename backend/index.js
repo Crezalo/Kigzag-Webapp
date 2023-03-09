@@ -39,6 +39,7 @@ const user_shoutout_router = require("./routes/user/shoutout_routes");
 const user_colab_router = require("./routes/user/colab_routes");
 const user_merch_router = require("./routes/user/merchandise_routes");
 const user_tipjar_router = require("./routes/user/tipjar_routes");
+const feedback_router = require("./routes/user/feedback_routes");
 
 const cart_router = require("./routes/user/cart_routes");
 
@@ -101,6 +102,7 @@ app.use("/user_vod", user_vod_router);
 app.use("/user_merchandise", user_merch_router);
 app.use("/user_tipjar", user_tipjar_router);
 app.use("/user_cart", cart_router);
+app.use("/user_feedback", feedback_router)
 
 // run discord bot
 discord_bot.run();

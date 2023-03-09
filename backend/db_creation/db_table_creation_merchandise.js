@@ -2,7 +2,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   ////////////////////////////////////////////////Table Creation/////////////////////////////////////////////////////////
 
   //6. Creator Merchandise Info table
-  // if 2 variants then Variant=2 and those variant will be added to same table with productid = productid_variantNumber
+  // if 2 variants then Variant=2 and those variant will be added to same table with productid = productid_variantNumber_imagechange (imagechange = 0 for same image as original product and 1 for different image)
   //Warranty period in months
   await pool
     .query(

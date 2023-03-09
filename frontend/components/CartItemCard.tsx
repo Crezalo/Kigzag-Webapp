@@ -102,7 +102,11 @@ const CartItemCard = ({ cartItem }: CartItemCardProps) => {
             setVariantName(res[0].variantname);
             setPrice(res[0].price);
           }
-          let res1 = await getMerchThumbnail(cartItem.productid);
+          let res1 = await getMerchThumbnail(
+            cartItem.productid.split("_")[2] == "1"
+              ? cartItem.productid
+              : cartItem.productid.split("_")[0]
+          );
           if (res1[0]) setDisplayPic(res1[0]["signedurl"]);
         }
       }

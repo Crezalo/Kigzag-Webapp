@@ -133,7 +133,7 @@ export default function Orders() {
   return (
     <div>
       <Head>
-        <title>Kigzag: My Purchases</title>
+        <title>Crezalo: My Purchases</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div

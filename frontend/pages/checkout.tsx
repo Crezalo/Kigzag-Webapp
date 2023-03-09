@@ -5,6 +5,7 @@ import queryString from "query-string";
 import AuthService from "../services/auth-services";
 import { useRouter } from "next/router";
 import AddressAddSelect from "../components/AddressAddSelect";
+import Head from "next/head";
 
 export default function Checkout() {
   const router = useRouter();
@@ -64,6 +65,10 @@ export default function Checkout() {
 
   return (
     <div>
+      <Head>
+        <title>Crezalo: Checkout</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       {stage === "0" ? (
         <div style={{ display: "flex", flexDirection: "row" }}>
           <div style={{ width: "70vw", margin: "5%" }}>

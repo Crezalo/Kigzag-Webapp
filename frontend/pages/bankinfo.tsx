@@ -200,7 +200,7 @@ export default function BankInfo() {
   return (
     <div>
       <Head>
-        <title>Kigzag: Bank Details</title>
+        <title>Crezalo: Bank Details</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>

@@ -113,6 +113,15 @@ const MerchReviewGrid = ({ merchReviews }: MerchReviewGridProp) => {
       ) : (
         <></>
       )}
+      <Typography
+        style={{
+          fontSize: "20px",
+          fontWeight: "bold",
+          marginLeft: "5vw",
+        }}
+      >
+        Reviews
+      </Typography>
       <Grid container spacing={1}>
         {merchReviews?.map((mid) => (
           <>
@@ -123,6 +132,23 @@ const MerchReviewGrid = ({ merchReviews }: MerchReviewGridProp) => {
             )}
           </>
         ))}
+        {merchReviews.length == 0 ? (
+          <div
+            style={{
+              marginTop: "2vh",
+              width: "95vw",
+              padding: "5px",
+              borderRadius: "5px",
+              color: "black",
+              backgroundColor: "white",
+              textAlign: "center",
+            }}
+          >
+            <span>No Reviews Yet</span>
+          </div>
+        ) : (
+          <></>
+        )}
       </Grid>
     </div>
   );

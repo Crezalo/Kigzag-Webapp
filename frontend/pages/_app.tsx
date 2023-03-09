@@ -11,6 +11,7 @@ import { faCheckSquare, faCoffee } from "@fortawesome/free-solid-svg-icons";
 
 // styles
 import "emoji-mart/css/emoji-mart.css";
+import FeedbackButton from "../components/FeedbackButton";
 
 library.add(fas, faCheckSquare, faCoffee);
 
@@ -63,6 +64,7 @@ export default function MyApp({ Component, pageProps }) {
           <Component {...pageProps} />
         </div>
       </ThemeProvider>
+      <FeedbackButton />
       <Footer />
     </div>
   );

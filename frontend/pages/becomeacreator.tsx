@@ -261,7 +261,7 @@ export default function BecomeACreator() {
   return (
     <div>
       <Head>
-        <title>Kigzag: Become A Creator</title>
+        <title>Crezalo: Become A Creator</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
