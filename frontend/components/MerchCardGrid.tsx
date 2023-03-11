@@ -69,7 +69,7 @@ const MerchCardGrid = ({
 }: MerchCardGridProp) => {
   const classes = useStyles();
   // const ismobile = isMobile;
-  const ismobile = useScreenSize().width * 1.2 < useScreenSize().height;
+  const ismobile = useScreenSize()?.width * 1.2 < useScreenSize()?.height;
 
   const [merchDetails, setMerchDetails] = useState([
     {
