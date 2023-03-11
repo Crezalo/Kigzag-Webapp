@@ -8,6 +8,8 @@ import UploadMerchModal from "./UploadMerchModal";
 import { getCreatorAllMerchData } from "../services/api-services/creator/merch_api";
 import UpdateSeriesPrices from "./UpdateSeriesPrices";
 import MerchCard from "./MerchCard";
+import { isMobile } from "react-device-detect";
+import { useScreenSize } from "../services/utility";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -66,6 +68,8 @@ const MerchCardGrid = ({
   onMerchPage,
 }: MerchCardGridProp) => {
   const classes = useStyles();
+  // const ismobile = isMobile;
+  const ismobile = useScreenSize().width * 1.2 < useScreenSize().height;
 
   const [merchDetails, setMerchDetails] = useState([
     {
@@ -97,7 +101,11 @@ const MerchCardGrid = ({
   GetVidDetails();
 
   return (
-    <div className="blueTextBlackBackground">
+    <div
+      className={
+        ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
+      }
+    >
       {!(onCreatorProfile || onMerchPage) ? (
         <div
           style={{

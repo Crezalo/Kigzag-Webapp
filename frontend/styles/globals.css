@@ -103,8 +103,8 @@ body {
 
 .feedbackButton {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 10vh;
+  right: 5vw;
   z-index: 999;
   background-color: white;
   color: white;
@@ -244,6 +244,12 @@ body {
   border-radius: 5%;
 }
 
+.videoCardImageElementMobile {
+  width: 80vw;
+  height: 20vh;
+  border-radius: 5%;
+}
+
 .videoCardTitle {
   /* Add shadows to create the "card" effect */
   transition: 0.3s;
@@ -295,6 +301,13 @@ body {
   height: 15vw;
   border-radius: 5%;
 }
+
+.merchCardImageElementMobile {
+  width: 80vw;
+  height: 25vh;
+  border-radius: 5%;
+}
+
 .bottom-right {
   position: absolute;
   bottom: 10px;
@@ -420,6 +433,12 @@ a {
   margin-left: 240;
   color: #3b82f6;
   padding: 0.5rem 0.5rem 0.5rem 2rem;
+  background: black;
+}
+.blueTextBlackBackgroundMobile {
+  margin-left: 240;
+  color: #3b82f6;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   background: black;
 }
 
@@ -592,6 +611,14 @@ a {
   padding: 0px 10px 10px 10px;
   /* border: 2px solid red; */
   display: flex;
+  font-size: larger;
+  flex-direction: row;
+  font-size: 20px;
+  justify-content: space-around;
+}
+
+.descriptionMobile {
+  padding: 0px 10px 10px 10px;
   font-size: larger;
   flex-direction: row;
   font-size: 20px;
@@ -914,7 +941,7 @@ a {
 }
 
 .pageMinHeight {
-  min-height: 90vh;
+  min-height: 80vh;
 }
 
 .buttonStyle {

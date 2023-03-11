@@ -2,6 +2,8 @@ import AuthService from "../services/auth-services";
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import { getMerchThumbnail } from "../services/api-services/creator/merch_api";
+import { isMobile } from "react-device-detect";
+import { useScreenSize } from "../services/utility";
 
 interface MerchCardProp {
   merchDetails: {
@@ -23,8 +25,7 @@ const MerchCard = ({ merchDetails }: MerchCardProp) => {
   const username = AuthService.getUsername();
 
   const [merchThumb, setMerchThumb] = useState("");
-
-  console.log(merchDetails);
+  const ismobile = useScreenSize().width * 1.2 < useScreenSize().height;
 
   const GetMerchThumbnail = () => {
     useEffect(() => {
@@ -49,7 +50,13 @@ const MerchCard = ({ merchDetails }: MerchCardProp) => {
         });
       }}
     >
-      <section className="videoCard merchCardImageElement pointer">
+      <section
+        className={
+          !ismobile
+            ? "videoCard merchCardImageElement pointer"
+            : "videoCard merchCardImageElementMobile pointer"
+        }
+      >
         {merchDetails.productid != "" && merchDetails.productid ? (
           <>
             <div className="videoCardImage">
@@ -57,7 +64,11 @@ const MerchCard = ({ merchDetails }: MerchCardProp) => {
                 <img
                   src={merchThumb}
                   alt="Loading ..."
-                  className="merchCardImageElement"
+                  className={
+                    !ismobile
+                      ? "merchCardImageElement"
+                      : "merchCardImageElementMobile"
+                  }
                 />
               ) : (
                 <></>

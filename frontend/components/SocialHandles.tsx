@@ -64,7 +64,7 @@ const SocialHandles = ({ creator }: SocialHandlesProp) => {
           }}
         >
           <Grid container spacing={1}>
-            <Grid item xs={12} sm={6} md={1}>
+            <Grid item>
               {creator && creator.twitterhandle ? (
                 <a
                   href={"https://twitter.com/" + creator.twitterhandle}
@@ -77,7 +77,7 @@ const SocialHandles = ({ creator }: SocialHandlesProp) => {
                 <></>
               )}
             </Grid>
-            <Grid item xs={12} sm={6} md={1}>
+            <Grid item>
               {creator && creator.instagram ? (
                 <a
                   href={"https://instagram.com/" + creator.instagram}
@@ -90,7 +90,7 @@ const SocialHandles = ({ creator }: SocialHandlesProp) => {
                 <></>
               )}
             </Grid>
-            <Grid item xs={12} sm={6} md={1}>
+            <Grid item>
               {creator && creator.youtube ? (
                 <a
                   href={creator.youtube
@@ -106,7 +106,7 @@ const SocialHandles = ({ creator }: SocialHandlesProp) => {
                 <></>
               )}
             </Grid>
-            <Grid item xs={12} sm={6} md={1}>
+            <Grid item>
               {creator && creator.website ? (
                 <a href={creator.website} target="_blank" rel="noreferrer">
                   <LanguageIcon />

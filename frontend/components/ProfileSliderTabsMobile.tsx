@@ -34,6 +34,7 @@ import MerchandiseTab from "./MerchandiseTab";
 import TipsTab from "./TipsTab";
 import VideosSeriesGating from "./VideosSeriesGating";
 import { getCreatorFeatureStatusData } from "../services/api-services/creator/features_api";
+import { BottomNavigation, Grid } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -46,67 +47,28 @@ const useStyles = makeStyles({
   background: {
     secondary: "black",
   },
-});
-
-const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+  root: {
+    position: "fixed",
+    bottom: 5,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    zIndex: 999,
+    borderRadius: "5px",
   },
 });
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
-
-interface ProfileSliderTabsProps {
+interface ProfileSliderTabsMobileProps {
   onCreatorProfile: boolean;
   isCreator: boolean; // used only if onCreatorProfile=false
   creator: string; // used only if onCreatorProfile=true
 }
 
-const ProfileSliderTabs = ({
+const ProfileSliderTabsMobile = ({
   onCreatorProfile,
   creator,
   isCreator,
-}: ProfileSliderTabsProps) => {
-  const theme = useTheme();
+}: ProfileSliderTabsMobileProps) => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
 
@@ -253,113 +215,79 @@ const ProfileSliderTabs = ({
     }
   };
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
   return (
     <>
       {isConnected && (onCreatorProfile || isCreator) ? (
         <>
-          <Box sx={{ display: "flex" }}>
-            <Drawer variant="permanent" open={open}>
-              {!open ? (
-                <Toolbar>
-                  <IconButton
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={handleDrawerOpen}
-                    edge="start"
-                    sx={{
-                      marginRight: 5,
-                      ...(open && { display: "none" }),
+          <BottomNavigation
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(newValue);
+            }}
+            showLabels
+            className={classes.root}
+          >
+            {["Videos", "Courses", "Merch", "Tip Jar"].map((text, index) => (
+              <>
+                {!onCreatorProfile || checkStatus(text) ? (
+                  <div
+                    key={text}
+                    style={{
+                      display: "flex",
+                      color: index == value ? "blue" : "primary",
+                      justifyContent: "space-around",
                     }}
+                    onClick={() => handleChange(event, index)}
                   >
-                    <MenuIcon />
-                  </IconButton>
-                </Toolbar>
-              ) : (
-                <DrawerHeader>
-                  <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === "rtl" ? (
-                      <ChevronRightIcon />
-                    ) : (
-                      <ChevronLeftIcon />
-                    )}
-                  </IconButton>
-                </DrawerHeader>
-              )}
-              <Divider />
-              <List>
-                {["Videos", "Courses", "Merch", "Tip Jar"].map(
-                  (text, index) => (
-                    <>
-                      {!onCreatorProfile || checkStatus(text) ? (
-                        <ListItem
-                          key={text}
-                          disablePadding
-                          sx={{
-                            display: "block",
-                            color: index == value ? "blue" : "primary",
-                          }}
-                          onClick={() => handleChange(event, index)}
-                        >
-                          <ListItemButton
-                            sx={{
-                              minHeight: 48,
-                              justifyContent: open ? "initial" : "center",
-                              px: 2.5,
-                            }}
-                          >
-                            <ListItemIcon
-                              sx={{
-                                minWidth: 0,
-                                mr: open ? 3 : "auto",
-                                justifyContent: "center",
-                                padding: "5px",
-                                color: index == value ? "#3b82f6" : "primary",
-                              }}
-                            >
-                              {index === 0 ? (
-                                <OndemandVideoIcon fontSize="large" />
-                              ) : (
-                                <></>
-                              )}
-                              {index === 1 ? (
-                                <CastForEducationIcon fontSize="large" />
-                              ) : (
-                                <></>
-                              )}
-                              {index === 2 ? (
-                                <StorefrontOutlinedIcon fontSize="large" />
-                              ) : (
-                                <></>
-                              )}
-                              {index === 3 ? (
-                                <SavingsOutlinedIcon fontSize="large" />
-                              ) : (
-                                <></>
-                              )}
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={text}
-                              sx={{ opacity: open ? 1 : 0 }}
-                            />
-                          </ListItemButton>
-                        </ListItem>
-                      ) : (
-                        <></>
-                      )}
-                    </>
-                  )
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                          padding: "5px",
+                          color: index == value ? "#3b82f6" : "primary",
+                        }}
+                      >
+                        {index === 0 ? (
+                          <OndemandVideoIcon fontSize="large" />
+                        ) : (
+                          <></>
+                        )}
+                        {index === 1 ? (
+                          <CastForEducationIcon fontSize="large" />
+                        ) : (
+                          <></>
+                        )}
+                        {index === 2 ? (
+                          <StorefrontOutlinedIcon fontSize="large" />
+                        ) : (
+                          <></>
+                        )}
+                        {index === 3 ? (
+                          <SavingsOutlinedIcon fontSize="large" />
+                        ) : (
+                          <></>
+                        )}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={text}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </div>
+                ) : (
+                  <></>
                 )}
-              </List>
-            </Drawer>
-          </Box>
+              </>
+            ))}
+          </BottomNavigation>
           {!onCreatorProfile || checkStatusValue(value) ? (
             <Paper>{tabs_array[value]}</Paper>
           ) : (
@@ -378,4 +306,4 @@ const ProfileSliderTabs = ({
   );
 };
 
-export default ProfileSliderTabs;
+export default ProfileSliderTabsMobile;

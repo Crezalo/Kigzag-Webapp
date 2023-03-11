@@ -22,6 +22,8 @@ import {
   getCreatorTipJarMsgData,
   updateTipJarMsgData,
 } from "../services/api-services/creator/tipjar_api";
+import { isMobile } from "react-device-detect";
+import { useScreenSize } from "../services/utility";
 
 const useStylesModal = makeStyles((theme) => ({
   paper: {
@@ -69,6 +71,8 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
   const [tipJarUserMsg, setTipJarUserMsg] = useState("");
   const [tipPrice, setTipPrice] = useState(100);
   const min = 0;
+  // const ismobile = isMobile;
+  const ismobile = useScreenSize().width * 1.2 < useScreenSize().height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -119,15 +123,21 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
 
   return (
     <div
-      className="blueTextBlackBackground"
+      className={
+        ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
+      }
       style={{
         justifyContent: "center",
         display: "flex",
         paddingTop: "5vh",
-        flexDirection: "row",
+        flexDirection: ismobile ? "column" : "row",
       }}
     >
-      <div className="blueTextBlackBackground">
+      <div
+        className={
+          ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
+        }
+      >
         {onCreatorProfile ? (
           <span style={{ color: "#3B82F6", marginBottom: "20px" }}>
             {tipJarMsg}
@@ -143,7 +153,9 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
         />
       </div>
       <div
-        className="blueTextBlackBackground"
+        className={
+          ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
+        }
         style={{
           justifyContent: "center",
           textAlign: "center",

@@ -16,6 +16,9 @@ import ShareIcon from "@mui/icons-material/Share";
 import { Tooltip } from "@mui/material";
 import ShareSocialModal from "../components/ShareSocialModal";
 import BasicModal from "../components/BasicModal";
+import { isMobile } from "react-device-detect";
+import ProfileSliderTabsMobile from "../components/ProfileSliderTabsMobile";
+import { useScreenSize } from "../services/utility";
 
 const style = {
   root: {
@@ -47,6 +50,8 @@ export default function CreatorProfile() {
   }
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  // const ismobile = isMobile;
+  const ismobile = useScreenSize().width * 1.2 < useScreenSize().height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -111,7 +116,14 @@ export default function CreatorProfile() {
       </Head>
       <div>
         {isConnected && username && creator.fname ? (
-          <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
+          <div
+            className={
+              ismobile
+                ? "blueTextBlackBackgroundMobile"
+                : "blueTextBlackBackground"
+            }
+            style={{ fontSize: 25 }}
+          >
             <BannerImages creator={creator} />
             <div style={{ display: "flex" }}>
               <div className="creatorImageDiv">
@@ -121,7 +133,89 @@ export default function CreatorProfile() {
                   width={125}
                 />
               </div>
-              <div className="description">
+              {ismobile ? (
+                <div className="description">
+                  <div
+                    style={{
+                      minWidth: "25vw",
+                      // width: "30vw",
+                      justifyContent: "center",
+                    }}
+                  ></div>
+                </div>
+              ) : (
+                <div className="description">
+                  <div
+                    style={{
+                      minWidth: "25vw",
+                      // width: "30vw",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                        color: "white",
+                        // margin: "5px 0 5px 0",
+                      }}
+                    >
+                      {creator.username}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "16px",
+                        color: "white",
+                        // margin: "5px 0 5px 0",
+                      }}
+                    >
+                      {creator.fname + " " + creator.lname}
+                    </div>
+                    {creator.bio != "" ? (
+                      <div style={{ fontSize: "16px", color: "white" }}>
+                        {creator.bio}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    <SocialHandles creator={creator} />
+                  </div>
+                </div>
+              )}
+              <BasicModal
+                modalButtonText={
+                  <Tooltip title="Share Kigzag">
+                    <ShareIcon
+                      className="pointer"
+                      style={{ fontSize: "30px", color: "lightgrey" }}
+                    />
+                  </Tooltip>
+                }
+                modalBody={
+                  <ShareSocialModal
+                    title={"Share " + creator.fname + "'s Kigzag"}
+                    url={
+                      process.env.NEXT_STATIC_WEBSITE_URL +
+                      "@" +
+                      creator.username
+                    }
+                    socialTypes={[
+                      "whatsapp",
+                      "telegram",
+                      "twitter",
+                      "linkedin",
+                      "facebook",
+                      "reddit",
+                    ]}
+                    onSocialButtonClicked={(data) => console.log(data)}
+                    style={style}
+                  />
+                }
+                formatting={true}
+              />
+            </div>
+            {ismobile ? (
+              <div className="descriptionMobile">
                 <div
                   style={{
                     minWidth: "25vw",
@@ -156,45 +250,25 @@ export default function CreatorProfile() {
                     <></>
                   )}
                   <SocialHandles creator={creator} />
+                  <br />
                 </div>
               </div>
-              <BasicModal
-                modalButtonText={
-                  <Tooltip title="Share Kigzag">
-                    <ShareIcon
-                      className="pointer"
-                      style={{ fontSize: "30px", color: "lightgrey" }}
-                    />
-                  </Tooltip>
-                }
-                modalBody={
-                  <ShareSocialModal
-                    title={"Share " + creator.fname + "'s Kigzag"}
-                    url={
-                      process.env.NEXT_STATIC_WEBSITE_URL +
-                      "@" +
-                      creator.username
-                    }
-                    socialTypes={[
-                      "whatsapp",
-                      "telegram",
-                      "twitter",
-                      "linkedin",
-                      "facebook",
-                      "reddit",
-                    ]}
-                    onSocialButtonClicked={(data) => console.log(data)}
-                    style={style}
-                  />
-                }
-                formatting={true}
+            ) : (
+              <></>
+            )}
+            {!ismobile ? (
+              <ProfileSliderTabs
+                onCreatorProfile={true}
+                creator={creator.username}
+                isCreator={true}
               />
-            </div>
-            <ProfileSliderTabs
-              onCreatorProfile={true}
-              creator={creator.username}
-              isCreator={true}
-            />
+            ) : (
+              <ProfileSliderTabsMobile
+                onCreatorProfile={true}
+                creator={creator.username}
+                isCreator={true}
+              />
+            )}
           </div>
         ) : (
           <></>

@@ -14,6 +14,8 @@ import {
 } from "../services/api-services/creator/video_api";
 import UpdateSeriesPrices from "./UpdateSeriesPrices";
 import UploadDocumentModal from "./UploadDocumentModal";
+import { isMobile } from "react-device-detect";
+import { useScreenSize } from "../services/utility";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -76,6 +78,8 @@ const ContentCardGrid = ({
 
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  // const ismobile = isMobile;
+  const ismobile = useScreenSize().width * 1.2 < useScreenSize().height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -142,7 +146,11 @@ const ContentCardGrid = ({
   GetVidDetails();
 
   return (
-    <div className="blueTextBlackBackground">
+    <div
+      className={
+        ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
+      }
+    >
       {!onCreatorProfile && !onVideoPlayer && creator === username ? (
         <div
           style={{

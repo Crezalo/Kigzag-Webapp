@@ -4,6 +4,8 @@ import Router from "next/router";
 import { useEffect, useState } from "react";
 import { getVideoThumbnail } from "../services/api-services/creator/video_api";
 import { getCreatorSubscriptionData_Series } from "../services/api-services/creator/subscriptions_api";
+import { isMobile } from "react-device-detect";
+import { useScreenSize } from "../services/utility";
 
 interface VideoCardProp {
   videoDetails: {
@@ -23,6 +25,8 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
 
   const [videoThumb, setVideoThumb] = useState("");
   const [minPrice, setMinPrice] = useState(0);
+  // const ismobile = isMobile;
+  const ismobile = useScreenSize().width * 1.2 < useScreenSize().height;
 
   const GetVidThumbnail = () => {
     useEffect(() => {
@@ -118,7 +122,13 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
         });
       }}
     >
-      <section className="videoCard videoCardImageElement pointer">
+      <section
+        className={
+          !ismobile
+            ? "videoCard videoCardImageElement pointer"
+            : "videoCard videoCardImageElementMobile pointer"
+        }
+      >
         {videoDetails.videoid != "" && videoDetails.videoid ? (
           <>
             <div className="videoCardImage">
@@ -126,7 +136,11 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
                 <img
                   src={videoThumb}
                   alt="Loading ..."
-                  className="videoCardImageElement"
+                  className={
+                    !ismobile
+                      ? "videoCardImageElement"
+                      : "videoCardImageElementMobile"
+                  }
                 />
               ) : (
                 <></>

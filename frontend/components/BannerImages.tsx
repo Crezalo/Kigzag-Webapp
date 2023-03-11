@@ -7,6 +7,8 @@ import website from "../public/website.png";
 import { getCreatorInfoImages } from "../services/api-services/content_api";
 import Carousel from "react-material-ui-carousel";
 import Image from "next/image";
+import { isMobile } from "react-device-detect";
+import { useScreenSize } from "../services/utility";
 
 interface SettingsT {
   autoPlay: boolean;
@@ -54,6 +56,8 @@ const BannerImages = ({ creator }: BannerImagesProp) => {
   var [signedURls, setSignedURls] = useState([]);
   var [imageLen, setImageLen] = useState(-1);
   const [settings, setSettings] = useState<SettingsT>(DefaultSettingsT);
+  // const ismobile=isMobile;
+  const ismobile = useScreenSize().width * 1.2 < useScreenSize().height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -136,7 +140,7 @@ const BannerImages = ({ creator }: BannerImagesProp) => {
                   borderRadius: 5,
                 },
               }}
-              sx={{ marginLeft: "20px" }}
+              sx={{ marginLeft: ismobile ? "0px" : "20px" }}
             >
               {Array.from(signedURls).map((item, i) => (
                 <img

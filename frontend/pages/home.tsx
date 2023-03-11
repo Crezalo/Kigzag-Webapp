@@ -18,6 +18,9 @@ import StreetviewIcon from "@mui/icons-material/Streetview";
 import ShareIcon from "@mui/icons-material/Share";
 import ShareSocialModal from "../components/ShareSocialModal";
 import { Button, Tooltip } from "@mui/material";
+import { isMobile } from "react-device-detect";
+import ProfileSliderTabsMobile from "../components/ProfileSliderTabsMobile";
+import { useScreenSize } from "../services/utility";
 
 const style = {
   root: {
@@ -67,6 +70,8 @@ const useStylesModal = makeStyles((theme) => ({
 export default function Home() {
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  // const ismobile = isMobile;
+  const ismobile = useScreenSize().width * 1.2 < useScreenSize().height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -131,17 +136,162 @@ export default function Home() {
       </Head>
       <div>
         {isConnected && username && user?.username != "" ? (
-          <div className="blueTextBlackBackground" style={{ fontSize: 25 }}>
+          <div
+            className={
+              ismobile
+                ? "blueTextBlackBackgroundMobile"
+                : "blueTextBlackBackground"
+            }
+            style={{ fontSize: 25 }}
+          >
             <BannerImages creator={user} />
             <div style={{ display: "flex" }}>
               <div className="creatorImageDiv">
                 <CreatorDP creator={user?.username} height={125} width={125} />
               </div>
-              <div className="description">
+              {ismobile ? (
+                <div className="description">
+                  <div
+                    style={{
+                      minWidth: "25vw",
+                      // width: "30vw",
+                      justifyContent: "center",
+                    }}
+                  ></div>
+                </div>
+              ) : (
+                <div className="description">
+                  <div
+                    style={{
+                      minWidth: "25vw",
+                      // width: "30vw",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "16.5px",
+                        color: "white",
+                        // margin: "5px 0 5px 0",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {user?.fname != ""
+                        ? user.fname + " " + user.lname
+                        : user.username}
+                    </div>
+                    {user.bio != "" ? (
+                      <div style={{ fontSize: "16px", color: "white" }}>
+                        {user.bio}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    {!user.iscreator ? (
+                      <button
+                        className="w-full bg-blue-500 text-white px-2 py-2 rounded buyButton"
+                        style={buttonStyle}
+                        onClick={() => {
+                          Router.push({
+                            pathname: "/becomeacreator",
+                          });
+                        }}
+                      >
+                        Monetize
+                      </button>
+                    ) : (
+                      <>
+                        <SocialHandles creator={user} />
+                        <div style={{ float: "left" }}>
+                          <BasicModal
+                            modalButtonText={
+                              <Button
+                                style={{
+                                  // background: "#3B82F6",
+                                  color: "white",
+                                  marginBottom: "2px",
+                                  borderRadius: "40%",
+                                  fontSize: "15px",
+                                  fontWeight: "bold",
+                                }}
+                                variant="contained"
+                                className="btn btn-1"
+                              >
+                                Features
+                              </Button>
+                            }
+                            modalBody={<UpdateFeatureStatus />}
+                            formatting={true}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+              {user.iscreator ? (
                 <div
                   style={{
-                    minWidth: "25vw",
-                    // width: "30vw",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <div style={{ marginRight: "15px" }}>
+                    <Tooltip title="Public View">
+                      <StreetviewIcon
+                        className="pointer"
+                        style={{ fontSize: "30px", color: "lightgrey" }}
+                        onClick={() => {
+                          Router.push({
+                            pathname: "/creatorprofile",
+                            query: { address: user.username },
+                          });
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+                  <BasicModal
+                    modalButtonText={
+                      <Tooltip title="Share Kigzag">
+                        <ShareIcon
+                          className="pointer"
+                          style={{ fontSize: "30px", color: "lightgrey" }}
+                        />
+                      </Tooltip>
+                    }
+                    modalBody={
+                      <ShareSocialModal
+                        title={"Share " + user.fname + "'s Kigzag"}
+                        url={
+                          process.env.NEXT_STATIC_WEBSITE_URL +
+                          "@" +
+                          user.username
+                        }
+                        socialTypes={[
+                          "whatsapp",
+                          "telegram",
+                          "twitter",
+                          "linkedin",
+                          "facebook",
+                          "reddit",
+                        ]}
+                        onSocialButtonClicked={(data) => console.log(data)}
+                        style={style}
+                      />
+                    }
+                    formatting={true}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+            {ismobile ? (
+              <div className="descriptionMobile">
+                <div
+                  style={{
+                    // minWidth: "25vw",
+                    width: "100vw",
                     justifyContent: "center",
                   }}
                 >
@@ -201,68 +351,31 @@ export default function Home() {
                           formatting={true}
                         />
                       </div>
+                      <br />
+                      <br />
                     </>
                   )}
                 </div>
               </div>
-              {user.iscreator ? (
-                <>
-                  <div style={{ marginRight: "15px" }}>
-                    <Tooltip title="Public View">
-                      <StreetviewIcon
-                        className="pointer"
-                        style={{ fontSize: "30px", color: "lightgrey" }}
-                        onClick={() => {
-                          Router.push({
-                            pathname: "/creatorprofile",
-                            query: { address: user.username },
-                          });
-                        }}
-                      />
-                    </Tooltip>
-                  </div>
-                  <BasicModal
-                    modalButtonText={
-                      <Tooltip title="Share Kigzag">
-                        <ShareIcon
-                          className="pointer"
-                          style={{ fontSize: "30px", color: "lightgrey" }}
-                        />
-                      </Tooltip>
-                    }
-                    modalBody={
-                      <ShareSocialModal
-                        title={"Share " + user.fname + "'s Kigzag"}
-                        url={
-                          process.env.NEXT_STATIC_WEBSITE_URL +
-                          "@" +
-                          user.username
-                        }
-                        socialTypes={[
-                          "whatsapp",
-                          "telegram",
-                          "twitter",
-                          "linkedin",
-                          "facebook",
-                          "reddit",
-                        ]}
-                        onSocialButtonClicked={(data) => console.log(data)}
-                        style={style}
-                      />
-                    }
-                    formatting={true}
-                  />
-                </>
-              ) : (
-                <></>
-              )}
-            </div>
+            ) : (
+              <></>
+            )}
             {user.iscreator ? (
-              <ProfileSliderTabs
-                onCreatorProfile={false}
-                creator=""
-                isCreator={user.iscreator}
-              />
+              <>
+                {!ismobile ? (
+                  <ProfileSliderTabs
+                    onCreatorProfile={false}
+                    creator=""
+                    isCreator={user.iscreator}
+                  />
+                ) : (
+                  <ProfileSliderTabsMobile
+                    onCreatorProfile={false}
+                    creator=""
+                    isCreator={user.iscreator}
+                  />
+                )}
+              </>
             ) : (
               <></>
             )}

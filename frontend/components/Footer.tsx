@@ -25,6 +25,16 @@ const Footer = () => {
           </div>
         </a>
       </Link>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </footer>
   );
 };

@@ -10,7 +10,6 @@ interface MerchandiseTabProp {
 const MerchandiseTab = ({ creator, onCreatorProfile }: MerchandiseTabProp) => {
   return (
     <div
-      className="blueTextBlackBackground"
       style={{ justifyContent: "center", textAlign: "center" }}
     >
       <MerchCardGrid creator={creator} onCreatorProfile={onCreatorProfile} />
