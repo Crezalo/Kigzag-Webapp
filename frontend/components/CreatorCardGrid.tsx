@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import React from "react";
 import CreatorCard from "./CreatorCard";
+import { useScreenSize } from "../services/utility";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -40,8 +41,13 @@ interface CreatorCardGridProp {
 }
 const CreatorCardGrid = ({ creatorsList }: CreatorCardGridProp) => {
   const classes = useStyles();
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
   return (
-    <div className="blueTextBlackBackground">
+    <div
+      className={
+        ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
+      }
+    >
       <Grid container spacing={1}>
         {creatorsList?.map((creator) => (
           <GridItem

@@ -26,7 +26,7 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
   const [videoThumb, setVideoThumb] = useState("");
   const [minPrice, setMinPrice] = useState(0);
   // const ismobile = isMobile;
-  const ismobile = useScreenSize()?.width * 1.2 < useScreenSize()?.height;
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const GetVidThumbnail = () => {
     useEffect(() => {

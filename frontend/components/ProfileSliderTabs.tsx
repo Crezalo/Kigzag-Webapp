@@ -363,12 +363,7 @@ const ProfileSliderTabs = ({
           {!onCreatorProfile || checkStatusValue(value) ? (
             <Paper>{tabs_array[value]}</Paper>
           ) : (
-            <div
-              className="blueTextBlackBackground"
-              style={{ textAlign: "center", marginTop: "10vh" }}
-            >
-              {creator} has no feature active.
-            </div>
+            <></>
           )}
         </>
       ) : (

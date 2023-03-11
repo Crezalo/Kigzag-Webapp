@@ -46,6 +46,7 @@ import {
   getProductRatingsData,
 } from "../services/api-services/user/merch_api";
 import MerchVariantCarousel from "./MerchVariantCarousel";
+import { useScreenSize } from "../services/utility";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -145,6 +146,7 @@ const MerchAccordianDetails = ({
     website: "",
   });
   var [qty, setQty] = useState(1);
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const GetUser = () => {
     useEffect(() => {
@@ -172,7 +174,13 @@ const MerchAccordianDetails = ({
 
   return (
     <>
-      <div className="merchAccordianDetails text-white">
+      <div
+        className={
+          ismobile
+            ? "merchAccordianDetailsMobile text-white"
+            : "merchAccordianDetails text-white"
+        }
+      >
         <div style={{ textAlign: "center" }}>
           <Accordion expanded={true}>
             <AccordionDetails>
@@ -338,7 +346,7 @@ const MerchAccordianDetails = ({
                     }
                   }}
                   style={{
-                    width: "5vw",
+                    width: ismobile ? "20vw" : "5vw",
                     padding: "5px",
                     marginRight: "10px",
                   }}

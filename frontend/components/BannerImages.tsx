@@ -57,7 +57,7 @@ const BannerImages = ({ creator }: BannerImagesProp) => {
   var [imageLen, setImageLen] = useState(-1);
   const [settings, setSettings] = useState<SettingsT>(DefaultSettingsT);
   // const ismobile=isMobile;
-  const ismobile = useScreenSize()?.width * 1.2 < useScreenSize()?.height;
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
     useEffect(() => {

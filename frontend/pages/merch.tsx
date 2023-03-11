@@ -20,6 +20,7 @@ import {
   getProductAllReviewsData,
   getProductRatingsData,
 } from "../services/api-services/user/merch_api";
+import { useScreenSize } from "../services/utility";
 
 interface SettingsT {
   autoPlay: boolean;
@@ -61,6 +62,7 @@ export default function Merch() {
   const [username, setUsername] = useState("");
   const [settings, setSettings] = useState<SettingsT>(DefaultSettingsT);
   const [rating, setRating] = useState(-1);
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const [merchDetails, setMerchDetails] = useState({
     title: "",
@@ -149,7 +151,9 @@ export default function Merch() {
     useEffect(() => {
       async function getData() {
         if (productid) {
-          const result = await getProductIdMerchData(productid.toString().split("_")[0]);
+          const result = await getProductIdMerchData(
+            productid.toString().split("_")[0]
+          );
           setMainMerchDetails(result[0]);
         }
       }
@@ -255,7 +259,9 @@ export default function Merch() {
         {isConnected && productid && merchReviews[0]?.ratings != -1 ? (
           <>
             <div>
-              <div className="merchPageImage">
+              <div
+                className={ismobile ? "merchPageImageMobile" : "merchPageImage"}
+              >
                 {updateSignedUrl() ? (
                   <Carousel
                     className="merchCarousel"

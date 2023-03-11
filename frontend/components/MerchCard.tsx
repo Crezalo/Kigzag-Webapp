@@ -25,7 +25,7 @@ const MerchCard = ({ merchDetails }: MerchCardProp) => {
   const username = AuthService.getUsername();
 
   const [merchThumb, setMerchThumb] = useState("");
-  const ismobile = useScreenSize()?.width * 1.2 < useScreenSize()?.height;
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const GetMerchThumbnail = () => {
     useEffect(() => {

@@ -2,6 +2,7 @@ import Jdenticon from "react-jdenticon";
 import Router from "next/router";
 import Image from "next/image";
 import CreatorDP from "./CreatorDP";
+import { useScreenSize } from "../services/utility";
 
 interface CreatorCardProp {
   creator: {
@@ -13,12 +14,13 @@ interface CreatorCardProp {
   };
 }
 const CreatorCard = ({ creator }: CreatorCardProp) => {
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
   return (
     <>
       {creator.username ? (
         <>
           <section
-            className="creatorCard pointer"
+            className={ismobile ? "creatorCardMobile" : "creatorCard pointer"}
             onClick={() =>
               Router.push({
                 pathname: "/creatorprofile",

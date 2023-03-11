@@ -7,6 +7,7 @@ import { Typography } from "@mui/material";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import WriteReviewModal from "./WriteReviewModal";
 import { checkProductValidReviewerData } from "../services/api-services/user/merch_api";
+import { useScreenSize } from "../services/utility";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -66,6 +67,7 @@ const MerchReviewGrid = ({ merchReviews }: MerchReviewGridProp) => {
   const [checkUserStatus, setCheckUserStatus] = useState(0);
   const [reviewid, setReviewid] = useState("");
   const [orderid, setOrderid] = useState("");
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const CheckUserValid = () => {
     useEffect(() => {
@@ -92,7 +94,11 @@ const MerchReviewGrid = ({ merchReviews }: MerchReviewGridProp) => {
   CheckUserValid();
 
   return (
-    <div className="blueTextBlackBackground">
+    <div
+      className={
+        ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
+      }
+    >
       {checkUserStatus != 0 ? (
         <BasicModal
           modalButtonText={

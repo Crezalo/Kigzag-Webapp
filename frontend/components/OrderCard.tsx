@@ -19,7 +19,7 @@ import {
   getMerchThumbnail,
   getProductIdMerchData,
 } from "../services/api-services/creator/merch_api";
-import { truncateString } from "../services/utility";
+import { truncateString, useScreenSize } from "../services/utility";
 import { makeStyles } from "@material-ui/core";
 import { TextField } from "@mui/material";
 import month from "../consts/months";
@@ -59,6 +59,7 @@ const OrderCard = ({ order }: OrderCardProp) => {
   const [displayPic, setDisplayPic] = useState("");
   const [variantName, setVariantName] = useState("");
   const classesModal = useStylesModal();
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const getItemData = () => {
     useEffect(() => {
@@ -100,17 +101,18 @@ const OrderCard = ({ order }: OrderCardProp) => {
     <>
       {order.ordertype !== -1 && order?.creator != "" ? (
         <div
-          className="cartItemCard pointer"
+          className={ismobile ? "cartItemCardMobile" : "cartItemCard pointer"}
           style={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "flex-start",
-            width:
-              order?.ordertype == 2
-                ? "35vw"
-                : order?.ordertype == 3
-                ? "100vw"
-                : "25vw",
+            width: ismobile
+              ? "100vw"
+              : order?.ordertype == 2
+              ? "35vw"
+              : order?.ordertype == 3
+              ? "100vw"
+              : "25vw",
           }}
           onClick={() => {
             Router.push({
@@ -129,7 +131,13 @@ const OrderCard = ({ order }: OrderCardProp) => {
             });
           }}
         >
-          <div className="cartItemCardImageElement">
+          <div
+            className={
+              ismobile
+                ? "cartItemCardImageElementMobile"
+                : "cartItemCardImageElement"
+            }
+          >
             {order.ordertype == 0 || order.ordertype == 3 ? (
               <CreatorDP creator={order.creator} height={90} width={90} />
             ) : (
@@ -138,7 +146,11 @@ const OrderCard = ({ order }: OrderCardProp) => {
                   <img
                     src={displayPic}
                     alt="Loading ..."
-                    className="cartItemCardImageElement"
+                    className={
+                      ismobile
+                        ? "cartItemCardImageElementMobile"
+                        : "cartItemCardImageElement"
+                    }
                   />
                 ) : (
                   <></>
@@ -150,7 +162,7 @@ const OrderCard = ({ order }: OrderCardProp) => {
             <div
               style={{
                 padding: "0px 5px 8px 15px",
-                width: "55%",
+                width: ismobile && order.ordertype === 2 ? "40%" : "55%",
               }}
             >
               <h1 style={{ fontSize: "14px" }}>{truncateString(title, 40)}</h1>
@@ -259,7 +271,7 @@ const OrderCard = ({ order }: OrderCardProp) => {
                 variant="filled"
                 value={order.quantity}
                 style={{
-                  width: "5vw",
+                  width: ismobile ? "15vw" : "5vw",
                   padding: "5px",
                   marginRight: "10px",
                 }}

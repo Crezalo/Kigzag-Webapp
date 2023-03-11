@@ -12,6 +12,7 @@ import { getUserDiscordData } from "../services/api-services/user/discord_api";
 import { getUserCommunityComboData } from "../services/api-services/user/community_combo_api";
 import { getUserAllOrdersData } from "../services/api-services/user/merch_api";
 import { getUserAllTipData } from "../services/api-services/user/tipjar_api";
+import { useScreenSize } from "../services/utility";
 
 const useStylesModal = makeStyles((theme) => ({
   paper: {
@@ -24,7 +25,7 @@ const useStylesModal = makeStyles((theme) => ({
     // flexDirection: "column",
     // width: "50%",
     justifyContent: "center",
-    margin: "10px 20px 20px 20px",
+    margin: "10px 5px 20px 5px",
     // backgroundColor: "#3b82f6",
     // padding: theme.spacing(3, 4, 3),
     // overflowY: "auto",
@@ -45,6 +46,7 @@ interface OrderCardGridProp {
 const OrderCardGrid = ({ category }: OrderCardGridProp) => {
   const username = AuthService.getUsername();
   const classesModal = useStylesModal();
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const [orderData, setOrderData] = useState([
     {
@@ -113,7 +115,11 @@ const OrderCardGrid = ({ category }: OrderCardGridProp) => {
   UpdateOrderType();
 
   return (
-    <div className="blueTextBlackBackground">
+    <div
+      className={
+        ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
+      }
+    >
       <Box
         component="form"
         sx={{

@@ -19,6 +19,7 @@ import {
   getUserAllTipData,
 } from "../services/api-services/user/tipjar_api";
 import CreatorOrderCard from "./CreatorOrderCard";
+import { useScreenSize } from "../services/utility";
 
 const useStylesModal = makeStyles((theme) => ({
   paper: {
@@ -59,6 +60,7 @@ const CreatorOrderCardGrid = ({
 }: CreatorOrderCardGridProp) => {
   const username = AuthService.getUsername();
   const classesModal = useStylesModal();
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const [orderData, setOrderData] = useState([
     {
@@ -129,7 +131,11 @@ const CreatorOrderCardGrid = ({
   UpdateOrderType();
 
   return (
-    <div className="blueTextBlackBackground">
+    <div
+      className={
+        ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
+      }
+    >
       <Box
         component="form"
         sx={{
@@ -144,7 +150,12 @@ const CreatorOrderCardGrid = ({
               order?.ordertype != -1 ? (
                 <div className={classesModal.paper}>
                   <Grid item xs={4}>
-                    <CreatorOrderCard order={order} key={index} title={title} variantname={variantname}/>
+                    <CreatorOrderCard
+                      order={order}
+                      key={index}
+                      title={title}
+                      variantname={variantname}
+                    />
                   </Grid>
                 </div>
               ) : (

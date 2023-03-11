@@ -28,6 +28,7 @@ import {
   updateCreatorFinInfoData,
 } from "../services/api-services/creator/fininfo_api";
 import banks from "../consts/banks";
+import { useScreenSize } from "../services/utility";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -140,6 +141,7 @@ export default function BankInfo() {
   const [bank_name, setBank_name] = useState("");
   const [ifsc_code, setIfsc_code] = useState("");
   const [acc_number, setAcc_number] = useState("");
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -206,7 +208,11 @@ export default function BankInfo() {
       <div>
         {isConnected && username && fininfo?.bank_name ? (
           <div
-            className="blueTextBlackBackground"
+            className={
+              ismobile
+                ? "blueTextBlackBackgroundMobile"
+                : "blueTextBlackBackground"
+            }
             style={{
               color: "white",
               fontSize: "18px",
@@ -214,7 +220,12 @@ export default function BankInfo() {
               // float: "right",
             }}
           >
-            <div className="form" style={{ padding: "5vh 0vw 0vh 35vw" }}>
+            <div
+              className="form"
+              style={{
+                padding: ismobile ? "5vh 0vw 0vh 5vw" : "5vh 0vw 0vh 35vw",
+              }}
+            >
               <label>Bank Name</label>
               <select
                 id="bank_name"
@@ -224,7 +235,8 @@ export default function BankInfo() {
                 style={{
                   color: "black",
                   resize: "both",
-                  width: "20vw",
+                  width: ismobile ? "80vw" : "20vw",
+
                   overflow: "none",
                 }}
                 onChange={(e) => {
@@ -247,7 +259,8 @@ export default function BankInfo() {
                 style={{
                   color: "black",
                   resize: "both",
-                  width: "10vw",
+                  width: ismobile ? "80vw" : "20vw",
+
                   overflow: "none",
                 }}
                 onChange={(e) => {
@@ -274,7 +287,8 @@ export default function BankInfo() {
                 style={{
                   color: "black",
                   resize: "both",
-                  width: "15vw",
+                  width: ismobile ? "80vw" : "20vw",
+
                   overflow: "none",
                 }}
                 required
@@ -284,7 +298,8 @@ export default function BankInfo() {
                   background: "#3B82F6",
                   color: "white",
                   marginBottom: "2px",
-                  width: "20vw",
+                  width: ismobile ? "80vw" : "20vw",
+                  textAlign: ismobile ? "center" : "left",
                   justifyContent: "center",
                 }}
                 className={classesModal.button}

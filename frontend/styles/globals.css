@@ -272,7 +272,25 @@ body {
   border-radius: 5%;
 }
 
+.cartItemCardImageElementMobile {
+  width: 15vw;
+  height: 15vw;
+  border-radius: 5%;
+}
+
 .cartItemCard {
+  /* Add shadows to create the "card" effect */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  color: black;
+  border-radius: 1%;
+  font-size: 20px;
+  margin: 10px;
+}
+
+.cartItemCardMobile {
   /* Add shadows to create the "card" effect */
   display: flex;
   flex-direction: row;
@@ -468,6 +486,17 @@ a {
   border-radius: 5%;
   font-size: 20px;
   max-width: 15vw;
+}
+.creatorCardMobile {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 1px 1px 3px #3b82f6;
+  transition: 0.3s;
+  margin: 5px;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 5%;
+  font-size: 20px;
+  max-width: 90vw;
 }
 
 /* On mouse-over, add a deeper shadow */
@@ -873,6 +902,14 @@ a {
   padding: 20px 20px 20px 50px;
 }
 
+.merchPageImageMobile {
+  width: 100%;
+  float: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 20px 20px 20px;
+}
 .vCenter {
   margin: 0;
   position: absolute;
@@ -901,6 +938,12 @@ a {
   width: 40%;
   float: left;
   padding: 30px 50px 20px 50px;
+}
+
+.merchAccordianDetailsMobile {
+  width: 100%;
+  float: left;
+  padding: 10px;
 }
 
 .merchPageProp {

@@ -27,6 +27,28 @@ import OneTimePurchaseTab from "../components/OneTimePurchaseTab";
 import Head from "next/head";
 import OrderCardGrid from "../components/OrderCardGrid";
 import RevenueCharts from "../components/RevenueCharts";
+import { useScreenSize } from "../services/utility";
+import { BottomNavigation } from "@mui/material";
+
+const useStyles = makeStyles({
+  tab: {
+    fontSize: "18px",
+    fontWeight: 600,
+  },
+
+  background: {
+    secondary: "black",
+  },
+  root: {
+    position: "fixed",
+    bottom: 5,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    zIndex: 999,
+    borderRadius: "5px",
+  },
+});
 
 const drawerWidth = 240;
 
@@ -80,9 +102,11 @@ const Drawer = styled(MuiDrawer, {
 export default function Revenue() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const classes = useStyles();
 
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -145,102 +169,170 @@ export default function Revenue() {
       >
         {username != "" && isConnected ? (
           <>
-            <div
-              style={{
-                paddingTop: "10vh",
-              }}
-            >
-              <Box sx={{ display: "flex" }}>
-                <Drawer variant="permanent" open={open}>
-                  {!open ? (
-                    <Toolbar>
-                      <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
+            {ismobile ? (
+              <BottomNavigation
+                value={value}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+                showLabels
+                className={classes.root}
+              >
+                {["Videos", "Courses", "Merch", "Tip Jar"].map(
+                  (text, index) => (
+                    <div
+                      key={text}
+                      style={{
+                        display: "flex",
+                        color: index == value ? "blue" : "primary",
+                        justifyContent: "space-around",
+                      }}
+                      onClick={() => handleChange(event, index)}
+                    >
+                      <ListItemButton
                         sx={{
-                          marginRight: 5,
-                          ...(open && { display: "none" }),
+                          minHeight: 48,
+                          justifyContent: open ? "initial" : "center",
+                          px: 2.5,
                         }}
                       >
-                        <MenuIcon />
-                      </IconButton>
-                    </Toolbar>
-                  ) : (
-                    <DrawerHeader>
-                      <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === "rtl" ? (
-                          <ChevronRightIcon />
-                        ) : (
-                          <ChevronLeftIcon />
-                        )}
-                      </IconButton>
-                    </DrawerHeader>
-                  )}
-                  <Divider />
-                  <List>
-                    {["Videos", "Courses", "Merch", "Tip Jar"].map(
-                      (text, index) => (
-                        <ListItem
-                          key={text}
-                          disablePadding
+                        <ListItemIcon
                           sx={{
-                            display: "block",
-                            color: index == value ? "blue" : "primary",
+                            minWidth: 0,
+                            mr: open ? 3 : "auto",
+                            justifyContent: "center",
+                            padding: "5px",
+                            color: index == value ? "#3b82f6" : "primary",
                           }}
-                          onClick={() => handleChange(event, index)}
                         >
-                          <ListItemButton
+                          {index === 0 ? (
+                            <OndemandVideoIcon fontSize="large" />
+                          ) : (
+                            <></>
+                          )}
+                          {index === 1 ? (
+                            <CastForEducationIcon fontSize="large" />
+                          ) : (
+                            <></>
+                          )}
+                          {index === 2 ? (
+                            <StorefrontOutlinedIcon fontSize="large" />
+                          ) : (
+                            <></>
+                          )}
+                          {index === 3 ? (
+                            <SavingsOutlinedIcon fontSize="large" />
+                          ) : (
+                            <></>
+                          )}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={text}
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
+                      </ListItemButton>
+                    </div>
+                  )
+                )}
+              </BottomNavigation>
+            ) : (
+              <div
+                style={{
+                  paddingTop: "10vh",
+                }}
+              >
+                <Box sx={{ display: "flex" }}>
+                  <Drawer variant="permanent" open={open}>
+                    {!open ? (
+                      <Toolbar>
+                        <IconButton
+                          color="inherit"
+                          aria-label="open drawer"
+                          onClick={handleDrawerOpen}
+                          edge="start"
+                          sx={{
+                            marginRight: 5,
+                            ...(open && { display: "none" }),
+                          }}
+                        >
+                          <MenuIcon />
+                        </IconButton>
+                      </Toolbar>
+                    ) : (
+                      <DrawerHeader>
+                        <IconButton onClick={handleDrawerClose}>
+                          {theme.direction === "rtl" ? (
+                            <ChevronRightIcon />
+                          ) : (
+                            <ChevronLeftIcon />
+                          )}
+                        </IconButton>
+                      </DrawerHeader>
+                    )}
+                    <Divider />
+                    <List>
+                      {["Videos", "Courses", "Merch", "Tip Jar"].map(
+                        (text, index) => (
+                          <ListItem
+                            key={text}
+                            disablePadding
                             sx={{
-                              minHeight: 48,
-                              justifyContent: open ? "initial" : "center",
-                              px: 2.5,
+                              display: "block",
+                              color: index == value ? "blue" : "primary",
                             }}
+                            onClick={() => handleChange(event, index)}
                           >
-                            <ListItemIcon
+                            <ListItemButton
                               sx={{
-                                minWidth: 0,
-                                mr: open ? 3 : "auto",
-                                justifyContent: "center",
-                                padding: "5px",
-                                color: index == value ? "#3b82f6" : "primary",
+                                minHeight: 48,
+                                justifyContent: open ? "initial" : "center",
+                                px: 2.5,
                               }}
                             >
-                              {index === 0 ? (
-                                <OndemandVideoIcon fontSize="large" />
-                              ) : (
-                                <></>
-                              )}
-                              {index === 1 ? (
-                                <CastForEducationIcon fontSize="large" />
-                              ) : (
-                                <></>
-                              )}
-                              {index === 2 ? (
-                                <StorefrontOutlinedIcon fontSize="large" />
-                              ) : (
-                                <></>
-                              )}
-                              {index === 3 ? (
-                                <SavingsOutlinedIcon fontSize="large" />
-                              ) : (
-                                <></>
-                              )}
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={text}
-                              sx={{ opacity: open ? 1 : 0 }}
-                            />
-                          </ListItemButton>
-                        </ListItem>
-                      )
-                    )}
-                  </List>
-                </Drawer>
-              </Box>
-            </div>
-            <div style={{ width: "90vw" }}>
+                              <ListItemIcon
+                                sx={{
+                                  minWidth: 0,
+                                  mr: open ? 3 : "auto",
+                                  justifyContent: "center",
+                                  padding: "5px",
+                                  color: index == value ? "#3b82f6" : "primary",
+                                }}
+                              >
+                                {index === 0 ? (
+                                  <OndemandVideoIcon fontSize="large" />
+                                ) : (
+                                  <></>
+                                )}
+                                {index === 1 ? (
+                                  <CastForEducationIcon fontSize="large" />
+                                ) : (
+                                  <></>
+                                )}
+                                {index === 2 ? (
+                                  <StorefrontOutlinedIcon fontSize="large" />
+                                ) : (
+                                  <></>
+                                )}
+                                {index === 3 ? (
+                                  <SavingsOutlinedIcon fontSize="large" />
+                                ) : (
+                                  <></>
+                                )}
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={text}
+                                sx={{ opacity: open ? 1 : 0 }}
+                              />
+                            </ListItemButton>
+                          </ListItem>
+                        )
+                      )}
+                    </List>
+                  </Drawer>
+                </Box>
+              </div>
+            )}
+            <div style={{ width: ismobile ? "100vw" : "90vw" }}>
               <Paper>{tabs_array[value]}</Paper>
             </div>
           </>

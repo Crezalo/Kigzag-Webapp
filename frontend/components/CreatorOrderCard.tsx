@@ -19,7 +19,7 @@ import {
   getMerchThumbnail,
   getProductIdMerchData,
 } from "../services/api-services/creator/merch_api";
-import { truncateString } from "../services/utility";
+import { truncateString, useScreenSize } from "../services/utility";
 import { makeStyles } from "@material-ui/core";
 import { TextField } from "@mui/material";
 import month from "../consts/months";
@@ -64,6 +64,7 @@ const CreatorOrderCard = ({
   const [displayPic, setDisplayPic] = useState("");
   const classesModal = useStylesModal();
   const deliveryStatus = ["Packing", "Shipped", "Delivered"];
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const getItemData = () => {
     useEffect(() => {
@@ -83,17 +84,18 @@ const CreatorOrderCard = ({
     <>
       {order.ordertype !== -1 && order?.creator != "" ? (
         <div
-          className="cartItemCard pointer"
+          className={ismobile ? "cartItemCardMobile" : "cartItemCard pointer"}
           style={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "flex-start",
-            width:
-              order?.ordertype == 2
-                ? "35vw"
-                : order?.ordertype == 3
-                ? "100vw"
-                : "25vw",
+            width: ismobile
+              ? "100vw"
+              : order?.ordertype == 2
+              ? "35vw"
+              : order?.ordertype == 3
+              ? "100vw"
+              : "25vw",
           }}
           onClick={() => {
             Router.push({
@@ -116,7 +118,7 @@ const CreatorOrderCard = ({
             <div
               style={{
                 padding: "0px 5px 8px 15px",
-                width: "55%",
+                width: ismobile && order.ordertype === 2 ? "50%" : "65%",
               }}
             >
               <h1 style={{ fontSize: "14px" }}>{truncateString(title, 40)}</h1>
@@ -156,7 +158,7 @@ const CreatorOrderCard = ({
           ) : (
             <>
               <div className="cartItemCardImageElement">
-                <CreatorDP creator={order.creator} height={90} width={90} />
+                <CreatorDP creator={order.username} height={90} width={90} />
               </div>
               <div
                 style={{
@@ -170,7 +172,7 @@ const CreatorOrderCard = ({
                     color: "#3B82F6",
                   }}
                 >
-                  {order.creator}
+                  {order.username}
                 </h1>
                 <h1 style={{ fontWeight: "bold", marginTop: "5px" }}>
                   ₹ {order.amount}

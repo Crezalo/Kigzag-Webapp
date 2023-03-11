@@ -51,7 +51,7 @@ export default function CreatorProfile() {
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   // const ismobile = isMobile;
-  const ismobile = useScreenSize()?.width * 1.2 < useScreenSize()?.height;
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
     useEffect(() => {

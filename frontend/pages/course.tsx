@@ -12,6 +12,7 @@ import { getSpecificUserData } from "../services/api-services/user_api";
 import Image from "next/image";
 import VideosSeriesGating from "../components/VideosSeriesGating";
 import CreatorDP from "../components/CreatorDP";
+import { useScreenSize } from "../services/utility";
 
 export default function Course() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function Course() {
   var [signedURl, setSignedURl] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -86,11 +88,6 @@ export default function Course() {
 
   GetDetails();
 
-  // console.log("videoDetails");
-  // console.log(videoDetails);
-  // console.log("signedURl");
-  // console.log(signedURl);
-
   return (
     <div>
       <Head>
@@ -101,7 +98,12 @@ export default function Course() {
         <>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div className="videoDiv" id="DemoVideoAndCourseInfo">
-              <div style={{ flexDirection: "row", display: "flex" }}>
+              <div
+                style={{
+                  flexDirection: ismobile ? "column" : "row",
+                  display: "flex",
+                }}
+              >
                 <div>
                   <video
                     controls
@@ -109,8 +111,8 @@ export default function Course() {
                     crossOrigin="anonymous"
                     controlsList="nodownload"
                     style={{
-                      width: "35vw",
-                      height: "35vh",
+                      height: ismobile ? "60vw" : "35vh",
+                      width: ismobile ? "90vw" : "35vw",
                       borderRadius: "5%",
                     }}
                   >
@@ -126,8 +128,8 @@ export default function Course() {
                 </div>
                 <div
                   style={{
-                    margin: "2vh 10vw 10vh 10vw",
-                    maxWidth: "50vw",
+                    margin: ismobile ? "5px" : "2vh 10vw 10vh 10vw",
+                    maxWidth: ismobile ? "100vw" : "50vw",
                   }}
                 >
                   <h1 className="videoDiv h1">{videoDetails.title}</h1>

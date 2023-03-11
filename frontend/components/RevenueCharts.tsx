@@ -26,6 +26,7 @@ import {
 import { getCreatorAllSeriesDemoVideoDetails } from "../services/api-services/creator/video_api";
 import { getCreatorAllMerchData } from "../services/api-services/creator/merch_api";
 import CreatorOrderCardGrid from "./CreatorOrderCardGrid";
+import { useScreenSize } from "../services/utility";
 
 interface RevenueChartsProp {
   category: "Videos" | "Courses" | "Merch" | "Perq";
@@ -35,6 +36,7 @@ const RevenueCharts = ({ category }: RevenueChartsProp) => {
   const username = AuthService.getUsername();
   const [data, setData] = useState(null);
   const [refresh, setRefresh] = useState(Math.random().toString(36).slice(2));
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
   const [dropDownNames, setDropDownNames] = useState([
     { seriesid: "", title: "", productid: "", variantname: "" },
   ]);
@@ -83,7 +85,11 @@ const RevenueCharts = ({ category }: RevenueChartsProp) => {
       {data ? (
         <>
           <div
-            className="blueTextBlackBackground"
+            className={
+              ismobile
+                ? "blueTextBlackBackgroundMobile"
+                : "blueTextBlackBackground"
+            }
             style={{ display: "flex", flexDirection: "row" }}
           >
             <Typography
@@ -91,7 +97,7 @@ const RevenueCharts = ({ category }: RevenueChartsProp) => {
                 marginTop: "10px",
                 writingMode: "vertical-lr",
                 textOrientation: "mixed",
-                fontSize: "20px",
+                fontSize: ismobile ? "15px" : "20px",
               }}
             >
               {category === "Videos"
@@ -102,7 +108,11 @@ const RevenueCharts = ({ category }: RevenueChartsProp) => {
                 ? "Sales for Merchandise (in ₹)"
                 : "Tips Received (in ₹)"}
             </Typography>
-            <LineChart width={800} height={500} data={data}>
+            <LineChart
+              width={ismobile ? 350 : 800}
+              height={ismobile ? 300 : 500}
+              data={data}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />

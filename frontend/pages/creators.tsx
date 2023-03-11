@@ -7,11 +7,13 @@ import {
   getTopCreators,
 } from "../services/api-services/user_api";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
+import { useScreenSize } from "../services/utility";
 
 export default function Creators() {
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
   const [offset, setOffset] = useState(0);
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -121,19 +123,23 @@ export default function Creators() {
   return (
     <div>
       <Head>
-        <title>Crezalo: Creators</title>
+        <title>Kigzag: Creators</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
         {username != "" && isConnected ? (
           <div
-            className="blueTextBlackBackground"
+            className={
+              ismobile
+                ? "blueTextBlackBackgroundMobile"
+                : "blueTextBlackBackground"
+            }
             style={{
               justifyContent: "center",
               fontSize: 25,
             }}
           >
-            <div style={{ width: 400, zIndex: -1 }}>
+            <div style={{ width: ismobile ? "80vw" : 400, zIndex: -1 }}>
               <ReactSearchAutocomplete
                 items={items}
                 onSearch={handleOnSearch}

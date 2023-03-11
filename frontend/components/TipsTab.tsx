@@ -72,7 +72,7 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
   const [tipPrice, setTipPrice] = useState(100);
   const min = 0;
   // const ismobile = isMobile;
-  const ismobile = useScreenSize()?.width * 1.2 < useScreenSize()?.height;
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
     useEffect(() => {

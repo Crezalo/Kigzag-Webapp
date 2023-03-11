@@ -19,6 +19,7 @@ import {
   getSpecificCreatorSeriesIdUserVideoSeriesData,
 } from "../services/api-services/user/video_series_api";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { useScreenSize } from "../services/utility";
 
 export default function VideoPlayer() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function VideoPlayer() {
   const [username, setUsername] = useState("");
   const [isValidated, setIsValidated] = useState(false);
   const videoRef = useRef(null);
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -178,6 +180,10 @@ export default function VideoPlayer() {
                     crossOrigin="anonymous"
                     controlsList="nodownload"
                     ref={videoRef}
+                    style={{
+                      height: ismobile ? "60vw" : "80vh",
+                      width: ismobile ? "90vw" : "90vw",
+                    }}
                   >
                     <source src={signedURl} type="video/mp4" />
                     {/* <track
@@ -205,7 +211,10 @@ export default function VideoPlayer() {
                       disableThemeScrollbar: false,
                     }}
                     pluginRenderers={DocViewerRenderers}
-                    style={{ height: "90vh" }}
+                    style={{
+                      height: ismobile ? "80vh" : "90vh",
+                      width: "100vw",
+                    }}
                   />
                 )}
                 <h1 className="videoDiv h1">
