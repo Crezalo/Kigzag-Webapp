@@ -12,7 +12,7 @@ import {
   getCreatorSubscriptionData_3m,
   getCreatorSubscriptionData_Series,
 } from "../services/api-services/creator/subscriptions_api";
-import { truncateString } from "../services/utility";
+import { truncateString, useScreenSize } from "../services/utility";
 import { getUserData } from "../services/api-services/user_api";
 import {
   getMerchThumbnail,
@@ -40,6 +40,7 @@ const CartItemCard = ({ cartItem }: CartItemCardProps) => {
   const [displayPic, setDisplayPic] = useState("");
   const [price, setPrice] = useState(0);
   const [variantName, setVariantName] = useState("");
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const getItemData = () => {
     useEffect(() => {
@@ -117,7 +118,7 @@ const CartItemCard = ({ cartItem }: CartItemCardProps) => {
   getItemData();
 
   return (
-    <div className="cartItemCard pointer">
+    <div className={ismobile ? "cartItemCardMobile" : "cartItemCard pointer"}>
       <div
         style={{
           display: "flex",
@@ -143,25 +144,33 @@ const CartItemCard = ({ cartItem }: CartItemCardProps) => {
           });
         }}
       >
-        <div className="cartItemCardImageElement">
-          {cartItem.feature == 0 ? (
-            <CreatorDP creator={cartItem.creator} height={150} width={150} />
-          ) : (
-            <>
-              {displayPic?.includes("https://") ? (
-                <img
-                  src={displayPic}
-                  alt="Loading ..."
-                  className="cartItemCardImageElement"
-                />
-              ) : (
-                <></>
-              )}
-            </>
-          )}
-        </div>
+        {ismobile ? (
+          <></>
+        ) : (
+          <div className="cartItemCardImageElement">
+            {cartItem.feature == 0 ? (
+              <CreatorDP creator={cartItem.creator} height={150} width={150} />
+            ) : (
+              <>
+                {displayPic?.includes("https://") ? (
+                  <img
+                    src={displayPic}
+                    alt="Loading ..."
+                    className="cartItemCardImageElement"
+                  />
+                ) : (
+                  <></>
+                )}
+              </>
+            )}
+          </div>
+        )}
         <div
-          style={{ padding: "0px 5px 8px 15px", height: "70px", width: "90%" }}
+          style={{
+            padding: "0px 5px 8px 15px",
+            height: "70px",
+            width: ismobile ? "100%" : "90%",
+          }}
         >
           <h1 style={{ fontSize: "14px" }}>{truncateString(title, 40)}</h1>
           <h1 style={{ fontSize: "13px", color: "grey", fontWeight: "bold" }}>

@@ -24,6 +24,7 @@ import {
 import CartItemCard from "./CartItemCard";
 import Router from "next/router";
 import { StringDecoder } from "string_decoder";
+import { useScreenSize } from "../services/utility";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -42,7 +43,7 @@ const useStylesModal = makeStyles((theme) => ({
     flexDirection: "column",
     // width: "50%",
     justifyContent: "center",
-    margin: "0 20px 20px 20px",
+    margin: "0 20px 20px 0px",
     // backgroundColor: "#3b82f6",
     padding: theme.spacing(3, 4, 3),
     overflowY: "auto",
@@ -145,6 +146,7 @@ const AddToCart = ({
   const minQty = 1;
   const maxQty = 9;
   const [cartItems, setCartItems] = useState<cartItem[]>([]);
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   function compare(a: any, b: any) {
     if (a.feature < b.feature) {
@@ -206,7 +208,7 @@ const AddToCart = ({
       async function getData() {
         const result = await getCartItems();
 
-        if (result[0]  && typeof result !== "string") {
+        if (result[0] && typeof result !== "string") {
           setCartItems(result.sort(compare));
           if (setCartItemsUp) setCartItemsUp(result.sort(compare));
         } else if (setCartItemsUp) setCartItemsUp([]);
@@ -251,7 +253,10 @@ const AddToCart = ({
   console.log(cartItems);
 
   return (
-    <div className={classesModal.paper}>
+    <div
+      className={classesModal.paper}
+      style={{ width: ismobile ? "90vw" : "50vw" }}
+    >
       {cartItems?.length > 0 && cartItems[0]?.cartid != "" ? (
         <div>
           <Typography
@@ -282,16 +287,16 @@ const AddToCart = ({
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "space-between",
-                            width: "40vw",
+                            width: ismobile ? "70vw" : "40vw",
                           }}
                         >
                           <CartItemCard cartItem={item} />
                           {item.feature == 2 ? (
                             <div
                               style={{
-                                width: "20%",
-                                padding: "2px",
-                                marginRight: "5%",
+                                width: ismobile ? "20vw" : "20%",
+                                padding: ismobile ? "0%" : "2px",
+                                marginRight: ismobile ? "0%" : "5%",
                               }}
                             >
                               <TextField
@@ -321,7 +326,7 @@ const AddToCart = ({
                                   }
                                 }}
                                 style={{
-                                  width: "5vw",
+                                  width: ismobile ? "20vw" : "5vw",
                                   padding: "5px",
                                   marginRight: "10px",
                                 }}

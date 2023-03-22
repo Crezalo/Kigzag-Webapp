@@ -11,6 +11,7 @@ import {
   MAIN_API_URL,
 } from "../services/api-services/creator/merch_api";
 import Carousel from "react-material-ui-carousel";
+import { useScreenSize } from "../services/utility";
 
 interface SettingsT {
   autoPlay: boolean;
@@ -69,6 +70,7 @@ const UploadMerchModal = ({
   const [fileUploadStatus, setFileUploadStatus] = useState("NO FILE ADDED");
   const [settings, setSettings] = useState<SettingsT>(DefaultSettingsT);
   const [uploadImages, setUploadImages] = useState(!variantUpload);
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const creatObjectUrl = (file) => {
     return window.URL.createObjectURL(file);
@@ -290,6 +292,7 @@ const UploadMerchModal = ({
           ) : (
             <></>
           )}
+          <br />
           {variantUpload ? (
             <textarea
               className="mb-4 border-b-2 form inputSingleLineText"
@@ -301,7 +304,7 @@ const UploadMerchModal = ({
                 color: "black",
                 overflow: "auto",
                 resize: "both",
-                width: "30vw",
+                width: ismobile ? "80vw" : "30vw",
                 height: "8vh",
               }}
               required
@@ -321,7 +324,7 @@ const UploadMerchModal = ({
               color: "black",
               overflow: "auto",
               resize: "both",
-              width: "30vw",
+              width: ismobile ? "80vw" : "30vw",
               height: "8vh",
             }}
             required
@@ -339,7 +342,7 @@ const UploadMerchModal = ({
             style={{
               color: "black",
               resize: "both",
-              width: "30vw",
+              width: ismobile ? "80vw" : "30vw",
               height: "25vh",
               overflow: "none",
             }}
@@ -369,7 +372,7 @@ const UploadMerchModal = ({
               style={{
                 color: "black",
                 resize: "both",
-                width: "10vw",
+                width: ismobile ? "50vw" : "10vw",
                 overflow: "none",
               }}
               required
@@ -389,7 +392,7 @@ const UploadMerchModal = ({
               style={{
                 color: "black",
                 resize: "both",
-                width: "10vw",
+                width: ismobile ? "50vw" : "10vw",
                 overflow: "none",
               }}
               required
@@ -409,7 +412,7 @@ const UploadMerchModal = ({
               style={{
                 color: "black",
                 resize: "both",
-                width: "10vw",
+                width: ismobile ? "50vw" : "10vw",
                 overflow: "none",
               }}
               required
@@ -427,7 +430,7 @@ const UploadMerchModal = ({
               style={{
                 color: "black",
                 resize: "both",
-                width: "10vw",
+                width: ismobile ? "50vw" : "10vw",
                 overflow: "none",
               }}
               required
@@ -448,7 +451,7 @@ const UploadMerchModal = ({
               style={{
                 color: "black",
                 resize: "both",
-                width: "10vw",
+                width: ismobile ? "50vw" : "10vw",
                 overflow: "none",
               }}
               required
@@ -461,7 +464,7 @@ const UploadMerchModal = ({
               style={{
                 color: "black",
                 resize: "both",
-                width: "20vw",
+                width: ismobile ? "50vw" : "12vw",
                 overflow: "none",
               }}
               defaultValue={
@@ -483,7 +486,7 @@ const UploadMerchModal = ({
               style={{
                 color: "black",
                 resize: "both",
-                width: "12vw",
+                width: ismobile ? "50vw" : "12vw",
                 overflow: "none",
               }}
               defaultValue={
@@ -512,7 +515,7 @@ const UploadMerchModal = ({
               style={{
                 color: "black",
                 resize: "both",
-                width: "10vw",
+                width: ismobile ? "50vw" : "10vw",
                 overflow: "none",
               }}
               required
@@ -521,7 +524,9 @@ const UploadMerchModal = ({
           <button
             type="submit"
             className="outline outline-offset-0 px-2 py-2 rounded buyButton"
-            style={{ width: "10vw" }}
+            style={{
+              width: ismobile ? "50vw" : "10vw",
+            }}
           >
             Upload
           </button>

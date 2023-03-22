@@ -15,7 +15,7 @@ const Footer = () => {
         fontSize: "12px",
       }}
     >
-      <Link legacyBehavior href="/about">
+      <Link legacyBehavior href={process.env.NEXT_STATIC_LANDING_WEBSITE_URL}>
         <a style={{ marginTop: "2px" }}>
           <div>
             <span style={{ color: "white", paddingLeft: "10px" }}>

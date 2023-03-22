@@ -109,7 +109,7 @@ const RevenueCharts = ({ category }: RevenueChartsProp) => {
                 : "Tips Received (in ₹)"}
             </Typography>
             <LineChart
-              width={ismobile ? 350 : 800}
+              width={ismobile ? 325 : 800}
               height={ismobile ? 300 : 500}
               data={data}
             >

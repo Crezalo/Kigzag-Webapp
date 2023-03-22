@@ -40,6 +40,11 @@ const useStylesModal = makeStyles((theme) => ({
     fontSize: "18px",
     textAlign: "center",
   },
+  textTOS: {
+    color: "lightgrey",
+    fontSize: "14px",
+    textAlign: "center",
+  },
   error: {
     color: "red",
     fontSize: "18px",
@@ -49,6 +54,12 @@ const useStylesModal = makeStyles((theme) => ({
   link: {
     color: "#3B82F6",
     fontSize: "18px",
+    textAlign: "center",
+    cursor: "pointer",
+  },
+  linkTOS: {
+    color: "#3B82F6",
+    fontSize: "14px",
     textAlign: "center",
     cursor: "pointer",
   },
@@ -199,6 +210,15 @@ const ConnectToAccount = () => {
       <Fade in={!isConnected}>
         <div className={classesModal.paper}>
           <p className={classesModal.error}>{errorMsg}</p>
+          <p className={classesModal.text}>For Details</p>
+          <a
+            href={process.env.NEXT_STATIC_LANDING_WEBSITE_URL}
+            className={classesModal.link + " pointer"}
+            style={{ marginBottom: "20px" }}
+            target="_blank"
+          >
+            Visit Crezalo
+          </a>
           {haveAccount ? (
             <>
               <div style={{ textAlign: "center" }}>
@@ -230,6 +250,23 @@ const ConnectToAccount = () => {
                     onClick={handleClickShowPassword}
                   >
                     Show Password
+                  </label>
+                </div>
+                <div style={{ textAlign: "center", paddingBottom: "10px" }}>
+                  <input type="checkbox" checked={true} />
+                  <label
+                    className={classesModal.textTOS}
+                    style={{ paddingLeft: "5px" }}
+                  >
+                    I agree to{" "}
+                    <a
+                      href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}
+                      target="_blank"
+                      className={classesModal.linkTOS}
+                    >
+                      terms of service
+                    </a>{" "}
+                    of Crezalo
                   </label>
                 </div>
                 <button className={classesModal.button} onClick={login}>
@@ -295,6 +332,23 @@ const ConnectToAccount = () => {
                   onClick={handleClickShowPassword}
                 >
                   Show Password
+                </label>
+              </div>
+              <div style={{ textAlign: "center", paddingBottom: "10px" }}>
+                <input type="checkbox" checked={true} />
+                <label
+                  className={classesModal.textTOS}
+                  style={{ paddingLeft: "5px" }}
+                >
+                  I agree to{" "}
+                  <a
+                    href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}
+                    target="_blank"
+                    className={classesModal.linkTOS}
+                  >
+                    terms of service
+                  </a>{" "}
+                  of Crezalo
                 </label>
               </div>
               <button className={classesModal.button} onClick={register}>

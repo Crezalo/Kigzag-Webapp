@@ -12,6 +12,7 @@ import {
   addUserMerchReviewData,
   updateMerchReviewData,
 } from "../services/api-services/user/merch_api";
+import { useScreenSize } from "../services/utility";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -109,6 +110,7 @@ const WriteReviewModal = ({
   const [value, setValue] = useState<number | null>(
     addorupdate == 2 ? parseInt(review.ratings.toString()) : 0
   );
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
   const [hover, setHover] = useState(-1);
   const [title, setTitle] = useState(
     addorupdate == 2 ? review.commenttitle : ""

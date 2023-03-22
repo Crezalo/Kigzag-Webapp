@@ -79,7 +79,7 @@ export default function Checkout() {
           <div
             style={{
               width: ismobile ? "100vw" : "70vw",
-              margin: ismobile ? "10px 0 10px 0" : "5%",
+              margin: ismobile ? "10px 0 10px 20px" : "5%",
             }}
           >
             <AddToCart

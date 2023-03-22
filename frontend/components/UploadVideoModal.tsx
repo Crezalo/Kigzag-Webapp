@@ -5,6 +5,7 @@ import { authHeader } from "../services/auth-header";
 import Image from "next/image";
 import uploadingGif from "../public/uploading.gif";
 import greenTick from "../public/green-tick.gif";
+import { useScreenSize } from "../services/utility";
 
 interface UploadVideoModalProp {
   category: "Videos" | "Series" | "SeriesVideoGrid";
@@ -14,6 +15,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
   const [videofile, setVideofile] = useState(null);
   const [thumbfile, setThumbfile] = useState(null);
   const [fileUploadStatus, setFileUploadStatus] = useState("NO FILE ADDED");
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const vidplay = document.getElementById("video_player") as HTMLVideoElement;
   const vidsrc = document.getElementById("video_source") as HTMLSourceElement;
@@ -106,7 +108,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
       style={{
         overflowY: "auto",
         overflowX: "hidden",
-        maxHeight: "80vh",
+        maxHeight: ismobile ? "90vh" : "80vh",
         backgroundColor: "#3b82f6",
         padding: "5px",
         borderRadius: "1%",
@@ -139,7 +141,11 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
               autoPlay
               crossOrigin="anonymous"
               controlsList="nodownload"
-              style={{ width: "28vw", height: "30vh", margin: "10px" }}
+              style={{
+                width: ismobile ? "80vw" : "28vw",
+                height: "30vh",
+                margin: "10px",
+              }}
             >
               <source
                 id="video_source"
@@ -199,7 +205,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
               color: "black",
               overflow: "auto",
               resize: "both",
-              width: "30vw",
+              width: ismobile ? "80vw" : "30vw",
               height: "8vh",
             }}
             required
@@ -214,7 +220,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
             style={{
               color: "black",
               resize: "both",
-              width: "30vw",
+              width: ismobile ? "80vw" : "30vw",
               height: "25vh",
               overflow: "none",
             }}
@@ -245,7 +251,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
                 style={{
                   color: "black",
                   resize: "both",
-                  width: "10vw",
+                  width: ismobile ? "50vw" : "10vw",
                   overflow: "none",
                 }}
                 required
@@ -261,7 +267,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
                 style={{
                   color: "black",
                   resize: "both",
-                  width: "10vw",
+                  width: ismobile ? "50vw" : "10vw",
                   overflow: "none",
                 }}
                 required
@@ -277,7 +283,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
                 style={{
                   color: "black",
                   resize: "both",
-                  width: "10vw",
+                  width: ismobile ? "50vw" : "10vw",
                   overflow: "none",
                 }}
                 required
@@ -289,7 +295,7 @@ const UploadVideoModal = ({ category, seriesid }: UploadVideoModalProp) => {
           <button
             type="submit"
             className="outline outline-offset-0 px-2 py-2 rounded buyButton"
-            style={{ width: "10vw" }}
+            style={{ width: ismobile ? "50vw" : "10vw" }}
           >
             Upload
           </button>
