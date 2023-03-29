@@ -21,6 +21,7 @@ import { Button, Tooltip } from "@mui/material";
 import { isMobile } from "react-device-detect";
 import ProfileSliderTabsMobile from "../components/ProfileSliderTabsMobile";
 import { useScreenSize } from "../services/utility";
+import CreatorOnboardIllustrate from "../components/CreatorOnboardIllustrate";
 
 const style = {
   root: {
@@ -131,7 +132,10 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Crezalo: Dashboard</title>
+        <title>
+          Crezalo: One Page Link To Sell Premium Videos, Courses, Merch, and
+          Receive Tips
+        </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
@@ -377,7 +381,7 @@ export default function Home() {
                 )}
               </>
             ) : (
-              <></>
+              <CreatorOnboardIllustrate />
             )}
           </div>
         ) : (

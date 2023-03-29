@@ -104,7 +104,7 @@ const Header = () => {
           style={{
             padding: "1px",
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "center",
           }}
         >
           {!atHome() ? (
@@ -129,7 +129,7 @@ const Header = () => {
           ) : (
             <></>
           )}
-          {atHome() ? (
+          {/* {atHome() ? (
             <Link legacyBehavior href="/creators">
               <a className="mr-6 py-1">
                 <div className="modelButton">
@@ -141,18 +141,15 @@ const Header = () => {
                     variant="contained"
                   >
                     <SearchIcon />
-                    {/* <span style={{ marginRight: "10px", marginLeft: "2px" }}>
-                      Explore
-                    </span> */}
                   </Button>
                 </div>
               </a>
             </Link>
           ) : (
             <></>
-          )}
+          )} */}
           {showCart() ? (
-            <div style={{ marginTop: "2px" }}>
+            <div className="mr-6 py-1">
               <BasicModal
                 modalButtonText={
                   <span
