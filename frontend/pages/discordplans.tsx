@@ -426,7 +426,7 @@ export default function DiscordPlans() {
             ) : (
               <>
                 {/* {typeof account !== "string" ? ( */}
-                {true ? (
+                {/* {true ? (
                   <ConnectToAccount />
                 ) : (
                   <>
@@ -438,7 +438,7 @@ export default function DiscordPlans() {
                       }}
                     />
                   </>
-                )}
+                )} */}
               </>
             )}
           </>

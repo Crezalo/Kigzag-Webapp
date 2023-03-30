@@ -13,6 +13,7 @@ import {
 import { GoogleLoginButton } from "react-social-login-buttons";
 import AuthService from "../services/auth-services";
 import PasswordStrengthBar from "react-password-strength-bar";
+import Router from "next/router";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -96,10 +97,18 @@ const useStylesModal = makeStyles((theme) => ({
   },
 }));
 
-const ConnectToAccount = () => {
+interface ConnectToAccountProps {
+  haveAccountBool?: boolean;
+  redirectToHome?: boolean;
+}
+
+const ConnectToAccount = ({
+  haveAccountBool,
+  redirectToHome,
+}: ConnectToAccountProps) => {
   const classesModal = useStylesModal();
   const [showPassword, setShowPassword] = useState(false);
-  const [haveAccount, setHaveAccount] = useState(true);
+  const [haveAccount, setHaveAccount] = useState(haveAccountBool);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -182,7 +191,7 @@ const ConnectToAccount = () => {
       );
       if (typeof result === "string") {
         if (result.includes("users_emailaddress_key")) {
-          setErrorMsg("This google account is already a user");
+          setErrorMsg("This account is already a user");
         } else if (result.includes("users_username_key")) {
           setErrorMsg("This username is already a user");
         } else {
@@ -190,7 +199,13 @@ const ConnectToAccount = () => {
         }
       } else if (result) {
         setIsConnected(result);
-        window.location.reload();
+        if (redirectToHome)
+          Router.push({
+            pathname: "/",
+          });
+        else {
+          window.location.reload();
+        }
       }
     }
   };

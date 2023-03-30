@@ -97,6 +97,10 @@ const Header = () => {
     return url === "/";
   };
 
+  const isRegister = () => {
+    return url.includes("register");
+  };
+
   return (
     <>
       {isConnected ? (
@@ -175,7 +179,10 @@ const Header = () => {
           <SettingMenu isCreator={isCreator} />
         </nav>
       ) : (
-        <ConnectToAccount />
+        <ConnectToAccount
+          haveAccountBool={!isRegister()}
+          redirectToHome={isRegister()}
+        />
       )}
     </>
   );
