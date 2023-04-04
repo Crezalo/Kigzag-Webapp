@@ -150,6 +150,14 @@ const UpdateVideoPrices = () => {
         if (username != "") {
           const result = await getCreatorSubscriptionData_1m(username);
           if (result[0]) setCreator1msub(result[0]);
+          else
+            setCreator1msub({
+              discord: 0,
+              video_on_demand: 0,
+              live_streaming: 0,
+              video_call: 0,
+              community_combo: 0,
+            });
         }
       }
       getData();
@@ -172,6 +180,14 @@ const UpdateVideoPrices = () => {
         if (username != "") {
           const result = await getCreatorSubscriptionData_3m(username);
           if (result[0]) setCreator3msub(result[0]);
+          else
+            setCreator3msub({
+              discord: 0,
+              video_on_demand: 0,
+              live_streaming: 0,
+              video_call: 0,
+              community_combo: 0,
+            });
         }
       }
       getData();
@@ -194,6 +210,14 @@ const UpdateVideoPrices = () => {
         if (username != "") {
           const result = await getCreatorSubscriptionData_1y(username);
           if (result[0]) setCreator1ysub(result[0]);
+          else
+            setCreator1ysub({
+              discord: 0,
+              video_on_demand: 0,
+              live_streaming: 0,
+              video_call: 0,
+              community_combo: 0,
+            });
         }
       }
       getData();
