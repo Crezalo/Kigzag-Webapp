@@ -283,6 +283,22 @@ const ConnectToAccount = ({
                     </a>{" "}
                     of Crezalo
                   </label>
+                  <br />
+                  <input type="checkbox" checked={true} />
+                  <label
+                    className={classesModal.textTOS}
+                    style={{ paddingLeft: "5px" }}
+                  >
+                    I agree to{" "}
+                    <a
+                      href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
+                      target="_blank"
+                      className={classesModal.linkTOS}
+                    >
+                      privacy policy
+                    </a>{" "}
+                    of Crezalo
+                  </label>
                 </div>
                 <button className={classesModal.button} onClick={login}>
                   Login
@@ -362,6 +378,22 @@ const ConnectToAccount = ({
                     className={classesModal.linkTOS}
                   >
                     terms of service
+                  </a>{" "}
+                  of Crezalo
+                </label>
+                <br />
+                <input type="checkbox" checked={true} />
+                <label
+                  className={classesModal.textTOS}
+                  style={{ paddingLeft: "5px" }}
+                >
+                  I agree to{" "}
+                  <a
+                    href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
+                    target="_blank"
+                    className={classesModal.linkTOS}
+                  >
+                    privacy policy
                   </a>{" "}
                   of Crezalo
                 </label>
