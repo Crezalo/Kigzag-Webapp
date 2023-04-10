@@ -106,7 +106,7 @@ const VideosSeriesGating = ({
     threemonths: 0,
     oneyear: 0,
   });
-  const [userValidatePurchase, setUserValidatePurchase] = useState(false);
+  const [userValidatePurchase, setUserValidatePurchase] = useState(true);
 
   const GetPrices = () => {
     useEffect(() => {
@@ -221,7 +221,8 @@ const VideosSeriesGating = ({
       async function getData() {
         var isValidated =
           (!onCreatorProfile && !onVideoPlayer && !onCoursePage) ||
-          category === "Series";
+          category === "Series" ||
+          (category === "Videos" && !onCoursePage && !onVideoPlayer);
         setUserValidatePurchase(isValidated);
         if (creator === username) {
           setUserValidatePurchase(true);
@@ -272,7 +273,7 @@ const VideosSeriesGating = ({
           <Typography style={{ fontSize: "20px", textAlign: "center" }}>
             {category === "Videos"
               ? "Access Premium Videos from " + creator
-              : "Access Course " + creator}
+              : "Access This Course from " + creator}
           </Typography>
           <Box
             component="form"

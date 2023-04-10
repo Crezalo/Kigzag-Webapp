@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getVideoThumbnail } from "../services/api-services/creator/video_api";
 import { getCreatorSubscriptionData_Series } from "../services/api-services/creator/subscriptions_api";
 import { isMobile } from "react-device-detect";
-import { useScreenSize } from "../services/utility";
+import { truncateString, useScreenSize } from "../services/utility";
 
 interface VideoCardProp {
   videoDetails: {
@@ -170,7 +170,7 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
             {videoDetails?.chronology > 0
               ? videoDetails?.chronology + ". "
               : ""}
-            {videoDetails.title}
+            {truncateString(videoDetails.title, 100)}
           </h1>
           <h1
             style={{

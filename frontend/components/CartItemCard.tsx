@@ -149,7 +149,7 @@ const CartItemCard = ({ cartItem }: CartItemCardProps) => {
         ) : (
           <div className="cartItemCardImageElement">
             {cartItem.feature == 0 ? (
-              <CreatorDP creator={cartItem.creator} height={150} width={150} />
+              <CreatorDP creator={cartItem.creator} height={125} width={125} />
             ) : (
               <>
                 {displayPic?.includes("https://") ? (

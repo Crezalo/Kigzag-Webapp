@@ -41,6 +41,7 @@ const user_merch_router = require("./routes/user/merchandise_routes");
 const user_tipjar_router = require("./routes/user/tipjar_routes");
 const feedback_router = require("./routes/user/feedback_routes");
 
+const email_router = require("./routes/email_server_routes");
 const cart_router = require("./routes/user/cart_routes");
 
 const discord_bot = require('./discord_token_gating_bot/bot');
@@ -103,6 +104,8 @@ app.use("/user_merchandise", user_merch_router);
 app.use("/user_tipjar", user_tipjar_router);
 app.use("/user_cart", cart_router);
 app.use("/user_feedback", feedback_router)
+
+app.use("/marketing", email_router);
 
 // run discord bot
 discord_bot.run();
