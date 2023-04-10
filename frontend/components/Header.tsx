@@ -5,6 +5,7 @@ import kigzaglogo from "../public/kigzaglogo.png";
 import AuthService from "../services/auth-services";
 import ConnectToAccount from "./ConnectToAccount";
 import SettingMenu from "./SettingMenu";
+import queryString from "query-string";
 import BasicModal from "./BasicModal";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -101,6 +102,11 @@ const Header = () => {
     return url.includes("register");
   };
 
+  const uname = () => {
+    if (url.split("?uname=").length == 2) return url.split("?uname=")[1];
+    else return "";
+  };
+
   return (
     <>
       {isConnected ? (
@@ -182,6 +188,7 @@ const Header = () => {
         <ConnectToAccount
           haveAccountBool={!isRegister()}
           redirectToHome={isRegister()}
+          uname={uname()}
         />
       )}
     </>

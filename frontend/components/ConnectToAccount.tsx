@@ -100,16 +100,18 @@ const useStylesModal = makeStyles((theme) => ({
 interface ConnectToAccountProps {
   haveAccountBool?: boolean;
   redirectToHome?: boolean;
+  uname?: string;
 }
 
 const ConnectToAccount = ({
   haveAccountBool,
   redirectToHome,
+  uname,
 }: ConnectToAccountProps) => {
   const classesModal = useStylesModal();
   const [showPassword, setShowPassword] = useState(false);
   const [haveAccount, setHaveAccount] = useState(haveAccountBool);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(uname);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -240,6 +242,7 @@ const ConnectToAccount = ({
                 <input
                   className={classesModal.input}
                   type="text"
+                  defaultValue={username}
                   placeholder={"Username"}
                   onChange={(e) => {
                     if (e.target.value != "") setUsername(e.target.value);
@@ -321,6 +324,7 @@ const ConnectToAccount = ({
               <input
                 className={classesModal.input}
                 type="text"
+                defaultValue={username}
                 placeholder={"Username"}
                 onChange={(e) => {
                   if (e.target.value != "") setUsername(e.target.value);
