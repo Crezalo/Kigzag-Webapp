@@ -13,6 +13,7 @@ import banks from "../consts/banks";
 import { addCreatorFinInfoData } from "../services/api-services/creator/fininfo_api";
 import { updateUserData } from "../services/api-services/user_api";
 import { addCreatorFeatureStatusData } from "../services/api-services/creator/features_api";
+import { useScreenSize } from "../services/utility";
 
 interface SettingsT {
   autoPlay: boolean;
@@ -45,6 +46,7 @@ const KYCModal = () => {
   // const [videofile, setVideofile] = useState(null);
   const [panfile, setPanFile] = useState(null);
   const [fileUploadStatus, setFileUploadStatus] = useState("NO FILE ADDED");
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const creatObjectUrl = (file) => {
     return window.URL.createObjectURL(file);
@@ -187,7 +189,7 @@ const KYCModal = () => {
               style={{
                 color: "black",
                 resize: "both",
-                width: "10vw",
+                width: ismobile ? "80vw" : "30vw",
                 overflow: "none",
               }}
               required
@@ -211,7 +213,7 @@ const KYCModal = () => {
               style={{
                 color: "black",
                 resize: "both",
-                width: "10vw",
+                width: ismobile ? "80vw" : "30vw",
                 overflow: "none",
               }}
               required
@@ -230,7 +232,7 @@ const KYCModal = () => {
               style={{
                 color: "black",
                 resize: "both",
-                width: "20vw",
+                width: ismobile ? "80vw" : "30vw",
                 overflow: "none",
               }}
               required
@@ -251,7 +253,7 @@ const KYCModal = () => {
               style={{
                 color: "black",
                 resize: "both",
-                width: "10vw",
+                width: ismobile ? "80vw" : "30vw",
                 overflow: "none",
               }}
               required
@@ -275,7 +277,7 @@ const KYCModal = () => {
               style={{
                 color: "black",
                 resize: "both",
-                width: "15vw",
+                width: ismobile ? "80vw" : "30vw",
                 overflow: "none",
               }}
               required

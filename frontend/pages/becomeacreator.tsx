@@ -23,6 +23,7 @@ import Carousel from "react-material-ui-carousel";
 import UploadProfilePicsLogoModal from "../components/UploadProfilePicsModal";
 import CreatorDP from "../components/CreatorDP";
 import KYCModal from "../components/KYCModal";
+import { useScreenSize } from "../services/utility";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -42,6 +43,24 @@ const useStylesModal = makeStyles((theme) => ({
     width: "50%",
     justifyContent: "center",
     margin: "0 20px 20px 20px",
+    // backgroundColor: "#3b82f6",
+    padding: theme.spacing(0, 4, 3),
+    // "&:hover": {
+    //   boxShadow: "0 10px 18px 8px #173464",
+    //   borderRadius: "2%",
+    // },
+  },
+  paperMobile: {
+    // backgroundColor: theme.palette.background.paper,
+    // border: "2px solid #000",
+    borderRadius: "5px",
+    boxShadow: theme.shadows[5],
+    color: "white",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    justifyContent: "center",
+    margin: "0",
     // backgroundColor: "#3b82f6",
     padding: theme.spacing(0, 4, 3),
     // "&:hover": {
@@ -70,6 +89,30 @@ const useStylesModal = makeStyles((theme) => ({
   },
   textfield: {
     width: "80%",
+    margin: "10px 0 10px 0",
+    "& .MuiFormLabel-root": {
+      fontSize: "18px",
+    },
+    "& label.Mui-focused": {
+      color: "white",
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "#3b82f6",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "white",
+      },
+      "&:hover fieldset": {
+        borderColor: "white",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#3b82f6",
+      },
+    },
+  },
+  textfieldMobile: {
+    width: "100%",
     margin: "10px 0 10px 0",
     "& .MuiFormLabel-root": {
       fontSize: "18px",
@@ -148,9 +191,7 @@ export default function BecomeACreator() {
   const [youtube, setYoutube] = useState("");
   const [website, setWebsite] = useState("");
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
     useEffect(() => {
@@ -267,17 +308,25 @@ export default function BecomeACreator() {
       <div>
         {isConnected && username && user?.username != "" ? (
           <div
-            className="blueTextBlackBackground"
-            style={{ fontSize: "18px", display: "flex", flexDirection: "row" }}
+            className={
+              ismobile
+                ? "blueTextBlackBackgroundMobile"
+                : "blueTextBlackBackground"
+            }
+            style={{
+              fontSize: "18px",
+              display: "flex",
+              flexDirection: ismobile ? "column" : "row",
+            }}
           >
             {!user.iscreator ? (
               <>
                 <div
                   style={{
-                    width: "50%",
+                    width: ismobile ? "100%" : "50%",
                     display: "flex",
                     flexDirection: "column",
-                    padding: "50px",
+                    padding: ismobile ? "0" : "50px",
                     justifyContent: "center",
                   }}
                 >
@@ -352,19 +401,23 @@ export default function BecomeACreator() {
                   <div
                     style={{
                       display: "flex",
-                      flexDirection: "row",
+                      flexDirection: ismobile ? "column" : "row",
                       justifyContent: "center",
                     }}
                   >
                     <div
                       style={{
                         justifyContent: "center",
-                        marginRight: "10px",
+                        marginRight: ismobile ? "0" : "10px",
                       }}
                     >
                       <Label style={{ margin: "10px" }}>First Name</Label>
                       <TextField
-                        className={classesModal.textfield}
+                        className={
+                          ismobile
+                            ? classesModal.textfieldMobile
+                            : classesModal.textfield
+                        }
                         placeholder="First Name Here ..."
                         type="text"
                         InputLabelProps={{
@@ -383,12 +436,16 @@ export default function BecomeACreator() {
                     <div
                       style={{
                         justifyContent: "center",
-                        marginLeft: "10px",
+                        marginLeft: ismobile ? "0" : "10px",
                       }}
                     >
                       <Label style={{ margin: "10px" }}>Last Name</Label>
                       <TextField
-                        className={classesModal.textfield}
+                        className={
+                          ismobile
+                            ? classesModal.textfieldMobile
+                            : classesModal.textfield
+                        }
                         placeholder="Last Name Here ..."
                         type="text"
                         InputLabelProps={{
@@ -406,6 +463,30 @@ export default function BecomeACreator() {
                       />
                     </div>
                   </div>
+                  {ismobile ? (
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <Label style={{ margin: "10px 0 0 10px" }}>Bio</Label>
+                      <TextField
+                        className={classesModal.textfieldMobile}
+                        placeholder="Bio Here ..."
+                        type="text"
+                        multiline
+                        rows={3}
+                        inputProps={{ style: { color: "white" } }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        variant="outlined"
+                        defaultValue={user.bio}
+                        onChange={(e) => {
+                          setBio(e.target.value);
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+
                   <div
                     style={{
                       marginTop: "50px",
@@ -419,87 +500,91 @@ export default function BecomeACreator() {
                     />
                   </div>
                 </div>
-                <div className={classesModal.paper}>
-                  <Label style={{ margin: "10px 0 0 10px" }}>Bio</Label>
-                  <TextField
-                    className={classesModal.textfield}
-                    placeholder="Bio Here ..."
-                    type="text"
-                    multiline
-                    rows={3}
-                    inputProps={{ style: { color: "white" } }}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    variant="outlined"
-                    defaultValue={user.bio}
-                    onChange={(e) => {
-                      setBio(e.target.value);
-                    }}
-                  />
-                  <Label style={{ margin: "10px 0 0 10px" }}>Twitter</Label>
-                  <TextField
-                    className={classesModal.textfield}
-                    placeholder="@YourTwitterHandle"
-                    type="text"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    variant="outlined"
-                    inputProps={{ style: { color: "white" } }}
-                    defaultValue={user.twitterhandle}
-                    onChange={(e) => {
-                      setTwitterhandle(e.target.value);
-                    }}
-                  />
-                  <Label style={{ margin: "10px 0 0 10px" }}>Instagram</Label>
-                  <TextField
-                    className={classesModal.textfield}
-                    placeholder="@YourInstagramUsername"
-                    type="text"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    variant="outlined"
-                    inputProps={{ style: { color: "white" } }}
-                    defaultValue={user.instagram}
-                    onChange={(e) => {
-                      setInstagram(e.target.value);
-                    }}
-                  />
-                  <Label style={{ margin: "10px 0 0 10px" }}>
-                    Youtube Channel
-                  </Label>
-                  <TextField
-                    className={classesModal.textfield}
-                    placeholder="https://www.youtube.com/c/channelid"
-                    type="text"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    variant="outlined"
-                    inputProps={{ style: { color: "white" } }}
-                    defaultValue={user.youtube}
-                    onChange={(e) => {
-                      setYoutube(e.target.value);
-                    }}
-                  />
-                  <Label style={{ margin: "10px 0 0 10px" }}>Website</Label>
-                  <TextField
-                    className={classesModal.textfield}
-                    placeholder="https://www.mywebsite.com/"
-                    type="text"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    variant="outlined"
-                    inputProps={{ style: { color: "white" } }}
-                    defaultValue={user.youtube}
-                    onChange={(e) => {
-                      setWebsite(e.target.value);
-                    }}
-                  />
-                </div>
+                {ismobile ? (
+                  <></>
+                ) : (
+                  <div className={classesModal.paper}>
+                    <Label style={{ margin: "10px 0 0 10px" }}>Bio</Label>
+                    <TextField
+                      className={classesModal.textfield}
+                      placeholder="Bio Here ..."
+                      type="text"
+                      multiline
+                      rows={3}
+                      inputProps={{ style: { color: "white" } }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      defaultValue={user.bio}
+                      onChange={(e) => {
+                        setBio(e.target.value);
+                      }}
+                    />
+                    <Label style={{ margin: "10px 0 0 10px" }}>Twitter</Label>
+                    <TextField
+                      className={classesModal.textfield}
+                      placeholder="@YourTwitterHandle"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      inputProps={{ style: { color: "white" } }}
+                      defaultValue={user.twitterhandle}
+                      onChange={(e) => {
+                        setTwitterhandle(e.target.value);
+                      }}
+                    />
+                    <Label style={{ margin: "10px 0 0 10px" }}>Instagram</Label>
+                    <TextField
+                      className={classesModal.textfield}
+                      placeholder="@YourInstagramUsername"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      inputProps={{ style: { color: "white" } }}
+                      defaultValue={user.instagram}
+                      onChange={(e) => {
+                        setInstagram(e.target.value);
+                      }}
+                    />
+                    <Label style={{ margin: "10px 0 0 10px" }}>
+                      Youtube Channel
+                    </Label>
+                    <TextField
+                      className={classesModal.textfield}
+                      placeholder="https://www.youtube.com/c/channelid"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      inputProps={{ style: { color: "white" } }}
+                      defaultValue={user.youtube}
+                      onChange={(e) => {
+                        setYoutube(e.target.value);
+                      }}
+                    />
+                    <Label style={{ margin: "10px 0 0 10px" }}>Website</Label>
+                    <TextField
+                      className={classesModal.textfield}
+                      placeholder="https://www.mywebsite.com/"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      inputProps={{ style: { color: "white" } }}
+                      defaultValue={user.youtube}
+                      onChange={(e) => {
+                        setWebsite(e.target.value);
+                      }}
+                    />
+                  </div>
+                )}
               </>
             ) : (
               <div>

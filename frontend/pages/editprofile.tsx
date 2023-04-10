@@ -427,7 +427,11 @@ export default function EditProfile() {
                 >
                   <Label style={{ margin: "10px" }}>First Name</Label>
                   <TextField
-                    className={classesModal.textfieldMobile}
+                    className={
+                      ismobile
+                        ? classesModal.textfieldMobile
+                        : classesModal.textfield
+                    }
                     placeholder="First Name Here ..."
                     type="text"
                     InputLabelProps={{
