@@ -99,13 +99,11 @@ const useStylesModal = makeStyles((theme) => ({
 
 interface ConnectToAccountProps {
   haveAccountBool?: boolean;
-  redirectToHome?: boolean;
   uname?: string;
 }
 
 const ConnectToAccount = ({
   haveAccountBool,
-  redirectToHome,
   uname,
 }: ConnectToAccountProps) => {
   const classesModal = useStylesModal();
@@ -201,13 +199,7 @@ const ConnectToAccount = ({
         }
       } else if (result) {
         setIsConnected(result);
-        if (redirectToHome)
-          Router.push({
-            pathname: "/",
-          });
-        else {
-          window.location.reload();
-        }
+        window.location.reload();
       }
     }
   };

@@ -185,11 +185,7 @@ const Header = () => {
           <SettingMenu isCreator={isCreator} />
         </nav>
       ) : (
-        <ConnectToAccount
-          haveAccountBool={!isRegister()}
-          redirectToHome={isRegister()}
-          uname={uname()}
-        />
+        <ConnectToAccount haveAccountBool={!isRegister()} uname={uname()} />
       )}
     </>
   );
