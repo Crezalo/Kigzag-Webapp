@@ -19,7 +19,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import ShareSocialModal from "../components/ShareSocialModal";
 import { Button, Tooltip } from "@mui/material";
 import SeeFeedbacks from "../components/SeeFeedbacks";
-import Marketing from "../components/Marketing";
+import KycApproval from "../components/KycApproval";
 
 const style = {
   root: {
@@ -99,10 +99,10 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Crezalo: Marketing [Admin only]</title>
+        <title>Crezalo: Feedbacks</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div>{isConnected ? <Marketing /> : <></>}</div>
+      <div>{isConnected ? <KycApproval /> : <></>}</div>
     </div>
   );
 }

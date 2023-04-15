@@ -29,6 +29,14 @@ module.exports = async function createTablesInPostgresDB(pool) {
     )
     .catch((err) => console.log("PG ERROR Fin_Info Table\n\n\t\t", err.message));
 
+
+  //3.  Creator Fin Info table creation
+  await pool
+    .query(
+      "CREATE TABLE IF NOT EXISTS Kyc_Approval (Creator VARCHAR(255) PRIMARY KEY, AadharNumber VARCHAR(100) UNIQUE NOT NULL, PanNumber VARCHAR(100) UNIQUE NOT NULL, Bank_Name VARCHAR(255) NOT NULL, IFSC_Code VARCHAR(100) NOT NULL, Acc_Number VARCHAR(50) NOT NULL);"
+    )
+    .catch((err) => console.log("PG ERROR Kyc_Approval Table\n\n\t\t", err.message));
+
   //1. Video Data from a creator
   // SeriesId: 0 for general videos and specific value when video is a part of series
   // Type => 0: Video, 1: pdf, 2: doc, 3: docx, 4: ppt, 5: excel 
@@ -114,6 +122,19 @@ module.exports = async function createTablesInPostgresDB(pool) {
   END; \
   $$;")
     .catch(err => console.error("fk ERROR Fin_Info Table\n\n\t\t", err.message));
+
+  // Creator Fin Info Table Creator is User
+  await pool.query("DO $$ \
+  BEGIN \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_kyc_approval_creator') THEN \
+          ALTER TABLE Kyc_Approval \
+              ADD CONSTRAINT fk_kyc_approval_creator \
+              FOREIGN KEY (Creator) REFERENCES Users(UserName) \
+              ON DELETE CASCADE; \
+      END IF; \
+  END; \
+  $$;")
+    .catch(err => console.error("fk ERROR Kyc_Approval Table\n\n\t\t", err.message));
 
   // Video Table Creator is User
   await pool.query("DO $$ \

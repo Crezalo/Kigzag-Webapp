@@ -15,22 +15,32 @@ require("dotenv").config();
 // add Creator_Features
 router.post("/", authorise, async (req, res) => {
     try {
-        const new_fin = await pool.query(
-            "INSERT INTO Creator_Features (Creator, Video_on_Demand, Courses, Merchandise, Tipjar) VALUES ($1,$2,$3,$4,$5) RETURNING*;",
-            [
-                req.username,
-                false,
-                false,
-                false,
-                false
-            ]
-        );
-
-        res.json({
-            isSuccessful: true,
-            errorMsg: "",
-            result: new_fin.rows
-        });
+        const {
+            creator
+        } = req.body
+        if (req.username == "admin") {
+            const new_fin = await pool.query(
+                "INSERT INTO Creator_Features (Creator, Video_on_Demand, Courses, Merchandise, Tipjar) VALUES ($1,$2,$3,$4,$5) RETURNING*;",
+                [
+                    creator,
+                    false,
+                    false,
+                    false,
+                    false
+                ]
+            );
+            res.json({
+                isSuccessful: true,
+                errorMsg: "",
+                result: new_fin.rows
+            });
+        } else {
+            res.json({
+                isSuccessful: false,
+                errorMsg: "unauthorised access",
+                result: ""
+            });
+        }
     } catch (err) {
         res.json({
             isSuccessful: false,

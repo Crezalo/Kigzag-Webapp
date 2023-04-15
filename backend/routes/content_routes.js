@@ -129,7 +129,7 @@ router.get("/merch_images/thumbnail/:productid", authorise, async (req, res) => 
   }
 });
 
-// get merch thumbnail
+// get merch display images
 router.get("/merch_images/allimages/:productid", authorise, async (req, res) => {
   try {
     const {
@@ -259,15 +259,35 @@ router.get("/creator_info/:type/:creator", authorise, async (req, res) => {
       expireTime: (new Date().getTime() + (3600 * 1000)),
     }
     if (type !== "oimages") {
-      var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_CREATOR_DOMAIN_NAME + `${type==="pancard" ?  req.username : creator}/${type}.png`, aws_cf_config);
-      // console.log('Signed URL: ' + signedUrl);
-      res.json({
-        isSuccessful: true,
-        errorMsg: "",
-        result: [{
-          'signedurl': signedUrl
-        }]
-      });
+      if (type === "pancard") {
+        if (req.username == "admin") {
+          var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_CREATOR_DOMAIN_NAME + `${creator}/${type}.png`, aws_cf_config);
+          // console.log('Signed URL: ' + signedUrl);
+          res.json({
+            isSuccessful: true,
+            errorMsg: "",
+            result: [{
+              'signedurl': signedUrl
+            }]
+          });
+        } else {
+          res.json({
+            isSuccessful: false,
+            errorMsg: "unauthorised access",
+            result: ""
+          });
+        }
+      } else {
+        var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_CREATOR_DOMAIN_NAME + `${creator}/${type}.png`, aws_cf_config);
+        // console.log('Signed URL: ' + signedUrl);
+        res.json({
+          isSuccessful: true,
+          errorMsg: "",
+          result: [{
+            'signedurl': signedUrl
+          }]
+        });
+      }
     } else {
       let signedUrls = []
       for (let i = 0; i < 5; i++) {

@@ -8,10 +8,10 @@ export const MAIN_API_URL = process.env.NEXT_STATIC_MAIN_API_URL;
 ////////////////////////         Creator Features Table            /////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 
-export async function addCreatorFeatureStatusData() {
+export async function addCreatorFeatureStatusData(creator: string) {
   try {
     if (authHeader().Authorization) {
-      const data = {};
+      const data = { creator: creator };
       const response = await axios.post(MAIN_API_URL + "features", data, {
         headers: authHeader(),
       });
@@ -34,7 +34,6 @@ export async function getCreatorFeatureStatusData(creator: string) {
       const response = await axios.get(MAIN_API_URL + "features/" + creator, {
         headers: authHeader(),
       });
-      console.log(MAIN_API_URL + "fininfo");
       if (response.data.isSuccessful) {
         return response.data.result;
       } else {

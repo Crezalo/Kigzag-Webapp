@@ -12,82 +12,42 @@ require("dotenv").config();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////   Add New Creator Fin Info   ///////////////////////////////////////////
-// add fin info
+// add fin info, done by admin [APPROVE KYC AND AFTER DATA TRANSFERED, CLEAN FROM APPROVAL TABLE]
 router.post("/", authorise, async (req, res) => {
     try {
         var {
-            aadharnumber,
-            pannumber,
-            bank_name,
-            ifsc_code,
-            acc_number
+            creator
         } = req.body;
-
-        if (ifsc_code == "") {
-            return res.json({
+        if (req.username == "admin") {
+            const kyc_details = await pool.query("SELECT * FROM Kyc_Approval WHERE creator=$1;", [creator]);
+            const new_fin = await pool.query(
+                "INSERT INTO Fin_Info (Creator, aadharnumber, pannumber, bank_name, IFSC_Code, Acc_Number) VALUES ($1,$2,$3,$4,$5,$6) RETURNING*;",
+                [
+                    creator,
+                    kyc_details.rows[0].aadharnumber,
+                    kyc_details.rows[0].pannumber,
+                    kyc_details.rows[0].bank_name,
+                    kyc_details.rows[0].ifsc_code,
+                    kyc_details.rows[0].acc_number
+                ]
+            );
+            const kyc_details_deleted = await pool.query("DELETE FROM Kyc_Approval WHERE creator=$1;", [creator]);
+            const makeCreator = await pool.query(
+                "UPDATE Users SET IsCreator=$1 WHERE UserName=$2 RETURNING*;",
+                [true, creator]
+            );
+            res.json({
+                isSuccessful: true,
+                errorMsg: "",
+                result: [kyc_details, new_fin, kyc_details_deleted, makeCreator]
+            });
+        } else {
+            res.json({
                 isSuccessful: false,
-                errorMsg: "Atleast one of UPI and Bank Details needed",
-                result: []
+                errorMsg: "unauthorised access",
+                result: ""
             });
         }
-
-        if (ifsc_code != "" && acc_number == "") {
-            return res.json({
-                isSuccessful: false,
-                errorMsg: "Bank Account Number can't be null",
-                result: []
-            });
-
-        }
-
-        if (!Validator.pan(pannumber)) {
-            return res.json({
-                isSuccessful: false,
-                errorMsg: "PAN Number Invalid",
-                result: []
-            });
-        }
-
-        if (!(Validator.aadhaar(aadharnumber) || Validator.aadhaarVID(aadharnumber))) {
-            return res.json({
-                isSuccessful: false,
-                errorMsg: "Aadhar Number Invalid",
-                result: []
-            });
-        }
-
-
-        if (ifsc_code != "") {
-            if (!Validator.ifsc(ifsc_code)) {
-                return res.json({
-                    isSuccessful: false,
-                    errorMsg: "IFSC Code Invalid",
-                    result: []
-                });
-            }
-            ifsc.fetchDetails(ifsc_code).then(function (res) {
-                console.log(res); // gives same result as https://ifsc.razorpay.com/KKBK0000261
-                console.log(ifsc.bank.PUNB); // prints PUNB
-            });
-        }
-
-        const new_fin = await pool.query(
-            "INSERT INTO Fin_Info (Creator, aadharnumber, pannumber, bank_name, IFSC_Code, Acc_Number) VALUES ($1,$2,$3,$4,$5,$6) RETURNING*;",
-            [
-                req.username,
-                aadharnumber,
-                pannumber,
-                bank_name,
-                ifsc_code,
-                acc_number
-            ]
-        );
-
-        res.json({
-            isSuccessful: true,
-            errorMsg: "",
-            result: new_fin.rows
-        });
     } catch (err) {
         res.json({
             isSuccessful: false,
@@ -216,6 +176,142 @@ router.put("/", authorise, async (req, res) => {
             result: new_User.rows
         });
 
+    } catch (err) {
+        res.json({
+            isSuccessful: false,
+            errorMsg: err.message,
+            result: []
+        });
+    }
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////          KYC Approval TABLE            /////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////   Add New Creator KYC Approval   ///////////////////////////////////////////
+// add fin info
+router.post("/kyc", authorise, async (req, res) => {
+    try {
+        var {
+            aadharnumber,
+            pannumber,
+            bank_name,
+            ifsc_code,
+            acc_number
+        } = req.body;
+
+        if (ifsc_code == "") {
+            return res.json({
+                isSuccessful: false,
+                errorMsg: "Atleast one of UPI and Bank Details needed",
+                result: []
+            });
+        }
+
+        if (ifsc_code != "" && acc_number == "") {
+            return res.json({
+                isSuccessful: false,
+                errorMsg: "Bank Account Number can't be null",
+                result: []
+            });
+
+        }
+
+        if (!Validator.pan(pannumber)) {
+            return res.json({
+                isSuccessful: false,
+                errorMsg: "PAN Number Invalid",
+                result: []
+            });
+        }
+
+        if (!(Validator.aadhaar(aadharnumber) || Validator.aadhaarVID(aadharnumber))) {
+            return res.json({
+                isSuccessful: false,
+                errorMsg: "Aadhar Number Invalid",
+                result: []
+            });
+        }
+
+
+        if (ifsc_code != "") {
+            if (!Validator.ifsc(ifsc_code)) {
+                return res.json({
+                    isSuccessful: false,
+                    errorMsg: "IFSC Code Invalid",
+                    result: []
+                });
+            }
+            ifsc.fetchDetails(ifsc_code).then(function (res) {
+                console.log(res); // gives same result as https://ifsc.razorpay.com/KKBK0000261
+                console.log(ifsc.bank.PUNB); // prints PUNB
+            });
+        }
+
+        const new_fin = await pool.query(
+            "INSERT INTO Kyc_Approval (Creator, aadharnumber, pannumber, bank_name, IFSC_Code, Acc_Number) VALUES ($1,$2,$3,$4,$5,$6) RETURNING*;",
+            [
+                req.username,
+                aadharnumber,
+                pannumber,
+                bank_name,
+                ifsc_code,
+                acc_number
+            ]
+        );
+
+        res.json({
+            isSuccessful: true,
+            errorMsg: "",
+            result: new_fin.rows
+        });
+    } catch (err) {
+        res.json({
+            isSuccessful: false,
+            errorMsg: err.message,
+            result: []
+        });
+    }
+});
+
+///////////////////////////////////////////   Get Data   ///////////////////////////////////////////
+// Get all kyc approval data
+router.get("/kyc/alldetailsforadmin", authorise, async (req, res) => {
+    try {
+        if (req.username == "admin") {
+            const ud = await pool.query("SELECT * FROM Kyc_Approval;");
+            res.json({
+                isSuccessful: true,
+                errorMsg: "",
+                result: ud.rows
+            });
+        } else {
+            res.json({
+                isSuccessful: false,
+                errorMsg: "unauthorised access",
+                result: ""
+            });
+        }
+    } catch (err) {
+        res.json({
+            isSuccessful: false,
+            errorMsg: err.message,
+            result: []
+        });
+    }
+});
+
+///////////////////////////////////////////   Get Data   ///////////////////////////////////////////
+// Get kyc data for user
+router.get("/kyc/applied", authorise, async (req, res) => {
+    try {
+        const ud = await pool.query("SELECT * FROM Kyc_Approval WHERE creator=$1;", [req.username]);
+        res.json({
+            isSuccessful: true,
+            errorMsg: "",
+            result: ud.rows
+        });
     } catch (err) {
         res.json({
             isSuccessful: false,

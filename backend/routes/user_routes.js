@@ -478,11 +478,9 @@ router.put("/", authorise, async (req, res) => {
   try {
     var {
       emailaddress,
-      username_up,
       fname,
       lname,
       bio,
-      iscreator,
       displaypicture,
       twitterhandle,
       instagram,
@@ -512,11 +510,6 @@ router.put("/", authorise, async (req, res) => {
         "UPDATE Users SET Bio=$1 WHERE UserName=$2 RETURNING*;",
         [bio, req.username]
       );
-    if (iscreator != null)
-      new_User = await pool.query(
-        "UPDATE Users SET IsCreator=$1 WHERE UserName=$2 RETURNING*;",
-        [iscreator, req.username]
-      );
     if (displaypicture != "")
       new_User = await pool.query(
         "UPDATE Users SET DisplayPicture=$1 WHERE UserName=$2 RETURNING*;",
@@ -542,30 +535,6 @@ router.put("/", authorise, async (req, res) => {
         "UPDATE Users SET Website=$1 WHERE UserName=$2 RETURNING*;",
         [website, req.username]
       );
-
-    // Cannot update username cause it will violate foreign key constraint for otherI tables
-    // if (username_up != "") {
-    //   new_User = await pool.query(
-    //     "UPDATE Users SET UserName=$1 WHERE UserName=$2 RETURNING*;",
-    //     [username_up, req.username]
-    //   );
-
-    //   // generate access token for the new user
-    //   const accessToken = jwt.sign({
-    //     user: username
-    //   }, process.env.JWT_ACCESS_TOKEN_SECRET, {
-    //     expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
-    //   });
-    //   // generate refresh token for the new user
-    //   const refreshToken = jwt.sign({
-    //     user: username
-    //   }, process.env.JWT_REFRESH_TOKEN_SECRET, {
-    //     expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
-    //   });
-
-    //   new_User.rows[0]['x-access-token'] = accessToken;
-    //   new_User.rows[0]['x-refresh-token'] = refreshToken;
-    // }
 
     res.json({
       isSuccessful: true,

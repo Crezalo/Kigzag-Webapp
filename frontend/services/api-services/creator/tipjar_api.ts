@@ -34,7 +34,6 @@ export async function getCreatorTipJarMsgData(creator: string) {
       const response = await axios.get(MAIN_API_URL + "tipjar/" + creator, {
         headers: authHeader(),
       });
-      console.log(MAIN_API_URL + "fininfo");
       if (response.data.isSuccessful) {
         return response.data.result;
       } else {

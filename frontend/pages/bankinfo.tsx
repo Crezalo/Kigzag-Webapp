@@ -12,7 +12,6 @@ import DummyProfile from "../public/DummyProfile.jpg";
 import DummyBanner from "../public/DummyBanner.jpg";
 import Head from "next/head";
 import AuthService from "../services/auth-services";
-import { getUserData, updateUserData } from "../services/api-services/user_api";
 import { Label } from "reactstrap";
 import Jdenticon from "react-jdenticon";
 import Image from "next/image";
@@ -24,7 +23,6 @@ import UploadProfilePicsLogoModal from "../components/UploadProfilePicsModal";
 import CreatorDP from "../components/CreatorDP";
 import {
   getCreatorFinInfoData,
-  getCreatorSpecificFinInfoData,
   updateCreatorFinInfoData,
 } from "../services/api-services/creator/fininfo_api";
 import banks from "../consts/banks";

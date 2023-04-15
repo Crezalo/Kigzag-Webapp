@@ -10,7 +10,7 @@ import {
 } from "../services/api-services/creator/merch_api";
 import Carousel from "react-material-ui-carousel";
 import banks from "../consts/banks";
-import { addCreatorFinInfoData } from "../services/api-services/creator/fininfo_api";
+import { addCreatorKycApprovalData } from "../services/api-services/creator/fininfo_api";
 import { updateUserData } from "../services/api-services/user_api";
 import { addCreatorFeatureStatusData } from "../services/api-services/creator/features_api";
 import { useScreenSize } from "../services/utility";
@@ -46,6 +46,7 @@ const KYCModal = () => {
   // const [videofile, setVideofile] = useState(null);
   const [panfile, setPanFile] = useState(null);
   const [fileUploadStatus, setFileUploadStatus] = useState("NO FILE ADDED");
+  const [errorMsg, setErrorMsg] = useState("");
   const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const creatObjectUrl = (file) => {
@@ -70,53 +71,33 @@ const KYCModal = () => {
             },
           }
         );
-        let result = await addCreatorFinInfoData(
-          event.target.aadharnumber.value,
-          event.target.pannumber.value,
-          event.target.bank_name.value,
-          event.target.ifsccode.value,
-          event.target.aacnumber.value
-        );
-        console.log(result);
-        let result1 = await updateUserData(
-          "",
-          "",
-          "",
-          "",
-          "",
-          true,
-          "",
-          "",
-          "",
-          "",
-          ""
-        );
-        console.log(result1);
-        let result2 = await addCreatorFeatureStatusData();
-        console.log(result2);
-        if (
-          response.data.isSuccessful &&
-          typeof result[0] !== "string" &&
-          typeof result1 !== "string" &&
-          typeof result2 !== "string"
-        ) {
-          // handle success
-          setFileUploadStatus("COMPLETE");
-          console.log(response.data.result);
-        } else {
-          setFileUploadStatus(
-            "Failed To Upload Retry! " + response.data.errorMsg
+        if (response.data.isSuccessful) {
+          let result = await addCreatorKycApprovalData(
+            event.target.aadharnumber.value,
+            event.target.pannumber.value,
+            event.target.bank_name.value,
+            event.target.ifsccode.value,
+            event.target.aacnumber.value
           );
-          console.log(response.data.errorMsg);
+          if (typeof result !== "string") {
+            // handle success
+            setFileUploadStatus("COMPLETE");
+          } else {
+            setFileUploadStatus("Failed To Upload Retry!");
+            setErrorMsg(result);
+          }
+        } else {
+          setFileUploadStatus("Failed To Upload Retry!");
+          setErrorMsg(response.data.errorMsg);
         }
       } else {
-        setFileUploadStatus("Failed To Upload Retry! User Not Logged In");
-        console.log("User Not Logged In");
+        setFileUploadStatus("Failed To Upload Retry!");
+        setErrorMsg("User Not Logged In");
       }
     } catch (err) {
       // handle error
       setFileUploadStatus("Failed To Upload Retry!");
-      console.log(err);
+      setErrorMsg("err.message");
     }
   };
 
@@ -132,7 +113,10 @@ const KYCModal = () => {
       }}
     >
       {fileUploadStatus === "Failed To Upload Retry!" ? (
-        <p style={{ color: "red" }}>{fileUploadStatus}</p>
+        <div style={{ textAlign: "center" }}>
+          <p style={{ color: "red" }}>{fileUploadStatus}</p>
+          <p style={{ color: "red" }}>{errorMsg}</p>
+        </div>
       ) : (
         <></>
       )}

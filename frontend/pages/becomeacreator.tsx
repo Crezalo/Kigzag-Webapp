@@ -24,6 +24,7 @@ import UploadProfilePicsLogoModal from "../components/UploadProfilePicsModal";
 import CreatorDP from "../components/CreatorDP";
 import KYCModal from "../components/KYCModal";
 import { useScreenSize } from "../services/utility";
+import { getMyKycApprovalRequestsData } from "../services/api-services/creator/fininfo_api";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -180,6 +181,7 @@ export default function BecomeACreator() {
   var [signedURls, setSignedURls] = useState([]);
   var [imageLen, setImageLen] = useState(-1);
   const [settings, setSettings] = useState<SettingsT>(DefaultSettingsT);
+  const [kyc, setkyc] = useState(null);
 
   const [emailaddress, setEmailaddress] = useState("");
   const [fname, setFname] = useState("");
@@ -258,6 +260,18 @@ export default function BecomeACreator() {
 
   GetUser();
 
+  const GetKYC = () => {
+    useEffect(() => {
+      async function getData() {
+        const result = await getMyKycApprovalRequestsData();
+        if (typeof result !== "string") setkyc(result[0]);
+      }
+      getData();
+    }, []);
+  };
+
+  GetKYC();
+
   function updateSignedUrl() {
     if (signedURls?.length > 0) {
       for (let i = 0; i < signedURls.length; i++) {
@@ -296,8 +310,9 @@ export default function BecomeACreator() {
       youtube,
       website
     );
-    console.log(result);
   };
+
+  console.log(kyc);
 
   return (
     <div>
@@ -319,7 +334,7 @@ export default function BecomeACreator() {
               flexDirection: ismobile ? "column" : "row",
             }}
           >
-            {!user.iscreator ? (
+            {!user.iscreator && !kyc?.creator ? (
               <>
                 <div
                   style={{
@@ -587,8 +602,21 @@ export default function BecomeACreator() {
                 )}
               </>
             ) : (
-              <div>
-                <h1>You Are Already A Creator!!! Enjoy!!!</h1>
+              <div
+                style={{
+                  textAlign: "center",
+                  width: "100vw",
+                  margin: "20vh 0 20vh 0",
+                }}
+              >
+                {user.iscreator ? (
+                  <h1>You Are Already A Creator!!! Enjoy!!!</h1>
+                ) : (
+                  <h1>
+                    We have received your KYC details and our team will update
+                    you after we verify them in 6-12 hours.
+                  </h1>
+                )}
               </div>
             )}
           </div>

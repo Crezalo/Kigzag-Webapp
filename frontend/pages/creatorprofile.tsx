@@ -115,7 +115,7 @@ export default function CreatorProfile() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
-        {isConnected && username && creator.fname ? (
+        {isConnected && username && creator?.username ? (
           <div
             className={
               ismobile
