@@ -88,6 +88,12 @@ const useStylesModal = makeStyles((theme) => ({
     backgroundColor: "white",
     borderRadius: "5px",
   },
+  successful: {
+    color: "green",
+    fontSize: "16px",
+    marginTop: "5px",
+    borderRadius: "5px",
+  },
   textfield: {
     width: "80%",
     margin: "10px 0 10px 0",
@@ -184,14 +190,16 @@ export default function BecomeACreator() {
   const [kyc, setkyc] = useState(null);
 
   const [emailaddress, setEmailaddress] = useState("");
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-  const [bio, setBio] = useState("");
+  const [fname, setFname] = useState("0");
+  const [lname, setLname] = useState("0");
+  const [bio, setBio] = useState("0");
   const [displaypicture, setDisplaypicture] = useState("");
-  const [twitterhandle, setTwitterhandle] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [youtube, setYoutube] = useState("");
-  const [website, setWebsite] = useState("");
+  const [twitterhandle, setTwitterhandle] = useState("0");
+  const [instagram, setInstagram] = useState("0");
+  const [youtube, setYoutube] = useState("0");
+  const [website, setWebsite] = useState("0");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
@@ -297,19 +305,21 @@ export default function BecomeACreator() {
   };
 
   const UpdateUserData = async () => {
+    setSuccessMsg("");
+    setErrorMsg("");
     const result = await updateUserData(
       emailaddress,
-      "",
       fname,
       lname,
       bio,
-      user.iscreator,
       displaypicture,
       twitterhandle,
       instagram,
       youtube,
       website
     );
+    if (typeof result !== "string") setSuccessMsg("Successful");
+    else setErrorMsg(result);
   };
 
   console.log(kyc);
@@ -514,6 +524,8 @@ export default function BecomeACreator() {
                       onClickFunction={UpdateUserData}
                     />
                   </div>
+                  <p className={classesModal.error}>{errorMsg}</p>
+                  <p className={classesModal.successful}>{successMsg}</p>
                 </div>
                 {ismobile ? (
                   <></>
