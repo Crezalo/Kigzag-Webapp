@@ -93,6 +93,7 @@ const SeeFeedbacks = () => {
   const [feedbacks, setFeedbacks] = useState([
     {
       feedback: "",
+      username: "",
       createdat: "",
     },
   ]);
@@ -118,6 +119,7 @@ const SeeFeedbacks = () => {
               return (
                 <div>
                   <span>{fb.createdat.split("T")[0] + "\t\t|\t\t"}</span>
+                  <span>{fb.username + "\t\t|\t\t"}</span>
                   <span>{fb.feedback}</span>
                   <hr />
                   <hr />

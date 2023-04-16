@@ -133,8 +133,8 @@ export default function Home() {
     <div>
       <Head>
         <title>
-          Crezalo: One Page Link To Sell Premium Videos, Courses, Merch, and
-          Receive Tips
+          Crezalo: One Link To Sell Premium Videos, Courses, Merch, and Receive
+          Tips
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>

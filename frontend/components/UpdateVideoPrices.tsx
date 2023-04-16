@@ -79,6 +79,12 @@ const useStylesModal = makeStyles((theme) => ({
     backgroundColor: "white",
     borderRadius: "5px",
   },
+  successful: {
+    color: "green",
+    fontSize: "16px",
+    backgroundColor: "white",
+    borderRadius: "5px",
+  },
   textfield: {
     // width: "80%",
     margin: "5px 0 5px 0",
@@ -109,6 +115,7 @@ const UpdateVideoPrices = () => {
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   const checkConnected = () => {
     useEffect(() => {
@@ -232,6 +239,8 @@ const UpdateVideoPrices = () => {
 
   const updatePrice = async () => {
     let result;
+    setSuccessMsg("");
+    setErrorMsg("");
     if (
       creator1msub.video_on_demand == 0 &&
       creator1msub.video_call == 0 &&
@@ -308,6 +317,7 @@ const UpdateVideoPrices = () => {
       if (result[0]) setCreator1ysub(result[0]);
     }
     if (!result[0]) setErrorMsg(result);
+    else setSuccessMsg("Successful");
   };
 
   console.log("creator1msub");
@@ -414,6 +424,7 @@ const UpdateVideoPrices = () => {
         <></>
       )}
       <p className={classesModal.error}>{errorMsg}</p>
+      <p className={classesModal.successful}>{successMsg}</p>
     </div>
   );
 };

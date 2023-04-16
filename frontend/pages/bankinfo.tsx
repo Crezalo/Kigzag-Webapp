@@ -7,26 +7,15 @@ import {
   makeStyles,
   TextField,
 } from "@material-ui/core";
-import ConnectToAccount from "../components/ConnectToAccount";
-import DummyProfile from "../public/DummyProfile.jpg";
-import DummyBanner from "../public/DummyBanner.jpg";
 import Head from "next/head";
 import AuthService from "../services/auth-services";
-import { Label } from "reactstrap";
-import Jdenticon from "react-jdenticon";
-import Image from "next/image";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import BasicModal from "../components/BasicModal";
-import { getCreatorInfoImages } from "../services/api-services/content_api";
-import Carousel from "react-material-ui-carousel";
-import UploadProfilePicsLogoModal from "../components/UploadProfilePicsModal";
-import CreatorDP from "../components/CreatorDP";
 import {
   getCreatorFinInfoData,
   updateCreatorFinInfoData,
 } from "../services/api-services/creator/fininfo_api";
 import banks from "../consts/banks";
 import { useScreenSize } from "../services/utility";
+import { type } from "os";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -69,8 +58,14 @@ const useStylesModal = makeStyles((theme) => ({
   error: {
     color: "red",
     fontSize: "16px",
-    backgroundColor: "white",
     borderRadius: "5px",
+    textAlign: "center",
+  },
+  successful: {
+    color: "green",
+    fontSize: "16px",
+    borderRadius: "5px",
+    textAlign: "center",
   },
   textfield: {
     width: "80%",
@@ -139,6 +134,8 @@ export default function BankInfo() {
   const [bank_name, setBank_name] = useState("");
   const [ifsc_code, setIfsc_code] = useState("");
   const [acc_number, setAcc_number] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
@@ -189,12 +186,15 @@ export default function BankInfo() {
   GetUser();
 
   const UpdateUserData = async () => {
+    setSuccessMsg("");
+    setErrorMsg("");
     const result = await updateCreatorFinInfoData(
       bank_name,
       ifsc_code,
       acc_number
     );
-    console.log(result);
+    if (typeof result !== "string") setSuccessMsg("Successful");
+    else setErrorMsg(result);
   };
 
   return (
@@ -309,6 +309,8 @@ export default function BankInfo() {
                 Update
               </Button>
             </div>
+            <p className={classesModal.error}>{errorMsg}</p>
+            <p className={classesModal.successful}>{successMsg}</p>
           </div>
         ) : (
           <div></div>

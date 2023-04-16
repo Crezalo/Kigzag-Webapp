@@ -14,9 +14,10 @@ router.post('/', authorise, async (req, res) => {
         } = req.body;
 
         const new_colab = await pool.query(
-            "INSERT INTO Feedback (Feedback, CreatedAt) VALUES ($1,TO_TIMESTAMP($2)) RETURNING*;",
+            "INSERT INTO Feedback (Feedback, Username, CreatedAt) VALUES ($1, $2, TO_TIMESTAMP($3)) RETURNING*;",
             [
                 feedback,
+                req.username,
                 Date.now() / 1000
             ]
         );

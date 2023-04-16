@@ -83,7 +83,13 @@ const useStylesModal = makeStyles((theme) => ({
   error: {
     color: "red",
     fontSize: "16px",
-    backgroundColor: "white",
+    borderRadius: "5px",
+    marginTop: "5px",
+  },
+  successful: {
+    color: "green",
+    fontSize: "16px",
+    marginTop: "5px",
     borderRadius: "5px",
   },
   textfield: {
@@ -181,14 +187,16 @@ export default function EditProfile() {
   const [settings, setSettings] = useState<SettingsT>(DefaultSettingsT);
 
   const [emailaddress, setEmailaddress] = useState("");
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-  const [bio, setBio] = useState("");
+  const [fname, setFname] = useState("0");
+  const [lname, setLname] = useState("0");
+  const [bio, setBio] = useState("0");
   const [displaypicture, setDisplaypicture] = useState("");
-  const [twitterhandle, setTwitterhandle] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [youtube, setYoutube] = useState("");
-  const [website, setWebsite] = useState("");
+  const [twitterhandle, setTwitterhandle] = useState("0");
+  const [instagram, setInstagram] = useState("0");
+  const [youtube, setYoutube] = useState("0");
+  const [website, setWebsite] = useState("0");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
   const checkConnected = () => {
@@ -281,20 +289,21 @@ export default function EditProfile() {
   };
 
   const UpdateUserData = async () => {
+    setSuccessMsg("");
+    setErrorMsg("");
     const result = await updateUserData(
       emailaddress,
-      "",
       fname,
       lname,
       bio,
-      user.iscreator,
       displaypicture,
       twitterhandle,
       instagram,
       youtube,
       website
     );
-    console.log(result);
+    if (typeof result !== "string") setSuccessMsg("Successful");
+    else setErrorMsg(result);
   };
 
   return (
@@ -305,68 +314,27 @@ export default function EditProfile() {
       </Head>
       <div>
         {isConnected && username && user?.username != "" ? (
-          <div
-            className={
-              ismobile
-                ? "blueTextBlackBackgroundMobile"
-                : "blueTextBlackBackground"
-            }
-            style={{
-              fontSize: "18px",
-              display: "flex",
-              flexDirection: ismobile ? "column" : "row",
-            }}
-          >
+          <>
             <div
+              className={
+                ismobile
+                  ? "blueTextBlackBackgroundMobile"
+                  : "blueTextBlackBackground"
+              }
               style={{
-                width: ismobile ? "100%" : "50%",
+                fontSize: "18px",
                 display: "flex",
-                flexDirection: "column",
-                padding: ismobile ? "0" : "50px",
+                flexDirection: ismobile ? "column" : "row",
               }}
             >
               <div
                 style={{
+                  width: ismobile ? "100%" : "50%",
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "center",
+                  padding: ismobile ? "0" : "50px",
                 }}
               >
-                {/* {user.iscreator ? ( */}
-                <div style={{}}>
-                  {updateSignedUrl() ? (
-                    <Carousel
-                      className="editPageCarousel"
-                      {...settings}
-                      navButtonsProps={{
-                        // Change the colors and radius of the actual buttons. THIS STYLES BOTH BUTTONS
-                        style: {
-                          backgroundColor: "cornflowerblue",
-                          borderRadius: 5,
-                        },
-                      }}
-                    >
-                      {Array.from(signedURls).map((item, i) => (
-                        <img
-                          src={item}
-                          alt="Loading ..."
-                          width="100%"
-                          height="100%"
-                          onError={({ currentTarget }) => {
-                            setImageLen(i);
-                            currentTarget.onerror = null; // prevents looping
-                            currentTarget.src = DummyBanner.src;
-                          }}
-                        />
-                      ))}
-                    </Carousel>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-                {/* ) : (
-                  <></>
-                )} */}
                 <div
                   style={{
                     display: "flex",
@@ -374,28 +342,70 @@ export default function EditProfile() {
                     justifyContent: "center",
                   }}
                 >
+                  {/* {user.iscreator ? ( */}
+                  <div style={{}}>
+                    {updateSignedUrl() ? (
+                      <Carousel
+                        className="editPageCarousel"
+                        {...settings}
+                        navButtonsProps={{
+                          // Change the colors and radius of the actual buttons. THIS STYLES BOTH BUTTONS
+                          style: {
+                            backgroundColor: "cornflowerblue",
+                            borderRadius: 5,
+                          },
+                        }}
+                      >
+                        {Array.from(signedURls).map((item, i) => (
+                          <img
+                            src={item}
+                            alt="Loading ..."
+                            width="100%"
+                            height="100%"
+                            onError={({ currentTarget }) => {
+                              setImageLen(i);
+                              currentTarget.onerror = null; // prevents looping
+                              currentTarget.src = DummyBanner.src;
+                            }}
+                          />
+                        ))}
+                      </Carousel>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                  {/* ) : (
+                  <></>
+                )} */}
                   <div
-                    className="creatorImageDiv"
                     style={{
+                      display: "flex",
+                      flexDirection: "column",
                       justifyContent: "center",
-                      width: "30%",
-                      display: "table",
-                      position: "relative",
                     }}
                   >
-                    <CreatorDP
-                      creator={user?.username}
-                      height={250}
-                      width={250}
-                    />
-                    <div className="bottom-right">
-                      <BasicModal
-                        modalButtonText={<CameraAltIcon />}
-                        modalBody={<UploadProfilePicsLogoModal />}
+                    <div
+                      className="creatorImageDiv"
+                      style={{
+                        justifyContent: "center",
+                        width: "30%",
+                        display: "table",
+                        position: "relative",
+                      }}
+                    >
+                      <CreatorDP
+                        creator={user?.username}
+                        height={250}
+                        width={250}
                       />
+                      <div className="bottom-right">
+                        <BasicModal
+                          modalButtonText={<CameraAltIcon />}
+                          modalBody={<UploadProfilePicsLogoModal />}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  {/* <div
+                    {/* <div
                     className="creatorImageDiv"
                     style={{
                       justifyContent: "center",
@@ -410,78 +420,191 @@ export default function EditProfile() {
                       <></>
                     )}
                   </div> */}
-                </div>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: ismobile ? "column" : "row",
-                  justifyContent: "center",
-                }}
-              >
-                <div
-                  style={{
-                    justifyContent: "center",
-                    marginRight: ismobile ? "0" : "10px",
-                  }}
-                >
-                  <Label style={{ margin: "10px" }}>First Name</Label>
-                  <TextField
-                    className={
-                      ismobile
-                        ? classesModal.textfieldMobile
-                        : classesModal.textfield
-                    }
-                    placeholder="First Name Here ..."
-                    type="text"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    variant="outlined"
-                    defaultValue={user.fname}
-                    inputProps={{
-                      style: { color: "white" },
-                    }}
-                    onChange={(e) => {
-                      setFname(e.target.value);
-                    }}
-                  />
+                  </div>
                 </div>
                 <div
                   style={{
+                    display: "flex",
+                    flexDirection: ismobile ? "column" : "row",
                     justifyContent: "center",
-                    marginLeft: ismobile ? "0" : "10px",
                   }}
                 >
-                  <Label style={{ margin: "10px" }}>Last Name</Label>
-                  <TextField
-                    className={
-                      ismobile
-                        ? classesModal.textfieldMobile
-                        : classesModal.textfield
-                    }
-                    placeholder="Last Name Here ..."
-                    type="text"
-                    InputLabelProps={{
-                      shrink: true,
+                  <div
+                    style={{
+                      justifyContent: "center",
+                      marginRight: ismobile ? "0" : "10px",
                     }}
-                    variant="outlined"
-                    defaultValue={user.lname}
-                    inputProps={{
-                      style: { color: "white" },
+                  >
+                    <Label style={{ margin: "10px" }}>First Name</Label>
+                    <TextField
+                      className={
+                        ismobile
+                          ? classesModal.textfieldMobile
+                          : classesModal.textfield
+                      }
+                      placeholder="First Name Here ..."
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      defaultValue={user.fname}
+                      inputProps={{
+                        style: { color: "white" },
+                      }}
+                      onChange={(e) => {
+                        setFname(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      justifyContent: "center",
+                      marginLeft: ismobile ? "0" : "10px",
                     }}
-                    // value={addUpdateCPW}
-                    onChange={(e) => {
-                      setLname(e.target.value);
+                  >
+                    <Label style={{ margin: "10px" }}>Last Name</Label>
+                    <TextField
+                      className={
+                        ismobile
+                          ? classesModal.textfieldMobile
+                          : classesModal.textfield
+                      }
+                      placeholder="Last Name Here ..."
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      defaultValue={user.lname}
+                      inputProps={{
+                        style: { color: "white" },
+                      }}
+                      // value={addUpdateCPW}
+                      onChange={(e) => {
+                        setLname(e.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+                {ismobile ? (
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <Label style={{ margin: "10px 0 0 10px" }}>Bio</Label>
+                    <TextField
+                      className={classesModal.textfieldMobile}
+                      placeholder="Bio Here ..."
+                      type="text"
+                      multiline
+                      rows={3}
+                      inputProps={{ style: { color: "white" } }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      defaultValue={user.bio}
+                      onChange={(e) => {
+                        setBio(e.target.value);
+                      }}
+                    />
+                    <Label style={{ margin: "10px 0 0 10px" }}>Twitter</Label>
+                    <TextField
+                      className={classesModal.textfieldMobile}
+                      placeholder="@YourTwitterHandle"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      inputProps={{ style: { color: "white" } }}
+                      defaultValue={user.twitterhandle}
+                      onChange={(e) => {
+                        setTwitterhandle(e.target.value);
+                      }}
+                    />
+                    <Label style={{ margin: "10px 0 0 10px" }}>Instagram</Label>
+                    <TextField
+                      className={classesModal.textfieldMobile}
+                      placeholder="@YourInstagramUsername"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      inputProps={{ style: { color: "white" } }}
+                      defaultValue={user.instagram}
+                      onChange={(e) => {
+                        setInstagram(e.target.value);
+                      }}
+                    />
+                    <Label style={{ margin: "10px 0 0 10px" }}>
+                      Youtube Channel
+                    </Label>
+                    <TextField
+                      className={classesModal.textfieldMobile}
+                      placeholder="https://www.youtube.com/c/channelid"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      inputProps={{ style: { color: "white" } }}
+                      defaultValue={user.youtube}
+                      onChange={(e) => {
+                        setYoutube(e.target.value);
+                      }}
+                    />
+                    <Label style={{ margin: "10px 0 0 10px" }}>Website</Label>
+                    <TextField
+                      className={classesModal.textfieldMobile}
+                      placeholder="https://www.mywebsite.com/"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      variant="outlined"
+                      inputProps={{ style: { color: "white" } }}
+                      defaultValue={user.youtube}
+                      onChange={(e) => {
+                        setWebsite(e.target.value);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <div
+                  style={{
+                    marginTop: "50px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    style={{
+                      background: "#3B82F6",
+                      color: "white",
+                      marginBottom: "2px",
+                      width: "30%",
+                      justifyContent: "center",
                     }}
-                  />
+                    className={classesModal.button}
+                    variant="contained"
+                    onClick={() => {
+                      UpdateUserData();
+                    }}
+                  >
+                    SAVE
+                  </Button>
+                  <p className={classesModal.error}>{errorMsg}</p>
+                  <p className={classesModal.successful}>{successMsg}</p>
                 </div>
               </div>
               {ismobile ? (
-                <div style={{ display: "flex", flexDirection: "column" }}>
+                <></>
+              ) : (
+                <div className={classesModal.paper}>
                   <Label style={{ margin: "10px 0 0 10px" }}>Bio</Label>
                   <TextField
-                    className={classesModal.textfieldMobile}
+                    className={classesModal.textfield}
                     placeholder="Bio Here ..."
                     type="text"
                     multiline
@@ -498,7 +621,7 @@ export default function EditProfile() {
                   />
                   <Label style={{ margin: "10px 0 0 10px" }}>Twitter</Label>
                   <TextField
-                    className={classesModal.textfieldMobile}
+                    className={classesModal.textfield}
                     placeholder="@YourTwitterHandle"
                     type="text"
                     InputLabelProps={{
@@ -513,7 +636,7 @@ export default function EditProfile() {
                   />
                   <Label style={{ margin: "10px 0 0 10px" }}>Instagram</Label>
                   <TextField
-                    className={classesModal.textfieldMobile}
+                    className={classesModal.textfield}
                     placeholder="@YourInstagramUsername"
                     type="text"
                     InputLabelProps={{
@@ -530,7 +653,7 @@ export default function EditProfile() {
                     Youtube Channel
                   </Label>
                   <TextField
-                    className={classesModal.textfieldMobile}
+                    className={classesModal.textfield}
                     placeholder="https://www.youtube.com/c/channelid"
                     type="text"
                     InputLabelProps={{
@@ -545,7 +668,7 @@ export default function EditProfile() {
                   />
                   <Label style={{ margin: "10px 0 0 10px" }}>Website</Label>
                   <TextField
-                    className={classesModal.textfieldMobile}
+                    className={classesModal.textfield}
                     placeholder="https://www.mywebsite.com/"
                     type="text"
                     InputLabelProps={{
@@ -559,119 +682,10 @@ export default function EditProfile() {
                     }}
                   />
                 </div>
-              ) : (
-                <></>
               )}
-              <div
-                style={{
-                  marginTop: "50px",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  style={{
-                    background: "#3B82F6",
-                    color: "white",
-                    marginBottom: "2px",
-                    width: "30%",
-                    justifyContent: "center",
-                  }}
-                  className={classesModal.button}
-                  variant="contained"
-                  onClick={() => {
-                    UpdateUserData();
-                  }}
-                >
-                  SAVE
-                </Button>
-              </div>
             </div>
-            {ismobile ? (
-              <></>
-            ) : (
-              <div className={classesModal.paper}>
-                <Label style={{ margin: "10px 0 0 10px" }}>Bio</Label>
-                <TextField
-                  className={classesModal.textfield}
-                  placeholder="Bio Here ..."
-                  type="text"
-                  multiline
-                  rows={3}
-                  inputProps={{ style: { color: "white" } }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  defaultValue={user.bio}
-                  onChange={(e) => {
-                    setBio(e.target.value);
-                  }}
-                />
-                <Label style={{ margin: "10px 0 0 10px" }}>Twitter</Label>
-                <TextField
-                  className={classesModal.textfield}
-                  placeholder="@YourTwitterHandle"
-                  type="text"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  inputProps={{ style: { color: "white" } }}
-                  defaultValue={user.twitterhandle}
-                  onChange={(e) => {
-                    setTwitterhandle(e.target.value);
-                  }}
-                />
-                <Label style={{ margin: "10px 0 0 10px" }}>Instagram</Label>
-                <TextField
-                  className={classesModal.textfield}
-                  placeholder="@YourInstagramUsername"
-                  type="text"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  inputProps={{ style: { color: "white" } }}
-                  defaultValue={user.instagram}
-                  onChange={(e) => {
-                    setInstagram(e.target.value);
-                  }}
-                />
-                <Label style={{ margin: "10px 0 0 10px" }}>
-                  Youtube Channel
-                </Label>
-                <TextField
-                  className={classesModal.textfield}
-                  placeholder="https://www.youtube.com/c/channelid"
-                  type="text"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  inputProps={{ style: { color: "white" } }}
-                  defaultValue={user.youtube}
-                  onChange={(e) => {
-                    setYoutube(e.target.value);
-                  }}
-                />
-                <Label style={{ margin: "10px 0 0 10px" }}>Website</Label>
-                <TextField
-                  className={classesModal.textfield}
-                  placeholder="https://www.mywebsite.com/"
-                  type="text"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  inputProps={{ style: { color: "white" } }}
-                  defaultValue={user.youtube}
-                  onChange={(e) => {
-                    setWebsite(e.target.value);
-                  }}
-                />
-              </div>
-            )}
-          </div>
+            <br />
+          </>
         ) : (
           <div></div>
         )}

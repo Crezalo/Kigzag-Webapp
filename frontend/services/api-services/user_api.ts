@@ -216,11 +216,9 @@ export async function getSearchResultForCreators(query: string) {
 
 export async function updateUserData(
   emailaddress: string,
-  username_up: string,
   fname: string,
   lname: string,
   bio: string,
-  iscreator: boolean,
   displaypicture: string,
   twitterhandle: string,
   instagram: string,
@@ -231,11 +229,9 @@ export async function updateUserData(
     if (authHeader().Authorization) {
       const data = {
         emailaddress: emailaddress,
-        username_up: username_up,
         fname: fname,
         lname: lname,
         bio: bio,
-        iscreator: iscreator,
         displaypicture: displaypicture,
         twitterhandle: twitterhandle,
         instagram: instagram,

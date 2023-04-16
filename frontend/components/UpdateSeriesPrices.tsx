@@ -73,6 +73,12 @@ const useStylesModal = makeStyles((theme) => ({
     backgroundColor: "white",
     borderRadius: "5px",
   },
+  successful: {
+    color: "green",
+    fontSize: "16px",
+    backgroundColor: "white",
+    borderRadius: "5px",
+  },
   textfield: {
     // width: "80%",
     margin: "5px 0 5px 0",
@@ -107,6 +113,7 @@ const UpdateSeriesPrices = ({ seriesid }: UpdateSeriesPricesProp) => {
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   const checkConnected = () => {
     useEffect(() => {
@@ -163,6 +170,8 @@ const UpdateSeriesPrices = ({ seriesid }: UpdateSeriesPricesProp) => {
 
   const updatePrice = async () => {
     let result;
+    setSuccessMsg("");
+    setErrorMsg("");
     if (
       seriesSub.onemonth == 0 &&
       seriesSub.threemonths == 0 &&
@@ -185,6 +194,7 @@ const UpdateSeriesPrices = ({ seriesid }: UpdateSeriesPricesProp) => {
       if (result[0]) setSeriesSub(result[0]);
     }
     if (!result[0]) setErrorMsg(result);
+    else setSuccessMsg("Successful");
   };
 
   return (
@@ -284,6 +294,7 @@ const UpdateSeriesPrices = ({ seriesid }: UpdateSeriesPricesProp) => {
         <></>
       )}
       <p className={classesModal.error}>{errorMsg}</p>
+      <p className={classesModal.successful}>{successMsg}</p>
     </div>
   );
 };

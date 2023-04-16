@@ -495,17 +495,17 @@ router.put("/", authorise, async (req, res) => {
         "UPDATE Users SET EmailAddress=$1 WHERE UserName=$2 RETURNING*;",
         [emailaddress, req.username]
       );
-    if (fname != "")
+    if (fname != "0")
       new_User = await pool.query(
         "UPDATE Users SET FName=$1 WHERE UserName=$2 RETURNING*;",
         [fname, req.username]
       );
-    if (lname != "")
+    if (lname != "0")
       new_User = await pool.query(
         "UPDATE Users SET LName=$1 WHERE UserName=$2 RETURNING*;",
         [lname, req.username]
       );
-    if (bio != "")
+    if (bio != "0")
       new_User = await pool.query(
         "UPDATE Users SET Bio=$1 WHERE UserName=$2 RETURNING*;",
         [bio, req.username]
@@ -515,22 +515,22 @@ router.put("/", authorise, async (req, res) => {
         "UPDATE Users SET DisplayPicture=$1 WHERE UserName=$2 RETURNING*;",
         [displaypicture, req.username]
       );
-    if (twitterhandle != "")
+    if (twitterhandle != "0")
       new_User = await pool.query(
         "UPDATE Users SET TwitterHandle=$1 WHERE UserName=$2 RETURNING*;",
         [twitterhandle, req.username]
       );
-    if (instagram != "")
+    if (instagram != "0")
       new_User = await pool.query(
         "UPDATE Users SET Instagram=$1 WHERE UserName=$2 RETURNING*;",
         [instagram, req.username]
       );
-    if (youtube != "")
+    if (youtube != "0")
       new_User = await pool.query(
         "UPDATE Users SET Youtube=$1 WHERE UserName=$2 RETURNING*;",
         [youtube, req.username]
       );
-    if (website != "")
+    if (website != "0")
       new_User = await pool.query(
         "UPDATE Users SET Website=$1 WHERE UserName=$2 RETURNING*;",
         [website, req.username]

@@ -129,7 +129,7 @@ const WriteFeedbackModal = ({}: WriteFeedbackModalProp) => {
                 className={classesModal.textfield}
                 type="string"
                 label="Feedback"
-                placeholder="We believe in correcting and improving our user experience. Every small feedback from you can be very helpful for us. Please Enter Feedback Here ..."
+                placeholder="We believe in correcting and improving our user experience. Please Enter Your Feedback Here ..."
                 InputLabelProps={{
                   shrink: true,
                 }}

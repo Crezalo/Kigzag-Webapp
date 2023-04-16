@@ -104,7 +104,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   //9. Feedback Table creation
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS Feedback (Id BIGSERIAL PRIMARY KEY, Feedback VARCHAR(255) NOT NULL, CreatedAt TIMESTAMP NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS Feedback (Id BIGSERIAL PRIMARY KEY, Feedback VARCHAR(255) NOT NULL, UserName VARCHAR(255) NOT NULL, CreatedAt TIMESTAMP NOT NULL);"
     )
     .catch((err) => console.log("PG ERROR Feedback Table\n\n\t\t", err.message));
 
@@ -252,6 +252,19 @@ module.exports = async function createTablesInPostgresDB(pool) {
   END; \
   $$;")
     .catch(err => console.error("fk ERROR Creator_TipJar_Msg Table\n\n\t\t", err.message));
+
+  // Feedback Table Username is User
+  await pool.query("DO $$ \
+  BEGIN \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_feedback_user') THEN \
+          ALTER TABLE Feedback \
+              ADD CONSTRAINT fk_feedback_user \
+              FOREIGN KEY (UserName) REFERENCES Users(UserName) \
+              ON DELETE CASCADE; \
+      END IF; \
+  END; \
+  $$;")
+    .catch(err => console.error("fk ERROR Feedback Table\n\n\t\t", err.message));
 
   // Other Table creation
   // Users, Creator_Series and Creator_Discord are tables with references in other tables via foriegn key hence all other tables can be created once User, Creator_Series and Creator_Discord tables are ready

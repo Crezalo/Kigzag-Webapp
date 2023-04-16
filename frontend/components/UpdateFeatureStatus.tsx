@@ -172,6 +172,8 @@ const UpdateFeatureStatus = () => {
   const updateStatus = async () => {
     let result;
 
+    setSuccessMsg("");
+    setErrorMsg("");
     result = await updateFeatureStatusData(
       video_on_demand,
       courses,

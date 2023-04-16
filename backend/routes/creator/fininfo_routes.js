@@ -134,7 +134,7 @@ router.put("/", authorise, async (req, res) => {
 
         var new_User;
 
-        if (bank_name != "") {
+        if (bank_name && bank_name != "") {
 
             new_User = await pool.query(
                 "UPDATE Fin_Info SET bank_name=$1 WHERE Creator=$2 RETURNING*;",
@@ -142,7 +142,7 @@ router.put("/", authorise, async (req, res) => {
             );
         }
 
-        if (ifsc_code != null) {
+        if (ifsc_code && ifsc_code != "") {
 
             if (!Validator.ifsc(ifsc_code)) {
                 return res.json({
@@ -164,7 +164,7 @@ router.put("/", authorise, async (req, res) => {
 
         }
 
-        if (acc_number != "")
+        if (acc_number && acc_number != "")
             new_User = await pool.query(
                 "UPDATE Fin_Info SET Acc_Number=$1 WHERE Creator=$2 RETURNING*;",
                 [acc_number, req.username]
