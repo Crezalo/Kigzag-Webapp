@@ -37,7 +37,7 @@ export async function sendMarketingEmail(sqlquery: string, template: string) {
         template: template,
       };
       console.log(MARKETING_API_URL);
-      const response = await axios.post(MARKETING_API_URL + "email/", data, {
+      const response = await axios.post(MARKETING_API_URL, data, {
         headers: authHeader(),
       });
       if (response.data.isSuccessful) {
