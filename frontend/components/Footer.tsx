@@ -82,6 +82,19 @@ const Footer = () => {
               </span>
             </a>
           </Link>
+          <Link legacyBehavior href={process.env.NEXT_STATIC_AU_WEBSITE_URL}>
+            <a style={{ marginTop: "2px" }}>
+              <span
+                style={{
+                  color: "#3B82F6",
+                  textDecoration: "underline",
+                  paddingRight: "10px",
+                }}
+              >
+                About Us
+              </span>
+            </a>
+          </Link>
         </div>
       )}
       <br />
