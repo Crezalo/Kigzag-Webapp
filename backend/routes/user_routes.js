@@ -165,7 +165,7 @@ router.post('/login/:signintype', async (req, res) => {
         userNameUp = username;
       } else {
         user_col = await pool.query("SELECT * FROM Users WHERE emailaddress = $1;", [username]);
-        userNameUp = user_col.rows[0].username;
+        userNameUp = user_col?.rows[0]?.username;
       }
 
       if (!user_col.rows[0]) {
