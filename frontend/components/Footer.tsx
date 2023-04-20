@@ -36,10 +36,19 @@ const Footer = () => {
       </footer>
       <br />
       <br />
+      <br />
+      <br />
+      <br />
       {ismobile ? (
         <></>
       ) : (
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            fontSize: "10px",
+          }}
+        >
           <Link legacyBehavior href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}>
             <a style={{ marginTop: "2px" }}>
               <span
@@ -97,9 +106,6 @@ const Footer = () => {
           </Link>
         </div>
       )}
-      <br />
-      <br />
-      <br />
     </div>
   );
 };

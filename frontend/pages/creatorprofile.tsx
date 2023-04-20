@@ -48,8 +48,10 @@ export default function CreatorProfile() {
     const url = router.asPath;
     address = queryString.parseUrl(url).query.address;
   }
+
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  const [creatorExists, setCreatorExists] = useState(true);
   // const ismobile = isMobile;
   const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
@@ -97,7 +99,11 @@ export default function CreatorProfile() {
       async function getData() {
         if (address != "") {
           const result = await getUserData(address?.toString());
-          setCreator(result[0]);
+          if (!result[0] || typeof result === "string") {
+            setCreatorExists(false);
+          } else {
+            setCreator(result[0]);
+          }
         }
       }
       getData();
@@ -105,6 +111,8 @@ export default function CreatorProfile() {
   };
 
   GetUser();
+
+  console.log(creatorExists);
 
   return (
     <div>
@@ -115,7 +123,7 @@ export default function CreatorProfile() {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div>
-        {isConnected && username && creator?.username ? (
+        {isConnected && username ? (
           <div
             className={
               ismobile
@@ -124,150 +132,164 @@ export default function CreatorProfile() {
             }
             style={{ fontSize: 25 }}
           >
-            <BannerImages creator={creator} />
-            <div style={{ display: "flex" }}>
-              <div className="creatorImageDiv">
-                <CreatorDP
-                  creator={creator.username}
-                  height={125}
-                  width={125}
-                />
-              </div>
-              {ismobile ? (
-                <div className="description">
-                  <div
-                    style={{
-                      minWidth: "25vw",
-                      // width: "30vw",
-                      justifyContent: "center",
-                    }}
-                  ></div>
-                </div>
-              ) : (
-                <div className="description">
-                  <div
-                    style={{
-                      minWidth: "25vw",
-                      // width: "30vw",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: "18px",
-                        fontWeight: "bold",
-                        color: "white",
-                        // margin: "5px 0 5px 0",
-                      }}
-                    >
-                      {creator.username}
+            {creatorExists ? (
+              <>
+                {creator?.username ? (
+                  <>
+                    <BannerImages creator={creator} />
+                    <div style={{ display: "flex" }}>
+                      <div className="creatorImageDiv">
+                        <CreatorDP
+                          creator={creator.username}
+                          height={125}
+                          width={125}
+                        />
+                      </div>
+                      {ismobile ? (
+                        <div className="description">
+                          <div
+                            style={{
+                              minWidth: "25vw",
+                              // width: "30vw",
+                              justifyContent: "center",
+                            }}
+                          ></div>
+                        </div>
+                      ) : (
+                        <div className="description">
+                          <div
+                            style={{
+                              minWidth: "25vw",
+                              // width: "30vw",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontSize: "18px",
+                                fontWeight: "bold",
+                                color: "white",
+                                // margin: "5px 0 5px 0",
+                              }}
+                            >
+                              {creator.username}
+                            </div>
+                            <div
+                              style={{
+                                fontSize: "16px",
+                                color: "white",
+                                // margin: "5px 0 5px 0",
+                              }}
+                            >
+                              {creator.fname + " " + creator.lname}
+                            </div>
+                            {creator.bio != "" ? (
+                              <div style={{ fontSize: "16px", color: "white" }}>
+                                {creator.bio}
+                              </div>
+                            ) : (
+                              <></>
+                            )}
+                            <SocialHandles creator={creator} />
+                          </div>
+                        </div>
+                      )}
+                      <BasicModal
+                        modalButtonText={
+                          <Tooltip title="Share Kigzag">
+                            <ShareIcon
+                              className="pointer"
+                              style={{ fontSize: "30px", color: "lightgrey" }}
+                            />
+                          </Tooltip>
+                        }
+                        modalBody={
+                          <ShareSocialModal
+                            title={"Share " + creator.fname + "'s Kigzag"}
+                            url={
+                              process.env.NEXT_STATIC_WEBSITE_URL +
+                              "@" +
+                              creator.username
+                            }
+                            socialTypes={[
+                              "whatsapp",
+                              "telegram",
+                              "twitter",
+                              "linkedin",
+                              "facebook",
+                              "reddit",
+                            ]}
+                            onSocialButtonClicked={(data) => console.log(data)}
+                            style={style}
+                          />
+                        }
+                        formatting={true}
+                      />
                     </div>
-                    <div
-                      style={{
-                        fontSize: "16px",
-                        color: "white",
-                        // margin: "5px 0 5px 0",
-                      }}
-                    >
-                      {creator.fname + " " + creator.lname}
-                    </div>
-                    {creator.bio != "" ? (
-                      <div style={{ fontSize: "16px", color: "white" }}>
-                        {creator.bio}
+                    {ismobile ? (
+                      <div className="descriptionMobile">
+                        <div
+                          style={{
+                            minWidth: "25vw",
+                            // width: "30vw",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: "18px",
+                              fontWeight: "bold",
+                              color: "white",
+                              // margin: "5px 0 5px 0",
+                            }}
+                          >
+                            {creator.username}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: "16px",
+                              color: "white",
+                              // margin: "5px 0 5px 0",
+                            }}
+                          >
+                            {creator.fname + " " + creator.lname}
+                          </div>
+                          {creator.bio != "" ? (
+                            <div style={{ fontSize: "16px", color: "white" }}>
+                              {creator.bio}
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+                          <SocialHandles creator={creator} />
+                          <br />
+                        </div>
                       </div>
                     ) : (
                       <></>
                     )}
-                    <SocialHandles creator={creator} />
-                  </div>
-                </div>
-              )}
-              <BasicModal
-                modalButtonText={
-                  <Tooltip title="Share Kigzag">
-                    <ShareIcon
-                      className="pointer"
-                      style={{ fontSize: "30px", color: "lightgrey" }}
-                    />
-                  </Tooltip>
-                }
-                modalBody={
-                  <ShareSocialModal
-                    title={"Share " + creator.fname + "'s Kigzag"}
-                    url={
-                      process.env.NEXT_STATIC_WEBSITE_URL +
-                      "@" +
-                      creator.username
-                    }
-                    socialTypes={[
-                      "whatsapp",
-                      "telegram",
-                      "twitter",
-                      "linkedin",
-                      "facebook",
-                      "reddit",
-                    ]}
-                    onSocialButtonClicked={(data) => console.log(data)}
-                    style={style}
-                  />
-                }
-                formatting={true}
-              />
-            </div>
-            {ismobile ? (
-              <div className="descriptionMobile">
-                <div
-                  style={{
-                    minWidth: "25vw",
-                    // width: "30vw",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: "bold",
-                      color: "white",
-                      // margin: "5px 0 5px 0",
-                    }}
-                  >
-                    {creator.username}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "16px",
-                      color: "white",
-                      // margin: "5px 0 5px 0",
-                    }}
-                  >
-                    {creator.fname + " " + creator.lname}
-                  </div>
-                  {creator.bio != "" ? (
-                    <div style={{ fontSize: "16px", color: "white" }}>
-                      {creator.bio}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                  <SocialHandles creator={creator} />
-                  <br />
-                </div>
+                    {!ismobile ? (
+                      <ProfileSliderTabs
+                        onCreatorProfile={true}
+                        creator={creator.username}
+                        isCreator={true}
+                      />
+                    ) : (
+                      <ProfileSliderTabsMobile
+                        onCreatorProfile={true}
+                        creator={creator.username}
+                        isCreator={true}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : (
+              <div style={{ textAlign: "center", marginTop: "15vh" }}>
+                😔 {address} not found
               </div>
-            ) : (
-              <></>
-            )}
-            {!ismobile ? (
-              <ProfileSliderTabs
-                onCreatorProfile={true}
-                creator={creator.username}
-                isCreator={true}
-              />
-            ) : (
-              <ProfileSliderTabsMobile
-                onCreatorProfile={true}
-                creator={creator.username}
-                isCreator={true}
-              />
             )}
           </div>
         ) : (

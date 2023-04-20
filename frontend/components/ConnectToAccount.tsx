@@ -57,6 +57,7 @@ const useStylesModal = makeStyles((theme) => ({
     fontSize: "18px",
     textAlign: "center",
     cursor: "pointer",
+    textDecoration: "underline",
   },
   linkTOS: {
     color: "#3B82F6",

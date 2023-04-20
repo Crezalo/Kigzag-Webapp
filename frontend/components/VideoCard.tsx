@@ -165,12 +165,12 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
         // className={category === "Series" ? "videoCardTitlePricesInfo" : ""}
         style={{ padding: "0px 5px 8px 15px" }}
       >
-        <div style={{ height: "70px" }}>
+        <div style={{ height: "85px" }}>
           <h1 style={{ fontSize: "16px" }}>
             {videoDetails?.chronology > 0
               ? videoDetails?.chronology + ". "
               : ""}
-            {truncateString(videoDetails.title, 100)}
+            {truncateString(videoDetails.title, 70)}
           </h1>
           <h1
             style={{
