@@ -9,7 +9,7 @@ module.exports = async function createTablesInPostgresDB(pool) {
   // Quantity will act like months for VOD and Course so 1, 3, 12 
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS User_Cart (CartId VARCHAR(255) PRIMARY KEY, UserName VARCHAR(255) NOT NULL, Creator VARCHAR(255) NOT NULL, Feature INTEGER NOT NULL, SeriesId VARCHAR(255) UNIQUE, ProductId VARCHAR(255) UNIQUE, Quantity NUMERIC DEFAULT 1 NOT NULL);"
+      "CREATE TABLE IF NOT EXISTS User_Cart (CartId VARCHAR(255) PRIMARY KEY, UserName VARCHAR(255) NOT NULL, Creator VARCHAR(255) NOT NULL, Feature INTEGER NOT NULL, SeriesId VARCHAR(255), ProductId VARCHAR(255), Quantity NUMERIC DEFAULT 1 NOT NULL);"
     )
     .catch((err) => console.log("PG ERROR User_Cart Table\n\n\t\t", err.message));
 
