@@ -14,6 +14,7 @@ import { GoogleLoginButton } from "react-social-login-buttons";
 import AuthService from "../services/auth-services";
 import PasswordStrengthBar from "react-password-strength-bar";
 import Router from "next/router";
+import guestCred from "../consts/guestcred";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -96,6 +97,23 @@ const useStylesModal = makeStyles((theme) => ({
       color: "white",
     },
   },
+  guestbutton: {
+    width: "100%",
+    height: "35px",
+    outline: "none",
+    border: "none",
+    borderRadius: "5px",
+    marginBottom: "15px",
+    textAlign: "center",
+    fontSize: "18px",
+    fontWeight: "bold",
+    backgroundColor: "#4CBB17",
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#C1E1C1",
+      color: "#008080",
+    },
+  },
 }));
 
 interface ConnectToAccountProps {
@@ -139,6 +157,17 @@ const ConnectToAccount = ({
 
   const login = async (resp: any) => {
     const result = await AuthService.login(username, password, "", 0);
+    console.log(result);
+    if (typeof result !== "string") {
+      setIsConnected(result);
+      window.location.reload();
+    } else {
+      setErrorMsg(result);
+    }
+  };
+
+  const guestlogin = async (resp: any) => {
+    const result = await AuthService.login(guestCred[0], guestCred[1], "", 0);
     console.log(result);
     if (typeof result !== "string") {
       setIsConnected(result);
@@ -298,6 +327,12 @@ const ConnectToAccount = ({
                 </div>
                 <button className={classesModal.button} onClick={login}>
                   Login
+                </button>
+                <button
+                  className={classesModal.guestbutton}
+                  onClick={guestlogin}
+                >
+                  Login As Guest
                 </button>
               </div>
               <div className={classesModal.textCont}>
