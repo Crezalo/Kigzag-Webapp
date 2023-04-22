@@ -33,6 +33,16 @@ module.exports = (optional = false) => async (req, res, next) => {
                 })
             }
             req.username = user;
+
+            // Verifying HTTP method
+            const httpMethod = req.method;
+            if ((httpMethod === 'POST' || httpMethod === 'PUT' || httpMethod === 'DELETE') && req.username == "guest") {
+                return res.send({
+                    isSuccessful: false,
+                    errorMsg: "Guest user not allowed: Please login to perform this action!",
+                    result: []
+                });
+            }
             next();
         } catch (err) {
             if (!optional) {

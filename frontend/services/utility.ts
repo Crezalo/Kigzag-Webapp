@@ -35,3 +35,54 @@ export const useScreenSize = (): ScreenSize => {
 export function truncateString(str: string, len: number) {
   return str?.length > len ? str.substring(0, len) + "..." : str;
 }
+
+// Function to reload the window with additional query parameters
+export function reloadWithQueryParams(router) {
+  const queryParams = {
+    // Additional query parameters
+    noguestlogin: true,
+    message: "Login in with user account to use this feature",
+  };
+  // Reload the window with additional query parameters
+  router.replace({
+    pathname: router.pathname,
+    query: {
+      ...router.query,
+      ...queryParams,
+    },
+  });
+
+  // Generate the new URL with query parameters
+  const newUrl = `${window.location.pathname}?${new URLSearchParams({
+    ...router.query,
+    ...queryParams,
+  })}`;
+
+  // Reload the window with the new URL
+  window.location.href = newUrl;
+}
+
+// Function to reload the window with additional query parameters
+export function reloadWithQueryParams_NoMessage(router) {
+  const queryParams = {
+    // Additional query parameters
+    noguestlogin: true,
+  };
+  // Reload the window with additional query parameters
+  router.replace({
+    pathname: router.pathname,
+    query: {
+      ...router.query,
+      ...queryParams,
+    },
+  });
+
+  // Generate the new URL with query parameters
+  const newUrl = `${window.location.pathname}?${new URLSearchParams({
+    ...router.query,
+    ...queryParams,
+  })}`;
+
+  // Reload the window with the new URL
+  window.location.href = newUrl;
+}

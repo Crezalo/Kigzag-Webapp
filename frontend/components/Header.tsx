@@ -15,6 +15,7 @@ import { getCartItems } from "../services/api-services/user/cart_api";
 import { useRouter } from "next/router";
 import { Button } from "@mui/material";
 import { getUserData } from "../services/api-services/user_api";
+import guestCred from "../consts/guestcred";
 
 interface cartItem {
   cartid: string;
@@ -29,6 +30,18 @@ interface cartItem {
 const Header = () => {
   const router = useRouter();
   const url = router.asPath;
+
+  let { uname, noguestlogin, message } = router.query;
+
+  if (!uname) {
+    uname = queryString.parseUrl(url).query.uname;
+  }
+  if (!noguestlogin) {
+    noguestlogin = queryString.parseUrl(url).query.noguestlogin;
+  }
+  if (!message) {
+    message = queryString.parseUrl(url).query.message;
+  }
 
   const [isConnected, setIsConnected] = useState(false);
   const [username, setUsername] = useState("");
@@ -102,8 +115,16 @@ const Header = () => {
     return url.includes("register");
   };
 
-  const uname = () => {
-    if (url.split("?uname=").length == 2) return url.split("?uname=")[1];
+  const getusername = () => {
+    if (uname) return uname.toString();
+    else return "";
+  };
+  const getnoguestlogin = () => {
+    if (noguestlogin?.toString() === "true") return true;
+    else return false;
+  };
+  const getmessage = () => {
+    if (message) return message.toString();
     else return "";
   };
 
@@ -117,7 +138,7 @@ const Header = () => {
             justifyContent: "center",
           }}
         >
-          {!atHome() ? (
+          {!atHome() && username != guestCred[0] ? (
             <Link legacyBehavior href="/">
               <a className="mr-6 py-1">
                 <div className="modelButton">
@@ -185,7 +206,12 @@ const Header = () => {
           <SettingMenu isCreator={isCreator} />
         </nav>
       ) : (
-        <ConnectToAccount haveAccountBool={!isRegister()} uname={uname()} />
+        <ConnectToAccount
+          haveAccountBool={!isRegister()}
+          uname={getusername()}
+          noguestlogin={getnoguestlogin()}
+          message={getmessage()}
+        />
       )}
     </>
   );

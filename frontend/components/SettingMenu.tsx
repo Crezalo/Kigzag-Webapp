@@ -7,13 +7,16 @@ import CurrencyRupee from "@mui/icons-material/CurrencyRupee";
 import Logout from "@mui/icons-material/Logout";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import AuthService from "../services/auth-services";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
+import guestCred from "../consts/guestcred";
+import { reloadWithQueryParams_NoMessage, useScreenSize } from "../services/utility";
 
 interface SettingsMenuProps {
   isCreator: boolean;
 }
 
 const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
+  const router = useRouter();
   return (
     <div
       className="outline text-blue-500 outline-offset-0 py-1 font-bold rounded"
@@ -56,30 +59,31 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`${
-                    active ? "bg-blue-500 text-white" : "text-blue-500"
-                  } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                  style={{ fontSize: 16 }}
-                  onClick={() => {
-                    Router.push({
-                      pathname: "/editprofile",
-                    });
-                  }}
-                >
-                  <Person
-                    className="w-5 h-5 ml-2 -mr-1 text-gray-300"
-                    aria-hidden="true"
-                    style={{ marginRight: "5px" }}
-                  />
-                  <div>Profile</div>
-                </button>
-              )}
-            </Menu.Item>
-            {/* <Menu.Item>
+          {AuthService.getUsername() != guestCred[0] ? (
+            <Menu.Items className="absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? "bg-blue-500 text-white" : "text-blue-500"
+                    } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                    style={{ fontSize: 16 }}
+                    onClick={() => {
+                      Router.push({
+                        pathname: "/editprofile",
+                      });
+                    }}
+                  >
+                    <Person
+                      className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                      aria-hidden="true"
+                      style={{ marginRight: "5px" }}
+                    />
+                    <div>Profile</div>
+                  </button>
+                )}
+              </Menu.Item>
+              {/* <Menu.Item>
               {({ active }) => (
                 <button
                   className={`${
@@ -101,7 +105,32 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                 </button>
               )}
             </Menu.Item> */}
-            {isCreator ? (
+              {isCreator ? (
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? "bg-blue-500 text-white" : "text-blue-500"
+                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                      style={{ fontSize: 16 }}
+                      onClick={() => {
+                        Router.push({
+                          pathname: "/bankinfo",
+                        });
+                      }}
+                    >
+                      <AccountBalanceIcon
+                        className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                        aria-hidden="true"
+                        style={{ marginRight: "5px" }}
+                      />
+                      <div>Banking</div>
+                    </button>
+                  )}
+                </Menu.Item>
+              ) : (
+                <></>
+              )}
               <Menu.Item>
                 {({ active }) => (
                   <button
@@ -111,45 +140,45 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                     style={{ fontSize: 16 }}
                     onClick={() => {
                       Router.push({
-                        pathname: "/bankinfo",
+                        pathname: "/orders",
                       });
                     }}
                   >
-                    <AccountBalanceIcon
+                    <Sell
                       className="w-5 h-5 ml-2 -mr-1 text-gray-300"
                       aria-hidden="true"
                       style={{ marginRight: "5px" }}
                     />
-                    <div>Banking</div>
+                    <div>Orders</div>
                   </button>
                 )}
               </Menu.Item>
-            ) : (
-              <></>
-            )}
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`${
-                    active ? "bg-blue-500 text-white" : "text-blue-500"
-                  } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                  style={{ fontSize: 16 }}
-                  onClick={() => {
-                    Router.push({
-                      pathname: "/orders",
-                    });
-                  }}
-                >
-                  <Sell
-                    className="w-5 h-5 ml-2 -mr-1 text-gray-300"
-                    aria-hidden="true"
-                    style={{ marginRight: "5px" }}
-                  />
-                  <div>Orders</div>
-                </button>
+              {isCreator ? (
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? "bg-blue-500 text-white" : "text-blue-500"
+                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                      style={{ fontSize: 16 }}
+                      onClick={() => {
+                        Router.push({
+                          pathname: "/revenue",
+                        });
+                      }}
+                    >
+                      <CurrencyRupee
+                        className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                        aria-hidden="true"
+                        style={{ marginRight: "5px" }}
+                      />
+                      <div>Revenue</div>
+                    </button>
+                  )}
+                </Menu.Item>
+              ) : (
+                <></>
               )}
-            </Menu.Item>
-            {isCreator ? (
               <Menu.Item>
                 {({ active }) => (
                   <button
@@ -158,45 +187,45 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                     } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                     style={{ fontSize: 16 }}
                     onClick={() => {
-                      Router.push({
-                        pathname: "/revenue",
-                      });
+                      AuthService.logout();
+                      window.location.reload();
                     }}
                   >
-                    <CurrencyRupee
+                    <Logout
                       className="w-5 h-5 ml-2 -mr-1 text-gray-300"
                       aria-hidden="true"
                       style={{ marginRight: "5px" }}
                     />
-                    <div>Revenue</div>
+                    <div>Logout</div>
                   </button>
                 )}
               </Menu.Item>
-            ) : (
-              <></>
-            )}
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`${
-                    active ? "bg-blue-500 text-white" : "text-blue-500"
-                  } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                  style={{ fontSize: 16 }}
-                  onClick={() => {
-                    AuthService.logout();
-                    window.location.reload();
-                  }}
-                >
-                  <Logout
-                    className="w-5 h-5 ml-2 -mr-1 text-gray-300"
-                    aria-hidden="true"
-                    style={{ marginRight: "5px" }}
-                  />
-                  <div>Logout</div>
-                </button>
-              )}
-            </Menu.Item>
-          </Menu.Items>
+            </Menu.Items>
+          ) : (
+            <Menu.Items className="absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? "bg-blue-500 text-white" : "text-blue-500"
+                    } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                    style={{ fontSize: 16 }}
+                    onClick={() => {
+                      AuthService.logout();
+                      reloadWithQueryParams_NoMessage(router);
+                    }}
+                  >
+                    <Logout
+                      className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                      aria-hidden="true"
+                      style={{ marginRight: "5px" }}
+                    />
+                    <div>Sign In</div>
+                  </button>
+                )}
+              </Menu.Item>
+            </Menu.Items>
+          )}
         </Transition>
       </Menu>
     </div>

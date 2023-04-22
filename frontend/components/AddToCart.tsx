@@ -22,9 +22,10 @@ import {
   updateCartItemsData,
 } from "../services/api-services/user/cart_api";
 import CartItemCard from "./CartItemCard";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { StringDecoder } from "string_decoder";
-import { useScreenSize } from "../services/utility";
+import { reloadWithQueryParams, useScreenSize } from "../services/utility";
+import guestCred from "../consts/guestcred";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -147,6 +148,7 @@ const AddToCart = ({
   const maxQty = 9;
   const [cartItems, setCartItems] = useState<cartItem[]>([]);
   const ismobile = useScreenSize()?.width < useScreenSize()?.height;
+  const router = useRouter();
 
   function compare(a: any, b: any) {
     if (a.feature < b.feature) {
@@ -184,19 +186,35 @@ const AddToCart = ({
 
   updateUsername();
 
+  const CheckGuestUser = () => {
+    useEffect(() => {
+      async function checkGuestUser() {
+        if (username == guestCred[0]) {
+          AuthService.logout();
+          reloadWithQueryParams(router);
+        }
+      }
+      checkGuestUser();
+    }, [username]);
+  };
+
+  CheckGuestUser();
+
   const PushRecentItem = () => {
     useEffect(() => {
       async function pushData() {
-        const result = await addCartItemData(
-          creator,
-          feature,
-          seriesid,
-          productid,
-          qty
-        );
-        console.log(result);
-        if (result[0] && typeof result !== "string") {
-          setCartItems(result.sort(compare));
+        if (creator) {
+          const result = await addCartItemData(
+            creator,
+            feature,
+            seriesid,
+            productid,
+            qty
+          );
+          console.log(result);
+          if (result[0] && typeof result !== "string") {
+            setCartItems(result.sort(compare));
+          }
         }
       }
       pushData();
@@ -207,7 +225,6 @@ const AddToCart = ({
     useEffect(() => {
       async function getData() {
         const result = await getCartItems();
-
         if (result[0] && typeof result !== "string") {
           setCartItems(result.sort(compare));
           if (setCartItemsUp) setCartItemsUp(result.sort(compare));
@@ -257,137 +274,159 @@ const AddToCart = ({
       className={classesModal.paper}
       style={{ width: ismobile ? "90vw" : "50vw" }}
     >
-      {cartItems?.length > 0 && cartItems[0]?.cartid != "" ? (
-        <div>
-          <Typography
-            style={{
-              fontSize: "22px",
-              fontWeight: "bold",
-              color: "black",
-              textAlign: "center",
-            }}
-          >
-            Cart
-          </Typography>
-          <Box
-            component="form"
-            sx={{
-              minWidth: 150,
-              margin: "20px 5px 15px 5px",
-            }}
-          >
-            <>
-              {Array.from(cartItems).map((item, index) => {
-                return (
-                  <>
-                    {item?.cartid ? (
+      {username !== guestCred[0] ? (
+        <>
+          {cartItems?.length > 0 && cartItems[0]?.cartid != "" ? (
+            <div>
+              <Typography
+                style={{
+                  fontSize: "22px",
+                  fontWeight: "bold",
+                  color: "black",
+                  textAlign: "center",
+                }}
+              >
+                Cart
+              </Typography>
+              <Box
+                component="form"
+                sx={{
+                  minWidth: 150,
+                  margin: "20px 5px 15px 5px",
+                }}
+              >
+                <>
+                  {Array.from(cartItems).map((item, index) => {
+                    return (
                       <>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            width: ismobile ? "70vw" : "40vw",
-                          }}
-                        >
-                          <CartItemCard cartItem={item} />
-                          {item.feature == 2 ? (
+                        {item?.cartid ? (
+                          <>
                             <div
                               style={{
-                                width: ismobile ? "20vw" : "20%",
-                                padding: ismobile ? "0%" : "2px",
-                                marginRight: ismobile ? "0%" : "5%",
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                width: ismobile ? "70vw" : "40vw",
                               }}
                             >
-                              <TextField
-                                type="number"
-                                size="small"
-                                InputLabelProps={{
-                                  shrink: true,
+                              <CartItemCard cartItem={item} />
+                              {item.feature == 2 ? (
+                                <div
+                                  style={{
+                                    width: ismobile ? "20vw" : "20%",
+                                    padding: ismobile ? "0%" : "2px",
+                                    marginRight: ismobile ? "0%" : "5%",
+                                  }}
+                                >
+                                  <TextField
+                                    type="number"
+                                    size="small"
+                                    InputLabelProps={{
+                                      shrink: true,
+                                    }}
+                                    variant="outlined"
+                                    inputProps={{ min: minQty, max: maxQty }}
+                                    value={item.quantity}
+                                    onChange={(e) => {
+                                      if (e.target.value === "") {
+                                        var temp = cartItems?.map((i) =>
+                                          i.cartid === item.cartid
+                                            ? updateQuantityInCart(i, 1)
+                                            : i
+                                        );
+                                        setCartItems(temp.sort(compare));
+                                        return;
+                                      }
+                                      const value = +e.target.value;
+                                      if (value < minQty) {
+                                        updateQty(item.cartid, minQty);
+                                      } else {
+                                        updateQty(item.cartid, value);
+                                      }
+                                    }}
+                                    style={{
+                                      width: ismobile ? "20vw" : "5vw",
+                                      padding: "5px",
+                                      marginRight: "10px",
+                                    }}
+                                  />
+                                </div>
+                              ) : (
+                                <></>
+                              )}
+                              <ClearIcon
+                                sx={{
+                                  color: "grey",
+                                  height: "30px",
+                                  margin: "5px",
                                 }}
-                                variant="outlined"
-                                inputProps={{ min: minQty, max: maxQty }}
-                                value={item.quantity}
-                                onChange={(e) => {
-                                  if (e.target.value === "") {
-                                    var temp = cartItems?.map((i) =>
-                                      i.cartid === item.cartid
-                                        ? updateQuantityInCart(i, 1)
-                                        : i
-                                    );
-                                    setCartItems(temp.sort(compare));
-                                    return;
-                                  }
-                                  const value = +e.target.value;
-                                  if (value < minQty) {
-                                    updateQty(item.cartid, minQty);
-                                  } else {
-                                    updateQty(item.cartid, value);
-                                  }
-                                }}
-                                style={{
-                                  width: ismobile ? "20vw" : "5vw",
-                                  padding: "5px",
-                                  marginRight: "10px",
+                                className="pointer"
+                                onClick={() => {
+                                  deleteItem(item.cartid);
+                                  removeItem(index);
                                 }}
                               />
                             </div>
-                          ) : (
-                            <></>
-                          )}
-                          <ClearIcon
-                            sx={{
-                              color: "grey",
-                              height: "30px",
-                              margin: "5px",
-                            }}
-                            className="pointer"
-                            onClick={() => {
-                              deleteItem(item.cartid);
-                              removeItem(index);
-                            }}
-                          />
-                        </div>
-                        <hr />
-                        <hr />
+                            <hr />
+                            <hr />
+                          </>
+                        ) : (
+                          <></>
+                        )}
                       </>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                );
-              })}
-            </>
-          </Box>
-          {/* <div style={{ textAlign: "right" }}>
+                    );
+                  })}
+                </>
+              </Box>
+              {/* <div style={{ textAlign: "right" }}>
             <h1 style={{ fontWeight: "bold", fontSize: "20px" }}>
               ₹ {price} Total
             </h1>
           </div> */}
-          {showContinueToCheckoutButton ? (
-            <Button
+              {showContinueToCheckoutButton ? (
+                <Button
+                  style={{
+                    background: "#3B82F6",
+                    color: "white",
+                    marginBottom: "2px",
+                  }}
+                  variant="contained"
+                  onClick={() => {
+                    Router.push({
+                      pathname: "/checkout",
+                      query: { stage: 0 },
+                    });
+                  }}
+                >
+                  Continue to Checkout
+                </Button>
+              ) : (
+                <></>
+              )}
+            </div>
+          ) : (
+            <h1
               style={{
-                background: "#3B82F6",
-                color: "white",
-                marginBottom: "2px",
-              }}
-              variant="contained"
-              onClick={() => {
-                Router.push({
-                  pathname: "/checkout",
-                  query: { stage: 0 },
-                });
+                fontSize: "25px",
+                color: "grey",
+                margin: "5px",
+                textAlign: "center",
               }}
             >
-              Continue to Checkout
-            </Button>
-          ) : (
-            <></>
+              Cart is empty
+            </h1>
           )}
-        </div>
+        </>
       ) : (
-        <h1 style={{ fontSize: "25px", color: "grey", margin: "5px" }}>
-          Cart is empty
+        <h1
+          style={{
+            fontSize: "25px",
+            color: "grey",
+            margin: "5px",
+            textAlign: "center",
+          }}
+        >
+          Please login with User Account!!!
         </h1>
       )}
     </div>

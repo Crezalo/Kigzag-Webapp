@@ -53,6 +53,12 @@ const useStylesModal = makeStyles((theme) => ({
     textAlign: "center",
     marginBottom: "10px",
   },
+  message: {
+    color: "lightgreen",
+    fontSize: "18px",
+    textAlign: "center",
+    marginBottom: "10px",
+  },
   link: {
     color: "#3B82F6",
     fontSize: "18px",
@@ -119,11 +125,15 @@ const useStylesModal = makeStyles((theme) => ({
 interface ConnectToAccountProps {
   haveAccountBool?: boolean;
   uname?: string;
+  message?: string;
+  noguestlogin?: boolean;
 }
 
 const ConnectToAccount = ({
   haveAccountBool,
   uname,
+  message,
+  noguestlogin,
 }: ConnectToAccountProps) => {
   const classesModal = useStylesModal();
   const [showPassword, setShowPassword] = useState(false);
@@ -249,6 +259,7 @@ const ConnectToAccount = ({
       <Fade in={!isConnected}>
         <div className={classesModal.paper}>
           <p className={classesModal.error}>{errorMsg}</p>
+          <p className={classesModal.message}>{message}</p>
           <p className={classesModal.text}>For Details</p>
           <a
             href={process.env.NEXT_STATIC_LANDING_WEBSITE_URL}
@@ -328,12 +339,16 @@ const ConnectToAccount = ({
                 <button className={classesModal.button} onClick={login}>
                   Login
                 </button>
-                <button
-                  className={classesModal.guestbutton}
-                  onClick={guestlogin}
-                >
-                  Login As Guest
-                </button>
+                {!noguestlogin ? (
+                  <button
+                    className={classesModal.guestbutton}
+                    onClick={guestlogin}
+                  >
+                    Login As Guest
+                  </button>
+                ) : (
+                  <></>
+                )}
               </div>
               <div className={classesModal.textCont}>
                 <p className={classesModal.text}>Create a new accountt?</p>
