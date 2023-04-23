@@ -42,6 +42,22 @@ const getFile = (bucket, name) => {
   return s3.getObject(params).promise();
 };
 
+// Returns a promise that resolves to true/false if object exists/doesn't exist
+const objectExists = async (bucket, name) => {
+  try {
+    await s3.headObject({
+      Bucket: bucket,
+      Key: name,
+    }).promise(); // Note the .promise() here
+    return true; // headObject didn't throw, object exists
+  } catch (err) {
+    if (err.code === 'NotFound') {
+      return false; // headObject threw with NotFound, object doesn't exist
+    }
+    throw err; // Rethrow other errors
+  }
+};
+
 //  upload new merch images
 // pass prefix to add before file name
 router.post('/merch_images/upload', authorise, (req, res) => {
@@ -147,7 +163,9 @@ router.get("/merch_images/allimages/:productid", authorise, async (req, res) => 
 
     let signedUrls = []
     for (let i = 0; i < 5; i++) {
-      signedUrls.push(await aws_cf.getSignedUrl(process.env.CLOUDFRONT_MERCH_DOMAIN_NAME + `${creator}/${productid}/${i}.png`, aws_cf_config));
+      if (await objectExists(process.env.S3_BUCKET_MERCH, `${creator}/${productid}/${i}.png`)) {
+        signedUrls.push(await aws_cf.getSignedUrl(process.env.CLOUDFRONT_MERCH_DOMAIN_NAME + `${creator}/${productid}/${i}.png`, aws_cf_config));
+      }
     }
     // console.log('Signed URLs: ' + signedUrls);
     res.json({
@@ -278,6 +296,7 @@ router.get("/creator_info/:type/:creator", authorise, async (req, res) => {
           });
         }
       } else {
+        // profilepic
         var signedUrl = await aws_cf.getSignedUrl(process.env.CLOUDFRONT_CREATOR_DOMAIN_NAME + `${creator}/${type}.png`, aws_cf_config);
         // console.log('Signed URL: ' + signedUrl);
         res.json({
@@ -291,7 +310,9 @@ router.get("/creator_info/:type/:creator", authorise, async (req, res) => {
     } else {
       let signedUrls = []
       for (let i = 0; i < 5; i++) {
-        signedUrls.push(await aws_cf.getSignedUrl(process.env.CLOUDFRONT_CREATOR_DOMAIN_NAME + `${creator}/profilepic${i}.png`, aws_cf_config));
+        if (await objectExists(process.env.S3_BUCKET_CREATOR, `${creator}/profilepic${i}.png`)) {
+          signedUrls.push(await aws_cf.getSignedUrl(process.env.CLOUDFRONT_CREATOR_DOMAIN_NAME + `${creator}/profilepic${i}.png`, aws_cf_config));
+        }
       }
       // console.log('Signed URL: ' + signedUrls);
       res.json({

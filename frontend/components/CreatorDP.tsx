@@ -70,7 +70,10 @@ const CreatorDP = ({ creator, height, width }: CreatorDPProp) => {
           }}
         />
       ) : (
-        <></>
+        <div
+          className="creatorDP editPageCarousel shimmer"
+          style={{ maxHeight: height, maxWidth: width }}
+        ></div>
       )}
     </>
   );

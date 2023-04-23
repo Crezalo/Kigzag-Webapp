@@ -262,7 +262,7 @@ export default function Merch() {
               <div
                 className={ismobile ? "merchPageImageMobile" : "merchPageImage"}
               >
-                {updateSignedUrl() ? (
+                {signedURls?.length > 0 ? (
                   <Carousel
                     className="merchCarousel"
                     {...settings}
@@ -288,7 +288,7 @@ export default function Merch() {
                   <></>
                 )}
               </div>
-              {merchDetails?.productid && updateSignedUrl() ? (
+              {merchDetails?.productid && signedURls?.length > 0 ? (
                 <MerchAccordianDetails
                   merchDetails={merchDetails}
                   mainMerchDetails={mainMerchDetails}

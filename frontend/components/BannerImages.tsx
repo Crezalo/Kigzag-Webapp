@@ -105,31 +105,11 @@ const BannerImages = ({ creator }: BannerImagesProp) => {
 
   GetImages();
 
-  function updateSignedUrl() {
-    if (signedURls?.length > 0) {
-      for (let i = 0; i < signedURls.length; i++) {
-        var http = new XMLHttpRequest();
-        http.open("HEAD", signedURls[i]);
-        http.onreadystatechange = function () {
-          if (this.readyState == this.DONE) {
-            if (this.status == 403) if (imageLen == -1) setImageLen(i);
-          }
-        };
-        http.send();
-      }
-      if (imageLen != -1) signedURls.length = imageLen;
-      return true;
-    }
-    return false;
-  }
-
-  updateSignedUrl();
-
   return (
     <>
       {creator && creator.iscreator ? (
         <div>
-          {updateSignedUrl() ? (
+          {signedURls?.length > 0 ? (
             <Carousel
               className="editPageCarousel"
               {...settings}
@@ -156,7 +136,12 @@ const BannerImages = ({ creator }: BannerImagesProp) => {
               ))}
             </Carousel>
           ) : (
-            <></>
+            <div
+              className="editPageCarousel shimmer"
+              style={{
+                marginLeft: ismobile ? "0px" : "20px",
+              }}
+            ></div>
           )}
         </div>
       ) : (

@@ -363,7 +363,7 @@ export default function BecomeACreator() {
                     }}
                   >
                     <div style={{}}>
-                      {updateSignedUrl() ? (
+                      {signedURls?.length > 0 ? (
                         <Carousel
                           className="editPageCarousel"
                           {...settings}
