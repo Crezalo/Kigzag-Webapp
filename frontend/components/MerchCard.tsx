@@ -57,7 +57,7 @@ const MerchCard = ({ merchDetails }: MerchCardProp) => {
             : "videoCard merchCardImageElementMobile pointer"
         }
       >
-        {merchDetails.productid != "" && merchDetails.productid ? (
+        {merchDetails?.productid != "" && merchDetails?.productid ? (
           <>
             <div className="videoCardImage">
               {merchThumb?.includes("https://") ? (
@@ -71,12 +71,18 @@ const MerchCard = ({ merchDetails }: MerchCardProp) => {
                   }
                 />
               ) : (
-                <></>
+                <div
+                  className={
+                    !ismobile
+                      ? "merchCardImageElement shimmer"
+                      : "merchCardImageElementMobile shimmer"
+                  }
+                ></div>
               )}
             </div>
           </>
         ) : (
-          <></>
+          <div className="videoCardImage shimmer"></div>
         )}
       </section>
       <div style={{ padding: "0px 5px 8px 0px", textAlign: "center" }}>

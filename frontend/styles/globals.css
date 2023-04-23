@@ -99,10 +99,10 @@ body {
     #3a3a3a 100%
   );
   background-repeat: no-repeat;
-  background-size: 800px 400px;
+  background-size: 100vw 100vh;
 
   /* Animantion */
-  -webkit-animation-duration: 2s;
+  -webkit-animation-duration: 1s;
 
   /* Specifies style for element when animation isn't playing */
   -webkit-animation-fill-mode: forwards;
@@ -241,16 +241,16 @@ body {
 
 .videoCard {
   /* Add shadows to create the "card" effect */
-  box-shadow: 0 1px 1px 3px #3b82f6;
+  box-shadow: 0 1px 1px 2px #2b2b2b;
   transition: 0.3s;
   margin: 10px;
-  background-color: #3b82f6;
+  background-color: #2b2b2b;
   color: white;
   font-size: 20px;
 }
 
-.videoCardTitlePricesInfo {
-  box-shadow: 0 1px 1px 3px #3b82f6;
+/* .videoCardTitlePricesInfo {
+  box-shadow: 0 1px 1px 2px #2b2b2b;
   transition: 0.3s;
   margin: 10px;
   background-color: #3b82f6;
@@ -258,11 +258,11 @@ body {
   width: 22vw;
   border-radius: 5%;
   font-size: 20px;
-}
+} */
 
 /* On mouse-over, add a deeper shadow */
 .videoCard:hover {
-  box-shadow: 0 10px 18px 8px #173464;
+  box-shadow: 0 10px 18px 8px #2b2b2b;
   border-radius: 10%;
 }
 
@@ -957,6 +957,11 @@ a {
 .merchCarousel {
   width: 90vw;
   /* height: 60vh; */
+}
+
+.merchCarouselShimmer {
+  width: 90vw;
+  height: 50vh;
 }
 
 .editPageCarousel {

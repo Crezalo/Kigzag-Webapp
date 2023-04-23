@@ -207,7 +207,7 @@ const MerchAccordianDetails = ({
                 >
                   <div className="creatorCardImage">
                     <CreatorDP
-                      creator={merchDetails.creator}
+                      creator={merchDetails?.creator}
                       height={50}
                       width={50}
                     />

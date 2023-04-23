@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import AddressAddSelect from "../components/AddressAddSelect";
 import Head from "next/head";
 import { useScreenSize } from "../services/utility";
+import { CircularProgress } from "@mui/material";
 
 export default function Checkout() {
   const router = useRouter();
@@ -69,73 +70,87 @@ export default function Checkout() {
         <title>Crezalo: Checkout</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      {stage === "0" ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: ismobile ? "column" : "row",
-          }}
-        >
-          <div
-            style={{
-              width: ismobile ? "100vw" : "70vw",
-              margin: ismobile ? "10px 0 10px 20px" : "5%",
-            }}
-          >
-            <AddToCart
-              showContinueToCheckoutButton={false}
-              setCartItemsUp={setCartItems}
-              setRefresh={setRefresh}
-            />
-          </div>
-          <div
-            style={{
-              width: ismobile ? "100vw" : "30vw",
-              margin: ismobile ? "10px 0 10px 0" : "5%",
-            }}
-          >
-            {cartItems.length > 0 ? (
-              <TotalPriceCheckout stage="0" refresh={refresh} />
+      <div style={{ backgroundColor: "black" }}>
+        {isConnected && username ? (
+          <>
+            {stage === "0" ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: ismobile ? "column" : "row",
+                }}
+              >
+                <div
+                  style={{
+                    width: ismobile ? "100vw" : "70vw",
+                    margin: ismobile ? "10px 0 10px 20px" : "5%",
+                  }}
+                >
+                  <AddToCart
+                    showContinueToCheckoutButton={false}
+                    setCartItemsUp={setCartItems}
+                    setRefresh={setRefresh}
+                  />
+                </div>
+                <div
+                  style={{
+                    width: ismobile ? "100vw" : "30vw",
+                    margin: ismobile ? "10px 0 10px 0" : "5%",
+                  }}
+                >
+                  {cartItems.length > 0 ? (
+                    <TotalPriceCheckout stage="0" refresh={refresh} />
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </div>
             ) : (
               <></>
             )}
-          </div>
-        </div>
-      ) : (
-        <></>
-      )}
-      {stage === "1" ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: ismobile ? "column" : "row",
-          }}
-        >
-          <div
-            style={{
-              width: ismobile ? "100vw" : "60vw",
-              margin: ismobile ? "10px 0 10px 0" : "5%",
-            }}
-          >
-            <AddressAddSelect setAddress={setAddress} />
-          </div>
-          <div
-            style={{
-              width: ismobile ? "100vw" : "30vw",
-              margin: ismobile ? "10px 0 10px 0" : "5%",
-            }}
-          >
-            {cartItems?.length > 0 ? (
-              <TotalPriceCheckout stage="1" refresh={refresh} />
+            {stage === "1" ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: ismobile ? "column" : "row",
+                }}
+              >
+                <div
+                  style={{
+                    width: ismobile ? "100vw" : "60vw",
+                    margin: ismobile ? "10px 0 10px 0" : "5%",
+                  }}
+                >
+                  <AddressAddSelect setAddress={setAddress} />
+                </div>
+                <div
+                  style={{
+                    width: ismobile ? "100vw" : "30vw",
+                    margin: ismobile ? "10px 0 10px 0" : "5%",
+                  }}
+                >
+                  {cartItems?.length > 0 ? (
+                    <TotalPriceCheckout stage="1" refresh={refresh} />
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </div>
             ) : (
               <></>
             )}
-          </div>
-        </div>
-      ) : (
-        <></>
-      )}
-      {stage === "2" ? <div>{/* Paytm Js Checkout */}</div> : <></>}
+            {stage === "2" ? <div>{/* Paytm Js Checkout */}</div> : <></>}
+          </>
+        ) : (
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import Image from "next/image";
 import VideosSeriesGating from "../components/VideosSeriesGating";
 import CreatorDP from "../components/CreatorDP";
 import { useScreenSize } from "../services/utility";
+import { CircularProgress } from "@mui/material";
 
 export default function Course() {
   const router = useRouter();
@@ -94,82 +95,90 @@ export default function Course() {
         <title>{videoDetails.title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      {isConnected && signedURl ? (
-        <>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div className="videoDiv" id="DemoVideoAndCourseInfo">
-              <div
-                style={{
-                  flexDirection: ismobile ? "column" : "row",
-                  display: "flex",
-                }}
-              >
-                <div>
-                  <video
-                    controls
-                    autoPlay
-                    crossOrigin="anonymous"
-                    controlsList="nodownload"
-                    style={{
-                      height: ismobile ? "60vw" : "35vh",
-                      width: ismobile ? "90vw" : "35vw",
-                      borderRadius: "5%",
-                    }}
-                  >
-                    <source src={signedURl} type="video/mp4" />
-                    {/* <track
+      <div style={{ backgroundColor: "black" }}>
+        {isConnected && signedURl ? (
+          <>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div className="videoDiv" id="DemoVideoAndCourseInfo">
+                <div
+                  style={{
+                    flexDirection: ismobile ? "column" : "row",
+                    display: "flex",
+                  }}
+                >
+                  <div>
+                    <video
+                      controls
+                      autoPlay
+                      crossOrigin="anonymous"
+                      controlsList="nodownload"
+                      style={{
+                        height: ismobile ? "60vw" : "35vh",
+                        width: ismobile ? "90vw" : "35vw",
+                        borderRadius: "5%",
+                      }}
+                    >
+                      <source src={signedURl} type="video/mp4" />
+                      {/* <track
               label="English"
               kind="captions"
               srcLang="en"
               src={VIDEO_API_URL + "captions/" + courseid}
               default
             /> */}
-                  </video>
-                </div>
-                <div
-                  style={{
-                    margin: ismobile ? "5px" : "2vh 10vw 10vh 10vw",
-                    maxWidth: ismobile ? "100vw" : "50vw",
-                  }}
-                >
-                  <h1 className="videoDiv h1">{videoDetails.title}</h1>
-                  <div
-                    onClick={() => {
-                      Router.push({
-                        pathname: "/creatorprofile",
-                        query: {
-                          address: videoDetails.creator,
-                        },
-                      });
-                    }}
-                    className="creatorIdent pointer"
-                  >
-                    <div className="creatorImageMinor">
-                      <CreatorDP
-                        creator={videoDetails.creator}
-                        height={50}
-                        width={50}
-                      />
-                    </div>
-                    <h2 className="VideoDiv h2">{videoDetails.creator}</h2>
+                    </video>
                   </div>
-                  <h1 className="VideoDiv p">{videoDetails.description}</h1>
+                  <div
+                    style={{
+                      margin: ismobile ? "5px" : "2vh 10vw 10vh 10vw",
+                      maxWidth: ismobile ? "100vw" : "50vw",
+                    }}
+                  >
+                    <h1 className="videoDiv h1">{videoDetails.title}</h1>
+                    <div
+                      onClick={() => {
+                        Router.push({
+                          pathname: "/creatorprofile",
+                          query: {
+                            address: videoDetails.creator,
+                          },
+                        });
+                      }}
+                      className="creatorIdent pointer"
+                    >
+                      <div className="creatorImageMinor">
+                        <CreatorDP
+                          creator={videoDetails.creator}
+                          height={50}
+                          width={50}
+                        />
+                      </div>
+                      <h2 className="VideoDiv h2">{videoDetails.creator}</h2>
+                    </div>
+                    <h1 className="VideoDiv p">{videoDetails.description}</h1>
+                  </div>
                 </div>
+                <VideosSeriesGating
+                  creator={videoDetails.creator}
+                  onCreatorProfile={false}
+                  category="SeriesVideoGrid"
+                  seriesid={courseid.toString()}
+                  onVideoPlayer={false}
+                  onCoursePage={true}
+                />
               </div>
-              <VideosSeriesGating
-                creator={videoDetails.creator}
-                onCreatorProfile={false}
-                category="SeriesVideoGrid"
-                seriesid={courseid.toString()}
-                onVideoPlayer={false}
-                onCoursePage={true}
-              />
             </div>
-          </div>
-        </>
-      ) : (
-        <>{/* <ConnectToAccount /> */}</>
-      )}
+          </>
+        ) : (
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }

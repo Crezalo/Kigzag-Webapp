@@ -146,6 +146,7 @@ const Header = () => {
                     style={{
                       background: "#3B82F6",
                       color: "white",
+                      borderRadius: "50%",
                     }}
                     variant="contained"
                   >
@@ -183,21 +184,33 @@ const Header = () => {
             <div className="mr-6 py-1">
               <BasicModal
                 modalButtonText={
-                  <span
+                  <Button
                     style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      fontSize: "15px",
+                      background: "#3B82F6",
+                      color: "white",
+                      marginBottom: "2px",
+                      borderRadius: "50%",
                     }}
+                    variant="contained"
                   >
-                    <ShoppingCartOutlinedIcon />
-                    {/* <span style={{ marginRight: "10px", marginLeft: "2px" }}>
+                    <span
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        fontSize: "15px",
+                        borderRadius: "50%",
+                      }}
+                    >
+                      <ShoppingCartOutlinedIcon />
+                      {/* <span style={{ marginRight: "10px", marginLeft: "2px" }}>
                       Cart
                       ({cartItems?.length})
                     </span> */}
-                  </span>
+                    </span>
+                  </Button>
                 }
                 modalBody={<AddToCart showContinueToCheckoutButton={true} />}
+                formatting={true}
               />
             </div>
           ) : (

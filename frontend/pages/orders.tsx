@@ -28,6 +28,7 @@ import Head from "next/head";
 import OrderCardGrid from "../components/OrderCardGrid";
 import { useScreenSize } from "../services/utility";
 import { BottomNavigation } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 
 const useStyles = makeStyles({
   tab: {
@@ -337,7 +338,13 @@ export default function Orders() {
             </div>
           </>
         ) : (
-          <></>
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
         )}
       </div>
     </div>

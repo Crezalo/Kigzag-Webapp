@@ -312,7 +312,7 @@ export default function EditProfile() {
         <title>Crezalo: Edit Profile</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div>
+      <div style={{ backgroundColor: "black" }}>
         {isConnected && username && user?.username != "" ? (
           <>
             <div
@@ -371,7 +371,7 @@ export default function EditProfile() {
                         ))}
                       </Carousel>
                     ) : (
-                      <></>
+                      <div className="editPageCarousel shimmer"></div>
                     )}
                   </div>
                   {/* ) : (
@@ -687,7 +687,13 @@ export default function EditProfile() {
             <br />
           </>
         ) : (
-          <div></div>
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
         )}
       </div>
     </div>

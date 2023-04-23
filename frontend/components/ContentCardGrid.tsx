@@ -207,9 +207,9 @@ const ContentCardGrid = ({
       <Grid container spacing={1}>
         {videoDetails?.map((vid) => (
           <>
-            {vid.videoid &&
+            {vid?.videoid &&
             category === "Series" &&
-            vid.videoid != ignoreVideoId ? (
+            vid?.videoid != ignoreVideoId ? (
               <GridItem
                 vid={vid}
                 classes={classes}
@@ -219,9 +219,9 @@ const ContentCardGrid = ({
             ) : (
               <></>
             )}
-            {vid.videoid &&
-            vid.videoid != vid.seriesid &&
-            vid.videoid != ignoreVideoId ? (
+            {vid?.videoid &&
+            vid?.videoid != vid.seriesid &&
+            vid?.videoid != ignoreVideoId ? (
               <GridItem
                 vid={vid}
                 classes={classes}

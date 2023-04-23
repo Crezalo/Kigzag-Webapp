@@ -143,7 +143,13 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
                   }
                 />
               ) : (
-                <></>
+                <div
+                  className={
+                    !ismobile
+                      ? "videoCardImageElement shimmer"
+                      : "videoCardImageElementMobile shimmer"
+                  }
+                ></div>
               )}
               <h3
                 className="bottom-right"
@@ -158,11 +164,10 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
             </div>
           </>
         ) : (
-          <></>
+          <div className="videoCardImage shimmer"></div>
         )}
       </section>
       <div
-        // className={category === "Series" ? "videoCardTitlePricesInfo" : ""}
         style={{ padding: "0px 5px 8px 15px" }}
       >
         <div style={{ height: "85px" }}>

@@ -203,7 +203,7 @@ export default function BankInfo() {
         <title>Crezalo: Bank Details</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div>
+      <div style={{ backgroundColor: "black" }}>
         {isConnected && username && fininfo?.bank_name ? (
           <div
             className={
@@ -313,7 +313,13 @@ export default function BankInfo() {
             <p className={classesModal.successful}>{successMsg}</p>
           </div>
         ) : (
-          <div></div>
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
         )}
       </div>
     </div>

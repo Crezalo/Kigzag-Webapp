@@ -17,7 +17,7 @@ import UpdateFeatureStatus from "../components/UpdateFeatureStatus";
 import StreetviewIcon from "@mui/icons-material/Streetview";
 import ShareIcon from "@mui/icons-material/Share";
 import ShareSocialModal from "../components/ShareSocialModal";
-import { Button, Tooltip } from "@mui/material";
+import { Button, CircularProgress, Tooltip } from "@mui/material";
 import { isMobile } from "react-device-detect";
 import ProfileSliderTabsMobile from "../components/ProfileSliderTabsMobile";
 import { useScreenSize } from "../services/utility";
@@ -138,7 +138,7 @@ export default function Home() {
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div>
+      <div style={{ backgroundColor: "black" }}>
         {isConnected && username && user?.username != "" ? (
           <div
             className={
@@ -385,8 +385,13 @@ export default function Home() {
             )}
           </div>
         ) : (
-          // <ConnectToAccount />
-          <></>
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
         )}
       </div>
     </div>

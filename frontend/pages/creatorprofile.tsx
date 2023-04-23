@@ -13,7 +13,7 @@ import BannerImages from "../components/BannerImages";
 import SocialHandles from "../components/SocialHandles";
 import CreatorDP from "../components/CreatorDP";
 import ShareIcon from "@mui/icons-material/Share";
-import { Tooltip } from "@mui/material";
+import { CircularProgress, Tooltip } from "@mui/material";
 import ShareSocialModal from "../components/ShareSocialModal";
 import BasicModal from "../components/BasicModal";
 import { isMobile } from "react-device-detect";
@@ -122,7 +122,7 @@ export default function CreatorProfile() {
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div>
+      <div style={{ backgroundColor: "black" }}>
         {isConnected && username ? (
           <div
             className={
@@ -293,7 +293,13 @@ export default function CreatorProfile() {
             )}
           </div>
         ) : (
-          <></>
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
         )}
       </div>
     </div>

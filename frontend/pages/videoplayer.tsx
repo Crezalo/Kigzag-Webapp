@@ -20,6 +20,7 @@ import {
 } from "../services/api-services/user/video_series_api";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { useScreenSize } from "../services/utility";
+import { CircularProgress } from "@mui/material";
 
 export default function VideoPlayer() {
   const router = useRouter();
@@ -168,7 +169,7 @@ export default function VideoPlayer() {
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div className="videoDiv">
+      <div className="videoDiv" style={{ backgroundColor: "black" }}>
         {isConnected && signedURl ? (
           <>
             {isValidated ? (
@@ -295,7 +296,13 @@ export default function VideoPlayer() {
             </div>
           </>
         ) : (
-          <>{/* <ConnectToAccount /> */}</>
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
         )}
       </div>
     </div>

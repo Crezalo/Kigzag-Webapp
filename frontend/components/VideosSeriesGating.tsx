@@ -336,7 +336,11 @@ const VideosSeriesGating = ({
                               variant="h3"
                               style={{ color: "#3b82f6" }}
                             >
-                              ₹{tier.price}
+                              {tier.price == 0 ? (
+                                <span className="shimmer">{"    "}</span>
+                              ) : (
+                                <>₹{tier.price}</>
+                              )}
                             </Typography>
                           </Box>
                           <ul>

@@ -330,7 +330,7 @@ export default function BecomeACreator() {
         <title>Crezalo: Become A Creator</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div>
+      <div style={{ backgroundColor: "black" }}>
         {isConnected && username && user?.username != "" ? (
           <div
             className={
@@ -390,7 +390,7 @@ export default function BecomeACreator() {
                           ))}
                         </Carousel>
                       ) : (
-                        <></>
+                        <div className="editPageCarousel shimmer"></div>
                       )}
                     </div>
                     <div
@@ -633,7 +633,13 @@ export default function BecomeACreator() {
             )}
           </div>
         ) : (
-          <div></div>
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
         )}
       </div>
     </div>

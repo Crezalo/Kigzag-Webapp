@@ -8,6 +8,7 @@ import {
 } from "../services/api-services/user_api";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { useScreenSize } from "../services/utility";
+import { CircularProgress } from "@mui/material";
 
 export default function Creators() {
   const [isConnected, setIsConnected] = useState(false);
@@ -126,7 +127,7 @@ export default function Creators() {
         <title>Kigzag: Creators</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div>
+      <div style={{ backgroundColor: "black" }}>
         {username != "" && isConnected ? (
           <div
             className={
@@ -155,7 +156,13 @@ export default function Creators() {
             </div>
           </div>
         ) : (
-          <>{/* <ConnectToAccount /> */}</>
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
         )}
       </div>
     </div>

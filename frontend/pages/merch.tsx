@@ -7,7 +7,7 @@ import Head from "next/head";
 import AuthService from "../services/auth-services";
 import Carousel from "react-material-ui-carousel";
 import { getSpecificUserData } from "../services/api-services/user_api";
-import { Paper, Button } from "@mui/material";
+import { Paper, Button, CircularProgress } from "@mui/material";
 import Image from "next/image";
 import {
   getProductIdMerchData,
@@ -227,26 +227,6 @@ export default function Merch() {
 
   GetRating();
 
-  function updateSignedUrl() {
-    if (signedURls?.length > 0) {
-      for (let i = 0; i < signedURls.length; i++) {
-        var http = new XMLHttpRequest();
-        http.open("HEAD", signedURls[i]);
-        http.onreadystatechange = function () {
-          if (this.readyState == this.DONE) {
-            if (this.status == 403) if (imageLen == -1) setImageLen(i);
-          }
-        };
-        http.send();
-      }
-      if (imageLen != -1) signedURls.length = imageLen;
-      return true;
-    }
-    return false;
-  }
-
-  updateSignedUrl();
-
   GetMerchImagesSignedUrls();
 
   return (
@@ -255,7 +235,7 @@ export default function Merch() {
         <title>{merchDetails?.title}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div className="videoDiv">
+      <div className="videoDiv" style={{ backgroundColor: "black" }}>
         {isConnected && productid && merchReviews[0]?.ratings != -1 ? (
           <>
             <div>
@@ -285,10 +265,10 @@ export default function Merch() {
                     ))}
                   </Carousel>
                 ) : (
-                  <></>
+                  <div className="merchCarouselShimmer shimmer"></div>
                 )}
               </div>
-              {merchDetails?.productid && signedURls?.length > 0 ? (
+              {merchDetails?.productid != "" && merchDetails?.productid ? (
                 <MerchAccordianDetails
                   merchDetails={merchDetails}
                   mainMerchDetails={mainMerchDetails}
@@ -296,7 +276,14 @@ export default function Merch() {
                   iscreator={merchDetails?.creator == username}
                 />
               ) : (
-                <></>
+                <div
+                  className={
+                    ismobile
+                      ? "merchAccordianDetailsMobile shimmer text-white"
+                      : "merchAccordianDetails shimmer text-white"
+                  }
+                  style={{ height: "50vh", borderRadius: "5%" }}
+                ></div>
               )}
             </div>
             {/* <div>
@@ -312,7 +299,13 @@ export default function Merch() {
             </div>
           </>
         ) : (
-          <>{/* <ConnectToAccount /> */}</>
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
         )}
       </div>
     </div>

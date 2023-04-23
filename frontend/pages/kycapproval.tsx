@@ -15,7 +15,7 @@ import UpdateFeatureStatus from "../components/UpdateFeatureStatus";
 import StreetviewIcon from "@mui/icons-material/Streetview";
 import ShareIcon from "@mui/icons-material/Share";
 import ShareSocialModal from "../components/ShareSocialModal";
-import { Button, Tooltip } from "@mui/material";
+import { Button, CircularProgress, Tooltip } from "@mui/material";
 import SeeFeedbacks from "../components/SeeFeedbacks";
 import KycApproval from "../components/KycApproval";
 
@@ -64,7 +64,7 @@ const useStylesModal = makeStyles((theme) => ({
   },
 }));
 
-export default function Home() {
+export default function KYCApproval() {
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
 
@@ -100,7 +100,19 @@ export default function Home() {
         <title>Crezalo: Feedbacks</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div>{isConnected ? <KycApproval /> : <></>}</div>
+      <div style={{ backgroundColor: "black" }}>
+        {isConnected ? (
+          <KycApproval />
+        ) : (
+          <CircularProgress
+            style={{
+              display: "flex",
+              margin: "auto",
+              height: "80vh",
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
