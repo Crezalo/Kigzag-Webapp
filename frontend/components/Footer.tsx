@@ -106,6 +106,26 @@ const Footer = () => {
           </Link>
         </div>
       )}
+      <br />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          fontSize: "10px",
+        }}
+      >
+        <span
+          style={{
+            color: "lightgrey",
+            paddingRight: "10px",
+            fontSize: "9px",
+            textAlign: "center",
+          }}
+        >
+          2023 © Copyright, Gandhi Rajeshkumar Champaklal HUF. All rights
+          reserved.
+        </span>
+      </div>
     </div>
   );
 };
