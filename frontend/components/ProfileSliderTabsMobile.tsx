@@ -49,8 +49,9 @@ const useStyles = makeStyles({
   },
   root: {
     position: "fixed",
-    bottom: 5,
-    width: "100%",
+    bottom: 0,
+    left:0,
+    width: "100vw",
     display: "flex",
     flexDirection: "row",
     zIndex: 999,
