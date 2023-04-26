@@ -25,6 +25,7 @@ import CreatorDP from "../components/CreatorDP";
 import KYCModal from "../components/KYCModal";
 import { useScreenSize } from "../services/utility";
 import { getMyKycApprovalRequestsData } from "../services/api-services/creator/fininfo_api";
+import loading from "../public/loadingCrezalo.gif";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -633,12 +634,19 @@ export default function BecomeACreator() {
             )}
           </div>
         ) : (
-          <CircularProgress
-            style={{
-              display: "flex",
-              margin: "auto",
-              height: "80vh",
-            }}
+          // <CircularProgress
+          //   style={{
+          //     display: "flex",
+          //     margin: "auto",
+          //     height: "80vh",
+          //   }}
+          // />
+          <Image
+            src={loading}
+            height="150"
+            width="150"
+            alt={""}
+            style={{ marginTop: "30vh", marginLeft: "45vw" }}
           />
         )}
       </div>

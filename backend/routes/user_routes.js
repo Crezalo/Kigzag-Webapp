@@ -100,18 +100,19 @@ router.post("/register", async (req, res) => {
           ]
         );
 
-        // generate access token for the new user
-        new_User.rows[0]['x-access-token'] = jwt.sign({
-          user: username
-        }, process.env.JWT_ACCESS_TOKEN_SECRET, {
-          expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
-        });
-        // generate refresh token for the new user
-        new_User.rows[0]['x-refresh-token'] = jwt.sign({
-          user: username
-        }, process.env.JWT_REFRESH_TOKEN_SECRET, {
-          expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
-        });
+        // Only Login with OTP route to get access and refresh tokens
+        // // generate access token for the new user
+        // new_User.rows[0]['x-access-token'] = jwt.sign({
+        //   user: username
+        // }, process.env.JWT_ACCESS_TOKEN_SECRET, {
+        //   expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+        // });
+        // // generate refresh token for the new user
+        // new_User.rows[0]['x-refresh-token'] = jwt.sign({
+        //   user: username
+        // }, process.env.JWT_REFRESH_TOKEN_SECRET, {
+        //   expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+        // });
         res.json({
           isSuccessful: true,
           errorMsg: "",

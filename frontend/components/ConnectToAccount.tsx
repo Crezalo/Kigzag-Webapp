@@ -13,8 +13,13 @@ import {
 import { GoogleLoginButton } from "react-social-login-buttons";
 import AuthService from "../services/auth-services";
 import PasswordStrengthBar from "react-password-strength-bar";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import guestCred from "../consts/guestcred";
+import { MuiOtpInput } from "mui-one-time-password-input";
+import { sendUserOTP, verifyUserOTP } from "../services/api-services/user_api";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import Timer from "./Timer";
+import { reloadWithQueryParams_message } from "../services/utility";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -35,6 +40,13 @@ const useStylesModal = makeStyles((theme) => ({
     flexDirection: "column",
     "&:hover": {
       boxShadow: "0 10px 18px 8px #3B82F6",
+    },
+  },
+  back: {
+    color: "white",
+    fontSize: "25px",
+    "&:hover": {
+      color: "#3B82F6",
     },
   },
   text: {
@@ -138,12 +150,20 @@ const ConnectToAccount = ({
   const classesModal = useStylesModal();
   const [showPassword, setShowPassword] = useState(false);
   const [haveAccount, setHaveAccount] = useState(haveAccountBool);
+  const [otpStage, setOtpStage] = useState(false);
   const [username, setUsername] = useState(uname);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  const router = useRouter();
+
+  const [otp, setOtp] = React.useState("");
+
+  const handleChange = (newValue) => {
+    setOtp(newValue);
+  };
 
   const checkConnected = () => {
     useEffect(() => {
@@ -165,14 +185,29 @@ const ConnectToAccount = ({
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const login = async (resp: any) => {
-    const result = await AuthService.login(username, password, "", 0);
-    console.log(result);
-    if (typeof result !== "string") {
-      setIsConnected(result);
-      window.location.reload();
+  const sendOTP = async (resp: any) => {
+    setOtp("");
+    const result = await sendUserOTP(username);
+    if (result[0] === "Success") {
+      setEmail(result[1]);
+      setOtpStage(true);
     } else {
       setErrorMsg(result);
+    }
+  };
+
+  const login = async (resp: any) => {
+    const otpVerified = await verifyUserOTP(otp, username);
+    console.log(otpVerified);
+    if (otpVerified == "Verified") {
+      const result = await AuthService.login(username, password, "", 0);
+      console.log(result);
+      if (typeof result !== "string") {
+        setIsConnected(result);
+        window.location.reload();
+      } else {
+        setErrorMsg(result);
+      }
     }
   };
 
@@ -238,8 +273,10 @@ const ConnectToAccount = ({
           setErrorMsg(result);
         }
       } else if (result) {
-        setIsConnected(result);
-        window.location.reload();
+        reloadWithQueryParams_message(
+          router,
+          "Account Registered Successfully, Please Login!"
+        );
       }
     }
   };
@@ -271,96 +308,144 @@ const ConnectToAccount = ({
           </a>
           {haveAccount ? (
             <>
-              <div style={{ textAlign: "center" }}>
-                <input
-                  className={classesModal.input}
-                  type="text"
-                  defaultValue={username}
-                  placeholder={"Username"}
-                  onChange={(e) => {
-                    if (e.target.value != "") setUsername(e.target.value);
-                  }}
-                />
-                <input
-                  className={classesModal.input}
-                  type={showPassword ? "text" : "password"}
-                  placeholder={"Password"}
-                  onChange={(e) => {
-                    if (e.target.value != "") setPassword(e.target.value);
-                  }}
-                />
-                <div style={{ textAlign: "center", paddingBottom: "10px" }}>
-                  <input
-                    type="checkbox"
-                    checked={showPassword}
-                    onChange={handleClickShowPassword}
+              {!otpStage ? (
+                <>
+                  <div style={{ textAlign: "center" }}>
+                    <input
+                      className={classesModal.input}
+                      type="text"
+                      defaultValue={username}
+                      placeholder={"Username"}
+                      onChange={(e) => {
+                        if (e.target.value != "") setUsername(e.target.value);
+                      }}
+                    />
+                    <input
+                      className={classesModal.input}
+                      type={showPassword ? "text" : "password"}
+                      placeholder={"Password"}
+                      onChange={(e) => {
+                        if (e.target.value != "") setPassword(e.target.value);
+                      }}
+                    />
+                    <div style={{ textAlign: "center", paddingBottom: "10px" }}>
+                      <input
+                        type="checkbox"
+                        checked={showPassword}
+                        onChange={handleClickShowPassword}
+                      />
+                      <label
+                        className={classesModal.text + " pointer"}
+                        style={{ paddingLeft: "5px" }}
+                        onClick={handleClickShowPassword}
+                      >
+                        Show Password
+                      </label>
+                    </div>
+                    <div style={{ textAlign: "center", paddingBottom: "10px" }}>
+                      <input type="checkbox" checked={true} />
+                      <label
+                        className={classesModal.textTOS}
+                        style={{ paddingLeft: "5px" }}
+                      >
+                        I agree to{" "}
+                        <a
+                          href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}
+                          target="_blank"
+                          className={classesModal.linkTOS}
+                        >
+                          terms of service
+                        </a>{" "}
+                        of Crezalo
+                      </label>
+                      <br />
+                      <input type="checkbox" checked={true} />
+                      <label
+                        className={classesModal.textTOS}
+                        style={{ paddingLeft: "5px" }}
+                      >
+                        I agree to{" "}
+                        <a
+                          href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
+                          target="_blank"
+                          className={classesModal.linkTOS}
+                        >
+                          privacy policy
+                        </a>{" "}
+                        of Crezalo
+                      </label>
+                    </div>
+                    <button className={classesModal.button} onClick={sendOTP}>
+                      Login
+                    </button>
+                    {!noguestlogin ? (
+                      <button
+                        className={classesModal.guestbutton}
+                        onClick={guestlogin}
+                      >
+                        Login As Guest
+                      </button>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                  <div className={classesModal.textCont}>
+                    <p className={classesModal.text}>Create a new accountt?</p>
+                    <p
+                      className={classesModal.link}
+                      onClick={() => {
+                        setHaveAccount(false);
+                      }}
+                    >
+                      Register
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <ArrowBackOutlinedIcon
+                    className={classesModal.back + " pointer"}
+                    onClick={() => setOtpStage(false)}
                   />
-                  <label
-                    className={classesModal.text + " pointer"}
-                    style={{ paddingLeft: "5px" }}
-                    onClick={handleClickShowPassword}
-                  >
-                    Show Password
-                  </label>
-                </div>
-                <div style={{ textAlign: "center", paddingBottom: "10px" }}>
-                  <input type="checkbox" checked={true} />
+                  <br />
                   <label
                     className={classesModal.textTOS}
                     style={{ paddingLeft: "5px" }}
                   >
-                    I agree to{" "}
+                    We sent a verification code to your email address
                     <a
-                      href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}
+                      href={"mailto:" + email}
                       target="_blank"
                       className={classesModal.linkTOS}
                     >
-                      terms of service
-                    </a>{" "}
-                    of Crezalo
+                      {" " + email}
+                    </a>
                   </label>
                   <br />
-                  <input type="checkbox" checked={true} />
-                  <label
-                    className={classesModal.textTOS}
-                    style={{ paddingLeft: "5px" }}
-                  >
-                    I agree to{" "}
-                    <a
-                      href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
-                      target="_blank"
-                      className={classesModal.linkTOS}
-                    >
-                      privacy policy
-                    </a>{" "}
-                    of Crezalo
-                  </label>
-                </div>
-                <button className={classesModal.button} onClick={login}>
-                  Login
-                </button>
-                {!noguestlogin ? (
-                  <button
-                    className={classesModal.guestbutton}
-                    onClick={guestlogin}
-                  >
-                    Login As Guest
+                  <MuiOtpInput
+                    value={otp}
+                    onChange={handleChange}
+                    onComplete={login}
+                    length={6}
+                    display="flex"
+                    gap={0.5}
+                    sx={{
+                      ".MuiOtpInput-TextField": {
+                        color: "#3b82f6",
+                        backgroundColor: "white",
+                        borderRadius: "5px",
+                      },
+                    }}
+                  />
+                  <br />
+                  <button className={classesModal.button} onClick={login}>
+                    Continue
                   </button>
-                ) : (
-                  <></>
-                )}
-              </div>
-              <div className={classesModal.textCont}>
-                <p className={classesModal.text}>Create a new accountt?</p>
-                <p
-                  className={classesModal.link}
-                  onClick={() => {
-                    setHaveAccount(false);
-                  }}
-                >
-                  Register
-                </p>
-              </div>
+                  {/* Render the OTP verification form */}
+                  {/* Render the Timer component with the resendOTP function and timerDuration */}
+                  <Timer resendOTP={sendOTP} timerDuration={300} />
+                </>
+              )}
             </>
           ) : (
             <>

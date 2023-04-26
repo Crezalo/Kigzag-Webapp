@@ -29,6 +29,8 @@ import OrderCardGrid from "../components/OrderCardGrid";
 import { useScreenSize } from "../services/utility";
 import { BottomNavigation } from "@mui/material";
 import { CircularProgress } from "@mui/material";
+import Image from "next/image";
+import loading from "../public/loadingCrezalo.gif";
 
 const useStyles = makeStyles({
   tab: {
@@ -338,12 +340,19 @@ export default function Orders() {
             </div>
           </>
         ) : (
-          <CircularProgress
-            style={{
-              display: "flex",
-              margin: "auto",
-              height: "80vh",
-            }}
+          // <CircularProgress
+          //   style={{
+          //     display: "flex",
+          //     margin: "auto",
+          //     height: "80vh",
+          //   }}
+          // />
+          <Image
+            src={loading}
+            height="150"
+            width="150"
+            alt={""}
+            style={{ marginTop: "30vh", marginLeft: "45vw" }}
           />
         )}
       </div>

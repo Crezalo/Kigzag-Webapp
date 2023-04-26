@@ -9,6 +9,8 @@ import {
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { useScreenSize } from "../services/utility";
 import { CircularProgress } from "@mui/material";
+import Image from "next/image";
+import loading from "../public/loadingCrezalo.gif";
 
 export default function Creators() {
   const [isConnected, setIsConnected] = useState(false);
@@ -156,12 +158,19 @@ export default function Creators() {
             </div>
           </div>
         ) : (
-          <CircularProgress
-            style={{
-              display: "flex",
-              margin: "auto",
-              height: "80vh",
-            }}
+          // <CircularProgress
+          //   style={{
+          //     display: "flex",
+          //     margin: "auto",
+          //     height: "80vh",
+          //   }}
+          // />
+          <Image
+            src={loading}
+            height="150"
+            width="150"
+            alt={""}
+            style={{ marginTop: "30vh", marginLeft: "45vw" }}
           />
         )}
       </div>

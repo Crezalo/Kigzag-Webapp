@@ -1,7 +1,6 @@
 import { CSSProperties } from "react";
 import Jdenticon from "react-jdenticon";
 import AuthService from "../services/auth-services";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getUserData } from "../services/api-services/user_api";
 import Router, { useRouter } from "next/router";
@@ -18,6 +17,8 @@ import ShareSocialModal from "../components/ShareSocialModal";
 import { Button, CircularProgress, Tooltip } from "@mui/material";
 import SeeFeedbacks from "../components/SeeFeedbacks";
 import Marketing from "../components/Marketing";
+import Image from "next/image";
+import loading from "../public/loadingCrezalo.gif";
 
 const style = {
   root: {
@@ -104,12 +105,19 @@ export default function MarketinG() {
         {isConnected ? (
           <Marketing />
         ) : (
-          <CircularProgress
-            style={{
-              display: "flex",
-              margin: "auto",
-              height: "80vh",
-            }}
+          // <CircularProgress
+          //   style={{
+          //     display: "flex",
+          //     margin: "auto",
+          //     height: "80vh",
+          //   }}
+          // />
+          <Image
+            src={loading}
+            height="150"
+            width="150"
+            alt={""}
+            style={{ marginTop: "30vh", marginLeft: "45vw" }}
           />
         )}
       </div>

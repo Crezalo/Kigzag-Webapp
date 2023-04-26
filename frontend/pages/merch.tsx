@@ -21,6 +21,7 @@ import {
   getProductRatingsData,
 } from "../services/api-services/user/merch_api";
 import { useScreenSize } from "../services/utility";
+import loading from "../public/loadingCrezalo.gif";
 
 interface SettingsT {
   autoPlay: boolean;
@@ -299,13 +300,20 @@ export default function Merch() {
             </div>
           </>
         ) : (
-          <CircularProgress
-            style={{
-              display: "flex",
-              margin: "auto",
-              height: "80vh",
-            }}
-          />
+          // <CircularProgress
+          //   style={{
+          //     display: "flex",
+          //     margin: "auto",
+          //     height: "80vh",
+          //   }}
+          // />
+          <Image
+          src={loading}
+          height="150"
+          width="150"
+          alt={""}
+          style={{ marginTop: "30vh", marginLeft: "45vw" }}
+        />
         )}
       </div>
     </div>

@@ -46,13 +46,42 @@ export async function addNewUser(
     console.log("register");
     console.log(response);
     if (response.data.isSuccessful) {
-      AuthService.setCurrentUserAccessToken(
-        response.data.result[0]["x-access-token"]
-      );
-      AuthService.setCurrentUserRefreshToken(
-        response.data.result[0]["x-refresh-token"]
-      );
+      // Only Login with OTP route to get access and refresh tokens
+      // AuthService.setCurrentUserAccessToken(
+      //   response.data.result[0]["x-access-token"]
+      // );
+      // AuthService.setCurrentUserRefreshToken(
+      //   response.data.result[0]["x-refresh-token"]
+      // );
       return true;
+    } else {
+      return response.data.errorMsg;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function sendUserOTP(username: string) {
+  try {
+    const response = await axios.post(MAIN_API_URL + "otp/" + username);
+    if (response.data.isSuccessful) {
+      return response.data.result;
+    } else {
+      return response.data.errorMsg;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function verifyUserOTP(otp: string, username: string) {
+  try {
+    const response = await axios.get(
+      MAIN_API_URL + "otp/verify/" + otp + "/" + username
+    );
+    if (response.data.isSuccessful) {
+      return response.data.result;
     } else {
       return response.data.errorMsg;
     }

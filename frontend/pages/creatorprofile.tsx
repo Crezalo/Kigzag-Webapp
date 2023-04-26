@@ -19,6 +19,7 @@ import BasicModal from "../components/BasicModal";
 import { isMobile } from "react-device-detect";
 import ProfileSliderTabsMobile from "../components/ProfileSliderTabsMobile";
 import { useScreenSize } from "../services/utility";
+import loading from "../public/loadingCrezalo.gif";
 
 const style = {
   root: {
@@ -293,12 +294,19 @@ export default function CreatorProfile() {
             )}
           </div>
         ) : (
-          <CircularProgress
-            style={{
-              display: "flex",
-              margin: "auto",
-              height: "80vh",
-            }}
+          // <CircularProgress
+          //   style={{
+          //     display: "flex",
+          //     margin: "auto",
+          //     height: "80vh",
+          //   }}
+          // />
+          <Image
+            src={loading}
+            height="150"
+            width="150"
+            alt={""}
+            style={{ marginTop: "30vh", marginLeft: "45vw" }}
           />
         )}
       </div>

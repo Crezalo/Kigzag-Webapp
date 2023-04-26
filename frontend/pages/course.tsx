@@ -14,6 +14,7 @@ import VideosSeriesGating from "../components/VideosSeriesGating";
 import CreatorDP from "../components/CreatorDP";
 import { useScreenSize } from "../services/utility";
 import { CircularProgress } from "@mui/material";
+import loading from "../public/loadingCrezalo.gif";
 
 export default function Course() {
   const router = useRouter();
@@ -170,12 +171,19 @@ export default function Course() {
             </div>
           </>
         ) : (
-          <CircularProgress
-            style={{
-              display: "flex",
-              margin: "auto",
-              height: "80vh",
-            }}
+          // <CircularProgress
+          //   style={{
+          //     display: "flex",
+          //     margin: "auto",
+          //     height: "80vh",
+          //   }}
+          // />
+          <Image
+            src={loading}
+            height="150"
+            width="150"
+            alt={""}
+            style={{ marginTop: "30vh", marginLeft: "45vw" }}
           />
         )}
       </div>

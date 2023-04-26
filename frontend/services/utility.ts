@@ -63,6 +63,32 @@ export function reloadWithQueryParams(router) {
 }
 
 // Function to reload the window with additional query parameters
+export function reloadWithQueryParams_message(router,message) {
+  const queryParams = {
+    // Additional query parameters
+    noguestlogin: true,
+    message: message,
+  };
+  // Reload the window with additional query parameters
+  router.replace({
+    pathname: router.pathname,
+    query: {
+      ...router.query,
+      ...queryParams,
+    },
+  });
+
+  // Generate the new URL with query parameters
+  const newUrl = `${window.location.pathname}?${new URLSearchParams({
+    ...router.query,
+    ...queryParams,
+  })}`;
+
+  // Reload the window with the new URL
+  window.location.href = newUrl;
+}
+
+// Function to reload the window with additional query parameters
 export function reloadWithQueryParams_NoMessage(router) {
   const queryParams = {
     // Additional query parameters
@@ -86,3 +112,4 @@ export function reloadWithQueryParams_NoMessage(router) {
   // Reload the window with the new URL
   window.location.href = newUrl;
 }
+
