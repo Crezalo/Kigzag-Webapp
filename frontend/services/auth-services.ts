@@ -58,6 +58,7 @@ class AuthService {
       this.validateCurrentUserRefreshToken() &&
       this.validateCurrentUserAccessToken()
     ) {
+      localStorage.removeItem("trigger_login_modal");
       return true;
     } else {
       const response = await userLogin(
@@ -71,6 +72,7 @@ class AuthService {
         this.validateCurrentUserRefreshToken() &&
         this.validateCurrentUserAccessToken()
       ) {
+        localStorage.removeItem("trigger_login_modal");
         return true;
       }
       return response;
@@ -99,6 +101,7 @@ class AuthService {
   logout() {
     localStorage.removeItem("user_access_token");
     localStorage.removeItem("user_refresh_token");
+    this.setTriggerLoginModal(true);
   }
 
   setCurrentUserAccessToken(token: string) {
@@ -109,12 +112,20 @@ class AuthService {
     localStorage.setItem("user_refresh_token", JSON.stringify(token));
   }
 
+  setTriggerLoginModal(flag: boolean) {
+    localStorage.setItem("trigger_login_modal", JSON.stringify(flag));
+  }
+
   getCurrentUserAccessToken() {
     return JSON.parse(localStorage.getItem("user_access_token"));
   }
 
   getCurrentUserRefreshToken() {
     return JSON.parse(localStorage.getItem("user_refresh_token"));
+  }
+
+  checkTriggerLoginModal() {
+    return localStorage.getItem("trigger_login_modal");
   }
 
   validateCurrentUserAccessToken() {

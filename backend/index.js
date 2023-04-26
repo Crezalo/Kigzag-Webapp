@@ -16,6 +16,7 @@ const cors = require("cors");
 // general table for oth creator and user
 const user_router = require("./routes/user_routes");
 const content_router = require("./routes/content_routes");
+const otp_router = require("./routes/otp_server_routes.js");
 
 // creator dominated table routes
 const features_router = require("./routes/creator/features_routes");
@@ -106,6 +107,7 @@ app.use("/user_cart", cart_router);
 app.use("/user_feedback", feedback_router)
 
 app.use("/marketing", email_router);
+app.use("/otp", otp_router);
 
 // run discord bot
 discord_bot.run();

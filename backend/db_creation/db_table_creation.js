@@ -108,6 +108,14 @@ module.exports = async function createTablesInPostgresDB(pool) {
     )
     .catch((err) => console.log("PG ERROR Feedback Table\n\n\t\t", err.message));
 
+
+  //10. OTP Table creation
+  await pool
+    .query(
+      "CREATE TABLE IF NOT EXISTS OTP (UserName VARCHAR(255) PRIMARY KEY, OTP INTEGER NOT NULL, CreatedAt TIMESTAMP NOT NULL);"
+    )
+    .catch((err) => console.log("PG ERROR OTP Table\n\n\t\t", err.message));
+
   ////////////////////////////////////// Foreign key Constraints Add//////////////////////////////////////////////////////
 
   // Creator Fin Info Table Creator is User
@@ -265,6 +273,19 @@ module.exports = async function createTablesInPostgresDB(pool) {
   END; \
   $$;")
     .catch(err => console.error("fk ERROR Feedback Table\n\n\t\t", err.message));
+
+  // OTP Table Username is User
+  await pool.query("DO $$ \
+  BEGIN \
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_otp_user') THEN \
+          ALTER TABLE OTP \
+              ADD CONSTRAINT fk_otp_user \
+              FOREIGN KEY (UserName) REFERENCES Users(UserName) \
+              ON DELETE CASCADE; \
+      END IF; \
+  END; \
+  $$;")
+    .catch(err => console.error("fk ERROR OTP Table\n\n\t\t", err.message));
 
   // Other Table creation
   // Users, Creator_Series and Creator_Discord are tables with references in other tables via foriegn key hence all other tables can be created once User, Creator_Series and Creator_Discord tables are ready
