@@ -207,7 +207,7 @@ export default function Orders() {
                           sx={{
                             minWidth: 0,
                             justifyContent: "space-around",
-                            padding: "5px 5vw 5px 5vw",
+                            padding: "5px 2vw 5px 2vw",
                             color: index == value ? "#3b82f6" : "primary",
                           }}
                         >
