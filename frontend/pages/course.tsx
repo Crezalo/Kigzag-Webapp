@@ -178,13 +178,24 @@ export default function Course() {
           //     height: "80vh",
           //   }}
           // />
-          <Image
-            src={loading}
-            height="150"
-            width="150"
-            alt={""}
-            style={{ marginTop: "30vh", marginLeft: "45vw" }}
-          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              paddingTop: "30vh",
+              height: "100vh",
+              width: "100vw",
+            }}
+          >
+            <Image
+              src={loading}
+              height="150"
+              width="150"
+              alt={""}
+              style={{ width: "150px", height: "150px" }}
+            />
+          </div>
         )}
       </div>
     </div>

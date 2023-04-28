@@ -50,7 +50,7 @@ const useStyles = makeStyles({
   root: {
     position: "fixed",
     bottom: 0,
-    left:0,
+    left: 0,
     width: "100vw",
     display: "flex",
     flexDirection: "row",
@@ -70,7 +70,6 @@ const ProfileSliderTabsMobile = ({
   creator,
   isCreator,
 }: ProfileSliderTabsMobileProps) => {
-  const [open, setOpen] = React.useState(false);
   const classes = useStyles();
 
   const [username, setUsername] = useState("");
@@ -243,16 +242,17 @@ const ProfileSliderTabsMobile = ({
                     <ListItemButton
                       sx={{
                         minHeight: 48,
-                        justifyContent: open ? "initial" : "center",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-around",
                         px: 2.5,
                       }}
                     >
                       <ListItemIcon
                         sx={{
                           minWidth: 0,
-                          mr: open ? 3 : "auto",
-                          justifyContent: "center",
-                          padding: "5px",
+                          justifyContent: "space-around",
+                          padding: "5px 5vw 5px 5vw",
                           color: index == value ? "#3b82f6" : "primary",
                         }}
                       >
@@ -277,10 +277,6 @@ const ProfileSliderTabsMobile = ({
                           <></>
                         )}
                       </ListItemIcon>
-                      <ListItemText
-                        primary={text}
-                        sx={{ opacity: open ? 1 : 0 }}
-                      />
                     </ListItemButton>
                   </div>
                 ) : (

@@ -13,6 +13,9 @@ import { getUserCommunityComboData } from "../services/api-services/user/communi
 import { getUserAllOrdersData } from "../services/api-services/user/merch_api";
 import { getUserAllTipData } from "../services/api-services/user/tipjar_api";
 import { useScreenSize } from "../services/utility";
+import Image from "next/image";
+import loading from "../public/loadingCrezalo.gif";
+import { Typography } from "@mui/material";
 
 const useStylesModal = makeStyles((theme) => ({
   paper: {
@@ -103,7 +106,7 @@ const OrderCardGrid = ({ category }: OrderCardGridProp) => {
           result = await getUserAllTipData();
         }
         console.log(result);
-        if (typeof result !== "string" && result[0]) {
+        if (typeof result !== "string") {
           setOrderData(result);
         }
       }
@@ -120,30 +123,67 @@ const OrderCardGrid = ({ category }: OrderCardGridProp) => {
         ismobile ? "blueTextBlackBackgroundMobile" : "blueTextBlackBackground"
       }
     >
-      <Box
-        component="form"
-        sx={{
-          minWidth: 150,
-          margin: "20px 5px 15px 5px",
-        }}
-      >
-        <Grid container direction="row" spacing={1}>
-          {orderData?.map((order, index) => (
-            <>
-              {(order?.creator != "" || order?.productid) &&
-              order?.ordertype != -1 ? (
-                <div className={classesModal.paper}>
-                  <Grid item xs={4}>
-                    <OrderCard order={order} key={index} />
-                  </Grid>
-                </div>
-              ) : (
-                <></>
-              )}
-            </>
-          ))}
-        </Grid>
-      </Box>
+      {orderData[0]?.ordertype != -1 || !orderData[0] ? (
+        <Box
+          component="form"
+          sx={{
+            minWidth: 150,
+            margin: "20px 5px 15px 5px",
+          }}
+        >
+          {orderData[0] ? (
+            <Grid container direction="row" spacing={1}>
+              {orderData?.map((order, index) => (
+                <>
+                  {order?.creator != "" || order?.productid ? (
+                    <div className={classesModal.paper}>
+                      <Grid item xs={4}>
+                        <OrderCard order={order} key={index} />
+                      </Grid>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </>
+              ))}
+            </Grid>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                paddingTop: "30vh",
+                height: "90vh",
+                width: "90vw",
+              }}
+            >
+              <Typography style={{ fontSize: "20px" }}>
+                😔 No Orders Yet
+              </Typography>
+            </div>
+          )}
+        </Box>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: "30vh",
+            height: "99vh",
+            width: "99vw",
+          }}
+        >
+          <Image
+            src={loading}
+            height="150"
+            width="150"
+            alt={""}
+            style={{ width: "150px", height: "150px" }}
+          />
+        </div>
+      )}
     </div>
   );
 };

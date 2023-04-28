@@ -27,6 +27,8 @@ import { getCreatorAllSeriesDemoVideoDetails } from "../services/api-services/cr
 import { getCreatorAllMerchData } from "../services/api-services/creator/merch_api";
 import CreatorOrderCardGrid from "./CreatorOrderCardGrid";
 import { useScreenSize } from "../services/utility";
+import Image from "next/image";
+import loading from "../public/loadingCrezalo.gif";
 
 interface RevenueChartsProp {
   category: "Videos" | "Courses" | "Merch" | "Perq";
@@ -203,7 +205,25 @@ const RevenueCharts = ({ category }: RevenueChartsProp) => {
           )}
         </>
       ) : (
-        <></>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: "30vh",
+            height: "99vh",
+            width: "99vw",
+          }}
+          className="blueTextBlackBackground"
+        >
+          <Image
+            src={loading}
+            height="150"
+            width="150"
+            alt={""}
+            style={{ width: "150px", height: "150px" }}
+          />
+        </div>
       )}
     </>
   );

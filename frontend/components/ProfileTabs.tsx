@@ -10,6 +10,8 @@ import ColabTab from "./ColabTab";
 import MerchandiseTab from "./MerchandiseTab";
 import TipsTab from "./TipsTab";
 import VideosSeriesGating from "./VideosSeriesGating";
+import Image from "next/image";
+import loading from "../public/loadingCrezalo.gif";
 
 const useStyles = makeStyles({
   tab: {
@@ -186,9 +188,24 @@ const ProfileTabs = ({
           )}
         </>
       ) : (
-        <CircularProgress
-          style={{ display: "flex", margin: "auto", height: "80vh" }}
-        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: "30vh",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
+          <Image
+            src={loading}
+            height="150"
+            width="150"
+            alt={""}
+            style={{ width: "150px", height: "150px" }}
+          />
+        </div>
       )}
     </>
   );

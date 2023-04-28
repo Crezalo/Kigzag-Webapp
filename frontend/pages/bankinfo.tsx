@@ -16,6 +16,8 @@ import {
 import banks from "../consts/banks";
 import { useScreenSize } from "../services/utility";
 import { type } from "os";
+import Image from "next/image";
+import loading from "../public/loadingCrezalo.gif";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -313,13 +315,24 @@ export default function BankInfo() {
             <p className={classesModal.successful}>{successMsg}</p>
           </div>
         ) : (
-          <CircularProgress
+          <div
             style={{
               display: "flex",
-              margin: "auto",
-              height: "80vh",
+              flexDirection: "row",
+              justifyContent: "center",
+              paddingTop: "30vh",
+              height: "100vh",
+              width: "100vw",
             }}
-          />
+          >
+            <Image
+              src={loading}
+              height="150"
+              width="150"
+              alt={""}
+              style={{ width: "150px", height: "150px" }}
+            />
+          </div>
         )}
       </div>
     </div>

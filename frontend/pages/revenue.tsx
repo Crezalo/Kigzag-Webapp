@@ -44,8 +44,9 @@ const useStyles = makeStyles({
   },
   root: {
     position: "fixed",
-    bottom: 5,
-    width: "100%",
+    bottom: 0,
+    left: 0,
+    width: "100vw",
     display: "flex",
     flexDirection: "row",
     zIndex: 999,
@@ -195,16 +196,17 @@ export default function Revenue() {
                       <ListItemButton
                         sx={{
                           minHeight: 48,
-                          justifyContent: open ? "initial" : "center",
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-around",
                           px: 2.5,
                         }}
                       >
                         <ListItemIcon
                           sx={{
                             minWidth: 0,
-                            mr: open ? 3 : "auto",
-                            justifyContent: "center",
-                            padding: "5px",
+                            justifyContent: "space-around",
+                            padding: "5px 5vw 5px 5vw",
                             color: index == value ? "#3b82f6" : "primary",
                           }}
                         >
@@ -229,10 +231,6 @@ export default function Revenue() {
                             <></>
                           )}
                         </ListItemIcon>
-                        <ListItemText
-                          primary={text}
-                          sx={{ opacity: open ? 1 : 0 }}
-                        />
                       </ListItemButton>
                     </div>
                   )
@@ -347,13 +345,24 @@ export default function Revenue() {
           //     height: "80vh",
           //   }}
           // />
-          <Image
-            src={loading}
-            height="150"
-            width="150"
-            alt={""}
-            style={{ marginTop: "30vh", marginLeft: "45vw" }}
-          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              paddingTop: "30vh",
+              height: "100vh",
+              width: "100vw",
+            }}
+          >
+            <Image
+              src={loading}
+              height="150"
+              width="150"
+              alt={""}
+              style={{ width: "150px", height: "150px" }}
+            />
+          </div>
         )}
       </div>
     </div>
