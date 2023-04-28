@@ -190,6 +190,7 @@ export default function Revenue() {
                         display: "flex",
                         color: index == value ? "blue" : "primary",
                         justifyContent: "space-around",
+                        width: "100vw",
                       }}
                       onClick={() => handleChange(event, index)}
                     >
