@@ -197,7 +197,7 @@ export default function CreatorProfile() {
                       )}
                       <BasicModal
                         modalButtonText={
-                          <Tooltip title="Share Kigzag">
+                          <Tooltip title="Share Crezalo">
                             <ShareIcon
                               className="pointer"
                               style={{ fontSize: "30px", color: "lightgrey" }}
@@ -206,7 +206,7 @@ export default function CreatorProfile() {
                         }
                         modalBody={
                           <ShareSocialModal
-                            title={"Share " + creator.fname + "'s Kigzag"}
+                            title={"Share " + creator.fname + "'s Crezalo"}
                             url={
                               process.env.NEXT_STATIC_WEBSITE_URL +
                               "@" +

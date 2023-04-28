@@ -126,7 +126,7 @@ export default function Creators() {
   return (
     <div>
       <Head>
-        <title>Kigzag: Creators</title>
+        <title>Crezalo: Creators</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div style={{ backgroundColor: "black" }}>

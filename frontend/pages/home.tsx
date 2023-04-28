@@ -21,12 +21,14 @@ import { isMobile } from "react-device-detect";
 import ProfileSliderTabsMobile from "../components/ProfileSliderTabsMobile";
 import { useScreenSize } from "../services/utility";
 import CreatorOnboardIllustrate from "../components/CreatorOnboardIllustrate";
+import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import Image from "next/image";
 import loading from "../public/loadingCrezalo.gif";
+import PricingPlanModal from "../components/PricingPlanModal";
 
 const style = {
   root: {
-    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    background: "linear-gradient(45deg, #FF8E53 20%, #FE6B8B 50%)",
     borderRadius: 3,
     border: 0,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
@@ -42,6 +44,26 @@ const style = {
     fontStyle: "italic",
   },
 };
+
+const stylePricing = {
+  root: {
+    background: "linear-gradient(45deg, #7F00FF 20%, #E100FF 50%)",
+    borderRadius: 3,
+    border: 0,
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    color: "white",
+  },
+  pricingContainer: {
+    border: "1px solid blue",
+    background: "rgb(0,0,0,0.7)",
+  },
+  title: {
+    textAlign: "center",
+    color: "white",
+    fontStyle: "italic",
+  },
+};
+
 const buttonStyle: CSSProperties = {
   fontSize: "15px",
   fontWeight: "bold",
@@ -255,9 +277,23 @@ export default function Home() {
                       />
                     </Tooltip>
                   </div>
+                  <div style={{ marginRight: "15px" }}>
+                    <BasicModal
+                      modalButtonText={
+                        <Tooltip title="Pricing Plan">
+                          <CurrencyRupeeIcon
+                            className="pointer"
+                            style={{ fontSize: "30px", color: "lightgrey" }}
+                          />
+                        </Tooltip>
+                      }
+                      modalBody={<PricingPlanModal style={stylePricing} />}
+                      formatting={true}
+                    />
+                  </div>
                   <BasicModal
                     modalButtonText={
-                      <Tooltip title="Share Kigzag">
+                      <Tooltip title="Share Crezalo">
                         <ShareIcon
                           className="pointer"
                           style={{ fontSize: "30px", color: "lightgrey" }}
@@ -266,7 +302,7 @@ export default function Home() {
                     }
                     modalBody={
                       <ShareSocialModal
-                        title={"Share " + user.fname + "'s Kigzag"}
+                        title={"Share " + user.fname + "'s Crezalo"}
                         url={
                           process.env.NEXT_STATIC_WEBSITE_URL +
                           "@" +
@@ -296,7 +332,7 @@ export default function Home() {
                 <div
                   style={{
                     // minWidth: "25vw",
-                    width: "100vw",
+                    width: "auto",
                     justifyContent: "center",
                   }}
                 >
