@@ -8,6 +8,7 @@ const otpGenerator = require('otp-generator');
 const fs = require('fs');
 require('dotenv').config();
 const textbelt = require('textbelt');
+var validator = require("email-validator");
 
 var transporter = nodemailer.createTransport({
     host: "smtpout.secureserver.net",
@@ -31,7 +32,7 @@ var transporter = nodemailer.createTransport({
 
 router.post('/:username', async (req, res) => {
     try {
-        const {
+        var {
             username
         } = req.params;
 
@@ -43,6 +44,12 @@ router.post('/:username', async (req, res) => {
         });
 
         console.log(otp);
+        //  In case user sends email instead of username
+        const valid = validator.validate(username);
+        if (valid) {
+            user_col = await pool.query("SELECT * FROM Users WHERE emailaddress = $1;", [username]);
+            username = user_col.rows[0].username;
+        }
         var delOTP = await pool.query("DELETE FROM otp WHERE username=$1 RETURNING*;", [username]);
 
         const ud = await pool.query("SELECT emailaddress FROM users WHERE username=$1;", [username]);
@@ -99,11 +106,18 @@ router.post('/:username', async (req, res) => {
 
 router.get('/verify/:otp/:username', async (req, res) => {
     try {
-        const {
+        var {
             otp,
             username
         } = req.params
 
+        //  In case user sends email instead of username
+        const valid = validator.validate(username);
+        if (valid) {
+            user_col = await pool.query("SELECT * FROM Users WHERE emailaddress = $1;", [username]);
+            username = user_col.rows[0].username;
+        }
+        
         const ud = await pool.query("SELECT * FROM otp WHERE otp=$1 AND username=$2;", [otp, username]);
         if (ud.rows[0]) {
             // compare if otp older than expiry in ms
