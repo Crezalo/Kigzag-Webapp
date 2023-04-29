@@ -13,12 +13,13 @@ module.exports = async function createTablesInPostgresDB(pool) {
   ////////////////////////////////////////////////Table Creation/////////////////////////////////////////////////////////
 
   //1.  User table creation
-  // SignUpType => 0: UnamePass, 1: Google, 2: Facebook, 3: Twitter, 10: Google + UnamePass, 20: Facebook + UnamePass, 30: Twitter + UnamePass
-  // For SignUpType it can be either of these => 0: UnamePass, 1: Google, 10: First Google, then UnamePass
+  // SignUpType => 0: UnamePassMobilNo, 
+  // Currently no 1: Google, 2: Facebook, 3: Twitter, 10: Google + UnamePass, 20: Facebook + UnamePass, 30: Twitter + UnamePass
+  // For SignUpType it can be either of these => 0: UnamePassMobilNo, 1: Google, 10: First Google, then UnamePass
   // SignInID => In case of google Login use [numeric] Google User Id
   await pool
     .query(
-      "CREATE TABLE IF NOT EXISTS Users (UserId BIGSERIAL PRIMARY KEY, EmailAddress VARCHAR(255) NOT NULL UNIQUE, SignUpType INTEGER NOT NULL, SignInID VARCHAR(255) NOT NULL, Password VARCHAR(255) NOT NULL, UserName VARCHAR(50) NOT NULL UNIQUE, FName VARCHAR(255) NOT NULL, LName VARCHAR(255) NOT NULL, Bio VARCHAR(255), IsCreator BOOLEAN NOT NULL, DisplayPicture VARCHAR(100), TwitterHandle VARCHAR(50), Instagram VARCHAR(50), Youtube VARCHAR(50), Website VARCHAR(50));"
+      "CREATE TABLE IF NOT EXISTS Users (UserId BIGSERIAL PRIMARY KEY, EmailAddress VARCHAR(255) NOT NULL UNIQUE, MobileNo VARCHAR(255) NOT NULL UNIQUE, SignUpType INTEGER NOT NULL, SignInID VARCHAR(255) NOT NULL, Password VARCHAR(255) NOT NULL, UserName VARCHAR(50) NOT NULL UNIQUE, FName VARCHAR(255) NOT NULL, LName VARCHAR(255) NOT NULL, Bio VARCHAR(255), IsCreator BOOLEAN NOT NULL, DisplayPicture VARCHAR(100), TwitterHandle VARCHAR(50), Instagram VARCHAR(50), Youtube VARCHAR(50), Website VARCHAR(50));"
     )
     .catch((err) => console.log("PG ERROR Users Table\n\n\t\t", err.message));
 

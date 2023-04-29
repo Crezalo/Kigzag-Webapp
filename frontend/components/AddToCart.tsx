@@ -26,6 +26,8 @@ import Router, { useRouter } from "next/router";
 import { StringDecoder } from "string_decoder";
 import { reloadWithQueryParams, useScreenSize } from "../services/utility";
 import guestCred from "../consts/guestcred";
+import Image from "next/image";
+import loading from "../public/loadingCrezalo.gif";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -146,7 +148,17 @@ const AddToCart = ({
   const [isConnected, setIsConnected] = useState(false);
   const minQty = 1;
   const maxQty = 9;
-  const [cartItems, setCartItems] = useState<cartItem[]>([]);
+  const [cartItems, setCartItems] = useState<cartItem[]>([
+    {
+      cartid: "",
+      user: "",
+      creator: "",
+      feature: -1,
+      productid: "",
+      seriesid: "",
+      quantity: 0,
+    },
+  ]);
   const ismobile = useScreenSize()?.width < useScreenSize()?.height;
   const router = useRouter();
 
@@ -276,145 +288,172 @@ const AddToCart = ({
     >
       {username !== guestCred[0] ? (
         <>
-          {cartItems?.length > 0 && cartItems[0]?.cartid != "" ? (
-            <div>
-              <Typography
-                style={{
-                  fontSize: "22px",
-                  fontWeight: "bold",
-                  color: "black",
-                  textAlign: "center",
-                }}
-              >
-                Cart
-              </Typography>
-              <Box
-                component="form"
-                sx={{
-                  minWidth: 150,
-                  margin: "20px 5px 15px 5px",
-                }}
-              >
-                <>
-                  {Array.from(cartItems).map((item, index) => {
-                    return (
-                      <>
-                        {item?.cartid ? (
+          {cartItems[0]?.feature != -1 && cartItems[0]?.cartid != "" ? (
+            <>
+              {cartItems?.length > 0 ? (
+                <div>
+                  <Typography
+                    style={{
+                      fontSize: "22px",
+                      fontWeight: "bold",
+                      color: "black",
+                      textAlign: "center",
+                    }}
+                  >
+                    Cart
+                  </Typography>
+                  <Box
+                    component="form"
+                    sx={{
+                      minWidth: 150,
+                      margin: "20px 5px 15px 5px",
+                    }}
+                  >
+                    <>
+                      {Array.from(cartItems).map((item, index) => {
+                        return (
                           <>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                width: ismobile ? "70vw" : "40vw",
-                              }}
-                            >
-                              <CartItemCard cartItem={item} />
-                              {item.feature == 2 ? (
+                            {item?.cartid ? (
+                              <>
                                 <div
                                   style={{
-                                    width: ismobile ? "20vw" : "20%",
-                                    padding: ismobile ? "0%" : "2px",
-                                    marginRight: ismobile ? "0%" : "5%",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    width: ismobile ? "70vw" : "40vw",
                                   }}
                                 >
-                                  <TextField
-                                    type="number"
-                                    size="small"
-                                    InputLabelProps={{
-                                      shrink: true,
+                                  <CartItemCard cartItem={item} />
+                                  {item.feature == 2 ? (
+                                    <div
+                                      style={{
+                                        width: ismobile ? "20vw" : "20%",
+                                        padding: ismobile ? "0%" : "2px",
+                                        marginRight: ismobile ? "0%" : "5%",
+                                      }}
+                                    >
+                                      <TextField
+                                        type="number"
+                                        size="small"
+                                        InputLabelProps={{
+                                          shrink: true,
+                                        }}
+                                        variant="outlined"
+                                        inputProps={{
+                                          min: minQty,
+                                          max: maxQty,
+                                        }}
+                                        value={item.quantity}
+                                        onChange={(e) => {
+                                          if (e.target.value === "") {
+                                            var temp = cartItems?.map((i) =>
+                                              i.cartid === item.cartid
+                                                ? updateQuantityInCart(i, 1)
+                                                : i
+                                            );
+                                            setCartItems(temp.sort(compare));
+                                            return;
+                                          }
+                                          const value = +e.target.value;
+                                          if (value < minQty) {
+                                            updateQty(item.cartid, minQty);
+                                          } else {
+                                            updateQty(item.cartid, value);
+                                          }
+                                        }}
+                                        style={{
+                                          width: ismobile ? "20vw" : "5vw",
+                                          padding: "5px",
+                                          marginRight: "10px",
+                                        }}
+                                      />
+                                    </div>
+                                  ) : (
+                                    <></>
+                                  )}
+                                  <ClearIcon
+                                    sx={{
+                                      color: "grey",
+                                      height: "30px",
+                                      margin: "5px",
                                     }}
-                                    variant="outlined"
-                                    inputProps={{ min: minQty, max: maxQty }}
-                                    value={item.quantity}
-                                    onChange={(e) => {
-                                      if (e.target.value === "") {
-                                        var temp = cartItems?.map((i) =>
-                                          i.cartid === item.cartid
-                                            ? updateQuantityInCart(i, 1)
-                                            : i
-                                        );
-                                        setCartItems(temp.sort(compare));
-                                        return;
-                                      }
-                                      const value = +e.target.value;
-                                      if (value < minQty) {
-                                        updateQty(item.cartid, minQty);
-                                      } else {
-                                        updateQty(item.cartid, value);
-                                      }
-                                    }}
-                                    style={{
-                                      width: ismobile ? "20vw" : "5vw",
-                                      padding: "5px",
-                                      marginRight: "10px",
+                                    className="pointer"
+                                    onClick={() => {
+                                      deleteItem(item.cartid);
+                                      removeItem(index);
                                     }}
                                   />
                                 </div>
-                              ) : (
-                                <></>
-                              )}
-                              <ClearIcon
-                                sx={{
-                                  color: "grey",
-                                  height: "30px",
-                                  margin: "5px",
-                                }}
-                                className="pointer"
-                                onClick={() => {
-                                  deleteItem(item.cartid);
-                                  removeItem(index);
-                                }}
-                              />
-                            </div>
-                            <hr />
-                            <hr />
+                                <hr />
+                                <hr />
+                              </>
+                            ) : (
+                              <></>
+                            )}
                           </>
-                        ) : (
-                          <></>
-                        )}
-                      </>
-                    );
-                  })}
-                </>
-              </Box>
-              {/* <div style={{ textAlign: "right" }}>
+                        );
+                      })}
+                    </>
+                  </Box>
+                  {/* <div style={{ textAlign: "right" }}>
             <h1 style={{ fontWeight: "bold", fontSize: "20px" }}>
               ₹ {price} Total
             </h1>
           </div> */}
-              {showContinueToCheckoutButton ? (
-                <Button
+                  {showContinueToCheckoutButton ? (
+                    <Button
+                      style={{
+                        background: "#3B82F6",
+                        color: "white",
+                        marginBottom: "2px",
+                      }}
+                      variant="contained"
+                      onClick={() => {
+                        Router.push({
+                          pathname: "/checkout",
+                          query: { stage: 0 },
+                        });
+                      }}
+                    >
+                      Continue to Checkout
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              ) : (
+                <h1
                   style={{
-                    background: "#3B82F6",
-                    color: "white",
-                    marginBottom: "2px",
-                  }}
-                  variant="contained"
-                  onClick={() => {
-                    Router.push({
-                      pathname: "/checkout",
-                      query: { stage: 0 },
-                    });
+                    fontSize: "25px",
+                    color: "grey",
+                    margin: "5px",
+                    textAlign: "center",
                   }}
                 >
-                  Continue to Checkout
-                </Button>
-              ) : (
-                <></>
-              )}
-            </div>
+                  Cart is empty
+                </h1>
+              )}{" "}
+            </>
           ) : (
-            <h1
+            <div
               style={{
-                fontSize: "25px",
-                color: "grey",
-                margin: "5px",
-                textAlign: "center",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                height: "100%",
+                width: "100%",
+                backgroundColor: "black",
+                borderRadius: "5px",
               }}
             >
-              Cart is empty
-            </h1>
+              <Image
+                src={loading}
+                height="150"
+                width="150"
+                alt={""}
+                style={{ width: "150px", height: "150px" }}
+              />
+            </div>
           )}
         </>
       ) : (

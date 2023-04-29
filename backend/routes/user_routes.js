@@ -3,6 +3,9 @@ const pool = require("../db_creation/db");
 const authorise = require("../middleware/authorise")();
 const refresh_authorise = require("../middleware/refresh_authorise")();
 var validator = require("email-validator");
+const {
+  phone
+} = require('phone');
 const isTimestamp = require('validate.io-timestamp');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -32,6 +35,7 @@ router.post("/register", async (req, res) => {
   try {
     var {
       emailaddress,
+      mobileno,
       signuptype,
       provideridtoken,
       password,
@@ -49,7 +53,7 @@ router.post("/register", async (req, res) => {
     // storing a hashedpassword for data security 
     const hashedpassword = (password != "" ? await bcrypt.hash(password, 10) : "");
     var signinid = "";
-    if (signuptype == 0 || signuptype == 1) {
+    if (signuptype == 0) {
       if (password == "" && signuptype == 0) {
         return res.json({
           isSuccessful: false,
@@ -78,12 +82,23 @@ router.post("/register", async (req, res) => {
           displaypicture = payload['picture'];
       }
 
-      const valid = validator.validate(emailaddress);
-      if (valid) {
+      const validEmail = validator.validate(emailaddress);
+
+      const {
+        isValid,
+        phoneNumber,
+        countryIso2,
+        countryIso3,
+        countryCode
+      } = phone(mobileno, {
+        country: 'IND'
+      });
+      if (validEmail && isValid) {
         const new_User = await pool.query(
-          "INSERT INTO Users (EmailAddress, SignUpType, SignInID, Password, UserName, FName, LName, Bio, IsCreator, DisplayPicture, TwitterHandle, Instagram, Youtube, Website) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING*;",
+          "INSERT INTO Users (EmailAddress, MobileNo, SignUpType, SignInID, Password, UserName, FName, LName, Bio, IsCreator, DisplayPicture, TwitterHandle, Instagram, Youtube, Website) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING*;",
           [
             emailaddress,
+            phoneNumber,
             signuptype,
             signinid,
             hashedpassword,
@@ -101,6 +116,7 @@ router.post("/register", async (req, res) => {
         );
 
         // Only Login with OTP route to get access and refresh tokens
+        // No JWT on Register
         // // generate access token for the new user
         // new_User.rows[0]['x-access-token'] = jwt.sign({
         //   user: username
@@ -121,18 +137,19 @@ router.post("/register", async (req, res) => {
       } else {
         res.json({
           isSuccessful: false,
-          errorMsg: "Email Address Invalid",
+          errorMsg: !validEmail && !isValid ? "Email Address & Mobile Number Invalid" : validEmail ? "Mobile Number Invalid" : "Email Address Invalid",
           result: []
         });
       }
     } else {
       res.json({
         isSuccessful: false,
-        errorMsg: "Invalid SignUpType Value. 0: UnamePass, 1: Google",
+        errorMsg: "Invalid SignUpType Value. 0: UnameEmailMobileNoPass",
         result: []
       });
     }
   } catch (err) {
+    console.log(err);
     res.json({
       isSuccessful: false,
       errorMsg: err.message,
@@ -184,7 +201,7 @@ router.post('/login/:signintype', async (req, res) => {
         if (!isMatch) {
           return res.send({
             isSuccessful: false,
-            errorMsg: "Password Incorrect",
+            errorMsg: "Password Incorrect, Please Go Back",
             result: []
           })
         }

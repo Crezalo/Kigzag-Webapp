@@ -11,6 +11,7 @@ export const MAIN_API_URL = process.env.NEXT_STATIC_MAIN_API_URL;
 
 export async function addNewUser(
   emailaddress: string,
+  mobileno: string,
   signuptype: number,
   provideridtoken: string,
   password: string,
@@ -28,6 +29,7 @@ export async function addNewUser(
   try {
     const data = {
       emailaddress: emailaddress,
+      mobileno: mobileno,
       signuptype: signuptype,
       provideridtoken: provideridtoken,
       password: password,

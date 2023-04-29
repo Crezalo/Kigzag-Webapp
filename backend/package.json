@@ -46,6 +46,7 @@
     "otp-generator": "^4.0.1",
     "path": "^0.12.7",
     "pg": "^8.6.0",
+    "phone": "^3.1.37",
     "postgres-date": "^2.1.0",
     "signale": "^1.4.0",
     "socket.io": "^4.4.1",

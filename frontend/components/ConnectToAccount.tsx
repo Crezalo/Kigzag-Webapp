@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@mui/material/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
+import { phone } from "phone";
 import {
   GoogleLogin,
   GoogleLogout,
@@ -20,6 +21,7 @@ import { sendUserOTP, verifyUserOTP } from "../services/api-services/user_api";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import Timer from "./Timer";
 import { reloadWithQueryParams_message } from "../services/utility";
+import { setEngine } from "crypto";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -30,7 +32,7 @@ const useStylesModal = makeStyles((theme) => ({
   paper: {
     border: "#3B82F6",
     boxShadow: "0 1px 1px 3px #3B82F6",
-    padding: theme.spacing(4, 4, 4, 4),
+    padding: theme.spacing(1, 2, 1, 2),
     transition: "0.3s",
     width: "300px",
     backgroundColor: "black",
@@ -39,7 +41,7 @@ const useStylesModal = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     "&:hover": {
-      boxShadow: "0 10px 18px 8px #3B82F6",
+      boxShadow: "0 10px 16px 8px #3B82F6",
     },
   },
   back: {
@@ -51,7 +53,7 @@ const useStylesModal = makeStyles((theme) => ({
   },
   text: {
     color: "white",
-    fontSize: "18px",
+    fontSize: "16px",
     textAlign: "center",
   },
   textTOS: {
@@ -61,19 +63,19 @@ const useStylesModal = makeStyles((theme) => ({
   },
   error: {
     color: "red",
-    fontSize: "18px",
+    fontSize: "15px",
     textAlign: "center",
-    marginBottom: "10px",
+    marginBottom: "5px",
   },
   message: {
     color: "lightgreen",
-    fontSize: "18px",
+    fontSize: "15px",
     textAlign: "center",
-    marginBottom: "10px",
+    marginBottom: "5px",
   },
   link: {
     color: "#3B82F6",
-    fontSize: "18px",
+    fontSize: "16px",
     textAlign: "center",
     cursor: "pointer",
     textDecoration: "underline",
@@ -107,7 +109,7 @@ const useStylesModal = makeStyles((theme) => ({
     marginBottom: "15px",
     textAlign: "center",
     color: "#3B82F6",
-    fontSize: "18px",
+    fontSize: "16px",
     fontWeight: "bold",
     backgroundColor: "white",
     "&:hover": {
@@ -123,7 +125,7 @@ const useStylesModal = makeStyles((theme) => ({
     borderRadius: "5px",
     marginBottom: "15px",
     textAlign: "center",
-    fontSize: "18px",
+    fontSize: "16px",
     fontWeight: "bold",
     backgroundColor: "#4CBB17",
     color: "white",
@@ -151,8 +153,10 @@ const ConnectToAccount = ({
   const [showPassword, setShowPassword] = useState(false);
   const [haveAccount, setHaveAccount] = useState(haveAccountBool);
   const [otpStage, setOtpStage] = useState(false);
+  const [mobileOtp, setMobileOtp] = useState(false);
   const [username, setUsername] = useState(uname);
   const [email, setEmail] = useState("");
+  const [mobileno, setMobileno] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -187,27 +191,65 @@ const ConnectToAccount = ({
 
   const sendOTP = async (resp: any) => {
     setOtp("");
-    const result = await sendUserOTP(username);
-    if (result[0] === "Success") {
-      setEmail(result[1]);
-      setOtpStage(true);
+    setErrorMsg("");
+    // Email based OTP verification
+    if (username != "") {
+      const result = await sendUserOTP(username);
+      if (result[0] === "Success") {
+        setEmail(result[1]);
+        setOtpStage(true);
+      } else {
+        if (result.includes("fk_otp_user")) {
+          setErrorMsg("Username Incorrect");
+        } else {
+          setErrorMsg(result);
+        }
+      }
+      // Mobile Number based OTP verification
+    } else if (mobileno != "") {
+      const { isValid, phoneNumber, countryIso2, countryIso3, countryCode } =
+        phone(mobileno, {
+          country: "IND",
+        });
+      if (isValid) {
+        console.log("success");
+        console.log(phoneNumber);
+        // const result = await sendUserOTP(username);
+        // if (result[0] === "Success") {
+        //   setMobileOtp(true);
+        //   setOtpStage(true);
+        // } else {
+        //   if (result.includes("fk_otp_user")) {
+        //     setErrorMsg("Username Incorrect");
+        //   } else {
+        //     setErrorMsg(result);
+        //   }
+        // }
+      } else {
+        setErrorMsg("Invalid Phone Number");
+      }
     } else {
-      setErrorMsg(result);
+      setErrorMsg("Please Insert Username & Password OR Mobile Number");
     }
   };
 
   const login = async (resp: any) => {
-    const otpVerified = await verifyUserOTP(otp, username);
-    console.log(otpVerified);
-    if (otpVerified == "Verified") {
-      const result = await AuthService.login(username, password, "", 0);
-      console.log(result);
-      if (typeof result !== "string") {
-        setIsConnected(result);
-        window.location.reload();
-      } else {
-        setErrorMsg(result);
+    if (parseInt(otp)) {
+      setErrorMsg("");
+      const otpVerified = await verifyUserOTP(otp, username);
+      console.log(otpVerified);
+      if (otpVerified == "Verified") {
+        const result = await AuthService.login(username, password, "", 0);
+        console.log(result);
+        if (typeof result !== "string") {
+          setIsConnected(result);
+          window.location.reload();
+        } else {
+          setErrorMsg(result);
+        }
       }
+    } else {
+      setErrorMsg("OTP must be a 6 digit number");
     }
   };
 
@@ -250,6 +292,7 @@ const ConnectToAccount = ({
     if (validateRegisterInput()) {
       const result = await AuthService.register(
         email,
+        mobileno,
         0,
         "",
         password,
@@ -264,15 +307,20 @@ const ConnectToAccount = ({
         "",
         ""
       );
+      console.log(result);
       if (typeof result === "string") {
         if (result.includes("users_emailaddress_key")) {
-          setErrorMsg("This account is already a user");
+          setErrorMsg("Email Already Exists");
         } else if (result.includes("users_username_key")) {
-          setErrorMsg("This username is already a user");
+          setErrorMsg("Username Already Exists");
+        } else if (result.includes("users_mobileno_key")) {
+          setErrorMsg("Mobile No Already Exists");
         } else {
           setErrorMsg(result);
         }
       } else if (result) {
+        console.log("vdfjvndfjvdfjvhfd");
+        setErrorMsg("");
         reloadWithQueryParams_message(
           router,
           "Account Registered Successfully, Please Login!"
@@ -301,7 +349,7 @@ const ConnectToAccount = ({
           <a
             href={process.env.NEXT_STATIC_LANDING_WEBSITE_URL}
             className={classesModal.link + " pointer"}
-            style={{ marginBottom: "20px" }}
+            style={{ marginBottom: "10px" }}
             target="_blank"
           >
             Visit Crezalo
@@ -328,7 +376,7 @@ const ConnectToAccount = ({
                         if (e.target.value != "") setPassword(e.target.value);
                       }}
                     />
-                    <div style={{ textAlign: "center", paddingBottom: "10px" }}>
+                    <div style={{ textAlign: "center" }}>
                       <input
                         type="checkbox"
                         checked={showPassword}
@@ -342,6 +390,18 @@ const ConnectToAccount = ({
                         Show Password
                       </label>
                     </div>
+                    <div style={{ marginBottom: "5px" }}>
+                      <label className={classesModal.linkTOS}>OR</label>
+                    </div>
+                    <input
+                      className={classesModal.input}
+                      type="text"
+                      defaultValue={mobileno}
+                      placeholder={"Mobile (+91 8888 888888)"}
+                      onChange={(e) => {
+                        if (e.target.value != "") setMobileno(e.target.value);
+                      }}
+                    />
                     <div style={{ textAlign: "center", paddingBottom: "10px" }}>
                       <input type="checkbox" checked={true} />
                       <label
@@ -356,15 +416,7 @@ const ConnectToAccount = ({
                         >
                           terms of service
                         </a>{" "}
-                        of Crezalo
-                      </label>
-                      <br />
-                      <input type="checkbox" checked={true} />
-                      <label
-                        className={classesModal.textTOS}
-                        style={{ paddingLeft: "5px" }}
-                      >
-                        I agree to{" "}
+                        and{" "}
                         <a
                           href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
                           target="_blank"
@@ -405,22 +457,41 @@ const ConnectToAccount = ({
                 <>
                   <ArrowBackOutlinedIcon
                     className={classesModal.back + " pointer"}
-                    onClick={() => setOtpStage(false)}
+                    onClick={() => {
+                      setOtpStage(false);
+                      setMobileOtp(false);
+                    }}
                   />
                   <br />
-                  <label
-                    className={classesModal.textTOS}
-                    style={{ paddingLeft: "5px" }}
-                  >
-                    We sent a verification code to your email address
-                    <a
-                      href={"mailto:" + email}
-                      target="_blank"
-                      className={classesModal.linkTOS}
+                  {!mobileOtp ? (
+                    <label
+                      className={classesModal.textTOS}
+                      style={{ paddingLeft: "5px" }}
                     >
-                      {" " + email}
-                    </a>
-                  </label>
+                      We sent a verification code to your email address
+                      <a
+                        href={"mailto:" + email}
+                        target="_blank"
+                        className={classesModal.linkTOS}
+                      >
+                        {" " + email}
+                      </a>
+                    </label>
+                  ) : (
+                    <label
+                      className={classesModal.textTOS}
+                      style={{ paddingLeft: "5px" }}
+                    >
+                      We sent a verification code to your phone number
+                      <a
+                        href={"mailto:" + email}
+                        target="_blank"
+                        className={classesModal.linkTOS}
+                      >
+                        {" " + mobileno}
+                      </a>
+                    </label>
+                  )}
                   <br />
                   <MuiOtpInput
                     value={otp}
@@ -468,6 +539,14 @@ const ConnectToAccount = ({
               />
               <input
                 className={classesModal.input}
+                type="tel"
+                placeholder={"Mobile (+91 8888 888888)"}
+                onChange={(e) => {
+                  if (e.target.value != "") setMobileno(e.target.value);
+                }}
+              />
+              <input
+                className={classesModal.input}
                 type={showPassword ? "text" : "password"}
                 placeholder={"Password"}
                 onChange={(e) => {
@@ -483,7 +562,7 @@ const ConnectToAccount = ({
                 }}
               />
               <PasswordStrengthBar password={password} />
-              <div style={{ textAlign: "center", paddingBottom: "10px" }}>
+              <div style={{ textAlign: "center" }}>
                 <input
                   type="checkbox"
                   checked={showPassword}
@@ -511,15 +590,7 @@ const ConnectToAccount = ({
                   >
                     terms of service
                   </a>{" "}
-                  of Crezalo
-                </label>
-                <br />
-                <input type="checkbox" checked={true} />
-                <label
-                  className={classesModal.textTOS}
-                  style={{ paddingLeft: "5px" }}
-                >
-                  I agree to{" "}
+                  and{" "}
                   <a
                     href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
                     target="_blank"

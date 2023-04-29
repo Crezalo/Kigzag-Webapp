@@ -159,7 +159,7 @@ const CartItemCard = ({ cartItem }: CartItemCardProps) => {
                     className="cartItemCardImageElement"
                   />
                 ) : (
-                  <></>
+                  <div className="cartItemCardImageElement shimmer"></div>
                 )}
               </>
             )}

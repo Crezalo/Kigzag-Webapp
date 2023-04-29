@@ -8,6 +8,7 @@ import {
 class AuthService {
   async register(
     emailaddress: string,
+    mobileno: string,
     signuptype: number,
     provideridtoken: string,
     password: string,
@@ -24,6 +25,7 @@ class AuthService {
   ) {
     const response = await addNewUser(
       emailaddress,
+      mobileno,
       signuptype,
       provideridtoken,
       password,
