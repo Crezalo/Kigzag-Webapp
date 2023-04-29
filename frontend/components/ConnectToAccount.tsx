@@ -5,6 +5,7 @@ import Modal from "@mui/material/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { phone } from "phone";
+import firebase from "./firebase";
 import {
   GoogleLogin,
   GoogleLogout,
@@ -17,7 +18,7 @@ import PasswordStrengthBar from "react-password-strength-bar";
 import Router, { useRouter } from "next/router";
 import guestCred from "../consts/guestcred";
 import { MuiOtpInput } from "mui-one-time-password-input";
-import { sendUserOTP, verifyUserOTP } from "../services/api-services/user_api";
+import { sendUserOTP } from "../services/api-services/user_api";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import Timer from "./Timer";
 import { reloadWithQueryParams_message } from "../services/utility";
@@ -155,6 +156,7 @@ const ConnectToAccount = ({
   const [otpStage, setOtpStage] = useState(false);
   const [mobileOtp, setMobileOtp] = useState(false);
   const [username, setUsername] = useState(uname);
+  const [confirmationResultFB, setConfirmationResultFB] = useState(null);
   const [email, setEmail] = useState("");
   const [mobileno, setMobileno] = useState("");
   const [password, setPassword] = useState("");
@@ -209,22 +211,44 @@ const ConnectToAccount = ({
     } else if (mobileno != "") {
       const { isValid, phoneNumber, countryIso2, countryIso3, countryCode } =
         phone(mobileno, {
-          country: "IND",
+          // country: "IND",
         });
       if (isValid) {
-        console.log("success");
         console.log(phoneNumber);
-        // const result = await sendUserOTP(username);
-        // if (result[0] === "Success") {
-        //   setMobileOtp(true);
-        //   setOtpStage(true);
-        // } else {
-        //   if (result.includes("fk_otp_user")) {
-        //     setErrorMsg("Username Incorrect");
-        //   } else {
-        //     setErrorMsg(result);
-        //   }
-        // }
+        setMobileno(phoneNumber);
+        // invisible recaptcha
+        const appVerifier = new firebase.auth.RecaptchaVerifier(
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: (response) => {
+              console.log(response);
+              // reCAPTCHA solved, allow signInWithPhoneNumber.
+              // ...
+            },
+            "expired-callback": () => {
+              // Response expired. Ask user to solve reCAPTCHA again.
+              // ...
+            },
+          }
+        );
+
+        // Send the verification code to the user's phone
+        firebase
+          .auth()
+          .signInWithPhoneNumber(mobileno, appVerifier)
+          .then((confirmationResult) => {
+            console.log(confirmationResult);
+            // Save the confirmation result for later use
+            console.log("heredfdfgdf");
+            setConfirmationResultFB(confirmationResult);
+            setOtpStage(true);
+            setMobileOtp(true);
+          })
+          .catch((error) => {
+            console.log("Err Message " + error);
+            setErrorMsg(error);
+          });
       } else {
         setErrorMsg("Invalid Phone Number");
       }
@@ -236,10 +260,16 @@ const ConnectToAccount = ({
   const login = async (resp: any) => {
     if (parseInt(otp)) {
       setErrorMsg("");
-      const otpVerified = await verifyUserOTP(otp, username);
-      console.log(otpVerified);
-      if (otpVerified == "Verified") {
-        const result = await AuthService.login(username, password, "", 0);
+      if (username != "") {
+        const result = await AuthService.login(
+          username,
+          password,
+          "",
+          0,
+          otp,
+          "",
+          ""
+        );
         console.log(result);
         if (typeof result !== "string") {
           setIsConnected(result);
@@ -247,6 +277,53 @@ const ConnectToAccount = ({
         } else {
           setErrorMsg(result);
         }
+      } else {
+        if (otp.length == 6)
+          confirmationResultFB
+            .confirm(otp)
+            .then(async (userCredential) => {
+              // User signed in successfully
+              const user = userCredential.user;
+              firebase
+                .auth()
+                .currentUser.getIdToken(/* forceRefresh */ true)
+                .then(async (idToken) => {
+                  // Save the ID token to the user object in the database.
+                  const result = await AuthService.login(
+                    username,
+                    password,
+                    "",
+                    1,
+                    "",
+                    idToken,
+                    user.phoneNumber
+                  );
+                  console.log(result);
+                  if (typeof result !== "string") {
+                    setIsConnected(result);
+                    window.location.reload();
+                  } else {
+                    setErrorMsg(result);
+                  }
+                })
+                .catch((error) => {
+                  setErrorMsg("Server Error, Unable to Validate OTP");
+                  console.error("Error getting ID token:", error);
+                });
+            })
+            .catch((error) => {
+              // Handle any errors from the signInWithPhoneNumber method.
+              if (error.code === "auth/invalid-verification-code") {
+                // The SMS verification code entered by the user is invalid.
+                // Handle the error accordingly.
+                setErrorMsg("OTP Invalid");
+                // ...
+              } else {
+                // Handle other errors from the signInWithPhoneNumber method.
+                setErrorMsg("OTP Expired");
+                // ...
+              }
+            });
       }
     } else {
       setErrorMsg("OTP must be a 6 digit number");
@@ -254,7 +331,15 @@ const ConnectToAccount = ({
   };
 
   const guestlogin = async (resp: any) => {
-    const result = await AuthService.login(guestCred[0], guestCred[1], "", 0);
+    const result = await AuthService.login(
+      guestCred[0],
+      guestCred[1],
+      "",
+      0,
+      "",
+      "",
+      ""
+    );
     console.log(result);
     if (typeof result !== "string") {
       setIsConnected(result);
@@ -319,7 +404,6 @@ const ConnectToAccount = ({
           setErrorMsg(result);
         }
       } else if (result) {
-        console.log("vdfjvndfjvdfjvhfd");
         setErrorMsg("");
         reloadWithQueryParams_message(
           router,
@@ -363,7 +447,7 @@ const ConnectToAccount = ({
                       className={classesModal.input}
                       type="text"
                       defaultValue={username}
-                      placeholder={"Username"}
+                      placeholder={"Username or Email"}
                       onChange={(e) => {
                         if (e.target.value != "") setUsername(e.target.value);
                       }}
@@ -427,7 +511,11 @@ const ConnectToAccount = ({
                         of Crezalo
                       </label>
                     </div>
-                    <button className={classesModal.button} onClick={sendOTP}>
+                    <button
+                      className={classesModal.button}
+                      onClick={sendOTP}
+                      id="recaptcha-container"
+                    >
                       Login
                     </button>
                     {!noguestlogin ? (
@@ -460,6 +548,7 @@ const ConnectToAccount = ({
                     onClick={() => {
                       setOtpStage(false);
                       setMobileOtp(false);
+                      setErrorMsg("");
                     }}
                   />
                   <br />
@@ -514,7 +603,12 @@ const ConnectToAccount = ({
                   </button>
                   {/* Render the OTP verification form */}
                   {/* Render the Timer component with the resendOTP function and timerDuration */}
-                  <Timer resendOTP={sendOTP} timerDuration={300} />
+                  <div id="recaptcha-container">
+                    <Timer
+                      resendOTP={sendOTP}
+                      timerDuration={mobileOtp ? 30 : 300}
+                    />
+                  </div>
                 </>
               )}
             </>

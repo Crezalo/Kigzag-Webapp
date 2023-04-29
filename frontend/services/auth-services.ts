@@ -54,7 +54,10 @@ class AuthService {
     username: string,
     password: string,
     provideridtoken: string,
-    signintype: number
+    signintype: number,
+    otp: string,
+    idtoken: string,
+    phonenumber: string
   ) {
     if (
       this.validateCurrentUserRefreshToken() &&
@@ -67,7 +70,10 @@ class AuthService {
         provideridtoken,
         username,
         password,
-        signintype
+        signintype,
+        otp,
+        idtoken,
+        phonenumber
       );
       if (
         response == true &&

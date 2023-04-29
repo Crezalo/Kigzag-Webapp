@@ -77,26 +77,14 @@ export async function sendUserOTP(username: string) {
   }
 }
 
-export async function verifyUserOTP(otp: string, username: string) {
-  try {
-    const response = await axios.get(
-      MAIN_API_URL + "otp/verify/" + otp + "/" + username
-    );
-    if (response.data.isSuccessful) {
-      return response.data.result;
-    } else {
-      return response.data.errorMsg;
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
-
 export async function userLogin(
   provideridtoken: string,
   username: string,
   password: string,
-  signintype: number
+  signintype: number,
+  otp: string,
+  idtoken: string,
+  phonenumber: string
 ) {
   try {
     var data;
@@ -104,10 +92,12 @@ export async function userLogin(
       data = {
         username: username,
         password: password,
+        otp: otp,
       };
     } else if (signintype == 1) {
       data = {
-        provideridtoken: provideridtoken,
+        idtoken: idtoken,
+        phonenumber: phonenumber,
       };
     }
 

@@ -95,58 +95,7 @@ router.post('/:username', async (req, res) => {
             result: ["Success", ud.rows[0].emailaddress.replace(/(\w{1})(.*)(\w{1})@(.*)/, '$1******$3@$4')]
         });
     } catch (err) {
-        res.json({
-            isSuccessful: false,
-            errorMsg: err.message,
-            result: []
-        });
-    }
-});
-
-
-router.get('/verify/:otp/:username', async (req, res) => {
-    try {
-        var {
-            otp,
-            username
-        } = req.params
-
-        //  In case user sends email instead of username
-        const valid = validator.validate(username);
-        if (valid) {
-            user_col = await pool.query("SELECT * FROM Users WHERE emailaddress = $1;", [username]);
-            username = user_col.rows[0].username;
-        }
-        
-        const ud = await pool.query("SELECT * FROM otp WHERE otp=$1 AND username=$2;", [otp, username]);
-        if (ud.rows[0]) {
-            // compare if otp older than expiry in ms
-            if ((new Date() - Date.parse(ud.rows[0].createdat)) / 1000 < process.env.OTP_EXPIRY_IN_MS) {
-
-                const vd = await pool.query("DELETE FROM otp WHERE username=$1 RETURNING*", [username]);
-                return res.send({
-                    isSuccessful: true,
-                    errorMsg: "",
-                    result: "Verified"
-                });
-            } else {
-                const vd = await pool.query("DELETE FROM otp WHERE username=$1 RETURNING*", [username]);
-                if (vd.rows[0]) {
-                    return res.send({
-                        isSuccessful: true,
-                        errorMsg: "",
-                        result: "OTP Expired"
-                    });
-                }
-            }
-        } else {
-            return res.send({
-                isSuccessful: true,
-                errorMsg: "",
-                result: "Incorrect OTP"
-            });
-        }
-    } catch (err) {
+        console.log(err);
         res.json({
             isSuccessful: false,
             errorMsg: err.message,

@@ -10,6 +10,7 @@ const isTimestamp = require('validate.io-timestamp');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
+const fbadmin = require('firebase-admin');
 
 const {
   OAuth2Client
@@ -24,6 +25,12 @@ async function googleVerify(provideridtoken) {
   const payload = ticket.getPayload();
   return payload;
 }
+
+// Initialize the Firebase Admin SDK
+const serviceAccount = require("./../" + process.env.FIREBASE_SERVICE_ADMIN_KEY_FILE);
+fbadmin.initializeApp({
+  credential: fbadmin.credential.cert(serviceAccount),
+});
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////          USER TABLE            /////////////////////////////////////////////////
@@ -159,6 +166,8 @@ router.post("/register", async (req, res) => {
 });
 
 ///////////////////////////////////////////   Login   ///////////////////////////////////////////
+/// signintype => 0: uname, password, email-otp
+///               1: uid, phonenumber
 router.post('/login/:signintype', async (req, res) => {
   try {
     const {
@@ -167,10 +176,11 @@ router.post('/login/:signintype', async (req, res) => {
     if (signintype == "0") {
       const {
         username,
-        password
+        password,
+        otp
       } = req.body;
-      if (!username || !password) {
-        throw new Error('Username and password are required')
+      if (!username || !password || !otp) {
+        throw new Error('Username, password and OTP are required')
       }
 
       //  In case user sends email instead of username
@@ -183,7 +193,7 @@ router.post('/login/:signintype', async (req, res) => {
         userNameUp = username;
       } else {
         user_col = await pool.query("SELECT * FROM Users WHERE emailaddress = $1;", [username]);
-        userNameUp = user_col?.rows[0]?.username;
+        userNameUp = user_col.rows[0].username;
       }
 
       if (!user_col.rows[0]) {
@@ -206,27 +216,52 @@ router.post('/login/:signintype', async (req, res) => {
           })
         }
 
-        // generate access token for the new user
-        const accessToken = jwt.sign({
-          user: userNameUp
-        }, process.env.JWT_ACCESS_TOKEN_SECRET, {
-          expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
-        });
-        // generate refresh token for the new user
-        const refreshToken = jwt.sign({
-          user: userNameUp
-        }, process.env.JWT_REFRESH_TOKEN_SECRET, {
-          expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
-        });
+        const ud = await pool.query("SELECT * FROM otp WHERE otp=$1 AND username=$2;", [otp, userNameUp]);
+        if (ud.rows[0]) {
+          // compare if otp older than expiry in ms
+          if ((new Date() - Date.parse(ud.rows[0].createdat)) / 1000 < process.env.OTP_EXPIRY_IN_MS) {
 
-        res.json({
-          isSuccessful: true,
-          errorMsg: "",
-          result: [{
-            'x-access-token': accessToken,
-            'x-refresh-token': refreshToken
-          }]
-        });
+            const vd = await pool.query("DELETE FROM otp WHERE username=$1 RETURNING*", [userNameUp]);
+
+            // OTP Verified scenario
+            // generate access token for the new user
+            const accessToken = jwt.sign({
+              user: userNameUp
+            }, process.env.JWT_ACCESS_TOKEN_SECRET, {
+              expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+            });
+            // generate refresh token for the new user
+            const refreshToken = jwt.sign({
+              user: userNameUp
+            }, process.env.JWT_REFRESH_TOKEN_SECRET, {
+              expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+            });
+
+            res.json({
+              isSuccessful: true,
+              errorMsg: "",
+              result: [{
+                'x-access-token': accessToken,
+                'x-refresh-token': refreshToken
+              }]
+            });
+          } else {
+            const vd = await pool.query("DELETE FROM otp WHERE username=$1 RETURNING*", [userNameUp]);
+            if (vd.rows[0]) {
+              return res.send({
+                isSuccessful: true,
+                errorMsg: "",
+                result: "OTP Expired"
+              });
+            }
+          }
+        } else {
+          return res.send({
+            isSuccessful: true,
+            errorMsg: "",
+            result: "Incorrect OTP"
+          });
+        }
 
       } else {
         res.json({
@@ -235,7 +270,99 @@ router.post('/login/:signintype', async (req, res) => {
           result: []
         });
       }
-    } else if (signintype == "1") {
+    }
+    // mobile number otp firebase login
+    else if (signintype == "1") {
+      const {
+        idtoken,
+        phonenumber
+      } = req.body;
+      fbadmin.auth().verifyIdToken(idtoken)
+        .then(async (decodedIdToken) => {
+          // user mobile otp verified
+          const ud = await pool.query("SELECT username FROM users WHERE mobileno=$1", [phonenumber]);
+          if (ud.rows[0]) {
+            userNameUp = ud.rows[0].username;
+
+            // revokeRefreshTokens to reset firebase user for future logins
+            fbadmin.auth().revokeRefreshTokens(decodedIdToken.uid)
+              .then(() => {
+                // OTP Verified scenario
+                // generate access token for the new user
+                const accessToken = jwt.sign({
+                  user: userNameUp
+                }, process.env.JWT_ACCESS_TOKEN_SECRET, {
+                  expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+                });
+                // generate refresh token for the new user
+                const refreshToken = jwt.sign({
+                  user: userNameUp
+                }, process.env.JWT_REFRESH_TOKEN_SECRET, {
+                  expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+                });
+
+                res.json({
+                  isSuccessful: true,
+                  errorMsg: "",
+                  result: [{
+                    'x-access-token': accessToken,
+                    'x-refresh-token': refreshToken
+                  }]
+                });
+              })
+              .catch((error) => {
+                fbadmin.auth().revokeRefreshTokens(decodedIdToken.uid)
+                  .then(() => {
+                    // OTP Verified scenario
+                    // generate access token for the new user
+                    const accessToken = jwt.sign({
+                      user: userNameUp
+                    }, process.env.JWT_ACCESS_TOKEN_SECRET, {
+                      expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+                    });
+                    // generate refresh token for the new user
+                    const refreshToken = jwt.sign({
+                      user: userNameUp
+                    }, process.env.JWT_REFRESH_TOKEN_SECRET, {
+                      expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+                    });
+
+                    res.json({
+                      isSuccessful: true,
+                      errorMsg: "",
+                      result: [{
+                        'x-access-token': accessToken,
+                        'x-refresh-token': refreshToken
+                      }]
+                    });
+                  })
+                  .catch((error) => {
+                    res.json({
+                      isSuccessful: false,
+                      errorMsg: "Server Error Please Retry!",
+                      result: []
+                    });
+                  });
+              });
+          } else {
+            res.json({
+              isSuccessful: false,
+              errorMsg: "Unregistered Mobile Number",
+              result: []
+            });
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching user data:', error);
+          res.json({
+            isSuccessful: false,
+            errorMsg: "OTP Not Verified, please retry!",
+            result: []
+          });
+        });
+    }
+    // google login
+    else if (signintype == "2") {
       const {
         provideridtoken
       } = req.body;
