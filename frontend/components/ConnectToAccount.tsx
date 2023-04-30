@@ -262,7 +262,7 @@ const ConnectToAccount = ({
   };
 
   const login = async (resp: any) => {
-    if (parseInt(otp)) {
+    if (parseInt(otp) && otp.length == 6) {
       setErrorMsg("");
       if (username != "") {
         const result = await AuthService.login(
@@ -282,52 +282,51 @@ const ConnectToAccount = ({
           setErrorMsg(result);
         }
       } else {
-        if (otp.length == 6)
-          confirmationResultFB
-            .confirm(otp)
-            .then(async (userCredential) => {
-              // User signed in successfully
-              const user = userCredential.user;
-              firebase
-                .auth()
-                .currentUser.getIdToken(/* forceRefresh */ true)
-                .then(async (idToken) => {
-                  // Save the ID token to the user object in the database.
-                  const result = await AuthService.login(
-                    username,
-                    password,
-                    "",
-                    1,
-                    "",
-                    idToken,
-                    user.phoneNumber
-                  );
-                  console.log(result);
-                  if (typeof result !== "string") {
-                    setIsConnected(result);
-                    window.location.reload();
-                  } else {
-                    setErrorMsg(result);
-                  }
-                })
-                .catch((error) => {
-                  setErrorMsg("Server Error, Unable to Validate OTP");
-                  console.error("Error getting ID token:", error);
-                });
-            })
-            .catch((error) => {
-              // Handle any errors from the signInWithPhoneNumber method.
-              if (error.code === "auth/invalid-verification-code") {
-                // The SMS verification code entered by the user is invalid.
-                // Handle the error accordingly.
-                setErrorMsg("OTP Invalid");
-                // ...
-              } else {
-                // Handle other errors from the signInWithPhoneNumber method.
-                setErrorMsg("OTP Expired");
-                // ...
-              }
-            });
+        confirmationResultFB
+          .confirm(otp)
+          .then(async (userCredential) => {
+            // User signed in successfully
+            const user = userCredential.user;
+            firebase
+              .auth()
+              .currentUser.getIdToken(/* forceRefresh */ true)
+              .then(async (idToken) => {
+                // Save the ID token to the user object in the database.
+                const result = await AuthService.login(
+                  username,
+                  password,
+                  "",
+                  1,
+                  "",
+                  idToken,
+                  user.phoneNumber
+                );
+                console.log(result);
+                if (typeof result !== "string") {
+                  setIsConnected(result);
+                  window.location.reload();
+                } else {
+                  setErrorMsg(result);
+                }
+              })
+              .catch((error) => {
+                setErrorMsg("Server Error, Unable to Validate OTP");
+                console.error("Error getting ID token:", error);
+              });
+          })
+          .catch((error) => {
+            // Handle any errors from the signInWithPhoneNumber method.
+            if (error.code === "auth/invalid-verification-code") {
+              // The SMS verification code entered by the user is invalid.
+              // Handle the error accordingly.
+              setErrorMsg("OTP Invalid");
+              // ...
+            } else {
+              // Handle other errors from the signInWithPhoneNumber method.
+              setErrorMsg("OTP Expired");
+              // ...
+            }
+          });
       }
     } else {
       setErrorMsg("OTP must be a 6 digit number");
