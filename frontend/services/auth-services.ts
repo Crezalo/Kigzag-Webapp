@@ -1,4 +1,5 @@
 import jwt_decode from "jwt-decode";
+import guestCred from "../consts/guestcred";
 import {
   addNewUser,
   userLogin,
@@ -85,6 +86,26 @@ class AuthService {
       }
       return response;
     }
+  }
+
+  async autoGuestLogin() {
+    if (this.getCurrentUserAccessToken() && this.getCurrentUserRefreshToken()) {
+      return false;
+    }
+    if (this.checkTriggerLoginModal()) {
+      return false;
+    }
+    const result = await this.login(
+      guestCred[0],
+      guestCred[1],
+      "",
+      0,
+      "",
+      "",
+      ""
+    );
+    if (result === true) window.location.reload();
+    return result;
   }
 
   async refresh() {

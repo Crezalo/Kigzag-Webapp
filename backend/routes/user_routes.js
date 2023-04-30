@@ -179,7 +179,7 @@ router.post('/login/:signintype', async (req, res) => {
         password,
         otp
       } = req.body;
-      if (!username || !password || !otp) {
+      if (!username || !password) {
         throw new Error('Username, password and OTP are required')
       }
 
@@ -216,6 +216,32 @@ router.post('/login/:signintype', async (req, res) => {
           })
         }
 
+        //if guest login
+        if (otp == "" && username == process.env.GUEST_LOGIN_USERNAME && password == process.env.GUEST_LOGIN_PASSWORD) {
+          // generate access token for the new user
+          const accessToken = jwt.sign({
+            user: userNameUp
+          }, process.env.JWT_ACCESS_TOKEN_SECRET, {
+            expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+          });
+          // generate refresh token for the new user
+          const refreshToken = jwt.sign({
+            user: userNameUp
+          }, process.env.JWT_REFRESH_TOKEN_SECRET, {
+            expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+          });
+
+          res.json({
+            isSuccessful: true,
+            errorMsg: "",
+            result: [{
+              'x-access-token': accessToken,
+              'x-refresh-token': refreshToken
+            }]
+          });
+        }
+
+        // else verify otp
         const ud = await pool.query("SELECT * FROM otp WHERE otp=$1 AND username=$2;", [otp, userNameUp]);
         if (ud.rows[0]) {
           // compare if otp older than expiry in ms

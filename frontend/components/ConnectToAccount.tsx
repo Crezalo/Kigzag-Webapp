@@ -162,7 +162,7 @@ const ConnectToAccount = ({
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
   const router = useRouter();
 
   const [otp, setOtp] = React.useState("");
@@ -176,11 +176,16 @@ const ConnectToAccount = ({
       async function getData() {
         if (typeof window !== "undefined") {
           console.log("AuthService.refresh()");
-          console.log(await AuthService.refresh());
-          setIsConnected(
-            AuthService.validateCurrentUserRefreshToken() &&
-              AuthService.validateCurrentUserAccessToken()
-          );
+          var agt = await AuthService.autoGuestLogin();
+          if (agt === true) {
+            setIsConnected(true);
+          } else {
+            console.log(await AuthService.refresh());
+            setIsConnected(
+              AuthService.validateCurrentUserRefreshToken() &&
+                AuthService.validateCurrentUserAccessToken()
+            );
+          }
         }
       }
       getData();
@@ -211,10 +216,9 @@ const ConnectToAccount = ({
     } else if (mobileno != "") {
       const { isValid, phoneNumber, countryIso2, countryIso3, countryCode } =
         phone(mobileno, {
-          // country: "IND",
+          country: "IND",
         });
       if (isValid) {
-        console.log(phoneNumber);
         setMobileno(phoneNumber);
         // invisible recaptcha
         const appVerifier = new firebase.auth.RecaptchaVerifier(
@@ -236,7 +240,7 @@ const ConnectToAccount = ({
         // Send the verification code to the user's phone
         firebase
           .auth()
-          .signInWithPhoneNumber(mobileno, appVerifier)
+          .signInWithPhoneNumber(phoneNumber, appVerifier)
           .then((confirmationResult) => {
             console.log(confirmationResult);
             // Save the confirmation result for later use
