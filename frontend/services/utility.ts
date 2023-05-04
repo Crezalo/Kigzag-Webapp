@@ -41,7 +41,7 @@ export function reloadWithQueryParams(router) {
   const queryParams = {
     // Additional query parameters
     noguestlogin: true,
-    message: "Login in with user account to use this feature",
+    message: "Please Login in with User Account!",
   };
   // Reload the window with additional query parameters
   router.replace({
@@ -63,7 +63,7 @@ export function reloadWithQueryParams(router) {
 }
 
 // Function to reload the window with additional query parameters
-export function reloadWithQueryParams_message(router,message) {
+export function reloadWithQueryParams_message(router, message) {
   const queryParams = {
     // Additional query parameters
     noguestlogin: true,
@@ -112,4 +112,3 @@ export function reloadWithQueryParams_NoMessage(router) {
   // Reload the window with the new URL
   window.location.href = newUrl;
 }
-

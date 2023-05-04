@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { Button } from "@mui/material";
 import { getUserData } from "../services/api-services/user_api";
 import guestCred from "../consts/guestcred";
+import { reloadWithQueryParams } from "../services/utility";
 
 interface cartItem {
   cartid: string;
@@ -110,6 +111,26 @@ const Header = () => {
   const atHome = () => {
     return url === "/";
   };
+
+  const checkGuestUser = async () => {
+    if (username == guestCred[0]) {
+      AuthService.logout();
+      reloadWithQueryParams(router);
+    }
+  };
+
+  const redirecToInfoWebsiteOrSignOut = () => {
+    useEffect(() => {
+      if (username == guestCred[0] && atHome()) {
+        router.push(process.env.NEXT_STATIC_LANDING_WEBSITE_URL);
+      }
+      if (isRegister()) {
+        checkGuestUser();
+      }
+    }, [username]);
+  };
+
+  redirecToInfoWebsiteOrSignOut();
 
   const isRegister = () => {
     return url.includes("register");
