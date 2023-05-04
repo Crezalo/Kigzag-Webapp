@@ -8,7 +8,7 @@ import SettingMenu from "./SettingMenu";
 import queryString from "query-string";
 import BasicModal from "./BasicModal";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+import DashboardIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
 import AddToCart from "./AddToCart";
 import { getCartItems } from "../services/api-services/user/cart_api";
