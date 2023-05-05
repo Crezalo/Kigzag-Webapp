@@ -240,7 +240,10 @@ const AddToCart = ({
         if (result[0] && typeof result !== "string") {
           setCartItems(result.sort(compare));
           if (setCartItemsUp) setCartItemsUp(result.sort(compare));
-        } else if (setCartItemsUp) setCartItemsUp([]);
+        } else {
+          setCartItems([]);
+          if (setCartItemsUp) setCartItemsUp([]);
+        }
       }
       getData();
     }, [username]);
@@ -288,7 +291,8 @@ const AddToCart = ({
     >
       {username !== guestCred[0] ? (
         <>
-          {cartItems[0]?.feature != -1 && cartItems[0]?.cartid != "" ? (
+          {(cartItems[0]?.feature != -1 && cartItems[0]?.cartid != "") ||
+          cartItems?.length == 0 ? (
             <>
               {cartItems?.length > 0 ? (
                 <div>
