@@ -112,3 +112,7 @@ export function reloadWithQueryParams_NoMessage(router) {
   // Reload the window with the new URL
   window.location.href = newUrl;
 }
+
+export function delay(ms) {
+  return new Promise((res) => setTimeout(res, ms));
+}

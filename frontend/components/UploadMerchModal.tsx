@@ -11,7 +11,7 @@ import {
   MAIN_API_URL,
 } from "../services/api-services/creator/merch_api";
 import Carousel from "react-material-ui-carousel";
-import { useScreenSize } from "../services/utility";
+import { delay, useScreenSize } from "../services/utility";
 
 interface SettingsT {
   autoPlay: boolean;
@@ -147,6 +147,12 @@ const UploadMerchModal = ({
         ) {
           // handle success
           setFileUploadStatus("COMPLETE");
+
+          // wait for 2 seconds to show experience
+          await delay(2000);
+
+          // reload to fetch updated details
+          window.location.reload();
           console.log(response?.data?.result);
           console.log(result);
         } else {

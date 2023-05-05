@@ -6,7 +6,7 @@ import Image from "next/image";
 import uploadingGif from "../public/uploading.gif";
 import greenTick from "../public/green-tick.gif";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-import { useScreenSize } from "../services/utility";
+import { delay, useScreenSize } from "../services/utility";
 
 interface UploadDocumentModalProp {
   seriesid: string;
@@ -60,6 +60,12 @@ const UploadDocumentModal = ({ seriesid }: UploadDocumentModalProp) => {
         if (response.data.isSuccessful) {
           // handle success
           setFileUploadStatus("COMPLETE");
+
+          // wait for 2 seconds to show experience
+          await delay(2000);
+
+          // reload to fetch updated details
+          window.location.reload();
           console.log(response.data.result[0]);
         } else {
           setFileUploadStatus("Failed To Upload Retry!");

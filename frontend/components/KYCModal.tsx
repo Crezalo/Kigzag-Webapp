@@ -13,7 +13,7 @@ import banks from "../consts/banks";
 import { addCreatorKycApprovalData } from "../services/api-services/creator/fininfo_api";
 import { updateUserData } from "../services/api-services/user_api";
 import { addCreatorFeatureStatusData } from "../services/api-services/creator/features_api";
-import { useScreenSize } from "../services/utility";
+import { delay, useScreenSize } from "../services/utility";
 
 interface SettingsT {
   autoPlay: boolean;
@@ -82,6 +82,12 @@ const KYCModal = () => {
           if (typeof result !== "string") {
             // handle success
             setFileUploadStatus("COMPLETE");
+
+            // wait for 2 seconds to show experience
+            await delay(2000);
+  
+            // reload to fetch updated details
+            window.location.reload();
           } else {
             setFileUploadStatus("Failed To Upload Retry!");
             setErrorMsg(result);
