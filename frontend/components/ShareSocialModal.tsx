@@ -35,6 +35,13 @@ import {
   WorkplaceShareButton,
   WorkplaceIcon,
 } from "react-share";
+import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import CastForEducationIcon from "@mui/icons-material/CastForEducation";
+import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
+import SavingsOutlinedIcon from "@mui/icons-material/SavingsOutlined";
+import LinkIcon from "@mui/icons-material/Link";
+import { Button } from "@mui/material";
+
 const useStyles = makeStyles({
   container: {
     position: "relative",
@@ -62,6 +69,20 @@ const useStyles = makeStyles({
     paddingTop: "20px",
     paddingBottom: "15px",
     textAlign: "left",
+    "& button": {
+      flex: "1 1 auto",
+      border: "none",
+      textAlign: "center",
+      margin: "5px",
+    },
+  },
+  linkIconContainer: {
+    /* width: 50%, */
+    /* margin: auto, */
+    /* margin-bottom: 1.5rem, */
+    paddingTop: "20px",
+    paddingBottom: "15px",
+    justifyContent: "center",
     "& button": {
       flex: "1 1 auto",
       border: "none",
@@ -207,11 +228,31 @@ const components: any = {
   },
 };
 
+const tabLinkButtons: any = {
+  normal: {
+    Icon: LinkIcon,
+  },
+  videos: {
+    Icon: OndemandVideoIcon,
+  },
+  course: {
+    Icon: CastForEducationIcon,
+  },
+  merch: {
+    Icon: StorefrontOutlinedIcon,
+  },
+  tip: {
+    Icon: SavingsOutlinedIcon,
+  },
+};
+
 interface ShareSocialModalProp {
   title?: string;
   socialTypes: string[];
+  linkTypes: string[];
   style?: any;
   url: string;
+  onCreatorProfile: boolean;
   onSocialButtonClicked?: (str: string) => any;
 }
 const ShareSocialModal = (props: ShareSocialModalProp) => {
@@ -220,10 +261,14 @@ const ShareSocialModal = (props: ShareSocialModalProp) => {
   const {
     title,
     socialTypes = ["facebook", "twitter"],
+    linkTypes = ["normal", "videos", "course", "merch", "tip"],
     style,
     url,
+    onCreatorProfile,
     onSocialButtonClicked = () => {},
   } = props;
+  const [urlState, setUrlState] = useState(url);
+
   const copyToClipboard = (text: string) => {
     if (navigator && navigator.clipboard)
       navigator.clipboard
@@ -240,12 +285,48 @@ const ShareSocialModal = (props: ShareSocialModalProp) => {
     return (
       <Tooltip title={type || ""} placement="top">
         <Button
-          url={url}
+          url={urlState}
           quote={title}
           onClick={() => onSocialButtonClicked(type)}
         >
           <Icon size={40} round />
         </Button>
+      </Tooltip>
+    );
+  }
+
+  function updateUrl(type: string) {
+    if (type == "normal") {
+      setUrlState(url);
+      setIsCopied(false);
+    } else if (type == "videos") {
+      setUrlState(url + "/videos");
+      setIsCopied(false);
+    } else if (type == "course") {
+      setUrlState(url + "/course");
+      setIsCopied(false);
+    } else if (type == "merch") {
+      setUrlState(url + "/merch");
+      setIsCopied(false);
+    } else if (type == "tip") {
+      setUrlState(url + "/tip");
+      setIsCopied(false);
+    } else {
+      return;
+    }
+    return;
+  }
+
+  function getTabLinkButtons(type: string) {
+    console.log(type);
+    console.log(tabLinkButtons);
+
+    const { Icon } = tabLinkButtons[type];
+    return (
+      <Tooltip title={type || ""} placement="top">
+        <button>
+          <Icon size={40} round onClick={() => updateUrl(type)} />
+        </button>
       </Tooltip>
     );
   }
@@ -266,19 +347,30 @@ const ShareSocialModal = (props: ShareSocialModalProp) => {
             </React.Fragment>
           ))}
       </div>
-
       <div className={classes.copyContainer} style={style?.copyContainer}>
         <div className={classes.copyUrl} data-testid="url">
-          {url}
+          {urlState}
         </div>
         <div
           className={classes.copyIcon}
           data-testid="copy-btn"
-          onClick={() => copyToClipboard(url)}
+          onClick={() => copyToClipboard(urlState)}
         >
           <p> {isCopied ? "Copied" : "Copy"} </p>
         </div>
       </div>
+      {!onCreatorProfile ? (
+        <div className={classes.linkIconContainer}>
+          {Array.isArray(linkTypes) &&
+            linkTypes.map((type, idx) => (
+              <React.Fragment key={"social_item_" + idx}>
+                {getTabLinkButtons(type)}
+              </React.Fragment>
+            ))}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

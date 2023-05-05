@@ -318,6 +318,7 @@ export default function Home() {
                         ]}
                         onSocialButtonClicked={(data) => console.log(data)}
                         style={style}
+                        onCreatorProfile={false}
                       />
                     }
                     formatting={true}

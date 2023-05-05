@@ -99,12 +99,14 @@ interface ProfileSliderTabsProps {
   onCreatorProfile: boolean;
   isCreator: boolean; // used only if onCreatorProfile=false
   creator: string; // used only if onCreatorProfile=true
+  tab?: string;
 }
 
 const ProfileSliderTabs = ({
   onCreatorProfile,
   creator,
   isCreator,
+  tab,
 }: ProfileSliderTabsProps) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -154,15 +156,37 @@ const ProfileSliderTabs = ({
           if (typeof res1 !== "string") {
             setStatus(res1[0]);
             if (onCreatorProfile) {
-              setValue(
-                res1[0]?.video_on_demand
-                  ? 0
-                  : res1[0]?.courses
-                  ? 1
-                  : res1[0]?.merchandise
-                  ? 2
-                  : 3
-              );
+              if (typeof tab === "string") {
+                if (tab == "videos" && res1[0]?.video_on_demand) {
+                  setValue(0);
+                } else if (tab == "course" && res1[0]?.courses) {
+                  setValue(1);
+                } else if (tab == "merch" && res1[0]?.merchandise) {
+                  setValue(2);
+                } else if (tab == "tip" && res1[0]?.tipjar) {
+                  setValue(3);
+                } else {
+                  setValue(
+                    res1[0]?.video_on_demand
+                      ? 0
+                      : res1[0]?.courses
+                      ? 1
+                      : res1[0]?.merchandise
+                      ? 2
+                      : 3
+                  );
+                }
+              } else {
+                setValue(
+                  res1[0]?.video_on_demand
+                    ? 0
+                    : res1[0]?.courses
+                    ? 1
+                    : res1[0]?.merchandise
+                    ? 2
+                    : 3
+                );
+              }
             }
           }
         }

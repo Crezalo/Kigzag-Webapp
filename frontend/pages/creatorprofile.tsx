@@ -43,11 +43,17 @@ const style = {
 export default function CreatorProfile() {
   const router = useRouter();
 
-  let { address } = router.query;
+  let { address, tab } = router.query;
+  // tab -> videos, course, merch, tip
 
   if (!address) {
     const url = router.asPath;
     address = queryString.parseUrl(url).query.address;
+  }
+
+  if (!tab) {
+    const url = router.asPath;
+    tab = queryString.parseUrl(url).query.tab;
   }
 
   const [username, setUsername] = useState("");
@@ -222,6 +228,7 @@ export default function CreatorProfile() {
                             ]}
                             onSocialButtonClicked={(data) => console.log(data)}
                             style={style}
+                            onCreatorProfile={true}
                           />
                         }
                         formatting={true}
@@ -274,12 +281,14 @@ export default function CreatorProfile() {
                         onCreatorProfile={true}
                         creator={creator.username}
                         isCreator={true}
+                        tab={tab?.toString()}
                       />
                     ) : (
                       <ProfileSliderTabsMobile
                         onCreatorProfile={true}
                         creator={creator.username}
                         isCreator={true}
+                        tab={tab?.toString()}
                       />
                     )}
                   </>
