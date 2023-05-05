@@ -226,6 +226,13 @@ export default function CreatorProfile() {
                               "facebook",
                               "reddit",
                             ]}
+                            linkTypes={[
+                              "normal",
+                              "videos",
+                              "course",
+                              "merch",
+                              "tip",
+                            ]}
                             onSocialButtonClicked={(data) => console.log(data)}
                             style={style}
                             onCreatorProfile={true}

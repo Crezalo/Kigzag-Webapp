@@ -316,6 +316,13 @@ export default function Home() {
                           "facebook",
                           "reddit",
                         ]}
+                        linkTypes={[
+                          "normal",
+                          "videos",
+                          "course",
+                          "merch",
+                          "tip",
+                        ]}
                         onSocialButtonClicked={(data) => console.log(data)}
                         style={style}
                         onCreatorProfile={false}
