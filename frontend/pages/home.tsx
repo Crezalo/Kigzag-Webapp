@@ -19,12 +19,14 @@ import ShareSocialModal from "../components/ShareSocialModal";
 import { Button, CircularProgress, Tooltip } from "@mui/material";
 import { isMobile } from "react-device-detect";
 import ProfileSliderTabsMobile from "../components/ProfileSliderTabsMobile";
-import { useScreenSize } from "../services/utility";
+import { reloadWithQueryParams, useScreenSize } from "../services/utility";
 import CreatorOnboardIllustrate from "../components/CreatorOnboardIllustrate";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import Image from "next/image";
 import loading from "../public/loadingCrezalo.gif";
 import PricingPlanModal from "../components/PricingPlanModal";
+import guestCred from "../consts/guestcred";
+import CreatorLoginIllustrate from "../components/CreatorLoginIllustrate";
 
 const style = {
   root: {
@@ -94,6 +96,7 @@ const useStylesModal = makeStyles((theme) => ({
 export default function Home() {
   const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+  const router = useRouter();
   // const ismobile = isMobile;
   const ismobile = useScreenSize()?.width < useScreenSize()?.height;
 
@@ -151,6 +154,13 @@ export default function Home() {
   };
 
   GetUser();
+
+  const checkGuestUser = async () => {
+    if (username == guestCred[0]) {
+      AuthService.logout();
+      reloadWithQueryParams(router);
+    }
+  };
 
   return (
     <div>
@@ -215,17 +225,45 @@ export default function Home() {
                       <></>
                     )}
                     {!user.iscreator ? (
-                      <button
-                        className="w-full bg-blue-500 text-white px-2 py-2 rounded buyButton"
-                        style={buttonStyle}
-                        onClick={() => {
-                          Router.push({
-                            pathname: "/becomeacreator",
-                          });
-                        }}
-                      >
-                        Monetize
-                      </button>
+                      <>
+                        {username == guestCred[0] ? (
+                          <button
+                            className="w-full bg-blue-500 text-white px-2 py-2 rounded buyButton"
+                            style={buttonStyle}
+                            onClick={() => {
+                              checkGuestUser();
+                            }}
+                          >
+                            Login
+                          </button>
+                        ) : (
+                          <>
+                            {username == guestCred[0] ? (
+                              <button
+                                className="w-full bg-blue-500 text-white px-2 py-2 rounded buyButton"
+                                style={buttonStyle}
+                                onClick={() => {
+                                  checkGuestUser();
+                                }}
+                              >
+                                Login
+                              </button>
+                            ) : (
+                              <button
+                                className="w-full bg-blue-500 text-white px-2 py-2 rounded buyButton"
+                                style={buttonStyle}
+                                onClick={() => {
+                                  Router.push({
+                                    pathname: "/becomeacreator",
+                                  });
+                                }}
+                              >
+                                Monetize
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </>
                     ) : (
                       <>
                         <SocialHandles creator={user} />
@@ -426,7 +464,13 @@ export default function Home() {
                 )}
               </>
             ) : (
-              <CreatorOnboardIllustrate />
+              <>
+                {username == guestCred[0] ? (
+                  <CreatorLoginIllustrate />
+                ) : (
+                  <CreatorOnboardIllustrate />
+                )}
+              </>
             )}
           </div>
         ) : (

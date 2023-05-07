@@ -119,18 +119,15 @@ const Header = () => {
     }
   };
 
-  const redirecToInfoWebsiteOrSignOut = () => {
+  const ifRegisterThenGuestSignOut = () => {
     useEffect(() => {
-      if (username == guestCred[0] && atHome()) {
-        router.push(process.env.NEXT_STATIC_LANDING_WEBSITE_URL);
-      }
       if (isRegister()) {
         checkGuestUser();
       }
     }, [username]);
   };
 
-  redirecToInfoWebsiteOrSignOut();
+  ifRegisterThenGuestSignOut();
 
   const isRegister = () => {
     return url.includes("register");
