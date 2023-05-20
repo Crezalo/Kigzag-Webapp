@@ -21,6 +21,7 @@ import { isMobile } from "react-device-detect";
 import ProfileSliderTabsMobile from "../components/ProfileSliderTabsMobile";
 import { reloadWithQueryParams, useScreenSize } from "../services/utility";
 import CreatorOnboardIllustrate from "../components/CreatorOnboardIllustrate";
+import MyCreatorBoard from "../components/MyCreatorBoard";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import Image from "next/image";
 import loading from "../public/loadingCrezalo.gif";
@@ -468,7 +469,10 @@ export default function Home() {
                 {username == guestCred[0] ? (
                   <CreatorLoginIllustrate />
                 ) : (
-                  <CreatorOnboardIllustrate />
+                  <div>
+                    <MyCreatorBoard />
+                    <CreatorOnboardIllustrate />
+                  </div>
                 )}
               </>
             )}

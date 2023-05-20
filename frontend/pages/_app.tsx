@@ -8,10 +8,13 @@ import { CssBaseline } from "@mui/material";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { faCheckSquare, faCoffee } from "@fortawesome/free-solid-svg-icons";
+import ReactGA from "react-ga";
 
 // styles
 import "emoji-mart/css/emoji-mart.css";
 import FeedbackButton from "../components/FeedbackButton";
+import { useRouter } from "next/router";
+import { initGA, logPageView } from "../services/analytics";
 
 library.add(fas, faCheckSquare, faCoffee);
 
@@ -52,8 +55,26 @@ const theme = createTheme({
 });
 
 export default function MyApp({ Component, pageProps }) {
+  const router = useRouter();
   useEffect(() => {
     document.body.style.backgroundColor = "black";
+  }, []);
+
+  // Track page views on route change
+  useEffect(() => {
+    initGA();
+    logPageView(window.location.pathname);
+
+    // Track page view on route change
+    const handleRouteChange = (url) => {
+      logPageView(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    // Clean up the event listener on unmount
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
   }, []);
   return (
     <div>
