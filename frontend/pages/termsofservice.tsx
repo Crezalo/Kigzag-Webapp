@@ -281,10 +281,10 @@ export default function TermsOfService() {
             product. Usually it is expected to be from 3 days to 14 days, but we
             don't offer any guarantees. We strive to ensure that all products
             are shipped within a reasonable time frame, and we will provide you
-            with a tracking number once the item has been shipped.Please note
-            that shipping times are estimated and are not guaranteed. Crezalo is
-            not responsible for any delays or damages caused by the shipment
-            provider.
+            with a tracking number once the item has been dispatched. Please
+            note that shipping times are estimated and are not guaranteed.
+            Crezalo is not responsible for any delays or damages caused by the
+            shipment provider.
           </p>
           <p className="mt-2 ml-16 text-base text-gray-400">
             If you have any questions or concerns about our shipping policy or
