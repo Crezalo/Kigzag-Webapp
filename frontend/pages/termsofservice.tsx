@@ -238,6 +238,11 @@ export default function TermsOfService() {
             timely and efficient manner.
           </p>
           <br />
+          <p className="mt-2 ml-16 text-base text-gray-400">
+            For each merchandise, creator can choose to ship via our third-party
+            shipping providers or handle shipping by themselves.
+          </p>
+          <br />
 
           <p className="ml-16 text-lg leading-6 font-medium text-gray-300">
             8.1 Third-Party Shipment Solutions:
@@ -273,11 +278,12 @@ export default function TermsOfService() {
           <p className="mt-2 ml-16 text-base text-gray-400">
             Shipping time may vary depending on the location of the buyer, the
             shipping option chosen by the creator, and the availability of the
-            product. We strive to ensure that all products are shipped within a
-            reasonable time frame, and we will provide you with a tracking
-            number once the item has been shipped.Please note that shipping
-            times are estimated and are not guaranteed. Crezalo is not
-            responsible for any delays or damages caused by the shipment
+            product. Usually it is expected to be from 3 days to 14 days, but we
+            don't offer any guarantees. We strive to ensure that all products
+            are shipped within a reasonable time frame, and we will provide you
+            with a tracking number once the item has been shipped.Please note
+            that shipping times are estimated and are not guaranteed. Crezalo is
+            not responsible for any delays or damages caused by the shipment
             provider.
           </p>
           <p className="mt-2 ml-16 text-base text-gray-400">

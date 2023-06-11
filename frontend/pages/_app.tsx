@@ -8,13 +8,13 @@ import { CssBaseline } from "@mui/material";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { faCheckSquare, faCoffee } from "@fortawesome/free-solid-svg-icons";
-import ReactGA from "react-ga";
 
 // styles
 import "emoji-mart/css/emoji-mart.css";
 import FeedbackButton from "../components/FeedbackButton";
 import { useRouter } from "next/router";
 import { initGA, logPageView } from "../services/analytics";
+import ga_url_titles from "../consts/ga_url_titles";
 
 library.add(fas, faCheckSquare, faCoffee);
 
@@ -63,11 +63,14 @@ export default function MyApp({ Component, pageProps }) {
   // Track page views on route change
   useEffect(() => {
     initGA();
-    logPageView(window.location.pathname);
+    logPageView(
+      window.location.pathname,
+      ga_url_titles[window.location.pathname]
+    );
 
     // Track page view on route change
-    const handleRouteChange = (url) => {
-      logPageView(url);
+    const handleRouteChange = (url: string) => {
+      logPageView(url, ga_url_titles[url]);
     };
     router.events.on("routeChangeComplete", handleRouteChange);
 
