@@ -125,7 +125,7 @@ export default function CreatorProfile() {
     <div>
       <Head>
         <title>
-          {creator ? creator?.fname + " " + creator?.lname : "Profile"}
+          {creator?.fname ? creator?.fname + " " + creator?.lname : "Crezalo: Creator Profile"}
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>

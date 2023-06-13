@@ -98,7 +98,7 @@ export default function KYCApproval() {
   return (
     <div>
       <Head>
-        <title>Crezalo: Feedbacks</title>
+        <title>Crezalo: KYC Approval</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div style={{ backgroundColor: "black" }}>

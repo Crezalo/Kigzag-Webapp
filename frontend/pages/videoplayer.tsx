@@ -166,7 +166,7 @@ export default function VideoPlayer() {
       <Head>
         <title>
           {videoDetails?.chronology > 0 ? videoDetails?.chronology + ". " : ""}
-          {videoDetails?.title}
+          {videoDetails?.title ? videoDetails?.title : "Crezalo: Player"}
         </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>

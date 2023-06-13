@@ -233,7 +233,7 @@ export default function Merch() {
   return (
     <div>
       <Head>
-        <title>{merchDetails?.title}</title>
+        <title>{merchDetails?.title ? merchDetails?.title : "Crezalo: Merch"}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="videoDiv" style={{ backgroundColor: "black" }}>
