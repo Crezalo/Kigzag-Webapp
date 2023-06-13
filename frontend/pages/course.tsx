@@ -93,7 +93,7 @@ export default function Course() {
   return (
     <div>
       <Head>
-        <title>{videoDetails.title}</title>
+        <title>{videoDetails?.title ? videoDetails?.title : "Crezalo: Course"}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div style={{ backgroundColor: "black" }}>
