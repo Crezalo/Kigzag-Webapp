@@ -23,6 +23,8 @@ import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import Timer from "./Timer";
 import { reloadWithQueryParams_message } from "../services/utility";
 import { setEngine } from "crypto";
+import Image from "next/image";
+import loading from "../public/loadingCrezalo.gif";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -163,6 +165,7 @@ const ConnectToAccount = ({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [isConnected, setIsConnected] = useState(true);
+  const [checkingOTP, setCheckingOTP] = useState(false);
   const router = useRouter();
 
   const [otp, setOtp] = React.useState("");
@@ -200,7 +203,8 @@ const ConnectToAccount = ({
     setOtp("");
     setErrorMsg("");
     // Email based OTP verification
-    if (username != "") {
+    if (username != "" && password != "") {
+      console.log(username, password);
       const result = await sendUserOTP(username);
       if (result[0] === "Success") {
         setEmail(result[1]);
@@ -261,10 +265,11 @@ const ConnectToAccount = ({
     }
   };
 
-  const login = async (resp: any) => {
+  const login = async () => {
     if (parseInt(otp) && otp.length == 6) {
       setErrorMsg("");
-      if (username != "") {
+      setCheckingOTP(true);
+      if (username != "" && password != "") {
         const result = await AuthService.login(
           username,
           password,
@@ -280,6 +285,7 @@ const ConnectToAccount = ({
           window.location.reload();
         } else {
           setErrorMsg(result);
+          setCheckingOTP(false);
         }
       } else {
         confirmationResultFB
@@ -307,10 +313,12 @@ const ConnectToAccount = ({
                   window.location.reload();
                 } else {
                   setErrorMsg(result);
+                  setCheckingOTP(false);
                 }
               })
               .catch((error) => {
                 setErrorMsg("Server Error, Unable to Validate OTP");
+                setCheckingOTP(false);
                 console.error("Error getting ID token:", error);
               });
           })
@@ -326,12 +334,26 @@ const ConnectToAccount = ({
               setErrorMsg("OTP Expired");
               // ...
             }
+            setCheckingOTP(false);
           });
       }
     } else {
       setErrorMsg("OTP must be a 6 digit number");
     }
   };
+
+  const autoTriggerLoginWhenOTPComplete = () => {
+    useEffect(() => {
+      async function getData() {
+        if (otp.length === 6) {
+          await login();
+        }
+      }
+      getData();
+    }, [otp]);
+  };
+
+  autoTriggerLoginWhenOTPComplete();
 
   const guestlogin = async (resp: any) => {
     const result = await AuthService.login(
@@ -441,276 +463,312 @@ const ConnectToAccount = ({
           >
             Visit Crezalo
           </a>
-          {haveAccount ? (
+          {!checkingOTP ? (
             <>
-              {!otpStage ? (
+              {haveAccount ? (
                 <>
-                  <div style={{ textAlign: "center" }}>
-                    <input
-                      className={classesModal.input}
-                      type="text"
-                      defaultValue={username}
-                      placeholder={"Username or Email"}
-                      onChange={(e) => {
-                        if (e.target.value != "") setUsername(e.target.value);
-                      }}
-                    />
-                    <input
-                      className={classesModal.input}
-                      type={showPassword ? "text" : "password"}
-                      placeholder={"Password"}
-                      onChange={(e) => {
-                        if (e.target.value != "") setPassword(e.target.value);
-                      }}
-                    />
-                    <div style={{ textAlign: "center" }}>
-                      <input
-                        type="checkbox"
-                        checked={showPassword}
-                        onChange={handleClickShowPassword}
+                  {!otpStage ? (
+                    <>
+                      <div style={{ textAlign: "center" }}>
+                        <input
+                          className={classesModal.input}
+                          type="text"
+                          defaultValue={username}
+                          placeholder={"Username or Email"}
+                          onChange={(e) => {
+                            if (e.target.value != "")
+                              setUsername(e.target.value);
+                          }}
+                        />
+                        <input
+                          className={classesModal.input}
+                          type={showPassword ? "text" : "password"}
+                          placeholder={"Password"}
+                          onChange={(e) => {
+                            if (e.target.value != "")
+                              setPassword(e.target.value);
+                            else setPassword("");
+                          }}
+                        />
+                        <div style={{ textAlign: "center" }}>
+                          <input
+                            type="checkbox"
+                            checked={showPassword}
+                            onChange={handleClickShowPassword}
+                          />
+                          <label
+                            className={classesModal.text + " pointer"}
+                            style={{ paddingLeft: "5px" }}
+                            onClick={handleClickShowPassword}
+                          >
+                            Show Password
+                          </label>
+                        </div>
+                        <div style={{ marginBottom: "5px" }}>
+                          <label className={classesModal.linkTOS}>OR</label>
+                        </div>
+                        <input
+                          className={classesModal.input}
+                          type="text"
+                          defaultValue={mobileno}
+                          placeholder={"Mobile (+91 8888 888888)"}
+                          onChange={(e) => {
+                            if (e.target.value != "")
+                              setMobileno(e.target.value);
+                          }}
+                        />
+                        <div
+                          style={{ textAlign: "center", paddingBottom: "10px" }}
+                        >
+                          <input type="checkbox" checked={true} />
+                          <label
+                            className={classesModal.textTOS}
+                            style={{ paddingLeft: "5px" }}
+                          >
+                            I agree to{" "}
+                            <a
+                              href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}
+                              target="_blank"
+                              className={classesModal.linkTOS}
+                            >
+                              terms of service
+                            </a>{" "}
+                            and{" "}
+                            <a
+                              href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
+                              target="_blank"
+                              className={classesModal.linkTOS}
+                            >
+                              privacy policy
+                            </a>{" "}
+                            of Crezalo
+                          </label>
+                        </div>
+                        <button
+                          className={classesModal.button}
+                          onClick={sendOTP}
+                          id="recaptcha-container"
+                        >
+                          Login
+                        </button>
+                        {!noguestlogin ? (
+                          <button
+                            className={classesModal.guestbutton}
+                            onClick={guestlogin}
+                          >
+                            Login As Guest
+                          </button>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                      <div className={classesModal.textCont}>
+                        <p className={classesModal.text}>
+                          Create a new accountt?
+                        </p>
+                        <p
+                          className={classesModal.link}
+                          onClick={() => {
+                            setHaveAccount(false);
+                          }}
+                        >
+                          Register
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <ArrowBackOutlinedIcon
+                        className={classesModal.back + " pointer"}
+                        onClick={() => {
+                          setOtpStage(false);
+                          setMobileOtp(false);
+                          setErrorMsg("");
+                        }}
                       />
-                      <label
-                        className={classesModal.text + " pointer"}
-                        style={{ paddingLeft: "5px" }}
-                        onClick={handleClickShowPassword}
-                      >
-                        Show Password
-                      </label>
-                    </div>
-                    <div style={{ marginBottom: "5px" }}>
-                      <label className={classesModal.linkTOS}>OR</label>
-                    </div>
-                    <input
-                      className={classesModal.input}
-                      type="text"
-                      defaultValue={mobileno}
-                      placeholder={"Mobile (+91 8888 888888)"}
-                      onChange={(e) => {
-                        if (e.target.value != "") setMobileno(e.target.value);
-                      }}
-                    />
-                    <div style={{ textAlign: "center", paddingBottom: "10px" }}>
-                      <input type="checkbox" checked={true} />
-                      <label
-                        className={classesModal.textTOS}
-                        style={{ paddingLeft: "5px" }}
-                      >
-                        I agree to{" "}
-                        <a
-                          href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}
-                          target="_blank"
-                          className={classesModal.linkTOS}
+                      <br />
+                      {!mobileOtp ? (
+                        <label
+                          className={classesModal.textTOS}
+                          style={{ paddingLeft: "5px" }}
                         >
-                          terms of service
-                        </a>{" "}
-                        and{" "}
-                        <a
-                          href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
-                          target="_blank"
-                          className={classesModal.linkTOS}
+                          We sent a verification code to your email address
+                          <a
+                            href={"mailto:" + email}
+                            target="_blank"
+                            className={classesModal.linkTOS}
+                          >
+                            {" " + email}
+                          </a>
+                        </label>
+                      ) : (
+                        <label
+                          className={classesModal.textTOS}
+                          style={{ paddingLeft: "5px" }}
                         >
-                          privacy policy
-                        </a>{" "}
-                        of Crezalo
-                      </label>
-                    </div>
-                    <button
-                      className={classesModal.button}
-                      onClick={sendOTP}
-                      id="recaptcha-container"
-                    >
-                      Login
-                    </button>
-                    {!noguestlogin ? (
-                      <button
-                        className={classesModal.guestbutton}
-                        onClick={guestlogin}
-                      >
-                        Login As Guest
+                          We sent a verification code to your phone number
+                          <a
+                            href={"mailto:" + email}
+                            target="_blank"
+                            className={classesModal.linkTOS}
+                          >
+                            {" " + mobileno}
+                          </a>
+                        </label>
+                      )}
+                      <br />
+                      <MuiOtpInput
+                        value={otp}
+                        onChange={handleChange}
+                        length={6}
+                        display="flex"
+                        gap={0.5}
+                        sx={{
+                          ".MuiOtpInput-TextField": {
+                            color: "#3b82f6",
+                            backgroundColor: "white",
+                            borderRadius: "5px",
+                          },
+                        }}
+                      />
+                      <br />
+                      <button className={classesModal.button} onClick={login}>
+                        Continue
                       </button>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                  <div className={classesModal.textCont}>
-                    <p className={classesModal.text}>Create a new accountt?</p>
-                    <p
-                      className={classesModal.link}
-                      onClick={() => {
-                        setHaveAccount(false);
-                      }}
-                    >
-                      Register
-                    </p>
-                  </div>
+                      {/* Render the OTP verification form */}
+                      {/* Render the Timer component with the resendOTP function and timerDuration */}
+                      <div id="recaptcha-container">
+                        <Timer
+                          resendOTP={sendOTP}
+                          timerDuration={mobileOtp ? 30 : 300}
+                        />
+                      </div>
+                    </>
+                  )}
                 </>
               ) : (
                 <>
-                  <ArrowBackOutlinedIcon
-                    className={classesModal.back + " pointer"}
-                    onClick={() => {
-                      setOtpStage(false);
-                      setMobileOtp(false);
-                      setErrorMsg("");
+                  <input
+                    className={classesModal.input}
+                    type="text"
+                    defaultValue={username}
+                    placeholder={"Username"}
+                    onChange={(e) => {
+                      if (e.target.value != "") setUsername(e.target.value);
                     }}
                   />
-                  <br />
-                  {!mobileOtp ? (
-                    <label
-                      className={classesModal.textTOS}
-                      style={{ paddingLeft: "5px" }}
-                    >
-                      We sent a verification code to your email address
-                      <a
-                        href={"mailto:" + email}
-                        target="_blank"
-                        className={classesModal.linkTOS}
-                      >
-                        {" " + email}
-                      </a>
-                    </label>
-                  ) : (
-                    <label
-                      className={classesModal.textTOS}
-                      style={{ paddingLeft: "5px" }}
-                    >
-                      We sent a verification code to your phone number
-                      <a
-                        href={"mailto:" + email}
-                        target="_blank"
-                        className={classesModal.linkTOS}
-                      >
-                        {" " + mobileno}
-                      </a>
-                    </label>
-                  )}
-                  <br />
-                  <MuiOtpInput
-                    value={otp}
-                    onChange={handleChange}
-                    onComplete={login}
-                    length={6}
-                    display="flex"
-                    gap={0.5}
-                    sx={{
-                      ".MuiOtpInput-TextField": {
-                        color: "#3b82f6",
-                        backgroundColor: "white",
-                        borderRadius: "5px",
-                      },
+                  <input
+                    className={classesModal.input}
+                    type="email"
+                    placeholder={"Email"}
+                    onChange={(e) => {
+                      if (e.target.value != "") setEmail(e.target.value);
                     }}
                   />
-                  <br />
-                  <button className={classesModal.button} onClick={login}>
-                    Continue
-                  </button>
-                  {/* Render the OTP verification form */}
-                  {/* Render the Timer component with the resendOTP function and timerDuration */}
-                  <div id="recaptcha-container">
-                    <Timer
-                      resendOTP={sendOTP}
-                      timerDuration={mobileOtp ? 30 : 300}
+                  <input
+                    className={classesModal.input}
+                    type="tel"
+                    placeholder={"Mobile (+91 8888 888888)"}
+                    onChange={(e) => {
+                      if (e.target.value != "") setMobileno(e.target.value);
+                    }}
+                  />
+                  <input
+                    className={classesModal.input}
+                    type={showPassword ? "text" : "password"}
+                    placeholder={"Password"}
+                    onChange={(e) => {
+                      if (e.target.value != "") setPassword(e.target.value);
+                    }}
+                  />
+                  <input
+                    className={classesModal.input}
+                    type={showPassword ? "text" : "password"}
+                    placeholder={"Confirm Password"}
+                    onChange={(e) => {
+                      if (e.target.value != "")
+                        setConfirmPassword(e.target.value);
+                    }}
+                  />
+                  <PasswordStrengthBar password={password} />
+                  <div style={{ textAlign: "center" }}>
+                    <input
+                      type="checkbox"
+                      checked={showPassword}
+                      onChange={handleClickShowPassword}
                     />
+                    <label
+                      className={classesModal.text + " pointer"}
+                      style={{ paddingLeft: "5px" }}
+                      onClick={handleClickShowPassword}
+                    >
+                      Show Password
+                    </label>
+                  </div>
+                  <div style={{ textAlign: "center", paddingBottom: "10px" }}>
+                    <input type="checkbox" checked={true} />
+                    <label
+                      className={classesModal.textTOS}
+                      style={{ paddingLeft: "5px" }}
+                    >
+                      I agree to{" "}
+                      <a
+                        href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}
+                        target="_blank"
+                        className={classesModal.linkTOS}
+                      >
+                        terms of service
+                      </a>{" "}
+                      and{" "}
+                      <a
+                        href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
+                        target="_blank"
+                        className={classesModal.linkTOS}
+                      >
+                        privacy policy
+                      </a>{" "}
+                      of Crezalo
+                    </label>
+                  </div>
+                  <button className={classesModal.button} onClick={register}>
+                    Register
+                  </button>
+                  <div className={classesModal.textCont}>
+                    <p className={classesModal.text}>
+                      Already have an account?
+                    </p>
+                    <p
+                      className={classesModal.link}
+                      onClick={() => {
+                        setHaveAccount(true);
+                      }}
+                    >
+                      Login
+                    </p>
                   </div>
                 </>
               )}
             </>
           ) : (
             <>
-              <input
-                className={classesModal.input}
-                type="text"
-                defaultValue={username}
-                placeholder={"Username"}
-                onChange={(e) => {
-                  if (e.target.value != "") setUsername(e.target.value);
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  height: "100%",
+                  width: "100%",
+                  backgroundColor: "black",
+                  borderRadius: "5px",
                 }}
-              />
-              <input
-                className={classesModal.input}
-                type="email"
-                placeholder={"Email"}
-                onChange={(e) => {
-                  if (e.target.value != "") setEmail(e.target.value);
-                }}
-              />
-              <input
-                className={classesModal.input}
-                type="tel"
-                placeholder={"Mobile (+91 8888 888888)"}
-                onChange={(e) => {
-                  if (e.target.value != "") setMobileno(e.target.value);
-                }}
-              />
-              <input
-                className={classesModal.input}
-                type={showPassword ? "text" : "password"}
-                placeholder={"Password"}
-                onChange={(e) => {
-                  if (e.target.value != "") setPassword(e.target.value);
-                }}
-              />
-              <input
-                className={classesModal.input}
-                type={showPassword ? "text" : "password"}
-                placeholder={"Confirm Password"}
-                onChange={(e) => {
-                  if (e.target.value != "") setConfirmPassword(e.target.value);
-                }}
-              />
-              <PasswordStrengthBar password={password} />
-              <div style={{ textAlign: "center" }}>
-                <input
-                  type="checkbox"
-                  checked={showPassword}
-                  onChange={handleClickShowPassword}
+              >
+                <Image
+                  src={loading}
+                  height="150"
+                  width="150"
+                  alt={""}
+                  style={{ width: "150px", height: "150px" }}
                 />
-                <label
-                  className={classesModal.text + " pointer"}
-                  style={{ paddingLeft: "5px" }}
-                  onClick={handleClickShowPassword}
-                >
-                  Show Password
-                </label>
-              </div>
-              <div style={{ textAlign: "center", paddingBottom: "10px" }}>
-                <input type="checkbox" checked={true} />
-                <label
-                  className={classesModal.textTOS}
-                  style={{ paddingLeft: "5px" }}
-                >
-                  I agree to{" "}
-                  <a
-                    href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}
-                    target="_blank"
-                    className={classesModal.linkTOS}
-                  >
-                    terms of service
-                  </a>{" "}
-                  and{" "}
-                  <a
-                    href={process.env.NEXT_STATIC_PP_WEBSITE_URL}
-                    target="_blank"
-                    className={classesModal.linkTOS}
-                  >
-                    privacy policy
-                  </a>{" "}
-                  of Crezalo
-                </label>
-              </div>
-              <button className={classesModal.button} onClick={register}>
-                Register
-              </button>
-              <div className={classesModal.textCont}>
-                <p className={classesModal.text}>Already have an account?</p>
-                <p
-                  className={classesModal.link}
-                  onClick={() => {
-                    setHaveAccount(true);
-                  }}
-                >
-                  Login
-                </p>
               </div>
             </>
           )}
