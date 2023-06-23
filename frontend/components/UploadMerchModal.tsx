@@ -12,6 +12,7 @@ import {
 } from "../services/api-services/creator/merch_api";
 import Carousel from "react-material-ui-carousel";
 import { delay, useScreenSize } from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 interface SettingsT {
   autoPlay: boolean;
@@ -213,6 +214,7 @@ const UploadMerchModal = ({
                   style={{ fontWeight: "100" }}
                   onClick={(e) => {
                     setUploadImages((show) => !show);
+                    clickEvent("MerchUploadWantDifferentImages");
                   }}
                 >
                   Want different images?

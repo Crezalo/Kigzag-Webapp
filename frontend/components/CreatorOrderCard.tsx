@@ -23,6 +23,7 @@ import { truncateString, useScreenSize } from "../services/utility";
 import { makeStyles } from "@material-ui/core";
 import { TextField } from "@mui/material";
 import month from "../consts/months";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   textfieldMsg: {
@@ -112,6 +113,13 @@ const CreatorOrderCard = ({
                   ? { courseid: order.seriesid }
                   : { address: order.creator },
             });
+            clickEvent(
+              order?.ordertype == 2
+                ? "RedirectFromCartToMerchPage"
+                : order?.ordertype == 1
+                ? "RedirectFromCartToCoursePage"
+                : "RedirectFromCartToCreatorProfilePage"
+            );
           }}
         >
           {order.ordertype !== 3 ? (

@@ -26,6 +26,7 @@ import KYCModal from "../components/KYCModal";
 import { useScreenSize } from "../services/utility";
 import { getMyKycApprovalRequestsData } from "../services/api-services/creator/fininfo_api";
 import loading from "../public/loadingCrezalo.gif";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -321,6 +322,7 @@ export default function BecomeACreator() {
     );
     if (typeof result !== "string") setSuccessMsg("Successful");
     else setErrorMsg(result);
+    clickEvent("BecomeACreator");
   };
 
   console.log(kyc);

@@ -35,6 +35,7 @@ import {
 import { getUserData } from "../services/api-services/user_api";
 import { getProductIdMerchData } from "../services/api-services/creator/merch_api";
 import { getUserAllAddressData } from "../services/api-services/user/merch_api";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   paper: {
@@ -201,6 +202,7 @@ const TotalPriceCheckout = ({ stage, refresh }: TotalPriceCheckoutProps) => {
               pathname: "/checkout",
               query: { stage: stage === "0" && cartContainsMerch ? 1 : 2 },
             });
+            clickEvent("RedirectToCheckout");
           } else {
             setErrorMsg("Please add address");
           }

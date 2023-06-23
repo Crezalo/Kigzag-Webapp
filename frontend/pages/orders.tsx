@@ -31,6 +31,7 @@ import { BottomNavigation } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import Image from "next/image";
 import loading from "../public/loadingCrezalo.gif";
+import { clickEvent } from "../services/analytics";
 
 const useStyles = makeStyles({
   tab: {
@@ -153,10 +154,12 @@ export default function Orders() {
 
   const handleDrawerOpen = () => {
     setOpen(true);
+    clickEvent("OrderSliderOpen");
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
+    clickEvent("OrderSliderClose");
   };
 
   return (
@@ -193,7 +196,10 @@ export default function Orders() {
                         justifyContent: "space-around",
                         width: "100vw",
                       }}
-                      onClick={() => handleChange(event, index)}
+                      onClick={() => {
+                        handleChange(event, index);
+                        clickEvent("TabChange_" + value + "_To_" + index);
+                      }}
                     >
                       <ListItemButton
                         sx={{
@@ -283,7 +289,10 @@ export default function Orders() {
                               display: "block",
                               color: index == value ? "blue" : "primary",
                             }}
-                            onClick={() => handleChange(event, index)}
+                            onClick={() => {
+                              handleChange(event, index);
+                              clickEvent("TabChange_" + value + "_To_" + index);
+                            }}
                           >
                             <ListItemButton
                               sx={{

@@ -24,6 +24,7 @@ import UploadProfilePicsLogoModal from "../components/UploadProfilePicsModal";
 import CreatorDP from "../components/CreatorDP";
 import { useScreenSize } from "../services/utility";
 import loading from "../public/loadingCrezalo.gif";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -305,6 +306,7 @@ export default function EditProfile() {
     );
     if (typeof result !== "string") setSuccessMsg("Successful");
     else setErrorMsg(result);
+    clickEvent("UpdateUserInfo");
   };
 
   return (

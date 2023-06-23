@@ -35,6 +35,7 @@ import TipsTab from "./TipsTab";
 import VideosSeriesGating from "./VideosSeriesGating";
 import { getCreatorFeatureStatusData } from "../services/api-services/creator/features_api";
 import { BottomNavigation, Grid } from "@mui/material";
+import { clickEvent } from "../services/analytics";
 
 const drawerWidth = 240;
 
@@ -263,7 +264,10 @@ const ProfileSliderTabsMobile = ({
                       justifyContent: "space-around",
                       width: "100vw",
                     }}
-                    onClick={() => handleChange(event, index)}
+                    onClick={() => {
+                      handleChange(event, index);
+                      clickEvent("TabChange_" + value + "_To_" + index);
+                    }}
                   >
                     <ListItemButton
                       sx={{

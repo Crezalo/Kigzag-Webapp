@@ -23,6 +23,7 @@ import {
   getCreatorFeatureStatusData,
   updateFeatureStatusData,
 } from "../services/api-services/creator/features_api";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -184,6 +185,7 @@ const UpdateFeatureStatus = () => {
       setStatus(result[0]);
       setSuccessMsg("Successful");
     } else setErrorMsg(result);
+    clickEvent("FeatureUpdate");
   };
 
   return (

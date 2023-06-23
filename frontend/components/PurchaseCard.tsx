@@ -19,6 +19,7 @@ import {
 import Modal from "@mui/material/Modal";
 import { getSpecificUserData } from "../services/api-services/user_api";
 import CreatorDP from "./CreatorDP";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -129,12 +130,13 @@ const PurchaseCard = ({ request }: PurchaseCardProp) => {
                   textAlign: "center",
                   padding: "5px 0 0 15px",
                 }}
-                onClick={() =>
+                onClick={() => {
                   Router.push({
                     pathname: "/creatorprofile",
                     query: { address: request.creator },
-                  })
-                }
+                  });
+                  clickEvent("RedirectToCreatorProfile");
+                }}
               >
                 {request.creator}
               </h2>

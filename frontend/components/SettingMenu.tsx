@@ -9,7 +9,11 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import AuthService from "../services/auth-services";
 import Router, { useRouter } from "next/router";
 import guestCred from "../consts/guestcred";
-import { reloadWithQueryParams_NoMessage, useScreenSize } from "../services/utility";
+import {
+  reloadWithQueryParams_NoMessage,
+  useScreenSize,
+} from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 interface SettingsMenuProps {
   isCreator: boolean;
@@ -72,6 +76,7 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                       Router.push({
                         pathname: "/editprofile",
                       });
+                      clickEvent("RedirectToEditProfile");
                     }}
                   >
                     <Person
@@ -117,6 +122,7 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                         Router.push({
                           pathname: "/bankinfo",
                         });
+                        clickEvent("RedirectToBankInfo");
                       }}
                     >
                       <AccountBalanceIcon
@@ -142,6 +148,7 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                       Router.push({
                         pathname: "/orders",
                       });
+                      clickEvent("RedirectToOrders");
                     }}
                   >
                     <Sell
@@ -165,6 +172,7 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                         Router.push({
                           pathname: "/revenue",
                         });
+                        clickEvent("RedirectToRevenue");
                       }}
                     >
                       <CurrencyRupee
@@ -189,6 +197,7 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                     onClick={() => {
                       AuthService.logout();
                       window.location.reload();
+                      clickEvent("Logout");
                     }}
                   >
                     <Logout
@@ -213,6 +222,7 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                     onClick={() => {
                       AuthService.logout();
                       reloadWithQueryParams_NoMessage(router);
+                      clickEvent("GuestLogout");
                     }}
                   >
                     <Logout

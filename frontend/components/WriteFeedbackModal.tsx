@@ -16,6 +16,7 @@ import {
   addFeedback,
   getAllFeedbacks,
 } from "../services/api-services/user/feedback_api";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -100,6 +101,7 @@ const WriteFeedbackModal = ({}: WriteFeedbackModalProp) => {
     result = await addFeedback(feedback);
     if (typeof result === "string") setErrorMsg(result);
     else setStatus(true);
+    clickEvent("AddFeeback");
   };
 
   return (

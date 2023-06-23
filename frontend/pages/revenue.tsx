@@ -32,6 +32,7 @@ import { BottomNavigation } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import Image from "next/image";
 import loading from "../public/loadingCrezalo.gif";
+import { clickEvent } from "../services/analytics";
 
 const useStyles = makeStyles({
   tab: {
@@ -152,10 +153,12 @@ export default function Revenue() {
 
   const handleDrawerOpen = () => {
     setOpen(true);
+    clickEvent("RevenueSliderOpen");
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
+    clickEvent("RevenueSliderClose");
   };
 
   return (
@@ -192,7 +195,10 @@ export default function Revenue() {
                         justifyContent: "space-around",
                         width: "100vw",
                       }}
-                      onClick={() => handleChange(event, index)}
+                      onClick={() => {
+                        handleChange(event, index);
+                        clickEvent("TabChange_" + value + "_To_" + index);
+                      }}
                     >
                       <ListItemButton
                         sx={{
@@ -282,7 +288,10 @@ export default function Revenue() {
                               display: "block",
                               color: index == value ? "blue" : "primary",
                             }}
-                            onClick={() => handleChange(event, index)}
+                            onClick={() => {
+                              handleChange(event, index);
+                              clickEvent("TabChange_" + value + "_To_" + index);
+                            }}
                           >
                             <ListItemButton
                               sx={{

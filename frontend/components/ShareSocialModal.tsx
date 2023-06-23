@@ -41,6 +41,7 @@ import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 import SavingsOutlinedIcon from "@mui/icons-material/SavingsOutlined";
 import LinkIcon from "@mui/icons-material/Link";
 import { Button } from "@mui/material";
+import { clickEvent } from "../services/analytics";
 
 const useStyles = makeStyles({
   container: {
@@ -287,7 +288,10 @@ const ShareSocialModal = (props: ShareSocialModalProp) => {
         <Button
           url={urlState}
           quote={title}
-          onClick={() => onSocialButtonClicked(type)}
+          onClick={() => {
+            onSocialButtonClicked(type);
+            clickEvent("ShareCreatorProfileUsing_" + type);
+          }}
         >
           <Icon size={40} round />
         </Button>
@@ -325,7 +329,14 @@ const ShareSocialModal = (props: ShareSocialModalProp) => {
     return (
       <Tooltip title={type || ""} placement="top">
         <button>
-          <Icon size={40} round onClick={() => updateUrl(type)} />
+          <Icon
+            size={40}
+            round
+            onClick={() => {
+              updateUrl(type);
+              clickEvent("UpdateShareUrl_" + type);
+            }}
+          />
         </button>
       </Tooltip>
     );
@@ -354,7 +365,10 @@ const ShareSocialModal = (props: ShareSocialModalProp) => {
         <div
           className={classes.copyIcon}
           data-testid="copy-btn"
-          onClick={() => copyToClipboard(urlState)}
+          onClick={() => {
+            copyToClipboard(urlState);
+            clickEvent("ShareUrlCopied");
+          }}
         >
           <p> {isCopied ? "Copied" : "Copy"} </p>
         </div>

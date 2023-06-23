@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getMerchThumbnail } from "../services/api-services/creator/merch_api";
 import { isMobile } from "react-device-detect";
 import { useScreenSize } from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 interface MerchCardProp {
   merchDetails: {
@@ -48,6 +49,7 @@ const MerchCard = ({ merchDetails }: MerchCardProp) => {
           pathname: "/merch",
           query: { productid: merchDetails.productid },
         });
+        clickEvent("RedirectFromCartToMerchPage");
       }}
     >
       <section

@@ -19,6 +19,7 @@ import {
   getProductIdMerchData,
 } from "../services/api-services/creator/merch_api";
 import CreatorDP from "./CreatorDP";
+import { clickEvent } from "../services/analytics";
 
 interface cartItem {
   cartid: string;
@@ -142,6 +143,11 @@ const CartItemCard = ({ cartItem }: CartItemCardProps) => {
                 ? { courseid: cartItem.seriesid }
                 : { address: cartItem.creator },
           });
+          clickEvent(cartItem.feature == 2
+            ? "RedirectFromCartToMerchPage"
+            : cartItem.feature == 1
+            ? "RedirectFromCartToCoursePage"
+            : "RedirectFromCartToCreatorProfilePage");
         }}
       >
         {ismobile ? (

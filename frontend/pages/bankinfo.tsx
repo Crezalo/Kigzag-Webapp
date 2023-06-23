@@ -18,6 +18,7 @@ import { useScreenSize } from "../services/utility";
 import { type } from "os";
 import Image from "next/image";
 import loading from "../public/loadingCrezalo.gif";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -306,6 +307,7 @@ export default function BankInfo() {
                 variant="contained"
                 onClick={() => {
                   UpdateUserData();
+                  clickEvent("UpdateBankInfo");
                 }}
               >
                 Update

@@ -47,6 +47,7 @@ import {
 } from "../services/api-services/user/merch_api";
 import MerchVariantCarousel from "./MerchVariantCarousel";
 import { useScreenSize } from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -202,6 +203,7 @@ const MerchAccordianDetails = ({
                         address: merchDetails.creator,
                       },
                     });
+                    clickEvent("RedirectFromCartToCreatorProfilePage");
                   }}
                   className="creatorIdent pointer"
                 >

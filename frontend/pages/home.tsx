@@ -28,6 +28,7 @@ import loading from "../public/loadingCrezalo.gif";
 import PricingPlanModal from "../components/PricingPlanModal";
 import guestCred from "../consts/guestcred";
 import CreatorLoginIllustrate from "../components/CreatorLoginIllustrate";
+import { clickEvent } from "../services/analytics";
 
 const style = {
   root: {
@@ -233,6 +234,7 @@ export default function Home() {
                             style={buttonStyle}
                             onClick={() => {
                               checkGuestUser();
+                              clickEvent("GuestUserSignIn");
                             }}
                           >
                             Login
@@ -245,6 +247,7 @@ export default function Home() {
                                 style={buttonStyle}
                                 onClick={() => {
                                   checkGuestUser();
+                                  clickEvent("GuestUserSignIn");
                                 }}
                               >
                                 Login
@@ -257,6 +260,7 @@ export default function Home() {
                                   Router.push({
                                     pathname: "/becomeacreator",
                                   });
+                                  clickEvent("Monetize");
                                 }}
                               >
                                 Monetize
@@ -312,6 +316,7 @@ export default function Home() {
                             pathname: "/creatorprofile",
                             query: { address: user.username },
                           });
+                          clickEvent("RedirectToCreatorProfile");
                         }}
                       />
                     </Tooltip>
@@ -410,6 +415,7 @@ export default function Home() {
                         Router.push({
                           pathname: "/becomeacreator",
                         });
+                        clickEvent("Monetize");
                       }}
                     >
                       Monetize

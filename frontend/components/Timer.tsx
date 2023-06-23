@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState, useEffect } from "react";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   link: {
@@ -35,6 +36,7 @@ const Timer = ({ resendOTP, timerDuration }: TimerProps) => {
   const handleResendOTP = () => {
     resendOTP();
     setTimer(timerDuration);
+    clickEvent("ResendOTP");
   };
 
   return (

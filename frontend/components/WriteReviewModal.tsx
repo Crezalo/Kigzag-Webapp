@@ -13,6 +13,7 @@ import {
   updateMerchReviewData,
 } from "../services/api-services/user/merch_api";
 import { useScreenSize } from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -251,7 +252,10 @@ const WriteReviewModal = ({
               marginBottom: "2px",
             }}
             variant="contained"
-            onClick={() => (addorupdate == 1 ? AddReview() : UpdateReview())}
+            onClick={() => {
+              addorupdate == 1 ? AddReview() : UpdateReview();
+              clickEvent(addorupdate == 1 ? "AddReview" : "UpdateReview");
+            }}
           >
             {addorupdate == 1 ? "Add" : "Update"}
           </Button>

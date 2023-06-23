@@ -6,6 +6,7 @@ import { getVideoThumbnail } from "../services/api-services/creator/video_api";
 import { getCreatorSubscriptionData_Series } from "../services/api-services/creator/subscriptions_api";
 import { isMobile } from "react-device-detect";
 import { truncateString, useScreenSize } from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 interface VideoCardProp {
   videoDetails: {
@@ -120,6 +121,9 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
               ? { courseid: videoDetails.videoid }
               : { videoid: videoDetails.videoid },
         });
+        clickEvent(
+          category === "Series" ? "RedirectToCourse" : "RedirectToVideoPlayer"
+        );
       }}
     >
       <section
@@ -167,9 +171,7 @@ const VideoCard = ({ videoDetails, category }: VideoCardProp) => {
           <div className="videoCardImage shimmer"></div>
         )}
       </section>
-      <div
-        style={{ padding: "0px 5px 8px 15px" }}
-      >
+      <div style={{ padding: "0px 5px 8px 15px" }}>
         <div style={{ height: "85px" }}>
           <h1 style={{ fontSize: "16px" }}>
             {videoDetails?.chronology > 0

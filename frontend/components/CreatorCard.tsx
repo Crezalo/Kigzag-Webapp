@@ -3,6 +3,7 @@ import Router from "next/router";
 import Image from "next/image";
 import CreatorDP from "./CreatorDP";
 import { useScreenSize } from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 interface CreatorCardProp {
   creator: {
@@ -21,12 +22,13 @@ const CreatorCard = ({ creator }: CreatorCardProp) => {
         <>
           <section
             className={ismobile ? "creatorCardMobile" : "creatorCard pointer"}
-            onClick={() =>
+            onClick={() => {
               Router.push({
                 pathname: "/creatorprofile",
                 query: { address: creator.username },
-              })
-            }
+              });
+              clickEvent("RedirectToCreatorProfile");
+            }}
           >
             <div className="creatorCardImage">
               <CreatorDP creator={creator.username} height={125} width={125} />

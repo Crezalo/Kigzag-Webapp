@@ -15,6 +15,7 @@ import greenTick from "../public/green-tick.gif";
 import { Modal, Box, Fade, NativeSelect } from "@mui/material";
 import AuthService from "../services/auth-services";
 import { addUserAddressData } from "../services/api-services/user/merch_api";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -161,6 +162,7 @@ const AddUpdateAddress = () => {
     );
     if (!result[0]) setErrorMsg(result);
     else setStatus(true);
+    clickEvent("AddDeliveryAddress");
   };
 
   return (

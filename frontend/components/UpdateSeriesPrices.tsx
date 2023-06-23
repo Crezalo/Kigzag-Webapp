@@ -17,6 +17,7 @@ import {
   addCreatorSubscriptionData_Series,
 } from "../services/api-services/creator/subscriptions_api";
 import AuthService from "../services/auth-services";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -195,6 +196,7 @@ const UpdateSeriesPrices = ({ seriesid }: UpdateSeriesPricesProp) => {
     }
     if (!result[0]) setErrorMsg(result);
     else setSuccessMsg("Successful");
+    clickEvent("CoursePriceUpdated");
   };
 
   return (

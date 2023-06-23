@@ -28,6 +28,7 @@ import { reloadWithQueryParams, useScreenSize } from "../services/utility";
 import guestCred from "../consts/guestcred";
 import Image from "next/image";
 import loading from "../public/loadingCrezalo.gif";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -385,6 +386,7 @@ const AddToCart = ({
                                     onClick={() => {
                                       deleteItem(item.cartid);
                                       removeItem(index);
+                                      clickEvent("ItemClearedFromCart");
                                     }}
                                   />
                                 </div>
@@ -417,6 +419,7 @@ const AddToCart = ({
                           pathname: "/checkout",
                           query: { stage: 0 },
                         });
+                        clickEvent("ContinueToCheckout");
                       }}
                     >
                       Continue to Checkout

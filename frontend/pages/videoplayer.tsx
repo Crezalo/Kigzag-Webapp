@@ -22,6 +22,7 @@ import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { useScreenSize } from "../services/utility";
 import { CircularProgress } from "@mui/material";
 import loading from "../public/loadingCrezalo.gif";
+import { clickEvent } from "../services/analytics";
 
 export default function VideoPlayer() {
   const router = useRouter();
@@ -233,6 +234,7 @@ export default function VideoPlayer() {
                         address: videoDetails?.creator,
                       },
                     });
+                    clickEvent("RedirectToCreatorProfile");
                   }}
                   className="creatorIdent pointer"
                 >

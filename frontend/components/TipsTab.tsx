@@ -24,6 +24,7 @@ import {
 } from "../services/api-services/creator/tipjar_api";
 import { isMobile } from "react-device-detect";
 import { useScreenSize } from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   paper: {
@@ -119,6 +120,7 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
 
   const updateMessage = async () => {
     let result = await updateTipJarMsgData(tipJarMsg);
+    clickEvent("TipMessageUpdateByCreator");
   };
 
   return (
@@ -230,7 +232,9 @@ const TipsTab = ({ creator, onCreatorProfile }: TipsTabProp) => {
                     maxWidth: "60px",
                   }}
                   variant="contained"
-                  onClick={() => {}}
+                  onClick={() => {
+                    clickEvent("TippingTriggered");
+                  }}
                 >
                   <CurrencyRupeeIcon />
                   Tip

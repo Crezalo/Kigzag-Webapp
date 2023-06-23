@@ -25,6 +25,7 @@ import { reloadWithQueryParams_message } from "../services/utility";
 import { setEngine } from "crypto";
 import Image from "next/image";
 import loading from "../public/loadingCrezalo.gif";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -202,6 +203,7 @@ const ConnectToAccount = ({
   const sendOTP = async (resp: any) => {
     setOtp("");
     setErrorMsg("");
+    clickEvent("SendOTP");
     // Email based OTP verification
     if (username != "" && password != "") {
       console.log(username, password);
@@ -266,6 +268,7 @@ const ConnectToAccount = ({
   };
 
   const login = async () => {
+    clickEvent("OTPBasedLogin");
     if (parseInt(otp) && otp.length == 6) {
       setErrorMsg("");
       setCheckingOTP(true);
@@ -356,6 +359,7 @@ const ConnectToAccount = ({
   autoTriggerLoginWhenOTPComplete();
 
   const guestlogin = async (resp: any) => {
+    clickEvent("GuestLogin");
     const result = await AuthService.login(
       guestCred[0],
       guestCred[1],
@@ -399,6 +403,7 @@ const ConnectToAccount = ({
   }
 
   const register = async (resp: any) => {
+    clickEvent("Register");
     if (validateRegisterInput()) {
       const result = await AuthService.register(
         email,
@@ -584,6 +589,7 @@ const ConnectToAccount = ({
                           setOtpStage(false);
                           setMobileOtp(false);
                           setErrorMsg("");
+                          clickEvent("GoBackToLoginModal");
                         }}
                       />
                       <br />
