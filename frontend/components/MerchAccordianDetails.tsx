@@ -237,7 +237,10 @@ const MerchAccordianDetails = ({
                     }}
                   >
                     {
-                      <Link href="#review-section">
+                      <Link
+                        href="#review-section"
+                        onClick={() => clickEvent("Merch_RedirectToReviews")}
+                      >
                         <div
                           style={{
                             display: "flex",

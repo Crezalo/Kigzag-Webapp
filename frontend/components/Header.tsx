@@ -17,6 +17,7 @@ import { Button } from "@mui/material";
 import { getUserData } from "../services/api-services/user_api";
 import guestCred from "../consts/guestcred";
 import { reloadWithQueryParams } from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 interface cartItem {
   cartid: string;
@@ -158,7 +159,10 @@ const Header = () => {
         >
           {!atHome() && username != guestCred[0] ? (
             <Link legacyBehavior href="/">
-              <a className="mr-6 py-1">
+              <a
+                className="mr-6 py-1"
+                onClick={() => clickEvent("Header_RedirectToDashboard")}
+              >
                 <div className="modelButton">
                   <Button
                     style={{

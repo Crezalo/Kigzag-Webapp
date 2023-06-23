@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@mui/material/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
+import { clickEvent } from "../services/analytics";
 
 const useStylesModal = makeStyles((theme) => ({
   modal: {
@@ -51,6 +52,7 @@ const BasicModal = ({
             variant="contained"
             onClick={() => {
               handleOpen();
+              clickEvent("BasicModal_" + modalButtonText.replace(/\s+/g, ""));
               if (onClickFunction) onClickFunction();
             }}
           >

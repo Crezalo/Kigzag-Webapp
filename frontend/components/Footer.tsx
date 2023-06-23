@@ -3,6 +3,7 @@ import Image from "next/image";
 import kigzaglogo from "../public/crezalo-logo-box-full.png";
 import React from "react";
 import { useScreenSize } from "../services/utility";
+import { clickEvent } from "../services/analytics";
 
 const Footer = () => {
   const ismobile = useScreenSize()?.width < useScreenSize()?.height;
@@ -19,7 +20,10 @@ const Footer = () => {
         }}
       >
         <Link legacyBehavior href={process.env.NEXT_STATIC_LANDING_WEBSITE_URL}>
-          <a style={{ marginTop: "2px" }}>
+          <a
+            style={{ marginTop: "2px" }}
+            onClick={() => clickEvent("Footer_RedirectToInfoWebsite")}
+          >
             <div>
               <span style={{ color: "white", paddingLeft: "10px" }}>
                 Powered By
@@ -50,7 +54,10 @@ const Footer = () => {
           }}
         >
           <Link legacyBehavior href={process.env.NEXT_STATIC_TOS_WEBSITE_URL}>
-            <a style={{ marginTop: "2px" }}>
+            <a
+              style={{ marginTop: "2px" }}
+              onClick={() => clickEvent("Footer_RedirectToToS")}
+            >
               <span
                 style={{
                   color: "#3B82F6",
@@ -63,7 +70,10 @@ const Footer = () => {
             </a>
           </Link>
           <Link legacyBehavior href={process.env.NEXT_STATIC_PP_WEBSITE_URL}>
-            <a style={{ marginTop: "2px" }}>
+            <a
+              style={{ marginTop: "2px" }}
+              onClick={() => clickEvent("Footer_RedirectToPP")}
+            >
               <span
                 style={{
                   color: "#3B82F6",
@@ -79,7 +89,10 @@ const Footer = () => {
             legacyBehavior
             href={process.env.NEXT_STATIC_TOS_RP_WEBSITE_URL}
           >
-            <a style={{ marginTop: "2px" }}>
+            <a
+              style={{ marginTop: "2px" }}
+              onClick={() => clickEvent("Footer_RedirectToRP")}
+            >
               <span
                 style={{
                   color: "#3B82F6",
@@ -92,7 +105,10 @@ const Footer = () => {
             </a>
           </Link>
           <Link legacyBehavior href={process.env.NEXT_STATIC_AU_WEBSITE_URL}>
-            <a style={{ marginTop: "2px" }}>
+            <a
+              style={{ marginTop: "2px" }}
+              onClick={() => clickEvent("Footer_RedirectToAU")}
+            >
               <span
                 style={{
                   color: "#3B82F6",
@@ -120,6 +136,7 @@ const Footer = () => {
             paddingRight: "10px",
             fontSize: "9px",
             textAlign: "center",
+            opacity: "50%",
           }}
         >
           2023 © Copyright, Gandhi Rajeshkumar Champaklal HUF. All rights
