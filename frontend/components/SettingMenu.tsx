@@ -6,21 +6,25 @@ import Sell from "@mui/icons-material/Sell";
 import CurrencyRupee from "@mui/icons-material/CurrencyRupee";
 import Logout from "@mui/icons-material/Logout";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import AuthService from "../services/auth-services";
 import Router, { useRouter } from "next/router";
 import guestCred from "../consts/guestcred";
 import {
   reloadWithQueryParams_NoMessage,
+  truncateString,
   useScreenSize,
 } from "../services/utility";
 import { clickEvent } from "../services/analytics";
 
 interface SettingsMenuProps {
   isCreator: boolean;
+  atDashboard: boolean;
 }
 
-const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
+const SettingMenu = ({ isCreator, atDashboard }: SettingsMenuProps) => {
   const router = useRouter();
+  const ismobile = useScreenSize()?.width < useScreenSize()?.height;
   return (
     <div
       className="outline text-blue-500 outline-offset-0 py-1 font-bold rounded"
@@ -30,11 +34,12 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
         zIndex: 10,
         outlineWidth: "thin",
         marginTop: "2px",
+        maxHeight: 40,
       }}
     >
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex justify-center w-full px-4 py-1 text-sm font-bold text-white bg-black rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <Menu.Button className="inline-flex justify-center w-full px-4 py-1 text-sm font-bold text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <div
               style={{
                 paddingTop: "2px",
@@ -42,7 +47,9 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                 fontWeight: "bold",
               }}
             >
-              {AuthService.getUsername()}
+              {ismobile
+                ? truncateString(AuthService.getUsername(), 10)
+                : AuthService.getUsername()}
             </div>
             {/* <ChevronDownIcon
               className="w-5 h-5 ml-2 -mr-1 text-violet-200 hover:text-violet-100"
@@ -65,6 +72,32 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
         >
           {AuthService.getUsername() != guestCred[0] ? (
             <Menu.Items className="absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              {ismobile && !atDashboard ? (
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? "bg-blue-500 text-white" : "text-blue-500"
+                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                      style={{ fontSize: 16 }}
+                      onClick={() => {
+                        Router.push({
+                          pathname: "/dashboard",
+                        });
+                      }}
+                    >
+                      <DashboardIcon
+                        className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                        aria-hidden="true"
+                        style={{ marginRight: "5px" }}
+                      />
+                      <div>Dashboard</div>
+                    </button>
+                  )}
+                </Menu.Item>
+              ) : (
+                <></>
+              )}
               <Menu.Item>
                 {({ active }) => (
                   <button
@@ -88,52 +121,55 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                   </button>
                 )}
               </Menu.Item>
-              {/* <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`${
-                    active ? "bg-blue-500 text-white" : "text-blue-500"
-                  } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                  style={{ fontSize: 16 }}
-                  onClick={() => {
-                    Router.push({
-                      pathname: "/updateprices",
-                    });
-                  }}
-                >
-                  <Sell
-                    className="w-5 h-5 ml-2 -mr-1 text-gray-300"
-                    aria-hidden="true"
-                    style={{ marginRight: "5px" }}
-                  />
-                  <div>Prices</div>
-                </button>
-              )}
-            </Menu.Item> */}
               {isCreator ? (
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? "bg-blue-500 text-white" : "text-blue-500"
-                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                      style={{ fontSize: 16 }}
-                      onClick={() => {
-                        Router.push({
-                          pathname: "/bankinfo",
-                        });
-                        clickEvent("RedirectToBankInfo");
-                      }}
-                    >
-                      <AccountBalanceIcon
-                        className="w-5 h-5 ml-2 -mr-1 text-gray-300"
-                        aria-hidden="true"
-                        style={{ marginRight: "5px" }}
-                      />
-                      <div>Banking</div>
-                    </button>
-                  )}
-                </Menu.Item>
+                <>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? "bg-blue-500 text-white" : "text-blue-500"
+                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                        style={{ fontSize: 16 }}
+                        onClick={() => {
+                          Router.push({
+                            pathname: "/bankinfo",
+                          });
+                          clickEvent("RedirectToBankInfo");
+                        }}
+                      >
+                        <AccountBalanceIcon
+                          className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                          aria-hidden="true"
+                          style={{ marginRight: "5px" }}
+                        />
+                        <div>Banking</div>
+                      </button>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        className={`${
+                          active ? "bg-blue-500 text-white" : "text-blue-500"
+                        } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                        style={{ fontSize: 16 }}
+                        onClick={() => {
+                          Router.push({
+                            pathname: "/revenue",
+                          });
+                          clickEvent("RedirectToRevenue");
+                        }}
+                      >
+                        <CurrencyRupee
+                          className="w-5 h-5 ml-2 -mr-1 text-gray-300"
+                          aria-hidden="true"
+                          style={{ marginRight: "5px" }}
+                        />
+                        <div>Revenue</div>
+                      </button>
+                    )}
+                  </Menu.Item>
+                </>
               ) : (
                 <></>
               )}
@@ -160,33 +196,6 @@ const SettingMenu = ({ isCreator }: SettingsMenuProps) => {
                   </button>
                 )}
               </Menu.Item>
-              {isCreator ? (
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? "bg-blue-500 text-white" : "text-blue-500"
-                      } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                      style={{ fontSize: 16 }}
-                      onClick={() => {
-                        Router.push({
-                          pathname: "/revenue",
-                        });
-                        clickEvent("RedirectToRevenue");
-                      }}
-                    >
-                      <CurrencyRupee
-                        className="w-5 h-5 ml-2 -mr-1 text-gray-300"
-                        aria-hidden="true"
-                        style={{ marginRight: "5px" }}
-                      />
-                      <div>Revenue</div>
-                    </button>
-                  )}
-                </Menu.Item>
-              ) : (
-                <></>
-              )}
               <Menu.Item>
                 {({ active }) => (
                   <button

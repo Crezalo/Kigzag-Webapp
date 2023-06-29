@@ -1,5 +1,6 @@
 const ga_url_titles = {
-  "https://www.crezalo.com": "Home/Dashboard",
+  "https://www.crezalo.com": "Home",
+  "https://www.crezalo.com/dashboard": "Dashboard",
   "https://www.crezalo.com/editprofile": "Edit Profile",
   "https://www.crezalo.com/bankinfo": "Edit BankInfo",
   "https://www.crezalo.com/orders": "Orders",

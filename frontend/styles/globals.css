@@ -487,13 +487,13 @@ a {
 .blueTextBlackBackground {
   margin-left: 240;
   color: #3b82f6;
-  padding: 0.5rem 0.5rem 0.5rem 2rem;
+  padding: 0rem 0.5rem 0.5rem 2rem;
   background: black;
 }
 .blueTextBlackBackgroundMobile {
   margin-left: 240;
   color: #3b82f6;
-  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  padding: 0rem 0.5rem 0.5rem 0.5rem;
   background: black;
 }
 

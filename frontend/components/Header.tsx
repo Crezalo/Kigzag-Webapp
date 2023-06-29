@@ -1,14 +1,16 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import kigzaglogo from "../public/kigzaglogo.png";
+import crezaloOnlyBirdlogo from "../public/Crezalo-onlybird-transparent.png";
+import crezaloTextlogo from "../public/crezalo-logo-name.png";
 import AuthService from "../services/auth-services";
 import ConnectToAccount from "./ConnectToAccount";
 import SettingMenu from "./SettingMenu";
 import queryString from "query-string";
 import BasicModal from "./BasicModal";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import DashboardIcon from "@mui/icons-material/Home";
+import HomeIcon from "@mui/icons-material/Home";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import SearchIcon from "@mui/icons-material/Search";
 import AddToCart from "./AddToCart";
 import { getCartItems } from "../services/api-services/user/cart_api";
@@ -18,6 +20,7 @@ import { getUserData } from "../services/api-services/user_api";
 import guestCred from "../consts/guestcred";
 import { reloadWithQueryParams } from "../services/utility";
 import { clickEvent } from "../services/analytics";
+import { isMobile } from "react-device-detect";
 
 interface cartItem {
   cartid: string;
@@ -107,10 +110,13 @@ const Header = () => {
   GetAllItems();
 
   const showCart = () => {
-    return !url.includes("checkout");
+    return !url.includes("/checkout/");
   };
-  const atHome = () => {
-    return url === "/";
+  const atDashboard = () => {
+    return url === "/dashboard/";
+  };
+  const atCreatorProfile = () => {
+    return url.includes("/creatorprofile/");
   };
 
   const checkGuestUser = async () => {
@@ -150,40 +156,124 @@ const Header = () => {
   return (
     <>
       {isConnected ? (
-        <nav
+        <div
           style={{
-            padding: "1px",
             display: "flex",
-            justifyContent: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            backgroundColor: "#36393e",
+            paddingLeft: isMobile ? 0 : "15vh",
           }}
         >
-          {!atHome() && username != guestCred[0] ? (
+          {!atCreatorProfile() ? (
             <Link legacyBehavior href="/">
-              <a
-                className="mr-6 py-1"
-                onClick={() => clickEvent("Header_RedirectToDashboard")}
-              >
-                <div className="modelButton">
-                  <Button
-                    style={{
-                      background: "#3B82F6",
-                      color: "white",
-                      borderRadius: "50%",
-                    }}
-                    variant="contained"
-                  >
-                    <DashboardIcon />
-                    {/*<span style={{ marginRight: "10px", marginLeft: "2px" }}>
-                      Home
-                    </span> */}
-                  </Button>
+              <a onClick={() => clickEvent("Header_RedirectToHome")}>
+                <div className="modelButton" style={{ paddingLeft: "2px" }}>
+                  {isMobile ? (
+                    <Button
+                      style={{
+                        backgroundColor: "black",
+                        color: "white",
+                        marginTop: "4px",
+                        borderRadius: "50%",
+                        border: "2 solid #424549",
+                        boxShadow: "0px 0px 2px",
+                      }}
+                      variant="contained"
+                    >
+                      <Image
+                        src={crezaloOnlyBirdlogo}
+                        alt="Crezalo Bird Logo"
+                        width={40}
+                        height={40}
+                      />
+                    </Button>
+                  ) : (
+                    <Button
+                      style={{
+                        backgroundColor: "black",
+                        marginTop: "2px",
+                        boxShadow: "1px 2px 3px #a0a2a4",
+                      }}
+                      variant="contained"
+                    >
+                      <Image
+                        src={crezaloOnlyBirdlogo}
+                        alt="Crezalo Bird Logo"
+                        width={40}
+                        height={40}
+                      />
+                      <Image
+                        src={crezaloTextlogo}
+                        alt="Crezalo Text Logo"
+                        width={150}
+                        height={35}
+                      />
+                    </Button>
+                  )}
                 </div>
               </a>
             </Link>
           ) : (
-            <></>
+            <Link legacyBehavior href="/">
+              <a onClick={() => clickEvent("Header_RedirectToHome")}>
+                <div className="modelButton" style={{ paddingLeft: "2px" }}>
+                  <Button
+                    style={{
+                      backgroundColor: "black",
+                      color: "white",
+                      marginTop: "4px",
+                      borderRadius: "50%",
+                      border: "2 solid #424549",
+                      boxShadow: "0px 0px 2px",
+                    }}
+                    variant="contained"
+                  >
+                    <Image
+                      src={crezaloOnlyBirdlogo}
+                      alt="Crezalo Bird Logo"
+                      width={40}
+                      height={40}
+                    />
+                  </Button>
+                </div>
+              </a>
+            </Link>
           )}
-          {/* {atHome() ? (
+          <nav
+            style={{
+              padding: "2px",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {!atDashboard() && username != guestCred[0] && !isMobile ? (
+              <Link legacyBehavior href="/dashboard">
+                <a
+                  className="mr-6 py-1"
+                  onClick={() => clickEvent("Header_RedirectToDashboard")}
+                >
+                  <div className="modelButton">
+                    <Button
+                      style={{
+                        background: "#3B82F6",
+                        color: "white",
+                        borderRadius: "50%",
+                      }}
+                      variant="contained"
+                    >
+                      <DashboardIcon />
+                      {/*<span style={{ marginRight: "10px", marginLeft: "2px" }}>
+                      Home
+                    </span> */}
+                    </Button>
+                  </div>
+                </a>
+              </Link>
+            ) : (
+              <></>
+            )}
+            {/* {atDashboard() ? (
             <Link legacyBehavior href="/creators">
               <a className="mr-6 py-1">
                 <div className="modelButton">
@@ -202,44 +292,45 @@ const Header = () => {
           ) : (
             <></>
           )} */}
-          {showCart() ? (
-            <div className="mr-6 py-1">
-              <BasicModal
-                modalButtonText={
-                  <Button
-                    style={{
-                      background: "#3B82F6",
-                      color: "white",
-                      marginBottom: "2px",
-                      borderRadius: "50%",
-                    }}
-                    variant="contained"
-                  >
-                    <span
+            {showCart() ? (
+              <div className="mr-6 py-1">
+                <BasicModal
+                  modalButtonText={
+                    <Button
                       style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        fontSize: "15px",
+                        background: "#3B82F6",
+                        color: "white",
+                        marginBottom: "2px",
                         borderRadius: "50%",
                       }}
+                      variant="contained"
                     >
-                      <ShoppingCartOutlinedIcon />
-                      {/* <span style={{ marginRight: "10px", marginLeft: "2px" }}>
+                      <span
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          fontSize: "15px",
+                          borderRadius: "50%",
+                        }}
+                      >
+                        <ShoppingCartOutlinedIcon />
+                        {/* <span style={{ marginRight: "10px", marginLeft: "2px" }}>
                       Cart
                       ({cartItems?.length})
                     </span> */}
-                    </span>
-                  </Button>
-                }
-                modalBody={<AddToCart showContinueToCheckoutButton={true} />}
-                formatting={true}
-              />
-            </div>
-          ) : (
-            <></>
-          )}
-          <SettingMenu isCreator={isCreator} />
-        </nav>
+                      </span>
+                    </Button>
+                  }
+                  modalBody={<AddToCart showContinueToCheckoutButton={true} />}
+                  formatting={true}
+                />
+              </div>
+            ) : (
+              <></>
+            )}
+            <SettingMenu isCreator={isCreator} atDashboard={atDashboard()} />
+          </nav>
+        </div>
       ) : (
         <ConnectToAccount
           haveAccountBool={!isRegister()}

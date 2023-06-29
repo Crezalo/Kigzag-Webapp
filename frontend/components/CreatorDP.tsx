@@ -3,6 +3,7 @@ import AuthService from "../services/auth-services";
 import DummyProfile from "../public/DummyProfile.jpg";
 import Image from "next/image";
 import { getCreatorInfoImages } from "../services/api-services/content_api";
+import guestCred from "../consts/guestcred";
 
 interface CreatorDPProp {
   creator: string;
@@ -64,6 +65,9 @@ const CreatorDP = ({ creator, height, width }: CreatorDPProp) => {
           width={width}
           height={height}
           className="creatorDP"
+          style={{
+            marginTop: username == guestCred[0] ? "20px" : 0,
+          }}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null; // prevents looping
             currentTarget.src = DummyProfile.src;
@@ -72,7 +76,10 @@ const CreatorDP = ({ creator, height, width }: CreatorDPProp) => {
       ) : (
         <div
           className="creatorDP shimmer"
-          style={{ maxHeight: height, maxWidth: width }}
+          style={{
+            maxHeight: height,
+            maxWidth: width,
+          }}
         ></div>
       )}
     </>
