@@ -11,6 +11,7 @@ Crezalo is a creator monetization service that allows creators to generate a lin
   - [Video Streaming](#video-streaming)
   - [File Storage](#file-storage)
   - [Database](#database)
+  - [Authentication](#authentication)
   - [Deployment](#deployment)
 - [Features](#features)
 - [Setup](#setup)
@@ -44,6 +45,10 @@ Files, including videos, images, and user verification documents, are stored in 
 ### Database
 
 We use an RDBMS Postgres database to manage and store application data efficiently.
+
+### Authentication
+
+We use Firebase-based login for mobile numbers and Google accounts. Guest login is also offered by default.
 
 ### Deployment
 
