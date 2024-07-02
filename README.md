@@ -28,7 +28,7 @@ Visit our info website: [Crezalo](https://crezalo.github.io/)
 
 ### Frontend
 
-The frontend of Crezalo is built using [Next.js](https://nextjs.org/) with TypeScript. This ensures a modern, scalable, and efficient development experience.
+The frontend of Crezalo is built using [Next.js](https://nextjs.org/) with TypeScript and Tailwinf CSS framework for styling with flexibility and speed. This ensures a modern, scalable, and efficient development experience.
 
 ### Backend
 
